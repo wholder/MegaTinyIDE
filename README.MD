@@ -1,0 +1,69 @@
+
+<p align="center"><img src="/images/MegaTinyIDE%20Screenshot.png"></p>
+
+# MegaTinyIDE (for 64 bit macOS, Windows & Linux)
+
+MegaTinyIDE is a simple, GNU-based IDE that's derived from another project of mine called ATTiny10IDE, which I originally wrote to simplify writing code for the ATTiny10 Series Microcontrollers using C. C++ or Assembly language.  This new version is intended to support coding for the new MegaTiny chips (tinyAVR® 1-series and 0-series), such as the ATtiny212, which feature a greatly expanded set of features compared to the original, Atmel-designed ATTiny series chips.
+
+**Note: MegaTinyIDE is still in development and has more thana few rough edges.  I addition, it has not yet been fully tested on either Windows, or Linux systems.**
+
+## Debugging Support
+
+<p align="center"><img src="/images/MegaTinyIDE%20Debugging.png"></p>
+
+MegaTinyIDE supports on-chip debugging of using the one pin UPDI interface.  Currently, this requires using a UPDI programmer/debugger, such as the [Atmel-ICE](https://www.microchip.com/DevelopmentTools/ProductDetails/ATATMEL-ICE) or [PICKit-4](https://www.microchip.com/Developmenttools/ProductDetails/PG164140), but MegaTinyIDE can also talk to the built-in debugger chips on the [ATTiny3217-Curiosity-Nano](https://www.microchip.com/DevelopmentTools/ProductDetails/PartNO/EV50J96A), [ATTiny416-Xplained-Nano](https://www.microchip.com/DevelopmentTools/ProductDetails/PartNO/ATTINY416-XNANO) and [ATTiny817-XPlained-Mini](https://www.microchip.com/developmenttools/ProductDetails/attiny817-xmini) and these boards can also be adapted to function as inexpensive programmer/debuggers.
+
+Supprted Debugging features incude:
+
+  - Set a Hardware Breakpoint by selecting the checkbox on an executable line of code in the Listing View
+  - Single Step while the highlighted line in the Listing View shows the next line to execute
+  - Watch the I/O ports, Rgiesters and Status Flags Change while stepping (changed fields are highlighted)
+  
+Features in Development
+
+  - Better Built-in documentation
+  - Arduino-style coding using the [ATTinyCore](https://github.com/SpenceKonde/ATTinyCore) library by Spence Konde (aka Dr. Azzy)
+  - Support for other UPDI-based programmers (and possibly debugging)
+  - A console feature that communicates over UPDI
+
+## One JAR File supports 64-bit Mac, Windows and Linux
+
+If you just want to try out the program, you don't need to download and compile the source code, as I maintain a pre-built, executable JAR file in the [out/artifacts/MegaTinyIDE_jar](https://github.com/wholder/MegaTinyIDE/tree/master/out/artifacts/AMegaTinyIDE_jar) folder from which you can download and run MegaTinyIDE as long as you have Java installed on your system.  On a Mac, simply double click the MegaTinyIDE.jar file to run it once you've downloaded it, although you'll probably have to right click and select "Open" the  first time you run MegaTinyIDE due to the Mac OS X security check and the fact that I'm currently unable to digitally sign the JAR file.  You should also be able to double click and run using Windows, but some versions of Windows may require you to [enable this ability](https://www.addictivetips.com/windows-tips/run-a-jar-file-on-windows/) first.  You'll need to give the .jar file RUN permission to execute on Linux and using a USB-based device programmer, such as the AVRISP MkII, may also require you to [create an install a rules file](https://stackoverflow.com/questions/5412727/avrisp-mkii-doesnt-work-with-avrdude-on-linux).  The needed GNU-based AVR toolchains are built into MegaTinyIDE and the appropriate toolchanin will be automatically installed when you run the MegaTinyIDE JAR file.
+
+## Help Requested
+So far this is just a one man project and I struggle at times to do adequate testing, especially on Windows and Linux, when I release a nw version. So, if anyone spots a problem, or has a question or a sugegstion, [please post an issue](https://github.com/wholder/MegaTinyIDE/issues) so I can investigate.  You can also email me at questions4wayne at gmail dot com.
+
+## Requirements
+I suggest using [Java 8 JRE](https://www.java.com) or JDK, or later for MegaTinyIDE, but the code also seems to run under the OpenJDK Java on Linux.  Note: I wrote MegaTinyIDE on a Mac Pro using the _Community_ version of [IntelliJ IDEA from JetBrains](https://www.jetbrains.com/idea/) and OS X is the only environment where I have extensively tested and used MegaTinyIDE .  I've included GNU/AVR toolchains for Mac and 64 bit Windows and 64 bit Linux, but have not extensively tested the code under Windows or Linux.  Feel free to report any issues you discover.  I'll do my best, when time permits, to investigate them, but I cannot guarantee fixes, timely or otherwise.
+
+## Using MegaTinyIDE
+MegaTinyIDE supports coding for the AvrXMega3 Series of Microcontrollers in C and C++ using the GNU AVR-C++ compiler to generate code.  The file extension you choose for your code file tells MegaTinyIDE how to process the code:
+
+    .c   - Compile as C file using avr-gcc
+    .cpp - Compile as C++ file using avr-g++
+    .s   - Assemble using avr-as and link with avr-ld
+    
+So, this means you'll have to save your source file with the appropriate extension before you can compile, or assemble it.  In addition, you can also write [inline assembly code](https://web.stanford.edu/class/ee281/projects/aut2002/yingzong-mouse/media/GCCAVRInlAsmCB.pdf) in a C/C++ (.c) file.  You'll find a few examples of these different approaches to writing code in the [examples folder](https://github.com/wholder/MegaTinyIDE/tree/master/examples) but these a pretty basic at the moment.
+
+## Credit and Thanks
+
+This project would have been much harder and much less cool without help from the following open source projects, or freely available software.
+
+ - {[Hid4Java](https://github.com/gary-rowe/hid4java) by Gary Rowe (used to talk to USB-based programmers)
+ - [ATTinyCore](https://github.com/SpenceKonde/ATTinyCore) library by Spence Konde (aka Dr. Azzy)
+ - [JSyntaxPane](https://github.com/nordfalk/jsyntaxpane) - Now uses [CppSyntaxPane](https://github.com/wholder/CppSyntaxPane), which is based on JSyntaxPane.
+ - [GraphPaperLayout](http://www.iitk.ac.in/esc101/05Aug/tutorial/uiswing/layout/example-1dot4/GraphPaperLayout.java) by Michael Martak, a grid layout manager that supports row and column spanning
+ - [IntelliJ IDEA from JetBrains](https://www.jetbrains.com/idea/) (my favorite development environment for Java coding. Thanks JetBrains!)
+ - [ANTLR version 4.7.1](http://www.antlr.org) - ALTLRv4 was used to generate the parser for the new (experimental) automatic prototype type generation feature.
+ - [CPP14 Antlr Grammar](https://github.com/antlr/grammars-v4/blob/master/cpp/CPP14.g4) - CPP14 was used as the base, C++ grammer for the automatic prototype type generation feature.
+ - [AVR Logo graphic](https://icon-icons.com/icon/Assembly-AVR/132579) by John Gardner
+
+## MIT License
+
+Copyright 2014-2020 Wayne Holder
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
