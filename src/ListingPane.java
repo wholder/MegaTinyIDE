@@ -281,7 +281,7 @@ public class ListingPane extends JScrollPane {
       private final Border              border = Utility.getBorder(BorderFactory.createLineBorder(Color.gray, 1), 2, 1, 2, 0);
       private final List<JLabel>        lbls = new ArrayList<>();
       private final List<HexTextfield>  vals = new ArrayList<>();
-      private int                       activeBits = 0xFF;
+      private int                       activeBits = 0xFFFFFFFF;
 
       class HexTextfield extends JTextField {
         private final String  format;
@@ -311,11 +311,11 @@ public class ListingPane extends JScrollPane {
       @Override
       public void setEnabled (boolean enabled) {
         for (int ii = 0; ii < lbls.size(); ii++) {
-          boolean active = (activeBits & (1 << (7 - ii))) != 0;
+          boolean active = (activeBits & (1 << (lbls.size() - 1 - ii))) != 0;
           lbls.get(ii).setEnabled(active && enabled);
         }
         for (int ii = 0; ii < vals.size(); ii++) {
-          boolean active = (activeBits & (1 << (7 - ii))) != 0;
+          boolean active = (activeBits & (1 << (lbls.size() - 1 - ii))) != 0;
           vals.get(ii).setEnabled(active && enabled);
         }
       }
