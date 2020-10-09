@@ -49,7 +49,7 @@ So, this means you'll have to save your source file with the appropriate extensi
 
 This project would have been much harder and much less cool without help from the following open source projects, or freely available software.
 
- - {[Hid4Java](https://github.com/gary-rowe/hid4java) by Gary Rowe (used to talk to USB-based programmers)
+ - [Hid4Java](https://github.com/gary-rowe/hid4java) by Gary Rowe (used to talk to USB-based programmers)
  - [ATTinyCore](https://github.com/SpenceKonde/ATTinyCore) library by Spence Konde (aka Dr. Azzy)
  - [JSyntaxPane](https://github.com/nordfalk/jsyntaxpane) - Now uses [CppSyntaxPane](https://github.com/wholder/CppSyntaxPane), which is based on JSyntaxPane.
  - [GraphPaperLayout](http://www.iitk.ac.in/esc101/05Aug/tutorial/uiswing/layout/example-1dot4/GraphPaperLayout.java) by Michael Martak, a grid layout manager that supports row and column spanning
