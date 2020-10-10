@@ -178,11 +178,11 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
     }
   }
 
-  EDBG (Programmer programmer, MegaTinyIDE.ChipInfo chip, boolean program) {
+  EDBG (Programmer prog, MegaTinyIDE.ChipInfo chip, boolean program) {
     hidServices = HidManager.getHidServices();
     this.chip = chip;
     this.program = program;
-    device = hidServices.getHidDevice(programmer.vid, programmer.pid, programmer.serial);
+    device = hidServices.getHidDevice(prog.vid, prog.pid, prog.serial);
     if (device != null) {
       if (device.isOpen()) {
         device.close();
@@ -190,11 +190,11 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
       if (device.open() && device.isOpen()) {
         device.setNonBlocking(true);
       } else {
-        throw new EDBGException("Unable to open programmer");
+        throw new EDBGException("Unable to open programmer: " + prog.name);
       }
       // Connect to target
       startSession();
-        // Configure programmer for UPDI in Debug Mode with 500 kHz clock
+      // Configure programmer for UPDI in Debug Mode with 500 kHz clock
       setVariantUPDI();
       setPhysicalInterfaceUPDI();
       setClockUPDI(UPDIClock);
@@ -208,7 +208,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
         attachDebugger(true);
       }
     } else {
-      throw new EDBGException("Unable to open programmer");
+      throw new EDBGException("Unable to find programmer: " + prog.name);
     }
   }
 

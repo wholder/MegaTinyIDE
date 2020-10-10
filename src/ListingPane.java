@@ -231,7 +231,7 @@ public class ListingPane extends JScrollPane {
               debugger = new EDBG(prog, info, false);
               debugger.resetTarget();
             } catch (Exception ex) {
-              ex.printStackTrace();
+              ide.showErrorDialog("Unable to open Programmer: " + prog.name);
               debugger = null;
               active = false;
               running = false;

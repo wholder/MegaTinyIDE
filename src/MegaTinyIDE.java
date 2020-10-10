@@ -706,8 +706,6 @@ public class MegaTinyIDE extends JFrame implements JSSCPort.RXEvent, ListingPane
         } else {
           showErrorDialog("Programmer not available");
         }
-      } else {
-        showErrorDialog("Target device type not selected");
       }
     });
     /*
@@ -716,53 +714,53 @@ public class MegaTinyIDE extends JFrame implements JSSCPort.RXEvent, ListingPane
     actions.add(readFuses = new JMenuItem("Read/Modify Fuses"));
     readFuses.setToolTipText("Used to Read and optionally Modify Device's Fuse Bytes");
     readFuses.addActionListener(e -> {
-      if (avrChip != null) {
-        ChipInfo info = chipTypes.get(avrChip);
-        EDBG.Programmer prog = EDBG.getProgrammer(programmer);
-        if (prog != null) {
-          EDBG edbg = new EDBG(prog, info, true);
-          try {
-            FusePane fusePane = new FusePane(info);
-            int[] offsets = new int[] {0, 1, 2, 4, 5, 6, 7, 8 /*, 10*/};
-            byte[] fuses = edbg.readFuses(offsets);
-            for (int ii = 0; ii < offsets.length; ii++) {
-              fusePane.setFuse(offsets[ii], fuses[ii]);
-            }
-            if (JOptionPane.showConfirmDialog(this, fusePane, "FUSES", OK_CANCEL_OPTION, PLAIN_MESSAGE) == 0) {
-              List<Integer> changedOffsets = new ArrayList<>();
-              for (int offset : offsets) {
-                if (fusePane.hasChanged(offset)) {
-                  changedOffsets.add(offset);
-                }
-              }
-              if (changedOffsets.size() > 0) {
-                int[] cOffs = changedOffsets.stream().mapToInt(Integer::intValue).toArray();
-                byte[] cFuses = new byte[cOffs.length];
-                for (int ii = 0; ii < cOffs.length; ii++) {
-                  cFuses[ii] = fusePane.getFuse(changedOffsets.get(ii));
-                }
-                StringBuilder msg = new StringBuilder("<html>Confirm update to changed fuses?<br><br>");
-                msg.append("<p style=\"font-family:Courier;font-size:12\">");
-                for (int ii = 0; ii < cOffs.length; ii++) {
-                  msg.append(String.format("Fuse 0x%02X: 0x%02X -> 0x%02X<br>", cOffs[ii], fuses[cOffs[ii]], cFuses[ii]));
-                }
-                msg.append("</p>");
-                msg.append("<br>Note: Changes will not take effect until<br>processor is RESET</html>");
-                if (doWarningDialog(msg.toString())) {
-                  edbg.writeFuses(cOffs, cFuses);
-                }
+      // Use chip type, if selected, else use attiny212 as proxy
+      ChipInfo info = chipTypes.get(avrChip != null ? avrChip : "attiny212");
+      EDBG.Programmer prog = EDBG.getProgrammer(programmer);
+      if (prog != null) {
+        EDBG edbg = null;
+        try {
+          edbg = new EDBG(prog, info, true);
+          FusePane fusePane = new FusePane(info);
+          int[] offsets = new int[] {0, 1, 2, 4, 5, 6, 7, 8 /*, 10*/};
+          byte[] fuses = edbg.readFuses(offsets);
+          for (int ii = 0; ii < offsets.length; ii++) {
+            fusePane.setFuse(offsets[ii], fuses[ii]);
+          }
+          if (JOptionPane.showConfirmDialog(this, fusePane, "FUSES", OK_CANCEL_OPTION, PLAIN_MESSAGE) == 0) {
+            List<Integer> changedOffsets = new ArrayList<>();
+            for (int offset : offsets) {
+              if (fusePane.hasChanged(offset)) {
+                changedOffsets.add(offset);
               }
             }
-          } catch (EDBG.EDBGException ex) {
-            showErrorDialog(ex.getMessage());
-          } finally {
+            if (changedOffsets.size() > 0) {
+              int[] cOffs = changedOffsets.stream().mapToInt(Integer::intValue).toArray();
+              byte[] cFuses = new byte[cOffs.length];
+              for (int ii = 0; ii < cOffs.length; ii++) {
+                cFuses[ii] = fusePane.getFuse(changedOffsets.get(ii));
+              }
+              StringBuilder msg = new StringBuilder("<html>Confirm update to changed fuses?<br><br>");
+              msg.append("<p style=\"font-family:Courier;font-size:12\">");
+              for (int ii = 0; ii < cOffs.length; ii++) {
+                msg.append(String.format("Fuse 0x%02X: 0x%02X -> 0x%02X<br>", cOffs[ii], fuses[cOffs[ii]], cFuses[ii]));
+              }
+              msg.append("</p>");
+              msg.append("<br>Note: Changes will not take effect until<br>processor is RESET</html>");
+              if (doWarningDialog(msg.toString())) {
+                edbg.writeFuses(cOffs, cFuses);
+              }
+            }
+          }
+        } catch (EDBG.EDBGException ex) {
+          showErrorDialog(ex.getMessage());
+        } finally {
+          if (edbg != null) {
             edbg.close();
           }
-        } else {
-          showErrorDialog("Programmer not available");
         }
       } else {
-        showErrorDialog("Target device type not selected");
+        showErrorDialog("Programmer not available");
       }
     });
     /*
@@ -771,35 +769,47 @@ public class MegaTinyIDE extends JFrame implements JSSCPort.RXEvent, ListingPane
     actions.add(idTarget = new JMenuItem("Identify Device"));
     idTarget.setToolTipText("Used to Read and Send Back Device's Signature & Serial Number");
     idTarget.addActionListener(e -> {
-      if (avrChip != null) {
-        ChipInfo info = chipTypes.get(avrChip);
-        EDBG.Programmer prog = EDBG.getProgrammer(programmer);
-        if (prog != null) {
-          EDBG edbg = new EDBG(prog, info, true);
-          try {
-            byte[] sig = edbg.getDeviceSignature();         // 3 bytes
-            String code = String.format("%02X%02X%02X", sig[0], sig[1], sig[2]);
-            ChipInfo chip = chipSignatures.get(code);
-            byte[] ser = edbg.getDeviceSerialNumber();      // 13 bytes
-            StringBuilder tmp = new StringBuilder("<html><p style=\"font-size:14;font-family:Courier\">");
-            tmp.append((chip != null ? "Type:       " + chip.name : "unknown") + "<br><br>");
-            tmp.append(String.format("Signature:  %02X, %02X, %02X<br><br>", sig[0] & 0xFF, sig[1] & 0xFF, sig[2] & 0xFF));
-            tmp.append(String.format("Serial Num: %02X, %02X, %02X, %02X, %02X, %02X, %02X, %02X, %02X, %02X, %02X, %02X, %02X",
-                                     ser[0] & 0xFF, ser[1] & 0xFF, ser[2] & 0xFF, ser[3] & 0xFF, ser[4] & 0xFF,
-                                     ser[5] & 0xFF, ser[6] & 0xFF, ser[7] & 0xFF, ser[8] & 0xFF, ser[9] & 0xFF,
-                                     ser[10] & 0xFF, ser[11] & 0xFF, ser[12]));
-            tmp.append("</p></html>");
-            showMessageDialog(this, tmp.toString(), "Device Info", INFORMATION_MESSAGE);
-          } catch (EDBG.EDBGException ex) {
-            showErrorDialog(ex.getMessage());
-          } finally {
+      // Use chip type, if selected, else use attiny212 as proxy
+      ChipInfo info = chipTypes.get(avrChip != null ? avrChip : "attiny212");
+      EDBG.Programmer prog = EDBG.getProgrammer(programmer);
+      if (prog != null) {
+        EDBG edbg = null;
+        try {
+          edbg = new EDBG(prog, info, true);
+          byte[] sig = edbg.getDeviceSignature();         // 3 bytes
+          String code = String.format("%02X%02X%02X", sig[0], sig[1], sig[2]);
+          ChipInfo chip = chipSignatures.get(code);
+          byte[] ser = edbg.getDeviceSerialNumber();      // 13 bytes
+          String[] columnNames = {"", ""};
+
+          Object[][] data = {
+              {"Type:", (chip != null ? chip.name : "unknown")},
+              {"Signature:", String.format("%02X, %02X, %02X", sig[0] & 0xFF, sig[1] & 0xFF, sig[2] & 0xFF)},
+              {"Serial Num:", String.format("%02X, %02X, %02X, %02X, %02X, %02X, %02X, %02X, %02X, %02X, %02X, %02X, %02X",
+                                            ser[0] & 0xFF, ser[1] & 0xFF, ser[2] & 0xFF, ser[3] & 0xFF, ser[4] & 0xFF,
+                                            ser[5] & 0xFF, ser[6] & 0xFF, ser[7] & 0xFF, ser[8] & 0xFF, ser[9] & 0xFF,
+                                            ser[10] & 0xFF, ser[11] & 0xFF, ser[12])},
+          };
+          JPanel panel = new JPanel(new BorderLayout());
+          //                                                                            ot ol ob or it il ib ir
+          panel.setBorder(Utility.getBorder(BorderFactory.createLineBorder(Color.black), 1, 1, 1, 1, 1, 4, 1, 1));
+          JTable table = new JTable(data, columnNames);
+          table.setFont(Utility.getCodeFont(12));
+          table.getColumnModel().getColumn(0).setPreferredWidth(100);
+          table.getColumnModel().getColumn(1).setPreferredWidth(400);
+          table.setRowHeight(20);
+          panel.add(table, BorderLayout.CENTER);
+          ImageIcon icon = new ImageIcon(Utility.class.getResource("images/info-32x32.png"));
+          showMessageDialog(this, panel, "Device Info", JOptionPane.PLAIN_MESSAGE, icon);
+        } catch (Exception ex) {
+          showErrorDialog(ex.getMessage());
+        } finally {
+          if (edbg != null) {
             edbg.close();
           }
-        } else {
-          showErrorDialog("Programmer not available");
         }
       } else {
-        showErrorDialog("Target device type not selected");
+        showErrorDialog("Programmer not available");
       }
     });
     /*
