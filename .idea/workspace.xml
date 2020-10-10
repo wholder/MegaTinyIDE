@@ -197,7 +197,14 @@
       <option name="project" value="LOCAL" />
       <updated>1602372234168</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Revise README">
+      <created>1602372399777</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1602372399777</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -205,9 +212,9 @@
     <option name="CHECK_NEW_TODO" value="false" />
     <MESSAGE value="Fix README" />
     <MESSAGE value="Regression fix" />
-    <MESSAGE value="Revise README" />
     <MESSAGE value="Misc fixes and improvements" />
-    <option name="LAST_COMMIT_MESSAGE" value="Misc fixes and improvements" />
+    <MESSAGE value="Revise README" />
+    <option name="LAST_COMMIT_MESSAGE" value="Revise README" />
   </component>
   <component name="WindowStateProjectService">
     <state x="246" y="88" width="1651" height="1365" key="#com.intellij.debugger.actions.ViewTextAction" timestamp="1602369797157">
@@ -258,10 +265,10 @@
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="1252" y="688" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.23.2560.1577@0.23.2560.1577" timestamp="1596512936793" />
-    <state x="1084" y="401" width="796" height="902" key="CommitChangelistDialog2" timestamp="1602372228133">
+    <state x="1084" y="401" width="796" height="902" key="CommitChangelistDialog2" timestamp="1602372399643">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state x="1084" y="401" width="796" height="902" key="CommitChangelistDialog2/0.23.2560.1577@0.23.2560.1577" timestamp="1602372228133" />
+    <state x="1084" y="401" width="796" height="902" key="CommitChangelistDialog2/0.23.2560.1577@0.23.2560.1577" timestamp="1602372399643" />
     <state x="822" y="123" width="1340" height="1377" key="DiffContextDialog" timestamp="1601845047279">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
@@ -310,10 +317,10 @@
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="980" y="393" key="SettingsEditor/0.23.2560.1577@0.23.2560.1577" timestamp="1602293566175" />
-    <state x="1050" y="545" key="Vcs.Push.Dialog.v2" timestamp="1602372238297">
+    <state x="1050" y="545" key="Vcs.Push.Dialog.v2" timestamp="1602372401742">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state x="1050" y="545" key="Vcs.Push.Dialog.v2/0.23.2560.1577@0.23.2560.1577" timestamp="1602372238297" />
+    <state x="1050" y="545" key="Vcs.Push.Dialog.v2/0.23.2560.1577@0.23.2560.1577" timestamp="1602372401742" />
     <state x="1051" y="566" key="caller.chooser.dialog" timestamp="1601930515705">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>

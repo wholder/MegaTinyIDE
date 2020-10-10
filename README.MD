@@ -5,7 +5,7 @@
 
 MegaTinyIDE is a simple, GNU-based IDE that's derived from another project of mine called ATTiny10IDE, which I originally wrote to simplify writing code for the ATTiny10 Series Microcontrollers using C. C++ or Assembly language.  This new version is intended to support coding for the new MegaTiny chips (tinyAVR® 1-series and 0-series), such as the ATtiny212, which feature a greatly expanded set of features compared to the original, Atmel-designed ATTiny series chips.
 
-**Note: MegaTinyIDE is still in development and likely has more than a few rough edges.  I addition, it has not yet been fully tested on either Windows, or Linux systems.  Stay tuned for an official release version.**
+**Note: MegaTinyIDE is still in development and likely has more than a few bugs, or rough edges.  In addition, it has not yet been fully tested on either Windows, or Linux systems.  Stay tuned for an official release version.**
 
 ## Debugging Support
 
