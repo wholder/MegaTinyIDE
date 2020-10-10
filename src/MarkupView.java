@@ -140,7 +140,8 @@ class MarkupView extends JPanel {
     JButton back = new JButton("BACK");
     jEditorPane.addHyperlinkListener(new HyperlinkListener() {
       private String tooltip;
-      @Override public void hyperlinkUpdate(HyperlinkEvent ev) {
+      @Override
+      public void hyperlinkUpdate(HyperlinkEvent ev) {
         JEditorPane editor = (JEditorPane) ev.getSource();
         if (ev.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
           String link = ev.getDescription();
@@ -153,9 +154,19 @@ class MarkupView extends JPanel {
               }
             }
           } else {
+            // Check for anchor in link
+            String anchor = null;
+            int off = link.indexOf("#");
+            if (off >= 0) {
+              anchor = link.substring(off + 1);
+              link = link.substring(0, off);
+            }
             Point scrollPosition = scrollPane.getViewport().getViewPosition();
             stack.add(new StackItem(currentPage, scrollPosition));
             loadMarkup(link);
+            if (anchor != null) {
+              jEditorPane.scrollToReference(anchor);
+            }
             back.setVisible(stack.size() > 0);
           }
         } else if (ev.getEventType() == HyperlinkEvent.EventType.ENTERED) {
@@ -182,7 +193,8 @@ class MarkupView extends JPanel {
     back.setVisible(false);
     HTMLEditorKit kit = new MyEditorKit();
     jEditorPane.setEditorKit(kit);
-    // Setup some basic markdown styles
+    // Setup some basic markdown styles (Note: limited to HTML 3.2)
+    // see: https://stackoverflow.com/questions/25147141/why-isnt-my-css-working-right-in-java
     StyleSheet styleSheet = kit.getStyleSheet();
     styleSheet.addRule("body {color:#000; font-family: Bookman, Arial, Helvetica; margin: 4px;}");
     styleSheet.addRule("h1 {font-size: 24px; font-weight: 500;}");
@@ -193,8 +205,8 @@ class MarkupView extends JPanel {
     styleSheet.addRule("h6 {font-size: 10px; font-weight: 500;}");
     styleSheet.addRule("pre {margin-left: 0.5cm;}");
     styleSheet.addRule("ol {margin-left: 1cm;}");
-    styleSheet.addRule("ol li {font-size: 12px; margin-top: 3px; margin-bottom: 3px;}");
-    styleSheet.addRule("ul li {font-size: 12px; margin-top: 3px; margin-bottom: 3px;}");
+    styleSheet.addRule("ol, li {font-size: 12px; padding-bottom: 6px;}");
+    styleSheet.addRule("ul, li {font-size: 12px; padding-bottom: 6px;}");
     styleSheet.addRule("code {font-family: " + codeFont + "; font-size: 12px; margin-bottom: 3px;}");
     styleSheet.addRule("p {font-size: 12px; margin-top: 5px; margin-bottom: 5px;}");
   }

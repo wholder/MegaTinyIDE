@@ -922,7 +922,6 @@ public class MegaTinyIDE extends JFrame implements JSSCPort.RXEvent, ListingPane
         Rectangle bounds = ev.getComponent().getBounds();
         prefs.putInt("window.width", bounds.width);
         prefs.putInt("window.height", bounds.height);
-        System.out.println(bounds.width);
       }
     });
     setVisible(true);
