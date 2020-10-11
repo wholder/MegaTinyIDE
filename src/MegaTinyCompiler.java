@@ -211,7 +211,7 @@ class MegaTinyCompiler {
     tags.put("CHIP", chip);
     tags.put("INTLV", prefs.getBoolean("interleave", true) ? "-S" : "");
     tags.put("SYMT", prefs.getBoolean("symbol_table", true) ? "-t" : "");
-    tags.put("CLOCK", clock != null ? clock : "8000000");
+    tags.put("CLOCK", clock != null ? clock : "20000000");
     tags.put("DEFINES", defines.toString());
     // Build list of files we need to compile and link
     MegaTinyIDE.ChipInfo chipInfo = MegaTinyIDE.chipTypes.get(chip.toLowerCase());
