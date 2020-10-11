@@ -30,20 +30,17 @@ class Utility {
     return base.getAbsolutePath() + fileSep;
   }
 
-  static String[] parse (String line) {
-    List<String> out = new ArrayList<>();
-    if (line.length() > 0) {
-      line = condenseWhitespace(line);
-      String[] tmp = line.split(" ");
-      if (tmp.length > 0) {
-        out.add(tmp[0]);
-        StringTokenizer tok = new StringTokenizer(line.substring(tmp[0].length()).trim(), ",");
-        while (tok.hasMoreTokens()) {
-          out.add(tok.nextToken().trim());
-        }
-      }
+  static String parseClockSpeed (String clock) {
+    clock = clock.replaceAll(",", "").toLowerCase().trim();
+    if (clock.endsWith("mhz")) {
+      return clock.substring(0, clock.length() - 3).trim() + "000000";
+    } else if (clock.endsWith("khz")) {
+      return clock.substring(0, clock.length() - 3).trim() + "000";
+    } else if (clock.endsWith("hz")) {
+      return clock.substring(0, clock.length() - 3).trim();
+    } else {
+      return clock;
     }
-    return out.toArray(new String[0]);
   }
 
   /**

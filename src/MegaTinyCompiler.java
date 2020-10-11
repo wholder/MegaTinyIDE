@@ -180,13 +180,21 @@ class MegaTinyCompiler {
         line = line.substring(0, idx).trim();
       }
       if (line.startsWith("#pragma")) {
-        line = line.substring(7).trim();
-        String[] parts = Utility.parse(line);
-        if (parts.length > 1) {
-          tags.put("PRAGMA." + parts[0].toUpperCase(), parts[1]);
-          switch (parts[0]) {
+        try {
+          line = line.substring(7).trim();
+          String[] parts = Utility.condenseWhitespace(line).split(" ");
+          if (parts.length > 1) {
+            tags.put("PRAGMA." + parts[0].toUpperCase(), parts[1]);
+            switch (parts[0]) {
             case "clock":                                         // Sets F_CPU #define
-              clock = parts[1];
+              clock = Utility.parseClockSpeed(parts.length > 2 ? parts[1] + " " + parts[2] : parts[1]);
+              try {
+                int test = Integer.parseInt(clock);
+              } catch (Exception ex) {
+                warnings.add("Invalid clock speed: \"" + line + "\" (ignored)");
+                clock = null;
+                continue;
+              }
               break;
             case "chip":                                          // Sets -mmcu compile option
               chip = parts[1];
@@ -198,11 +206,14 @@ class MegaTinyCompiler {
               exports.put(parts[1], new Integer[0]);
               break;
             default:
-              warnings.add("Unknown pragma: " + line + " (ignored)");
+              warnings.add("Unknown pragma: \"" + line + "\" (ignored)");
               break;
+            }
+          } else {
+            warnings.add("Invalid pragma: \"" + line + "\" (ignored)");
           }
-        } else {
-          warnings.add("Invalid pragma: " + line + " (ignored)");
+        } catch (Exception ex) {
+          warnings.add("Error parsing: \"" + line + "\" (ignored)");
         }
       } else if (line.startsWith("#include")) {
         LastIncludeLine = Math.max(LastIncludeLine, lineNum);
@@ -218,7 +229,7 @@ class MegaTinyCompiler {
     if (chipInfo == null) {
       throw new IllegalStateException("Unknown chip type: " + chip);
     }
-    out.put("INFO", "chip: " + chip + ", clock: " + tags.get("CLOCK"));
+    out.put("INFO", "chip: " + chip + ", clock: " + String.format("%,d", Integer.parseInt(tags.get("CLOCK"))));
     MegaTinyIDE.ProgressBar progress = null;
     try {
       // Copy contents of "source" pane to source file with appropriate extension for code type

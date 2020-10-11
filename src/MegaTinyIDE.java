@@ -949,7 +949,7 @@ public class MegaTinyIDE extends JFrame implements JSSCPort.RXEvent, ListingPane
       }
       if (line.startsWith("#pragma")) {
         line = line.substring(7).trim();
-        String[] parts = Utility.parse(line);
+        String[] parts = Utility.condenseWhitespace(line).split(" ");
         if (parts.length > 1 && "chip".equals(parts[0])) {
           if (chipTypes.containsKey(parts[1])) {
             avrChip = parts[1];
