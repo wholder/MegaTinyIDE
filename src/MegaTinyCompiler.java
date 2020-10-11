@@ -186,12 +186,11 @@ class MegaTinyCompiler {
             tags.put("PRAGMA." + parts[0].toUpperCase(), parts[1]);
             switch (parts[0]) {
             case "clock":                                         // Sets F_CPU #define
-              clock = Utility.parseClockSpeed(parts.length > 2 ? parts[1] + " " + parts[2] : parts[1]);
               try {
-                int test = Integer.parseInt(clock);
+                String tmp = Utility.parseClockSpeed(parts.length > 2 ? parts[1] + " " + parts[2] : parts[1]);
+                clock = Integer.toString(Integer.parseInt(tmp));
               } catch (Exception ex) {
                 warnings.add("Invalid clock speed: \"" + line + "\" (ignored)");
-                clock = null;
                 continue;
               }
               break;
