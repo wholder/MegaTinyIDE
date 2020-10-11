@@ -169,7 +169,6 @@ class MegaTinyCompiler {
     StringBuilder defines = new StringBuilder();
     Map<String, String> out = new HashMap<>();
     List<String> warnings = new ArrayList<>();
-    Map<String, Integer[]> exports = new LinkedHashMap<>();
     // Process #pragma and #include directives
     int lineNum = 0;
     int LastIncludeLine = 1;
@@ -201,9 +200,6 @@ class MegaTinyCompiler {
               break;
             case "define":                                        // Sets -D compile option to parts[1]
               defines.append("-D").append(parts[1]).append(" ");
-              break;
-            case "xparm":                                         // Defines exported parameter
-              exports.put(parts[1], new Integer[0]);
               break;
             default:
               warnings.add("Unknown pragma: \"" + line + "\" (ignored)");
@@ -430,58 +426,6 @@ class MegaTinyCompiler {
     String buf = Utility.getFile(tmpDir + srcBase + ".hex");
     out.put("HEX", buf);
     out.put("CHIP", chip);
-    // Check if any variables were exported
-    if (exports.size() > 0) {
-      try {
-        String listing = out.get("LST");
-        int idx = listing.indexOf("SYMBOL TABLE:\n");
-        int loadStart = 0, dataStart = 0;
-        if (idx >= 0) {
-          int end = listing.indexOf("\n\n", idx);
-          if (end >= 0 && end > idx) {
-            String symbols = listing.substring(idx + 14, end);
-            StringTokenizer tok = new StringTokenizer(symbols, "\n");
-            while (tok.hasMoreElements()) {
-              String line = Utility.condenseWhitespace(tok.nextToken());
-              String[] parts = line.split("\\s");
-              if (parts.length == 6) {
-                if ("O".equals(parts[2]) && exports.containsKey(parts[5])) {
-                  String tmp = parts[0];
-                  int add = Integer.parseInt(tmp.substring(tmp.length() - 4), 16);
-                  int size = Integer.parseInt(parts[4]);
-                  exports.put(parts[5], new Integer[]{add, size});
-                }
-              } else if (parts.length == 5) {
-                int add = Integer.parseInt(parts[0].toUpperCase().substring(parts[0].length() - 4), 16);
-                switch (parts[4]) {
-                  case "__data_load_start":
-                    loadStart = add;
-                    break;
-                  case "__data_start":
-                    dataStart = add;
-                    break;
-                }
-              }
-            }
-          }
-        }
-        StringBuilder exVars = new StringBuilder();
-        for (String name : exports.keySet()) {
-          Integer[] parts = exports.get(name);
-          if (parts != null && parts.length == 2) {
-            int add = parts[0] - dataStart + loadStart;
-            int size = parts[1];
-            exVars.append(name).append(":").append(Integer.toHexString(add)).append(":").append(size).append("\n");
-          } else {
-            warnings.add("Data for #pragma xparm: " + name + " not found in .data section - " +
-                "declare with __attribute__ ((section (\".data\")))");
-          }
-        }
-        out.put("XPARMS", exVars.toString());
-      } catch (Exception ex) {
-        ex.printStackTrace();
-      }
-    }
     // Check if any warnings were generated
     if (warnings.size() > 0) {
       StringBuilder tmp = new StringBuilder("Warnings:\n");

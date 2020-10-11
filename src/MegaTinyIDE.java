@@ -600,7 +600,6 @@ public class MegaTinyIDE extends JFrame implements JSSCPort.RXEvent, ListingPane
                 tmp.append(compileMap.get("WARN"));
                 tmp.append("\n\n");
               }
-              //String exportParms = compileMap.get("XPARMS");
               tmp.append( compileMap.get("SIZE"));
               tmp.append(compileMap.get("LST"));
               String listing = tmp.toString();
