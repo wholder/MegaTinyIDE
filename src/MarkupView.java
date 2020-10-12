@@ -241,7 +241,9 @@ class MarkupView extends JPanel {
     InputStream fis = MarkupView.class.getClassLoader().getResourceAsStream(file);
     if (fis != null) {
       byte[] data = new byte[fis.available()];
-      fis.read(data);
+      if (fis.read(data) != data.length) {
+        throw new IOException("getResource() not all bytes read from file: " + file);
+      }
       fis.close();
       return data;
     }

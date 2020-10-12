@@ -1,5 +1,5 @@
   /*
-   *  Test code to support development of Avr8Test - used to decode various AVR command packets and
+   *  Test code to support future development - used to decode various AVR command packets and
    *  error code and convert them into human-readable messages.
    */
 public class AvrPacketDecoder {

@@ -22,10 +22,10 @@ class Utility {
   private static final String   EndMarker   = "\n//:End Embedded Markdown Data";
   private static final String   fileSep =  System.getProperty("file.separator");
 
-  static String createDir (String path) {
+  static String createDir (String path) throws IOException {
     File base = (new File(path));
-    if (!base.exists()) {
-      base.mkdirs();
+    if (!base.exists() && !base.mkdirs()) {
+      throw new IOException("createDir() unable to create directory: " + base.getAbsolutePath());
     }
     return base.getAbsolutePath() + fileSep;
   }
@@ -37,7 +37,7 @@ class Utility {
     } else if (clock.endsWith("khz")) {
       return clock.substring(0, clock.length() - 3).trim() + "000";
     } else if (clock.endsWith("hz")) {
-      return clock.substring(0, clock.length() - 3).trim();
+      return clock.substring(0, clock.length() - 2).trim();
     } else {
       return clock;
     }
@@ -59,6 +59,20 @@ class Utility {
     return buf.toString().trim();
   }
 
+  static String condenseTabs (String text) {
+    StringBuilder tmp = new StringBuilder();
+    boolean lastTab = false;
+    for (char cc : text.toCharArray()) {
+      boolean isTab = cc == '\t';
+      if (isTab && lastTab) {
+        continue;
+      }
+      tmp.append(cc);
+      lastTab = isTab;
+    }
+    return tmp.toString();
+  }
+
   static void saveFile (File file, String text) {
     try {
       FileOutputStream out = new FileOutputStream(file);
@@ -78,7 +92,9 @@ class Utility {
   static String getFile (File file) throws IOException {
     FileInputStream fis = new FileInputStream(file);
     byte[] data = new byte[fis.available()];
-    fis.read(data);
+    if (fis.read(data) != data.length) {
+      throw new IOException("getFile() not all bytes read from file: " + file.getName());
+    }
     fis.close();
     return new String(data, StandardCharsets.UTF_8);
   }
@@ -92,7 +108,9 @@ class Utility {
     }
     if (fis != null) {
       byte[] data = new byte[fis.available()];
-      fis.read(data);
+      if (fis.read(data) != data.length) {
+        throw new IOException("getFile() not all bytes read from file: " + file);
+      }
       fis.close();
       return new String(data, StandardCharsets.UTF_8);
     }
@@ -103,44 +121,54 @@ class Utility {
    * Recursively remove files and directories from directory "dir"
    * @param dir starting directory
    */
-  static void removeFiles (File dir) {
+  static void removeFiles (File dir) throws IOException {
     final File[] files = dir.listFiles();
     if (files != null) {
       for (File file : files) {
         if (file.isDirectory()) {
           removeFiles(file);
         }
-        file.delete();
+        if (!file.delete()) {
+          throw new IOException("removeFiles() unable to delete file: " + file.getName());
+        }
       }
     }
   }
 
-  static Properties getResourceMap (String file) throws IOException {
+  static Map<String,String> getResourceMap (String file) throws IOException {
     Properties prop = new Properties();
     InputStream fis = Utility.class.getClassLoader().getResourceAsStream(file);
     if (fis != null) {
       prop.load(fis);
       fis.close();
     }
-    return prop;
+    return propertiesToMap(prop);
   }
 
-  static Properties getResourceMap (URL url) throws IOException {
+  static Map<String,String> getResourceMap (URL url) throws IOException {
     Properties prop = new Properties();
     HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
     InputStream fis = conn.getInputStream();
     prop.load(fis);
     fis.close();
-    return prop;
+    return propertiesToMap(prop);
   }
 
-  static String replaceTags (String src, Map tags) {
+  private static Map<String,String> propertiesToMap (Properties prop) {
+    Map<String,String> map = new TreeMap<>();
+    for (String key : prop.stringPropertyNames()) {
+      map.put(key, prop.getProperty(key));
+    }
+    return map;
+  }
+
+  static String replaceTags (String src, Map<String,String> tags) {
     Pattern pat = Pattern.compile("(\\*\\[(.*?)]\\*)");
     Matcher mat = pat.matcher(src);
     StringBuffer buf = new StringBuffer();
     while (mat.find()) {
       String tag = mat.group(2);
-      String rep = (String) tags.get(tag);
+      String rep = tags.get(tag);
       if (rep == null) {
         throw new IllegalStateException("Utility.replaceTags() Tag '" + tag + "' not defined");
       }
@@ -171,33 +199,18 @@ class Utility {
     }).collect(Collectors.joining());
   }
 
-  static void runCmd (Process proc, MegaTinyIDE.MyTextPane pane) {
-    Stream.of(proc.getErrorStream(), proc.getInputStream()).parallel().map((InputStream isForOutput) -> {
-      StringBuilder output = new StringBuilder();
-      try (
-          BufferedReader br = new BufferedReader(new InputStreamReader(isForOutput))) {
-        String line;
-        while ((line = br.readLine()) != null) {
-          pane.append(line);
-          pane.append("\n");
-        }
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
-      return output;
-    }).collect(Collectors.joining());
-  }
-
   private static void copyResourceToDir (String fName, String tmpDir) throws IOException {
     InputStream fis = Utility.class.getClassLoader().getResourceAsStream(fName);
     tmpDir = tmpDir.endsWith("/") ? tmpDir : tmpDir + "/";
     if (fis != null) {
       File path = new File(tmpDir);
-      if (!path.exists()) {
-        path.mkdirs();
+      if (!path.exists() && !path.mkdirs()) {
+        throw new IOException("copyResourceToDir() unable to create path: " + path.getAbsolutePath());
       }
       byte[] data = new byte[fis.available()];
-      fis.read(data);
+      if (fis.read(data) != data.length) {
+        throw new IOException("getFile() not all bytes read from file: " + path.getPath());
+      }
       fis.close();
       File file = new File(tmpDir + (new File(fName)).getName());
       FileOutputStream fOut = new FileOutputStream(file);
@@ -256,7 +269,6 @@ class Utility {
       line = line.replace(srcDir, "");
       int idx = line.indexOf(":");
       if (idx > 0) {
-        ;
         line = line.substring(idx + 1).trim();
       }
       String[] parts = line.split("\\s.");
@@ -341,7 +353,9 @@ class Utility {
       if (in != null) {
         int size = in.available();
         byte[] data = new byte[size];
-        in.read(data);
+        if (in.read(data) != data.length) {
+          throw new IOException("crcZipfile() not all bytes read");
+        }
         crc.update(data);
       }
     } catch (Exception ex) {

@@ -1,15 +1,15 @@
 import java.awt.*;
-import java.util.Properties;
+import java.util.Map;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
 import static javax.swing.JOptionPane.showMessageDialog;
 
 class ParmDialog extends JDialog {
-  private static final double[]   lblWeights = {0.6, 0.3, 0.1};
-  private static Properties       fuseInfo;
-  private boolean                 cancelled = true;
-  ParmPanel[]                     fuseSet;
+  private static final double[]       lblWeights = {0.6, 0.3, 0.1};
+  private static Map<String,String>   fuseInfo;
+  private boolean                     cancelled = true;
+  ParmPanel[]                         fuseSet;
 
   static {
     try {

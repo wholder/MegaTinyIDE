@@ -195,6 +195,7 @@ class MegaTinyCompiler {
               }
               break;
             case "chip":                                          // Sets -mmcu compile option
+            case "target":
               chip = parts[1];
               break;
             case "define":                                        // Sets -D compile option to parts[1]

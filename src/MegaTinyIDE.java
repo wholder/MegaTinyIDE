@@ -69,21 +69,20 @@ public class MegaTinyIDE extends JFrame implements JSSCPort.RXEvent, ListingPane
   private final JMenuItem         saveAsMenu;
   private final JMenuItem         newMenu;
   private final RadioMenu         targetMenu;
-  private final String            tmpDir;
-  private final String            tmpExe;
   private final JMenuItem         build;
   private final JMenuItem         progFlash;
   private final JMenuItem         readFuses;
   private final JMenuItem         idTarget;
   private final JMenu             progMenu;
+  private final Preferences       prefs = Preferences.userRoot().node(this.getClass().getName());
+  private String                  tmpDir, tmpExe;
   private String                  programmer;
   private String                  avrChip;
   private String                  editFile;
   private boolean                 directHex, compiled, codeDirty, showDebugger;
   private File                    cFile;
-  private final Preferences       prefs = Preferences.userRoot().node(this.getClass().getName());
   private Map<String, String>     compileMap;
-  private Properties              versionInfo;
+  private Map<String, String>     versionInfo;
 
   {
     try {
@@ -251,6 +250,7 @@ public class MegaTinyIDE extends JFrame implements JSSCPort.RXEvent, ListingPane
     prefs.putBoolean("gen_prototypes", prefs.getBoolean("gen_prototypes", false));
     prefs.putBoolean("interleave", prefs.getBoolean("interleave", false));
     prefs.putBoolean("symbol_table", prefs.getBoolean("symbol_table", false));
+    prefs.putBoolean("vector_names", prefs.getBoolean("vector_names", true));
     prefs.putBoolean("enable_preprocessing", prefs.getBoolean("enable_preprocessing", false));
     prefs.putBoolean("developer_features", prefs.getBoolean("developer_features", false));
   }
@@ -327,6 +327,7 @@ public class MegaTinyIDE extends JFrame implements JSSCPort.RXEvent, ListingPane
     items.add(new ParmDialog.ParmItem("Generate Prototypes (Experimental){*[GEN_PROTOS]*}", prefs.getBoolean("gen_prototypes", true)));
     items.add(new ParmDialog.ParmItem("Interleave Source and ASM{*[INTERLEAVE]*}",  prefs.getBoolean("interleave", true)));
     items.add(new ParmDialog.ParmItem("Include Symbol Table in Listing{*[SYMTABLE]*}",  prefs.getBoolean("symbol_table", false)));
+    items.add(new ParmDialog.ParmItem("Add Vector Names in Listing{*[VECNAMES]*}",  prefs.getBoolean("vector_names", false)));
     boolean devFeatures = (modifiers & InputEvent.CTRL_MASK) != 0;
     if (devFeatures) {
       items.add(new ParmDialog.ParmItem("Enable Preprocessing (Developer){*[PREPROCESS]*}", prefs.getBoolean("enable_preprocessing", false)));
@@ -340,9 +341,10 @@ public class MegaTinyIDE extends JFrame implements JSSCPort.RXEvent, ListingPane
       prefs.putBoolean("gen_prototypes",          parmSet[0].value);
       prefs.putBoolean("interleave",              parmSet[1].value);
       prefs.putBoolean("symbol_table",            parmSet[2].value);
+      prefs.putBoolean("vector_names",            parmSet[3].value);
       if (devFeatures) {
-        prefs.putBoolean("enable_preprocessing",  parmSet[3].value);
-        prefs.putBoolean("developer_features",    parmSet[4].value);
+        prefs.putBoolean("enable_preprocessing",  parmSet[4].value);
+        prefs.putBoolean("developer_features",    parmSet[5].value);
       }
     }
   }
@@ -350,8 +352,13 @@ public class MegaTinyIDE extends JFrame implements JSSCPort.RXEvent, ListingPane
   private MegaTinyIDE () {
     super("ATTinyC");
     // Setup temp directory for code compilation and toolchain
-    tmpDir = Utility.createDir(tempBase + "avr-temp-code");
-    tmpExe = Utility.createDir(tempBase + "avr-toolchain");
+    try {
+      tmpDir = Utility.createDir(tempBase + "avr-temp-code");
+      tmpExe = Utility.createDir(tempBase + "avr-toolchain");
+    } catch (IOException ex) {
+      showErrorDialog("Unable to create temporary working directories");
+      System.exit(1);
+    }
     // Load version info
     try {
       versionInfo = Utility.getResourceMap("version.props");
@@ -377,7 +384,7 @@ public class MegaTinyIDE extends JFrame implements JSSCPort.RXEvent, ListingPane
     MarkupView howToPane = new MarkupView("documentation/index.md");
     tabPane.addTab("How To", null, howToPane, "This is the documentation page");
     tabPane.addTab("Source Code", null, codePane, "This is the editor pane where you enter source code");
-    listPane = new ListingPane(tabPane, "Listing", "Select this pane to view the assembler listing", this);
+    listPane = new ListingPane(tabPane, "Listing", "Select this pane to view the assembler listing", this, prefs);
     listPane.getEditPane().addHyperlinkListener(ev -> {
       if (ev.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
         String [] tmp = ev.getDescription().split(":");
@@ -411,15 +418,15 @@ public class MegaTinyIDE extends JFrame implements JSSCPort.RXEvent, ListingPane
       // Check for new version available
       // https://github.com/wholder/MegaTinyIDE/blob/master/resources/version.props
       try {
-        Properties latest = Utility.getResourceMap(new URL(VERSION_URL));
-        String oldVersion = versionInfo.getProperty("version");
-        String newVersion = latest.getProperty("version");
+        Map<String,String> latest = Utility.getResourceMap(new URL(VERSION_URL));
+        String oldVersion = versionInfo.get("version");
+        String newVersion = latest.get("version");
         if (oldVersion != null && newVersion != null) {
           try {
             float oldV = Float.parseFloat(oldVersion);
             float newV = Float.parseFloat(newVersion);
             if (newV > oldV) {
-              String status = latest.getProperty("status");
+              String status = latest.get("status");
               String version = newVersion + (status != null && status.length() > 0 ? " " + status : "");
               ImageIcon icon = new ImageIcon(Utility.class.getResource("images/info-32x32.png"));
               if (JOptionPane.showConfirmDialog(this, "<html>A new version (" + version + ") is available!<br>" +
@@ -1035,7 +1042,7 @@ public class MegaTinyIDE extends JFrame implements JSSCPort.RXEvent, ListingPane
 
   private void reloadToolchain () {
     try {
-      loadToolchain("toolchains/combined.zip");
+      new ToolchainLoader(this, "toolchains/combined.zip", tmpExe);
       prefs.remove("reload_toolchain");
       prefs.putLong("toolchain-crc", Utility.crcTree(tmpExe));
     } catch (Exception ex) {
@@ -1043,10 +1050,6 @@ public class MegaTinyIDE extends JFrame implements JSSCPort.RXEvent, ListingPane
       selectTab(Tab.LIST);
       listPane.setText("Unable to Install Toolchain:\n" + ex.toString());
     }
-  }
-
-  private void loadToolchain (String src) {
-    new ToolchainLoader(this, src, tmpExe);
   }
 
   class ToolchainLoader implements Runnable  {
@@ -1128,6 +1131,7 @@ public class MegaTinyIDE extends JFrame implements JSSCPort.RXEvent, ListingPane
         }
       } catch (Exception ex) {
         ex.printStackTrace();
+        showErrorDialog("ToolchainLoader.run() exception " + ex.getMessage());
       }
       progress.close();
     }

@@ -1,13 +1,16 @@
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
+import java.io.IOException;
 import java.util.*;
 import java.util.List;
+import java.util.prefs.Preferences;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,6 +34,7 @@ public class ListingPane extends JScrollPane {
   private final Map<Integer,Integer>  lineNumToAddress = new TreeMap<>();
   private final Map<Integer,Integer>  addressToLineNum = new HashMap<>();
   private final List<DebugListener>   debugListeners = new ArrayList<>();
+  private final Preferences           prefs;
   private final int                   lineHeight;
   StatusPane                          statusPane;
   JPanel                              outerPane;
@@ -48,9 +52,10 @@ public class ListingPane extends JScrollPane {
     debugListeners.add(debugListener);
   }
 
-  ListingPane (JTabbedPane tabs, String tabName, String hoverText, MegaTinyIDE ide) {
+  ListingPane (JTabbedPane tabs, String tabName, String hoverText, MegaTinyIDE ide, Preferences prefs) {
     getVerticalScrollBar().setUnitIncrement(16);
     this.ide = ide;
+    this.prefs = prefs;
     debugPane = new JTextPane();
     // Kludge needed to allow horizontal scrolling, which is needed to keep breakpoints on proper lines
     JPanel panel = new JPanel(new BorderLayout());
@@ -143,6 +148,19 @@ public class ListingPane extends JScrollPane {
     debugPane.setContentType("text/lst");
     breakLines.clear();
     lineNumToAddress.clear();
+    Map<String,String> vecs = null;
+    int maxVector = 0;
+    if (prefs.getBoolean("vector_names", false)) {
+      try {
+        MegaTinyIDE.ChipInfo chip = ide.getChipInfo(ide.getAvrChip());
+        vecs = Utility.getResourceMap("vecset" + chip.get("vecset") + ".props");
+        for (String key : vecs.keySet()) {
+          maxVector = Math.max(maxVector, Integer.parseInt(key));
+        }
+      } catch (IOException ex) {
+        ide.showErrorDialog("Unable to load vector set");
+      }
+    }
     StringBuilder buf = new StringBuilder();
     String[] lines = list.split("\n");
     boolean lastBlank = false;
@@ -160,19 +178,16 @@ public class ListingPane extends JScrollPane {
         int address = Integer.parseInt(hexAdd, 16);
         lineNumToAddress.put(lineNum, address);
         addressToLineNum.put(address, lineNum);
-      } else {
-        // 	SET_BIT(VPORTA.DIR, 3);							// Set bit 3 in PORTA (pin 7) to output
-        StringBuilder tmp = new StringBuilder();
-        boolean lastTab = false;
-        for (char cc : line.toCharArray()) {
-          boolean isTab = cc == '\t';
-          if (isTab && lastTab) {
-            continue;
+        if (vecs != null) {
+          if (address <= maxVector * 2) {
+            String vecName = vecs.get(Integer.toString(address / 2));
+            vecName = vecName != null && vecName.length() > 0 ? vecName : "not used";
+            // Add vector name to end of line
+            line = line + " - " + vecName;
           }
-          tmp.append(cc);
-          lastTab = isTab;
         }
-        line = tmp.toString();
+      } else {
+        line = Utility.condenseTabs(line);
       }
       lineNum++;
       buf.append(line);
@@ -208,11 +223,13 @@ public class ListingPane extends JScrollPane {
     private Thread                  runThread;
     private int                     portMask;
 
-    {
-      portMasks.put( 8, 0x0000CF);
-      portMasks.put(14, 0x000FFF);
-      portMasks.put(20, 0x0F3FFF);
-      portMasks.put(24, 0x3FFFFF);
+    {                                   //      Port C              Port B              Port A
+                                        // |7|6|5|4|3|2|1|0|   |7|6|5|4|3|2|1|0|   |7|6|5|4|3|2|1|0|
+      portMasks.put( 8, 0x0000CF);      //  - - - - - - - -     - - - - - - - -     x x - - x x x x
+      portMasks.put(14, 0x000FFF);      //  - - - - - - - -     - - - - x x x x     x x x x x x x x
+      portMasks.put(20, 0x0F3FFF);      //  - - - - x x x x     - - x x x x x x     x x x x x x x x
+      portMasks.put(24, 0x3FFFFF);      //  - - x x x x x x     x x x x x x x x     x x x x x x x x
+      // Note: 'x' indicates usable pins
     }
 
     public void setActive (boolean active) {
@@ -278,21 +295,23 @@ public class ListingPane extends JScrollPane {
     }
 
     class HexPanel extends JPanel {
-      private final Border              border = Utility.getBorder(BorderFactory.createLineBorder(Color.gray, 1), 2, 1, 2, 0);
+      private final TitledBorder        titleBorder;
       private final List<JLabel>        lbls = new ArrayList<>();
       private final List<HexTextfield>  vals = new ArrayList<>();
       private int                       activeBits = 0xFFFFFFFF;
 
       class HexTextfield extends JTextField {
-        private final String  format;
-        private int           value;
+        private final Border  activeBorder = BorderFactory.createLineBorder(Color.black, 1);
+        private final Border  inactiveBorder = BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1);
+        private final String      format;
+        private int               value;
 
         HexTextfield (int width) {
           setEditable(false);
           format = "%0" + width + "X";
           setColumns(width);
           setHorizontalAlignment(CENTER);
-          setBorder(border);
+          setEnabled(false);
           setText(String.format(format, 0));
         }
 
@@ -300,6 +319,12 @@ public class ListingPane extends JScrollPane {
           setBackground(showChange && value != this.value ? CHANGED_COLOR : Color.white);
           this.value = value;
           setText(String.format(format, value));
+        }
+
+        @Override
+        public void setEnabled (boolean enabled) {
+          super.setEnabled(enabled);
+          setBorder(Utility.getBorder(enabled ? activeBorder : inactiveBorder, 2, 1, 2, 0));
         }
       }
 
@@ -313,11 +338,9 @@ public class ListingPane extends JScrollPane {
         for (int ii = 0; ii < lbls.size(); ii++) {
           boolean active = (activeBits & (1 << (lbls.size() - 1 - ii))) != 0;
           lbls.get(ii).setEnabled(active && enabled);
-        }
-        for (int ii = 0; ii < vals.size(); ii++) {
-          boolean active = (activeBits & (1 << (lbls.size() - 1 - ii))) != 0;
           vals.get(ii).setEnabled(active && enabled);
         }
+        titleBorder.setTitleColor(active ? Color.BLACK : Color.GRAY);
       }
 
       class BinTextfield extends HexTextfield {
@@ -329,8 +352,9 @@ public class ListingPane extends JScrollPane {
       HexPanel (String title, int rows, int cols, String[] fieldLabels, String[] tooltips, int fieldWidth) {
         super(new GridLayout(rows, 2 * cols));
         setBackground(STATUS_BACK);
-        // Padding                                                          ot ol ob or it il ib ir
-        setBorder(Utility.getBorder(BorderFactory.createTitledBorder(title), 2, 2, 0, 2, 1, 3, 0, 3));
+        titleBorder = BorderFactory.createTitledBorder(title);
+        // Padding                              ot ol ob or it il ib ir
+        setBorder(Utility.getBorder(titleBorder, 2, 2, 0, 2, 1, 3, 0, 3));
         Font font = Utility.getCodeFont(FONT_SIZE);
         for (int row = 0; row < rows; row++) {
           for (int col = 0; col < cols; col++) {
