@@ -783,20 +783,22 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
           String code = String.format("%02X%02X%02X", sig[0], sig[1], sig[2]);
           ChipInfo chip = chipSignatures.get(code);
           byte[] ser = edbg.getDeviceSerialNumber();      // 13 bytes
-          String[] columnNames = {"", ""};
-
           Object[][] data = {
               {"Type:", (chip != null ? chip.name : "unknown")},
+              {"Pins:", chip.get("pins") + " pins"},
               {"Signature:", String.format("%02X, %02X, %02X", sig[0] & 0xFF, sig[1] & 0xFF, sig[2] & 0xFF)},
               {"Serial Num:", String.format("%02X, %02X, %02X, %02X, %02X, %02X, %02X, %02X, %02X, %02X, %02X, %02X, %02X",
                                             ser[0] & 0xFF, ser[1] & 0xFF, ser[2] & 0xFF, ser[3] & 0xFF, ser[4] & 0xFF,
                                             ser[5] & 0xFF, ser[6] & 0xFF, ser[7] & 0xFF, ser[8] & 0xFF, ser[9] & 0xFF,
                                             ser[10] & 0xFF, ser[11] & 0xFF, ser[12])},
+              {"Flash:", chip.get("flash") + "k bytes"},
+              {"EEProm:", chip.get("eeprom") + " bytes"},
+              {"SRam:", chip.get("sram") + " bytes"},
           };
           JPanel panel = new JPanel(new BorderLayout());
           //                                                                            ot ol ob or it il ib ir
           panel.setBorder(Utility.getBorder(BorderFactory.createLineBorder(Color.black), 1, 1, 1, 1, 1, 4, 1, 1));
-          JTable table = new JTable(data, columnNames);
+          JTable table = new JTable(data, new String[] {"", ""});
           table.setFont(Utility.getCodeFont(12));
           table.getColumnModel().getColumn(0).setPreferredWidth(100);
           table.getColumnModel().getColumn(1).setPreferredWidth(400);

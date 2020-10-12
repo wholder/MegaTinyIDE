@@ -11,7 +11,10 @@
   <component name="ChangeListManager">
     <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.MD" beforeDir="false" afterPath="$PROJECT_DIR$/README.MD" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/attinys.props" beforeDir="false" afterPath="$PROJECT_DIR$/resources/attinys.props" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/EDBG.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/EDBG.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MegaTinyIDE.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MegaTinyIDE.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,6 +73,13 @@
     </key>
   </component>
   <component name="RunManager" selected="Application.MegaTinyIDE">
+    <configuration name="EDBG" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="EDBG" />
+      <module name="MegaTinyIDE" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="MarkupView" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="MarkupView" />
       <module name="MegaTinyIDE" />
@@ -104,26 +114,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ToolchainCombiner" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="tools.ToolchainCombiner" />
-      <module name="MegaTinyIDE" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="tools.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Application.MegaTinyIDE" />
+        <item itemvalue="Application.EDBG" />
         <item itemvalue="Application.MegaTinyCompiler" />
         <item itemvalue="Application.MarkupView" />
         <item itemvalue="Application.Test" />
-        <item itemvalue="Application.ToolchainCombiner" />
       </list>
     </recent_temporary>
   </component>
@@ -255,7 +252,14 @@
       <option name="project" value="LOCAL" />
       <updated>1602528718907</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="Revise README">
+      <created>1602529470246</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1602529470246</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -274,12 +278,12 @@
     <MESSAGE value="Fix README" />
     <MESSAGE value="Regression fix" />
     <MESSAGE value="Misc fixes and improvements" />
-    <MESSAGE value="Revise README" />
     <MESSAGE value="Fix default clock speed" />
     <MESSAGE value="Improve #pragma parsing" />
     <MESSAGE value="Add option to display vector names in listing" />
     <MESSAGE value="Revise screenshots" />
-    <option name="LAST_COMMIT_MESSAGE" value="Revise screenshots" />
+    <MESSAGE value="Revise README" />
+    <option name="LAST_COMMIT_MESSAGE" value="Revise README" />
   </component>
   <component name="WindowStateProjectService">
     <state x="246" y="88" width="1651" height="1365" key="#com.intellij.debugger.actions.ViewTextAction" timestamp="1602369797157">
@@ -330,10 +334,10 @@
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="1252" y="688" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.23.2560.1577@0.23.2560.1577" timestamp="1596512936793" />
-    <state x="1084" y="401" width="796" height="902" key="CommitChangelistDialog2" timestamp="1602528718752">
+    <state x="1084" y="401" width="796" height="902" key="CommitChangelistDialog2" timestamp="1602529470103">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state x="1084" y="401" width="796" height="902" key="CommitChangelistDialog2/0.23.2560.1577@0.23.2560.1577" timestamp="1602528718752" />
+    <state x="1084" y="401" width="796" height="902" key="CommitChangelistDialog2/0.23.2560.1577@0.23.2560.1577" timestamp="1602529470103" />
     <state x="822" y="123" width="1340" height="1377" key="DiffContextDialog" timestamp="1602450393001">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
@@ -346,46 +350,46 @@
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="1601" y="401" width="729" height="678" key="Github.UntrackedFilesDialog/0.23.2560.1577@0.23.2560.1577" timestamp="1602205585314" />
-    <state width="1516" height="294" key="GridCell.Tab.0.bottom" timestamp="1602528345384">
+    <state width="1516" height="294" key="GridCell.Tab.0.bottom" timestamp="1602535063240">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1516" height="294" key="GridCell.Tab.0.bottom/0.23.2560.1577@0.23.2560.1577" timestamp="1602528345384" />
-    <state width="1516" height="294" key="GridCell.Tab.0.center" timestamp="1602528345383">
+    <state width="1516" height="294" key="GridCell.Tab.0.bottom/0.23.2560.1577@0.23.2560.1577" timestamp="1602535063240" />
+    <state width="1516" height="294" key="GridCell.Tab.0.center" timestamp="1602535063239">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1516" height="294" key="GridCell.Tab.0.center/0.23.2560.1577@0.23.2560.1577" timestamp="1602528345383" />
-    <state width="1516" height="294" key="GridCell.Tab.0.left" timestamp="1602528345382">
+    <state width="1516" height="294" key="GridCell.Tab.0.center/0.23.2560.1577@0.23.2560.1577" timestamp="1602535063239" />
+    <state width="1516" height="294" key="GridCell.Tab.0.left" timestamp="1602535063239">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1516" height="294" key="GridCell.Tab.0.left/0.23.2560.1577@0.23.2560.1577" timestamp="1602528345382" />
-    <state width="1516" height="294" key="GridCell.Tab.0.right" timestamp="1602528345383">
+    <state width="1516" height="294" key="GridCell.Tab.0.left/0.23.2560.1577@0.23.2560.1577" timestamp="1602535063239" />
+    <state width="1516" height="294" key="GridCell.Tab.0.right" timestamp="1602535063239">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1516" height="294" key="GridCell.Tab.0.right/0.23.2560.1577@0.23.2560.1577" timestamp="1602528345383" />
-    <state width="1516" height="341" key="GridCell.Tab.1.bottom" timestamp="1602528087230">
+    <state width="1516" height="294" key="GridCell.Tab.0.right/0.23.2560.1577@0.23.2560.1577" timestamp="1602535063239" />
+    <state width="1516" height="341" key="GridCell.Tab.1.bottom" timestamp="1602533789224">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1516" height="341" key="GridCell.Tab.1.bottom/0.23.2560.1577@0.23.2560.1577" timestamp="1602528087230" />
-    <state width="1516" height="341" key="GridCell.Tab.1.center" timestamp="1602528087230">
+    <state width="1516" height="341" key="GridCell.Tab.1.bottom/0.23.2560.1577@0.23.2560.1577" timestamp="1602533789224" />
+    <state width="1516" height="341" key="GridCell.Tab.1.center" timestamp="1602533789223">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1516" height="341" key="GridCell.Tab.1.center/0.23.2560.1577@0.23.2560.1577" timestamp="1602528087230" />
-    <state width="1516" height="341" key="GridCell.Tab.1.left" timestamp="1602528087229">
+    <state width="1516" height="341" key="GridCell.Tab.1.center/0.23.2560.1577@0.23.2560.1577" timestamp="1602533789223" />
+    <state width="1516" height="341" key="GridCell.Tab.1.left" timestamp="1602533789223">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1516" height="341" key="GridCell.Tab.1.left/0.23.2560.1577@0.23.2560.1577" timestamp="1602528087229" />
-    <state width="1516" height="341" key="GridCell.Tab.1.right" timestamp="1602528087230">
+    <state width="1516" height="341" key="GridCell.Tab.1.left/0.23.2560.1577@0.23.2560.1577" timestamp="1602533789223" />
+    <state width="1516" height="341" key="GridCell.Tab.1.right" timestamp="1602533789224">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1516" height="341" key="GridCell.Tab.1.right/0.23.2560.1577@0.23.2560.1577" timestamp="1602528087230" />
+    <state width="1516" height="341" key="GridCell.Tab.1.right/0.23.2560.1577@0.23.2560.1577" timestamp="1602533789224" />
     <state x="980" y="393" key="SettingsEditor" timestamp="1602293566175">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="980" y="393" key="SettingsEditor/0.23.2560.1577@0.23.2560.1577" timestamp="1602293566175" />
-    <state x="1050" y="545" key="Vcs.Push.Dialog.v2" timestamp="1602528720541">
+    <state x="1050" y="545" key="Vcs.Push.Dialog.v2" timestamp="1602529471731">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state x="1050" y="545" key="Vcs.Push.Dialog.v2/0.23.2560.1577@0.23.2560.1577" timestamp="1602528720541" />
+    <state x="1050" y="545" key="Vcs.Push.Dialog.v2/0.23.2560.1577@0.23.2560.1577" timestamp="1602529471731" />
     <state x="1051" y="566" key="caller.chooser.dialog" timestamp="1601930515705">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
@@ -402,10 +406,10 @@
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="1546" y="197" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.23.2560.1577@0.23.2560.1577" timestamp="1596513829459" />
-    <state x="1335" y="282" width="1077" height="721" key="find.popup" timestamp="1602492044776">
+    <state x="1335" y="282" width="1077" height="721" key="find.popup" timestamp="1602534084959">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state x="1335" y="282" width="1077" height="721" key="find.popup/0.23.2560.1577@0.23.2560.1577" timestamp="1602492044776" />
+    <state x="1335" y="282" width="1077" height="721" key="find.popup/0.23.2560.1577@0.23.2560.1577" timestamp="1602534084959" />
     <state x="895" y="434" key="new project wizard" timestamp="1601861891668">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>

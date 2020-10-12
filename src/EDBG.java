@@ -1432,58 +1432,6 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
     }
   }
 
-  public static class DeviceInfo {
-    private static final Pattern  hexNum = Pattern.compile("\\b(0x)?([0-9A-Fa-f]+)\\b");
-    Map<String, String>           tParms;
-
-    DeviceInfo (String sigKey) throws IOException {
-      PropertyMap pMap = new PropertyMap("attinys.props");
-      Map<String, PropertyMap.ParmSet> revMap = pMap.getReverseMap("sig");
-      tParms = revMap.get(sigKey);
-      tParms.put("sig", sigKey);
-    }
-
-    private String get (String key) {
-      return tParms.get(key);
-    }
-
-    public int getIntValue (String key) {
-      String val = tParms.get(key);
-      Matcher mat = hexNum.matcher(val);
-      if (mat.find()) {
-        String hex = mat.group(2);
-        return Integer.parseInt(hex, 16);
-      }
-      return Integer.parseInt(val);
-    }
-
-    public String toString () {
-      return
-          "  Signature: " + tParms.get("sig") + "\n" +
-              "  Device:    " + get("master") + ", series " + tParms.get("series") + "\n" +
-              "  Pins:      " + get("pins") + "\n" +
-              "  Variant:   " + get("variant") + "\n" +
-              "  Flash:     " + get("flash") + " K, page size = " + get("fpage") + " bytes" +
-              ", base = " + get("fbase") + "\n" +
-              "  SRAM:      " + get("sram") + " bytes, base = " + get("sbase") + "\n" +
-              "  EEPROM:    " + get("eeprom") + " bytes, page size = " + get("epage") + " bytes" +
-              ", base = " + get("ebase") + "\n" +
-              "  NVM_BASE:  " + tParms.get("nvmBase") + "\n" +
-              "  OCD_BASE:  " + get("ocdBase");
-    }
-  }
-
-  public DeviceInfo getDeviceInfo () {
-    byte[] response = getDeviceSignature();
-    int sig = (((int) response[0] & 0xFF) << 16) + (((int) response[1] & 0xFF) << 8) + ((int) response[2] & 0xFF);
-    String sigKey = String.format("%06X", sig);
-    try {
-      return new DeviceInfo(sigKey);
-    } catch (Exception ex) {
-      throw new EDBGException("EBDG.getDeviceInfo(): Device not found");
-    }
-  }
-
   /**
    * get 13 byte device serial number
    *
@@ -1658,13 +1606,15 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
     boolean reset, stop, swbp, bp0, bp1;
 
     Break (byte[] data) {
-      pc = getUnsigned16(data, 9);      // get byte aaddress for break
-      ext = getUnsigned16(data, 14);    // get raw extended info for break
-      reset = (data[14] & 0x80) != 0;   // true if break resulted from RESET
-      stop  = (data[14] & 0x40) != 0;   // true if break resulted from ATTACH
-      swbp  = (data[15] & 0x20) != 0;
-      bp0   = (data[15] & 0x02) != 0;   // true if hit hardware breakpoint
-      bp1   = (data[15] & 0x01) != 0;   // true if break resulted from RUN_TO or STEP
+      pc = getUnsigned16(data, 1);        // get byte aaddress for break
+      if (data.length >= 8) {
+        ext = getUnsigned16(data, 6);     // get raw extended info for break
+        reset = (data[6] & 0x80) != 0;    // true if break resulted from RESET
+        stop = (data[6] & 0x40) != 0;     // true if break resulted from ATTACH
+        swbp = (data[7] & 0x20) != 0;
+        bp0 = (data[7] & 0x02) != 0;      // true if hit hardware breakpoint
+        bp1 = (data[7] & 0x01) != 0;      // true if break resulted from RUN_TO or STEP
+      }
     }
 
     public String toString () {
@@ -1689,27 +1639,37 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
     }
   }
 
+  private static byte[] decodeResponse (byte[] data) {
+    if (data[0] == (byte) 0x82 && data.length >= 8) {
+      int length = ((int) data[2] & 0xFF) + (((int) data[1] & 0xFF) << 8);
+      if (length > 5 && data[3] == 0x0E && data[4] == 0x00) {
+        byte[] tmp = new byte[length - 5];
+        System.arraycopy(data, 8, tmp, 0, tmp.length);
+        return tmp;
+      }
+    }
+    return null;
+  }
+
   /**
-   * Wait for Break Event
+   * Wait for Break Event and handle IDR events, if any
    * @param doTimeout if true, return after timeout period
    */
   private void breakWait (boolean doTimeout) throws InterruptedException {
     int timeout = 2;
     while (!doTimeout || timeout-- > 0) {
       byte[] data = sendCmd(new byte[] {(byte) 0x82});
-      if (data[0] == (byte) 0x82
-          && data[1] == 0x00
-          // Note: Atmel-ICE returns data[2] (length) == 14 bytes, others return 13
-          && (data[2] == 0x0D || data[2] == 0x0E)
-          && data[3] == 0x0E
-          && data[8] == 0x40
-        //&& ((data[14] & 0x0F) == 0x04)
-      ) {
-        if (DEBUG_PRINT) {
-          Break brk = new Break(data);
-          debugPrint(brk.toString());
+      byte[] rsp = decodeResponse(data);
+      if (rsp != null) {
+        if (rsp[0] == 0x40) {                 // EVT_AVR8_BREAK
+          if (DEBUG_PRINT) {
+            Break brk = new Break(rsp);
+            debugPrint(brk.toString());
+          }
+          return;
+        } else if (rsp[0] == 0x41) {         // EVT_AVR8_IDR
+          System.out.println("EVT_AVR8_IDR");
         }
-        return;
       }
       Thread.sleep(100);
     }
