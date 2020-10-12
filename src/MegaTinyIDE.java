@@ -38,7 +38,7 @@ import static javax.swing.JOptionPane.*;
    *  License: MIT (https://opensource.org/licenses/MIT)
    */
 
-public class MegaTinyIDE extends JFrame implements JSSCPort.RXEvent, ListingPane.DebugListener {
+public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
   private static final String     VERSION_URL = "https://raw.githubusercontent.com/wholder/MegaTinyIDE/master/resources/version.props";
   private static final String     DOWNLOAD = "https://github.com/wholder/MegaTinyIDE/blob/master/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar";
   private static final String     fileSep =  System.getProperty("file.separator");
@@ -52,7 +52,7 @@ public class MegaTinyIDE extends JFrame implements JSSCPort.RXEvent, ListingPane
   private static final KeyStroke  DEBUG_KEY = KeyStroke.getKeyStroke(KeyEvent.VK_D, cmdMask) ;
   static Map<String,ChipInfo>     chipTypes = new LinkedHashMap<>();
   static Map<String,ChipInfo>     chipSignatures = new LinkedHashMap<>();
-  private enum                    Tab {DOC(0), SRC(1), LIST(2), HEX(3), PROG(4), INFO(5);
+  private enum                    Tab {DOC(0), SRC(1), LIST(2), HEX(3), INFO(4);
                                          final int num; Tab(int num) {this.num = num;}}
   private final String            osName = System.getProperty("os.name").toLowerCase();
   private enum                    OpSys {MAC, WIN, LINUX}
@@ -62,7 +62,6 @@ public class MegaTinyIDE extends JFrame implements JSSCPort.RXEvent, ListingPane
   private final CodeEditPane      codePane;
   private ListingPane             listPane;
   private MyTextPane              hexPane;
-  private final MyTextPane        progPane;
   private final MyTextPane        infoPane;
   private final JMenuItem         openMenu;
   private JMenuItem               saveMenu;
@@ -396,10 +395,8 @@ public class MegaTinyIDE extends JFrame implements JSSCPort.RXEvent, ListingPane
     });
     listPane.addDebugListener(this);
     hexPane =  new MyTextPane(tabPane, "Hex Output", "Intel Hex Output file for programmer");
-    progPane = new MyTextPane(tabPane, "Programmer", "Records communication with Arduino-based programmer");
     infoPane = new MyTextPane(tabPane, "Error Info", "Displays additional information about IDE and error messages");
     hexPane.setEditable(false);
-    progPane.setEditable(false);
     infoPane.setEditable(false);
     infoPane.append("os.name: " + osName + "\n");
     infoPane.append("os:      " + os.toString() + "\n");
@@ -1134,13 +1131,6 @@ public class MegaTinyIDE extends JFrame implements JSSCPort.RXEvent, ListingPane
         showErrorDialog("ToolchainLoader.run() exception " + ex.getMessage());
       }
       progress.close();
-    }
-  }
-
-  // Implement JSSCPort.RXEvent
-  public void rxChar (byte cc) {
-    if (progPane != null) {
-      progPane.append(Character.toString((char) cc));
     }
   }
 

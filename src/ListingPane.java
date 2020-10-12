@@ -150,10 +150,12 @@ public class ListingPane extends JScrollPane {
     lineNumToAddress.clear();
     Map<String,String> vecs = null;
     int maxVector = 0;
+    int addressSize = 2;
     if (prefs.getBoolean("vector_names", false)) {
       try {
         MegaTinyIDE.ChipInfo chip = ide.getChipInfo(ide.getAvrChip());
         vecs = Utility.getResourceMap("vecset" + chip.get("vecset") + ".props");
+        addressSize = chip.getInt("flash") >= 16 ? 4 : 2;
         for (String key : vecs.keySet()) {
           maxVector = Math.max(maxVector, Integer.parseInt(key));
         }
@@ -179,8 +181,9 @@ public class ListingPane extends JScrollPane {
         lineNumToAddress.put(lineNum, address);
         addressToLineNum.put(address, lineNum);
         if (vecs != null) {
-          if (address <= maxVector * 2) {
-            String vecName = vecs.get(Integer.toString(address / 2));
+          int vector = address / addressSize;
+          if (vector <= maxVector) {
+            String vecName = vecs.get(Integer.toString(vector));
             vecName = vecName != null && vecName.length() > 0 ? vecName : "not used";
             // Add vector name to end of line
             line = line + " - " + vecName;
