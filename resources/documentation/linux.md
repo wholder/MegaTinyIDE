@@ -1,9 +1,8 @@
 ### Linux Serial Ports
-Serial port access is limited to certain users and groups in Linux, which may prevent you from seeing programmers that use a serial port interface. To enable user access, you must open a terminal and enter the following commands before **`MegaTinyIDE`** will be able to access the ports on your system. Don't worry if some of the commands fail. All of these groups may not exist on every Linux distro. (Note, this process must only be done once for each user):
+Access to to USB, HID-based programmers, such as the Atmel-ICE, is limited to certain users and groups in Linux, which may prevent you from selecting and using these programmers.  This is normally fixed by adding special "rules" to a file in the "`/etc/udev/rules.d/`" directory.  However, in my testing using Mint LInux 19 (running in emulation on Parallels), I have been unable, so far, to create a rule file that works.  If you know how to fix this, please post a comment in the "[Issues](https://github.com/wholder/MegaTinyIDE/issues)" page.
 
-  + `sudo usermod -a -G uucp username`
-  + `sudo usermod -a -G dialout username`
-  + `sudo usermod -a -G lock username`
-  + `sudo usermod -a -G tty username`
+However, until I can sort this out, you should be able to run MegaTinyIDE as root, like this:
 
-Replace the username parameter with your current username. (If you are not sure what your username is, type **`whoami`** and it will tell you.) If you are using SUSE 11.3 or higher, replace the '**`-a -G`**' flags with a single '**`-A`**' flag. Log out and restart **`MegaTinyIDE`** you should have access to the serial port.
+   `$ sudo java -jar MegaTinyIDE.jar`
+   
+and providing your root password, when asked.
