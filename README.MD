@@ -12,7 +12,7 @@ MegaTinyIDE is a simple, GNU-based IDE that's derived from another project of mi
   - Now supports include of user files using `#include "file.h"` notation
   - Automatically annotate interrupt vectors in listing file (optional)
   - Interleave code and generated asm in listing file (optional)
-  - Graahical interface for FUSE values
+  - Graphical interface for FUSE values
   - Hardware Debugging using UPDI interface and compatible programmer/debugger (more below)
 
 ## Debugging Support

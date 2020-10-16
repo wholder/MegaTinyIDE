@@ -111,7 +111,7 @@ class MegaTinyCompiler {
                                         "-DLTO_ENABLED " +            // ??
                                         "-fuse-linker-plugin " +      // Enable link-time optimization (requires 5.4.0)
                                         "-Wl,--gc-sections " +        // Eliminate unused code
-                                        "-Wl,--print-gc-sections " +  // Print dead code removed
+//                                        "-Wl,--print-gc-sections " +  // Print dead code removed
                                         "-DF_CPU=*[CLOCK]* " +        // Create #define for F_CPU
                                         "-mmcu=*[CHIP]* " +           // Select CHIP microcontroller type
                                         "-o *[TDIR]**[OFILE]* " +     // Output to file temp/OFILE
@@ -261,7 +261,7 @@ class MegaTinyCompiler {
           String[] parts = include.split("\\.");
           if (parts.length > 1 && "h".equalsIgnoreCase(parts[1])) {
             // Does a matching .c of .cpp file exist in same directory
-            for (String ext : new String[] {".c", ".cpp"}) {
+            for (String ext : new String[] {".c", ".cpp", ".s"}) {
               String fName = parts[0] + ext;
               if ((new File(srcDir + fName)).exists()) {
                 compFiles.add(new CompFile(srcDir, tmpDir, fName));
@@ -325,7 +325,7 @@ class MegaTinyCompiler {
           Path item = it.next();
           String fName = item.getFileName().toString();
           String[] parts = fName.split("\\.");
-          if (parts.length > 1 && (parts[1].equalsIgnoreCase("c") || parts[1].equalsIgnoreCase("cpp"))) {
+          if (parts.length > 1 && (parts[1].equalsIgnoreCase("c") || parts[1].equalsIgnoreCase("cpp") || parts[1].equalsIgnoreCase("s"))) {
             String compFile = item.toString().substring(path.toString().length());
             compFile = compFile.startsWith("/") ? compFile.substring(1) : compFile;
             if (!compFile.contains("deprecated")) {

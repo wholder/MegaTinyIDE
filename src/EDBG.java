@@ -1447,7 +1447,8 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
 
   /**
    * Allocates hardware breakpoint resources on the target OCD module.
-   * Note: AVR devices with UPDI have one hardware breakpoint.
+   * Note: AVR devices with UPDI have one hardware breakpoint in addition to the special breakpoint used
+   * by the "run to address" and "step" commands.
    * IMPORTANT: uses byte address, not word address
    *
    * @param address Byte address for breakpoint
