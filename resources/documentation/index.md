@@ -1,7 +1,7 @@
 ## Documentation Index
 
  + [Introducing MegaTinyIDE](ideintro.md)
-    + [Linux Users - Please Read](https://github.com/gary-rowe/hid4java/wiki/Troubleshooting#my-device-doesnt-work-on-linux)
+    + [Linux Users - Please Read](linux.md)
     + [Troubleshooting](trouble.md)
  + [Compatible Programmer/Debuggers](programmers.md)
     + [Atmel-ICE](programmers.md#Atmel-ICE)
