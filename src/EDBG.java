@@ -7,8 +7,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
   /*
     Peripherial Memory Map (Note: 32 General Purpose Working Registers in separate I/O space)
@@ -528,28 +526,6 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
         0x02                  // bytes to read
     });
     return (double) getUnsigned16(response, 0) / 1000.0;
-  }
-
-  /*
-   * = = = = = = = = = = = = = =
-   *    EDBG_CTRL Commands
-   * = = = = = = = = = = = = = =
-   */
-
-  /**
-   * Returns data, but I'm not sure what it means
-   *
-   * @return byte[] of data
-   */
-  public byte[] queryEdbgInfo () {
-    return sendAvrCmd(new byte[] {
-        0x20,                 // EDBG_CTRL
-        0x02,                 // Command ID (CMD_EDBG_GET)
-        0x00,                 // Command version (always (0x00)
-        0x10,                 // Command context (EDBG_CONTEXT_CONFIG0)
-        0x04,                 // address (EDBG_CONFIG_TARGET_NAME)
-        0x30,                 // read 48 bytes
-    });
   }
 
   /**
