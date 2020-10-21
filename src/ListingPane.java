@@ -153,7 +153,7 @@ public class ListingPane extends JScrollPane {
     int addressSize = 2;
     if (prefs.getBoolean("vector_names", false)) {
       try {
-        MegaTinyIDE.ChipInfo chip = ide.getChipInfo(ide.getAvrChip());
+        MegaTinyIDE.ChipInfo chip = MegaTinyIDE.getChipInfo(ide.getAvrChip());
         vecs = Utility.getResourceMap("vecset" + chip.get("vecset") + ".props");
         addressSize = chip.getInt("flash") >= 16 ? 4 : 2;
         for (String key : vecs.keySet()) {
@@ -239,7 +239,7 @@ public class ListingPane extends JScrollPane {
       if (active) {
         String avrChip = ide.getAvrChip();
         if (avrChip != null) {
-          MegaTinyIDE.ChipInfo info = ide.getChipInfo(avrChip);
+          MegaTinyIDE.ChipInfo info = MegaTinyIDE.getChipInfo(avrChip);
           int pins = info.getInt("pins");
           portMask = portMasks.get(pins);
           portC.setActiveMask((portMask >> 16) & 0xFF);

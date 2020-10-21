@@ -21,6 +21,7 @@ class Utility {
   private static final String   StartMarker = "//:Begin Embedded Markdown Data (do not edit)";
   private static final String   EndMarker   = "\n//:End Embedded Markdown Data";
   private static final String   fileSep =  System.getProperty("file.separator");
+  private static final Pattern  pat1 = Pattern.compile("(\\*\\[(.*?)]\\*)");
 
   static String createDir (String path) throws IOException {
     File base = (new File(path));
@@ -162,23 +163,58 @@ class Utility {
     return map;
   }
 
-  static String replaceTags (String src, Map<String,String> tags) {
-    Pattern pat = Pattern.compile("(\\*\\[(.*?)]\\*)");
-    Matcher mat = pat.matcher(src);
-    StringBuffer buf = new StringBuffer();
-    while (mat.find()) {
-      String tag = mat.group(2);
-      String rep = tags.get(tag);
-      if (rep == null) {
-        throw new IllegalStateException("Utility.replaceTags() Tag '" + tag + "' not defined");
-      }
-      try {
-        mat.appendReplacement(buf, Matcher.quoteReplacement(rep));
-      } catch (Exception ex) {
-        throw (new IllegalStateException("tag = '" + tag + "'. rep = '" + rep + "'"));
+  static Map<String,String> parseParms (String parms) {
+    Map<String,String> map = new HashMap<>();
+    if (parms != null) {
+      String[] items = parms.split(",");
+      for (String item : items) {
+        String[] parts = item.trim().split("=");
+        if (parts.length == 2) {
+          map.put(parts[0].trim(), parts[1].trim());
+        }
       }
     }
-    mat.appendTail(buf);
+    return map;
+  }
+
+  interface TagCallback {
+    String getTag (String name, String parm, Map<String,String> tags);
+  }
+
+  static String replaceTags (String src, Map<String,String> tags) {
+    return replaceTags(src, tags, null);
+  }
+
+  static String replaceTags (String src, Map<String,String> tags, TagCallback callback) {
+    Matcher mat1 = pat1.matcher(src);
+    StringBuffer buf = new StringBuffer();
+    while (mat1.find()) {
+      String tag = mat1.group(2);
+      if (tag.contains("*{") && tag.contains("}*")) {
+        tag = tag.replaceAll("\\*\\{", "*[");
+        tag = tag.replaceAll("}\\*", "]*");
+        tag = replaceTags(tag, tags, callback);
+      }
+      String parm = null;
+      String[] parts = tag.split(":");
+      if (parts.length > 1) {
+        tag = parts[0];
+        parm = parts[1];
+      }
+      String rep = tags.get(tag);
+      if (rep != null) {
+        try {
+          mat1.appendReplacement(buf, Matcher.quoteReplacement(rep));
+        } catch (Exception ex) {
+          throw (new IllegalStateException("tag = '" + tag + "'. rep = '" + rep + "'"));
+        }
+      } else if (callback != null && (rep = callback.getTag(tag, parm, tags)) != null) {
+        mat1.appendReplacement(buf, Matcher.quoteReplacement(rep));
+      } else {
+        throw new IllegalStateException("Utility.replaceTags() Tag '" + tag + "' not defined");
+      }
+    }
+    mat1.appendTail(buf);
     return buf.toString();
   }
 

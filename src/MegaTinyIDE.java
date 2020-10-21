@@ -120,7 +120,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     return avrChip;
   }
 
-  public ChipInfo getChipInfo (String name) {
+  public static ChipInfo getChipInfo (String name) {
     return chipTypes.get(name);
   }
 
@@ -185,8 +185,8 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
 
   public static class ChipInfo implements Comparable<ChipInfo> {
     private final PropertyMap.ParmSet parms;
-    public String                     name, variant, series, sram, flash, eeprom, signature;
-    private final int                 pins;
+    public final String               name, variant, series, sram, flash, eeprom, signature;
+    public final int                  pins;
 
     ChipInfo (String name, PropertyMap.ParmSet parms) {
       this.name = name;
@@ -380,7 +380,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
       listPane.setForeground(Color.red);
       hexPane.setForeground(Color.red);
     });
-    MarkupView howToPane = new MarkupView("documentation/index.md");
+    MarkupView howToPane = new MarkupView("documentation/index.md", null);
     tabPane.addTab("How To", null, howToPane, "This is the documentation page");
     tabPane.addTab("Source Code", null, codePane, "This is the editor pane where you enter source code");
     listPane = new ListingPane(tabPane, "Listing", "Select this pane to view the assembler listing", this, prefs);

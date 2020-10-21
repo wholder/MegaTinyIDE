@@ -1,25 +1,25 @@
-series1: fpage = 64, fbase = 0x8000, ebase = 0x1400, epage = 32, series = 1, prog = updi, nvmBase = 0x1000, ocdBase = 0x0F80
-attiny212:  parent = series1, pins =  8, variant = txy2, sig = 1E9121, flash =  2, eeprom =  64, sram =  128, sbase = 0x3F80, vecset = 1
-attiny412:  parent = series1, pins =  8, variant = txy2, sig = 1E9223, flash =  4, eeprom = 128, sram =  256, sbase = 0x3F00, vecset = 1
-attiny214:  parent = series1, pins = 14, variant = txy4, sig = 1E9120, flash =  2, eeprom =  64, sram =  128, sbase = 0x3F80, vecset = 2
-attiny414:  parent = series1, pins = 14, variant = txy4, sig = 1E9222, flash =  4, eeprom = 128, sram =  256, sbase = 0x3F00, vecset = 2
-attiny814:  parent = series1, pins = 14, variant = txy4, sig = 1E9322, flash =  8, eeprom = 128, sram =  512, sbase = 0x3E00, vecset = 2
-attiny1614: parent = series1, pins = 14, variant = txy4, sig = 1E9422, flash = 16, eeprom = 256, sram = 2048, sbase = 0x3800, vecset = 6
-attiny416:  parent = series1, pins = 20, variant = txy6, sig = 1E9221, flash =  4, eeprom = 128, sram =  256, sbase = 0x3F00, vecset = 3
-attiny816:  parent = series1, pins = 20, variant = txy6, sig = 1E9321, flash =  8, eeprom = 128, sram =  512, sbase = 0x3E00, vecset = 3
-attiny1616: parent = series1, pins = 20, variant = txy6, sig = 1E9421, flash = 16, eeprom = 256, sram = 2048, sbase = 0x3800, vecset = 6
-attiny3216: parent = series1, pins = 20, variant = txy6, sig = 1E9521, flash = 32, eeprom = 256, sram = 2048, sbase = 0x3800, vecset = 6
-attiny417:  parent = series1, pins = 24, variant = txy7, sig = 1E9202, flash =  4, eeprom = 128, sram =  256, sbase = 0x3F00, vecset = 3
-attiny817:  parent = series1, pins = 24, variant = txy7, sig = 1E9320, flash =  8, eeprom = 128, sram =  512, sbase = 0x3E00, vecset = 3
-attiny1617: parent = series1, pins = 24, variant = txy7, sig = 1E9420, flash = 16, eeprom = 256, sram = 2048, sbase = 0x3800, vecset = 6
-attiny3217: parent = series1, pins = 24, variant = txy7, sig = 1E9522, flash = 32, eeprom = 256, sram = 2048, sbase = 0x3800, vecset = 6
-series0: fpage = 64, fbase = 0x8000, ebase = 0x1400, epage = 32, series = 0, prog = updi, nvmBase = 0x1000, ocdBase = 0x0F80
-attiny204:  parent = series0, pins = 14, variant = txy4, sig = 1E9122, flash =  2, eeprom =  64, sram =  128, sbase = 0x3F80, vecset = 5
-attiny404:  parent = series0, pins = 14, variant = txy4, sig = 1E9226, flash =  4, eeprom = 128, sram =  256, sbase = 0x3F00, vecset = 5
-attiny804:  parent = series0, pins = 14, variant = txy4, sig = 1E9325, flash =  8, eeprom = 128, sram =  512, sbase = 0x3E00, vecset = 5
-attiny1604: parent = series0, pins = 14, variant = txy4, sig = 1E9425, flash = 16, eeprom = 256, sram = 1024, sbase = 0x3C00, vecset = 5
-attiny406:  parent = series0, pins = 20, variant = txy6, sig = 1E9225, flash =  4, eeprom = 128, sram =  256, sbase = 0x3F00, vecset = 4
-attiny806:  parent = series0, pins = 20, variant = txy6, sig = 1E9324, flash =  8, eeprom = 128, sram =  512, sbase = 0x3E00, vecset = 4
-attiny1606: parent = series0, pins = 20, variant = txy6, sig = 1E9424, flash = 16, eeprom = 256, sram = 1024, sbase = 0x3C00, vecset = 4
-attiny807:  parent = series0, pins = 24, variant = txy7, sig = 1E9323, flash =  8, eeprom = 128, sram =  512, sbase = 0x3E00, vecset = 4
-attiny1607: parent = series0, pins = 24, variant = txy7, sig = 1E9423, flash = 16, eeprom = 256, sram = 1024, sbase = 0x3C00, vecset = 4
+series1: fpage=64, fbase=0x8000, ebase=0x1400, epage=32, series=1, prog=updi, nvmBase=0x1000, ocdBase=0x0F80
+attiny212:  parent=series1, pins= 8, variant=txy2, sig=1E9121, flash= 2, eeprom= 64, sram= 128, sbase=0x3F80, vecset=1, dacs=1
+attiny412:  parent=series1, pins= 8, variant=txy2, sig=1E9223, flash= 4, eeprom=128, sram= 256, sbase=0x3F00, vecset=1, dacs=1
+attiny214:  parent=series1, pins=14, variant=txy4, sig=1E9120, flash= 2, eeprom= 64, sram= 128, sbase=0x3F80, vecset=2, dacs=1
+attiny414:  parent=series1, pins=14, variant=txy4, sig=1E9222, flash= 4, eeprom=128, sram= 256, sbase=0x3F00, vecset=2, dacs=1
+attiny814:  parent=series1, pins=14, variant=txy4, sig=1E9322, flash= 8, eeprom=128, sram= 512, sbase=0x3E00, vecset=2, dacs=1
+attiny1614: parent=series1, pins=14, variant=txy4, sig=1E9422, flash=16, eeprom=256, sram=2048, sbase=0x3800, vecset=6, dacs=3
+attiny416:  parent=series1, pins=20, variant=txy6, sig=1E9221, flash= 4, eeprom=128, sram= 256, sbase=0x3F00, vecset=3, dacs=1
+attiny816:  parent=series1, pins=20, variant=txy6, sig=1E9321, flash= 8, eeprom=128, sram= 512, sbase=0x3E00, vecset=3, dacs=1
+attiny1616: parent=series1, pins=20, variant=txy6, sig=1E9421, flash=16, eeprom=256, sram=2048, sbase=0x3800, vecset=6, dacs=3
+attiny3216: parent=series1, pins=20, variant=txy6, sig=1E9521, flash=32, eeprom=256, sram=2048, sbase=0x3800, vecset=6, dacs=3
+attiny417:  parent=series1, pins=24, variant=txy7, sig=1E9202, flash= 4, eeprom=128, sram= 256, sbase=0x3F00, vecset=3, dacs=1
+attiny817:  parent=series1, pins=24, variant=txy7, sig=1E9320, flash= 8, eeprom=128, sram= 512, sbase=0x3E00, vecset=3, dacs=1
+attiny1617: parent=series1, pins=24, variant=txy7, sig=1E9420, flash=16, eeprom=256, sram=2048, sbase=0x3800, vecset=6, dacs=3
+attiny3217: parent=series1, pins=24, variant=txy7, sig=1E9522, flash=32, eeprom=256, sram=2048, sbase=0x3800, vecset=6, dacs=3
+series0: fpage=64, fbase=0x8000, ebase=0x1400, epage=32, series=0, prog=updi, nvmBase=0x1000, ocdBase=0x0F80, dacs=0
+attiny204:  parent=series0, pins=14, variant=txy4, sig=1E9122, flash= 2, eeprom= 64, sram= 128, sbase=0x3F80, vecset=5
+attiny404:  parent=series0, pins=14, variant=txy4, sig=1E9226, flash= 4, eeprom=128, sram= 256, sbase=0x3F00, vecset=5
+attiny804:  parent=series0, pins=14, variant=txy4, sig=1E9325, flash= 8, eeprom=128, sram= 512, sbase=0x3E00, vecset=5
+attiny1604: parent=series0, pins=14, variant=txy4, sig=1E9425, flash=16, eeprom=256, sram=1024, sbase=0x3C00, vecset=5
+attiny406:  parent=series0, pins=20, variant=txy6, sig=1E9225, flash= 4, eeprom=128, sram= 256, sbase=0x3F00, vecset=4
+attiny806:  parent=series0, pins=20, variant=txy6, sig=1E9324, flash= 8, eeprom=128, sram= 512, sbase=0x3E00, vecset=4
+attiny1606: parent=series0, pins=20, variant=txy6, sig=1E9424, flash=16, eeprom=256, sram=1024, sbase=0x3C00, vecset=4
+attiny807:  parent=series0, pins=24, variant=txy7, sig=1E9323, flash= 8, eeprom=128, sram= 512, sbase=0x3E00, vecset=4
+attiny1607: parent=series0, pins=24, variant=txy7, sig=1E9423, flash=16, eeprom=256, sram=1024, sbase=0x3C00, vecset=4
