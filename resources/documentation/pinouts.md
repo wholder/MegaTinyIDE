@@ -30,4 +30,9 @@
         <td style="width:100px;">EEPROM:</td>
         <td style="width:100px;">*[INFO:*{CHIP}*-eeprom]* bytes</td>
      </tr>
-  </table>
+      <tr>
+         <td></td>
+         <td style="width:100px;">Number of DACs:</td>
+         <td style="width:100px;">*[INFO:*{CHIP}*-dacs]*</td>
+      </tr>
+ </table>
