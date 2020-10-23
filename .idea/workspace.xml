@@ -10,7 +10,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.MD" beforeDir="false" afterPath="$PROJECT_DIR$/README.MD" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -312,7 +311,14 @@
       <option name="project" value="LOCAL" />
       <updated>1603412155330</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="Revise README">
+      <created>1603413468829</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1603413468829</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -335,13 +341,13 @@
     <MESSAGE value="Improve #pragma parsing" />
     <MESSAGE value="Add option to display vector names in listing" />
     <MESSAGE value="Revise screenshots" />
-    <MESSAGE value="Revise README" />
     <MESSAGE value="Fix assembly of .s files" />
     <MESSAGE value="Update docs on Linux rules issue." />
     <MESSAGE value="Code cleanup" />
     <MESSAGE value="Added basic chip pinout diagrams" />
     <MESSAGE value="Enhancements to chip pinout diagrams" />
-    <option name="LAST_COMMIT_MESSAGE" value="Enhancements to chip pinout diagrams" />
+    <MESSAGE value="Revise README" />
+    <option name="LAST_COMMIT_MESSAGE" value="Revise README" />
   </component>
   <component name="WindowStateProjectService">
     <state x="246" y="88" width="1651" height="1365" key="#com.intellij.debugger.actions.ViewTextAction" timestamp="1603071117040">
@@ -400,10 +406,10 @@
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="1252" y="688" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.23.2560.1577@0.23.2560.1577" timestamp="1596512936793" />
-    <state x="1084" y="401" width="844" height="984" key="CommitChangelistDialog2" timestamp="1603412149985">
+    <state x="1084" y="401" width="844" height="984" key="CommitChangelistDialog2" timestamp="1603413468694">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state x="1084" y="401" width="844" height="984" key="CommitChangelistDialog2/0.23.2560.1577@0.23.2560.1577" timestamp="1603412149985" />
+    <state x="1084" y="401" width="844" height="984" key="CommitChangelistDialog2/0.23.2560.1577@0.23.2560.1577" timestamp="1603413468694" />
     <state x="822" y="123" width="1340" height="1377" key="DiffContextDialog" timestamp="1602450393001">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
@@ -452,10 +458,10 @@
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="973" y="299" key="SettingsEditor/0.23.2560.1577@0.23.2560.1577" timestamp="1603318294819" />
-    <state x="1050" y="545" key="Vcs.Push.Dialog.v2" timestamp="1603412158208">
+    <state x="1050" y="545" key="Vcs.Push.Dialog.v2" timestamp="1603413470243">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state x="1050" y="545" key="Vcs.Push.Dialog.v2/0.23.2560.1577@0.23.2560.1577" timestamp="1603412158208" />
+    <state x="1050" y="545" key="Vcs.Push.Dialog.v2/0.23.2560.1577@0.23.2560.1577" timestamp="1603413470243" />
     <state width="779" height="782" key="XDebugger.FullValuePopup" timestamp="1603056763863">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
