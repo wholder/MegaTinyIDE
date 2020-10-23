@@ -74,6 +74,7 @@ This project would have been much harder and much less cool without help from th
  - [IntelliJ IDEA from JetBrains](https://www.jetbrains.com/idea/) (my favorite development environment for Java coding. Thanks JetBrains!)
  - [ANTLR version 4.7.1](http://www.antlr.org) - ALTLRv4 was used to generate the parser for the new (experimental) automatic prototype type generation feature.
  - [CPP14 Antlr Grammar](https://github.com/antlr/grammars-v4/blob/master/cpp/CPP14.g4) - CPP14 was used as the base, C++ grammar for the automatic prototype type generation feature.
+ - [James' Dodgy Arduino-Oriented Pinout Maker For Microcontrollers](https://github.com/sleemanj/ArduinoOrientedChipPinoutCreator) by James Sleeman for inspiration to write my pinout diagram generator
  - [AVR Logo graphic](https://icon-icons.com/icon/Assembly-AVR/132579) by John Gardner
 
 ## MIT License
