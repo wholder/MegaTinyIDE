@@ -4,6 +4,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
@@ -265,6 +266,17 @@ public class ListingPane extends JScrollPane {
           active = false;
         }
       } else {
+        if (running) {
+          if (runThread != null && runThread.isAlive()) {
+            try {
+              runThread.interrupt();
+              runThread.join(200);
+            } catch (InterruptedException ex) {
+              // do nothing
+            }
+          }
+          running = false;
+        }
         if (debugger != null){
           debugger.close();
           debugger = null;
@@ -431,7 +443,9 @@ public class ListingPane extends JScrollPane {
       JPanel buttons = new JPanel(new GridLayout(1, 5));
       buttons.setBorder(Utility.getBorder(BorderFactory.createLineBorder(Color.BLACK, 1), 1, 1, 1, 1));
       buttons.add(attach = new JButton("ATTACH"));
-      attach.addActionListener(ev -> setActive(active = ! active));
+      attach.addActionListener((ActionEvent ev) -> {
+        setActive(active = !active);
+      });
       buttons.add(run = new JButton("RUN"));
       run.addActionListener(ev -> {
         if (debugger != null) {
@@ -471,7 +485,12 @@ public class ListingPane extends JScrollPane {
         if (debugger != null) {
           if (running) {
             if (runThread != null && runThread.isAlive()) {
-              runThread.interrupt();
+              try {
+                runThread.interrupt();
+                runThread.join(200);
+              } catch (InterruptedException ex) {
+                // do nothing
+              }
             }
           }
         }
@@ -488,7 +507,12 @@ public class ListingPane extends JScrollPane {
         if (debugger != null) {
           if (running) {
             if (runThread != null && runThread.isAlive()) {
-              runThread.interrupt();
+              try {
+                runThread.interrupt();
+                runThread.join(200);
+              } catch (InterruptedException ex) {
+                // do nothing
+              }
             }
           }
           debugger.resetTarget();
@@ -501,32 +525,34 @@ public class ListingPane extends JScrollPane {
 
     public void updateState (boolean showChange) {
       try {
-        byte[] regs = debugger.readRegisters(0, 32);
-        int pc = debugger.getProgramCounter();
-        highlightAddress(pc);
-        byte flags = debugger.getStatusRegister();
-        int sp = debugger.getStackPointer();
-        boolean portAUsed = (portMask & 0xFF) != 0;
-        byte prta = portAUsed ? debugger.readSRam(0x0002, 1)[0] : 0;      // PORTA.IN
-        boolean portBUsed = (portMask & 0xFF00) != 0;
-        byte prtb = portBUsed ? debugger.readSRam(0x0006, 1)[0] : 0;      // PORTB.IN
-        boolean portCUsed = (portMask & 0xFF0000) != 0;
-        byte prtc = portCUsed ? debugger.readSRam(0x000A, 1)[0] : 0;      // PORTC.IN
-        SwingUtilities.invokeLater(() -> {
-          setRegs(regs, showChange);
-          setPC(pc, showChange);
-          setBits(this.flags, flags, showChange);
-          setSP(sp, showChange);
-          if (portAUsed) {
-            setBits(portA, prta, showChange);
-          }
-          if (portBUsed) {
-            setBits(portB, prtb, showChange);
-          }
-          if (portCUsed) {
-            setBits(portC, prtc, showChange);
-          }
-        });
+        if (debugger != null) {
+          byte[] regs = debugger.readRegisters(0, 32);
+          int pc = debugger.getProgramCounter();
+          highlightAddress(pc);
+          byte flags = debugger.getStatusRegister();
+          int sp = debugger.getStackPointer();
+          boolean portAUsed = (portMask & 0xFF) != 0;
+          byte prta = portAUsed ? debugger.readSRam(0x0002, 1)[0] : 0;      // PORTA.IN
+          boolean portBUsed = (portMask & 0xFF00) != 0;
+          byte prtb = portBUsed ? debugger.readSRam(0x0006, 1)[0] : 0;      // PORTB.IN
+          boolean portCUsed = (portMask & 0xFF0000) != 0;
+          byte prtc = portCUsed ? debugger.readSRam(0x000A, 1)[0] : 0;      // PORTC.IN
+          SwingUtilities.invokeLater(() -> {
+            setRegs(regs, showChange);
+            setPC(pc, showChange);
+            setBits(this.flags, flags, showChange);
+            setSP(sp, showChange);
+            if (portAUsed) {
+              setBits(portA, prta, showChange);
+            }
+            if (portBUsed) {
+              setBits(portB, prtb, showChange);
+            }
+            if (portCUsed) {
+              setBits(portC, prtc, showChange);
+            }
+          });
+        }
       } catch (EDBG.EDBGException ex) {
         ex.printStackTrace();
         ide.showErrorDialog(ex.getMessage());

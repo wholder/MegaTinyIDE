@@ -1633,7 +1633,8 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    * @param doTimeout if true, return after timeout period
    */
   private void breakWait (boolean doTimeout) throws InterruptedException {
-    int timeout = 2;
+    int timeout = 20;
+    StringBuilder msg = new StringBuilder();
     while (!doTimeout || timeout-- > 0) {
       byte[] data = sendCmd(new byte[] {(byte) 0x82});
       byte[] rsp = decodeResponse(data);
@@ -1645,10 +1646,18 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
           }
           return;
         } else if (rsp[0] == 0x41) {         // EVT_AVR8_IDR
-          System.out.println("EVT_AVR8_IDR");
+          char cc = (char) rsp[2];
+          msg.append(cc);
+          if (cc == '\n') {
+            System.out.print(msg.toString());
+            msg.setLength(0);
+          }
+          timeout = 20;
+          Thread.sleep(1);
+          continue;
         }
       }
-      Thread.sleep(100);
+      Thread.sleep(50);
     }
     throw new EDBGException("breakWait() timeout");
   }
