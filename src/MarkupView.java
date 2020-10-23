@@ -23,6 +23,7 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Map;
+import java.util.List;
 import java.util.prefs.Preferences;
 
 class MarkupView extends JPanel {
@@ -55,9 +56,10 @@ class MarkupView extends JPanel {
   }
 
   class MyImageView extends ImageView {
-    private String        loc;
-    private AttributeSet  attributes;
-    private Image         img;
+    private String                loc;
+    private AttributeSet          attributes;
+    private Image                 img;
+    private ChipLayout.DrawSpace  ds;
 
     private MyImageView (Element elem) {
       super(elem);
@@ -136,10 +138,26 @@ class MarkupView extends JPanel {
             ex.printStackTrace();
           }
         } else if (loc.startsWith("chiplayout:")) {
-          return img = ChipLayout.getLayout(parmMap.get("CHIP"), parmMap.get("PKG"));
+          this.ds = ChipLayout.getLayout(parmMap.get("CHIP"), parmMap.get("PKG"));
+          return img = ds.img;
         }
       }
       return img = super.getImage();
+    }
+
+    @Override
+    public String getToolTipText (float x, float y, Shape shape) {
+      if (ds != null && ds.hoverList.size() > 0 && shape instanceof Rectangle) {
+        Rectangle rect = (Rectangle) shape;
+        int xLoc = (int) x - rect.x;
+        int yLoc = (int) y - rect.y;
+        for (ChipLayout.HoverText ht : ds.hoverList) {
+          if (ht.rect.contains(xLoc, yLoc)) {
+            return ht.text;
+          }
+        }
+      }
+      return super.getToolTipText(x, y, shape);
     }
   }
 
@@ -293,9 +311,14 @@ class MarkupView extends JPanel {
             if (parts.length > 1) {
               MegaTinyIDE.ChipInfo info = MegaTinyIDE.getChipInfo(parts[0]);
               if (info != null) {
-                return info.get(parts[1]);
+                String tmp = info.get(parts[1]);
+                if (tmp != null) {
+                  return tmp;
+                }
+                return "INFO tag parameter \"" + parts[1] + "\" undefined";
               }
             }
+            return "malformed INFO tag parameter \"" + parm + "\"";
           }
           return "callback tag \"" + name + "\" undefined";
         });

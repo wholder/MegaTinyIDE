@@ -30,7 +30,7 @@ public class ChipLayout {
   private static final Color    WHT = Color.white;
   private static final Color    BLK = Color.black;
   private static final Font     BFNT = new Font("Helvetica", Font.PLAIN, 32);
-  private static final Font     PFNT = new Font("Helvetica", Font.PLAIN, 24);
+  private static final Font     PFNT = new Font("Helvetica", Font.PLAIN, 22);
   private static final String[] SO8 = {"VCC", "PA6/TXD/DAC", "PA7/RXD", "PA1/SDA/MOSI", "PA2/SCL/MISO", "PA0/RST/UPDI",
                                        "PA3//SCK/CLKI", "GND"};
   private static final String[] SO14 = {"VCC", "PA4/SS", "PA5/VREF", "PA6/DAC", "PA7", "PB3/RXD", "PB2/TXD",
@@ -75,21 +75,24 @@ public class ChipLayout {
     colors.put("SS",   new ColorSet(BLK, BLU));
   }
 
-  static class MyLabel {
-    List<DrawShape> drawShapes = new ArrayList<>();
-    Rectangle2D bounds = new Rectangle2D.Double();
-
-    static class DrawShape {
-      Shape   shape;
-      Color   color;
-      boolean fill;
-      DrawShape(Shape shape, Color color, boolean fill) {
-        this.shape = shape;
-        this.color = color;
-        this.fill = fill;
-      }
+  static class DrawShape {
+    Shape   shape;
+    Color   color;
+    boolean fill;
+    DrawShape(Shape shape, Color color, boolean fill) {
+      this.shape = shape;
+      this.color = color;
+      this.fill = fill;
     }
+  }
+
+  static class MyLabel {
+    String          text;
+    List<DrawShape> drawShapes = new ArrayList<>();
+    Rectangle2D     bounds = new Rectangle2D.Double();
+
     MyLabel (String text, Font font, Color fontColor, Color background, double forceWid, double forceHyt) {
+      this.text = text;
       BufferedImage img = new BufferedImage(10, 10, BufferedImage.TYPE_INT_RGB);
       Graphics2D g2 = img.createGraphics();
       GlyphVector gv = font.createGlyphVector(g2.getFontRenderContext(), text);
@@ -121,9 +124,20 @@ public class ChipLayout {
     }
   }
 
-   static class  DrawSpace {
-     BufferedImage  img;
-     Graphics2D     g2;
+  static class HoverText {
+    Rectangle rect;
+    String    text;
+
+    HoverText (Rectangle rect,  String text) {
+      this.rect = rect;
+      this.text = text;
+    }
+  }
+
+  static class DrawSpace {
+     BufferedImage    img;
+     Graphics2D       g2;
+     List<HoverText>  hoverList = new ArrayList<>();
 
      DrawSpace (int wid, int hyt) {
       img = new BufferedImage(wid, hyt, BufferedImage.TYPE_INT_RGB);
@@ -132,10 +146,69 @@ public class ChipLayout {
       g2.setColor(BACK);
       g2.fillRect(0, 0, wid, hyt);
     }
+
+    void addHoverText (Rectangle rect, String text) {
+       if (text.matches("P[ABC][0-7]")) {
+         text = text + ": Port " + text.charAt(1) + ", Pin " + text.charAt(2);
+       } else if (text.matches("^\\d+$")) {
+           text = "Pin " + text;
+       } else {
+         switch (text) {
+         case "VCC":
+           text = text + ": Operating Voltage";
+           break;
+         case "GND":
+           text = text + ": Ground";
+           break;
+         case "DAC":
+           text = text + ": Digital to Analog Converter Output";
+           break;
+         case "MISO":
+           text = text + ": SPI Master In Slave Out";
+           break;
+         case "MOSI":
+           text = text + ": SPI Master Out Slave In";
+           break;
+         case "SCK":
+           text = text + ": SPI Clock In/Out";
+           break;
+         case "SS":
+           text = text + ": SPI Slave Select (active low)";
+           break;
+         case "RXD":
+           text = text + ": USART Serial Input";
+           break;
+         case "TXD":
+           text = text + ": USART Serial Output";
+           break;
+         case "SCL":
+           text = text + ": TWI Clock";
+           break;
+         case "SDA":
+           text = text + ": TWI Data In/Out";
+           break;
+         case "UPDI":
+           text = text + ": Unified Program and Debug Interface";
+           break;
+         case "CLKI":
+           text = text + ": External Clock Input";
+           break;
+         case "RST":
+           text = text + ": Reset Input";
+           break;
+         case "VREF":
+           text = text + ": External Voltage Reference";
+           break;
+         }
+       }
+       String html = "<html><body><p style=\"font-family:Courier;font-size:24\">" + text + "</p></body></html>";
+      hoverList.add(new HoverText(rect, html));
+    }
   }
 
-  private static void drawLabel (Graphics2D g2, MyLabel label, double angle, double xLoc, double yLoc) {
-    for (MyLabel.DrawShape drawShape : label.drawShapes) {
+  private static void drawLabel (DrawSpace ds, MyLabel label, double angle, double xLoc, double yLoc) {
+    Graphics2D g2 = ds.g2;
+    for (DrawShape drawShape : label.drawShapes) {
       AffineTransform rotate = AffineTransform.getRotateInstance(Math.toRadians(angle));
       Shape rotated = rotate.createTransformedShape(drawShape.shape);
       AffineTransform position = AffineTransform.getTranslateInstance(xLoc, yLoc);
@@ -145,6 +218,8 @@ public class ChipLayout {
         g2.fill(positioned);
       } else{
         g2.draw(positioned);
+        Rectangle rect = positioned.getBounds();
+        ds.addHoverText(rect, label.text);
       }
     }
   }
@@ -158,7 +233,7 @@ public class ChipLayout {
     return colors.get(def);
   }
 
-  private static Image getSoic (String label, int imgWid, int pins, String[] pn, boolean hasDacs) {
+  private static DrawSpace getSoic (String label, int imgWid, int pins, String[] pn, boolean hasDacs) {
     int spacing = 35;
     int bodyHyt = pins * spacing / 2 + spacing / 2;
     int bodyWid = 180;
@@ -169,7 +244,7 @@ public class ChipLayout {
     int gap = 4;
     int bHyt = 30;
     int sOff = (pins * spacing) / 4 - spacing / 2;
-    drawLabel(ds.g2, new MyLabel(label, BFNT, WHT, CHIP, bodyHyt, bodyWid), -90, cx, cy);
+    drawLabel(ds, new MyLabel(label, BFNT, WHT, CHIP, bodyHyt, bodyWid), -90, cx, cy);
     int[] cols = new int[COLS.length];
     int base = bodyWid / 2;
     for (int ii = 0; ii < COLS.length; ii++) {
@@ -192,14 +267,14 @@ public class ChipLayout {
         String pLbl = pairs[0];
         if (pLbl.length() > 0 && (!"DAC".equals(pLbl) || hasDacs)) {
           ColorSet cSet = getColorSet(pairs, DCLR[ii]);
-          drawLabel(ds.g2, new MyLabel(pLbl, PFNT, cSet.txtClr, cSet.lblClr, wid, bHyt), 0, xOff, yOff);
+          drawLabel(ds, new MyLabel(pLbl, PFNT, cSet.txtClr, cSet.lblClr, wid, bHyt), 0, xOff, yOff);
         }
       }
     }
-    return ds.img;
+    return ds;
   }
 
-  private static Image getVqfn (String label, int imgWid, int pins, String[] pn, boolean hasDacs) {
+  private static DrawSpace getVqfn (String label, int imgWid, int pins, String[] pn, boolean hasDacs) {
     int spacing = 35;
     int bodyHyt = pins * spacing / 4 + spacing / 2;
     int bodyWid = bodyHyt;
@@ -212,7 +287,7 @@ public class ChipLayout {
     int sOff = (pins * spacing) / 8 - spacing / 2;
     int xOff, yOff, rotate;
     // Draw VQFN-20 package body
-    drawLabel(ds.g2, new MyLabel(label, BFNT, WHT, CHIP, bodyHyt, bodyWid), 0, cx, cy);
+    drawLabel(ds, new MyLabel(label, BFNT, WHT, CHIP, bodyHyt, bodyWid), 0, cx, cy);
     int[] cols = new int[COLS.length];
     int base = bodyWid / 2;
     for (int ii = 0; ii < COLS.length; ii++) {
@@ -250,14 +325,14 @@ public class ChipLayout {
             xOff = sOff - (pin - pins / 2 - pins / 4 - 1) * spacing;
             yOff = -col;
           }
-          drawLabel(ds.g2, new MyLabel(pLbl, PFNT, cSet.txtClr, cSet.lblClr, wid, bHyt), rotate, cx + xOff, cy + yOff);
+          drawLabel(ds, new MyLabel(pLbl, PFNT, cSet.txtClr, cSet.lblClr, wid, bHyt), rotate, cx + xOff, cy + yOff);
         }
       }
     }
-    return ds.img;
+    return ds;
   }
 
-  public static Image getLayout (String avrChip, String pkg) {
+  public static DrawSpace getLayout (String avrChip, String pkg) {
     MegaTinyIDE.ChipInfo info = MegaTinyIDE.getChipInfo(avrChip);
     String chipLabel = "AT" + avrChip.substring(2);
     boolean hasDacs = info.getInt("dacs") > 0;
