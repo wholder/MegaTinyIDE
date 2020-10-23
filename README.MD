@@ -70,12 +70,12 @@ This project would have been much harder and much less cool without help from th
  - [ATTinyCore](https://github.com/SpenceKonde/ATTinyCore) library by Spence Konde (aka Dr. Azzy)
  - [JSyntaxPane](https://github.com/nordfalk/jsyntaxpane) - Now uses [CppSyntaxPane](https://github.com/wholder/CppSyntaxPane), which is based on JSyntaxPane.
  - [Txtmark](https://github.com/rjeschke/txtmark) Java markdown processor by René Jeschke
- - [GraphPaperLayout](http://www.iitk.ac.in/esc101/05Aug/tutorial/uiswing/layout/example-1dot4/GraphPaperLayout.java) by Michael Martak, a grid layout manager that supports row and column spanning
+ - [GraphPaperLayout](http://www.iitk.ac.in/esc101/05Aug/tutorial/uiswing/layout/example-1dot4/GraphPaperLayout.java) by Michael Martak, a grid layout manager that supports row and column spanning.
  - [IntelliJ IDEA from JetBrains](https://www.jetbrains.com/idea/) (my favorite development environment for Java coding. Thanks JetBrains!)
  - [ANTLR version 4.7.1](http://www.antlr.org) - ALTLRv4 was used to generate the parser for the new (experimental) automatic prototype type generation feature.
  - [CPP14 Antlr Grammar](https://github.com/antlr/grammars-v4/blob/master/cpp/CPP14.g4) - CPP14 was used as the base, C++ grammar for the automatic prototype type generation feature.
  - [James' Dodgy Arduino-Oriented Pinout Maker For Microcontrollers](https://github.com/sleemanj/ArduinoOrientedChipPinoutCreator) by James Sleeman for inspiration and motivation to write my take on his pinout diagram generator.
- - [AVR Logo graphic](https://icon-icons.com/icon/Assembly-AVR/132579) by John Gardner
+ - [AVR Logo graphic](https://icon-icons.com/icon/Assembly-AVR/132579) by John Gardner.
 
 ## MIT License
 
