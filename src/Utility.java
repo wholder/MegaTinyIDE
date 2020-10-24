@@ -556,7 +556,7 @@ class Utility {
     } else if (os.contains("mac")) {
       return new Font("Menlo", Font.PLAIN, points);
     } else if (os.contains("linux")) {
-      return new Font("Courier", Font.PLAIN, points);
+      return new Font("Monospaced", Font.PLAIN, points);
     } else {
       return new Font("Courier", Font.PLAIN, points);
     }

@@ -63,7 +63,7 @@ public class ListingPane extends JScrollPane {
     panel.add(ListingPane.this.debugPane);
     ListingPane.this.debugPane.setBorder(new EmptyBorder(0, 5, 0, 0));
     boolean windows = System.getProperty("os.name").toLowerCase().contains("win");
-    Font font = new Font(windows ? "Consolas" : "Menlo", Font.PLAIN, 12);
+    Font font = Utility.getCodeFont(12);
     fontMetrics = getFontMetrics(font);
     lineHeight = ListingPane.this.fontMetrics.getHeight();
     Document doc = ListingPane.this.debugPane.getDocument();

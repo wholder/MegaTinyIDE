@@ -395,11 +395,18 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     });
     listPane.addDebugListener(this);
     hexPane =  new MyTextPane(tabPane, "Hex Output", "Intel Hex Output file for programmer");
-    infoPane = new MyTextPane(tabPane, "Error Info", "Displays additional information about IDE and error messages");
+    infoPane = new MyTextPane(tabPane, "Info", "Displays additional information about IDE and error messages");
     hexPane.setEditable(false);
     infoPane.setEditable(false);
     infoPane.append("os.name: " + osName + "\n");
     infoPane.append("os:      " + os.toString() + "\n");
+    if (prefs.getBoolean("developer_features", false)) {
+      String[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
+      infoPane.append("Installed fonts:\n");
+      for (String font : fonts) {
+        infoPane.append("  " + font + "\n");
+      }
+    }
     // Add menu bar and menus
     JMenuBar menuBar = new JMenuBar();
     // Add "File" Menu
