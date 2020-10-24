@@ -7,7 +7,7 @@ MegaTinyIDE is a simple, GNU-based IDE that's derived from another project of mi
 
 ### Project status
 
-While more tesing is still needed, I am declaring the code as operational on Mac, Windows 10 and Linux.  However, MegaTinyIDE is still in development and likely has more than a few bugs, or rough edges.
+While more testing is still needed, I am declaring the code as operational (Beta status) on Mac, Windows 10 and Linux.  However, MegaTinyIDE is still in development and likely has more than a few bugs, or rough edges.
 
 ### New Features
 
