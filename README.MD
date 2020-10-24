@@ -16,6 +16,7 @@ While more tesing is still needed, I am declaring the code as operational on Mac
   - Interleave code and generated asm in listing file (optional)
   - Graphical interface for FUSE values
   - Hardware Debugging using UPDI interface and compatible programmer/debugger (more below)
+  - Built-in Pinout Reference Diagrams (with pin-level tooltips)
 
 ### Debugging Support
 
