@@ -11,11 +11,8 @@
   <component name="ChangeListManager">
     <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/attiny212.c" beforeDir="false" afterPath="$PROJECT_DIR$/examples/attiny212.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/toolchains/combined.zip" beforeDir="false" afterPath="$PROJECT_DIR$/resources/toolchains/combined.zip" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/EDBG.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/EDBG.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ListingPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ListingPane.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -344,7 +341,14 @@
       <option name="project" value="LOCAL" />
       <updated>1603482447345</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="Fixes to debugger">
+      <created>1603495930401</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1603495930401</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -374,7 +378,8 @@
     <MESSAGE value="Enhancements to chip pinout diagrams" />
     <MESSAGE value="Revise README" />
     <MESSAGE value="Revise built-in docs on how to setup a Linux &quot;rules&quot; file" />
-    <option name="LAST_COMMIT_MESSAGE" value="Revise built-in docs on how to setup a Linux &quot;rules&quot; file" />
+    <MESSAGE value="Fixes to debugger" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixes to debugger" />
   </component>
   <component name="WindowStateProjectService">
     <state x="246" y="88" width="1651" height="1365" key="#com.intellij.debugger.actions.ViewTextAction" timestamp="1603071117040">
@@ -433,10 +438,10 @@
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="1252" y="688" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.23.2560.1577@0.23.2560.1577" timestamp="1596512936793" />
-    <state x="1084" y="401" width="844" height="984" key="CommitChangelistDialog2" timestamp="1603482441991">
+    <state x="1084" y="401" width="844" height="984" key="CommitChangelistDialog2" timestamp="1603495919449">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state x="1084" y="401" width="844" height="984" key="CommitChangelistDialog2/0.23.2560.1577@0.23.2560.1577" timestamp="1603482441991" />
+    <state x="1084" y="401" width="844" height="984" key="CommitChangelistDialog2/0.23.2560.1577@0.23.2560.1577" timestamp="1603495919449" />
     <state x="822" y="123" width="1340" height="1377" key="DiffContextDialog" timestamp="1602450393001">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
@@ -449,22 +454,22 @@
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="1601" y="401" width="729" height="678" key="Github.UntrackedFilesDialog/0.23.2560.1577@0.23.2560.1577" timestamp="1602205585314" />
-    <state width="1546" height="294" key="GridCell.Tab.0.bottom" timestamp="1603495751657">
+    <state width="1546" height="294" key="GridCell.Tab.0.bottom" timestamp="1603508817816">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="294" key="GridCell.Tab.0.bottom/0.23.2560.1577@0.23.2560.1577" timestamp="1603495751657" />
-    <state width="1546" height="294" key="GridCell.Tab.0.center" timestamp="1603495751656">
+    <state width="1546" height="294" key="GridCell.Tab.0.bottom/0.23.2560.1577@0.23.2560.1577" timestamp="1603508817816" />
+    <state width="1546" height="294" key="GridCell.Tab.0.center" timestamp="1603508817815">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="294" key="GridCell.Tab.0.center/0.23.2560.1577@0.23.2560.1577" timestamp="1603495751656" />
-    <state width="1546" height="294" key="GridCell.Tab.0.left" timestamp="1603495751656">
+    <state width="1546" height="294" key="GridCell.Tab.0.center/0.23.2560.1577@0.23.2560.1577" timestamp="1603508817815" />
+    <state width="1546" height="294" key="GridCell.Tab.0.left" timestamp="1603508817815">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="294" key="GridCell.Tab.0.left/0.23.2560.1577@0.23.2560.1577" timestamp="1603495751656" />
-    <state width="1546" height="294" key="GridCell.Tab.0.right" timestamp="1603495751656">
+    <state width="1546" height="294" key="GridCell.Tab.0.left/0.23.2560.1577@0.23.2560.1577" timestamp="1603508817815" />
+    <state width="1546" height="294" key="GridCell.Tab.0.right" timestamp="1603508817816">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="294" key="GridCell.Tab.0.right/0.23.2560.1577@0.23.2560.1577" timestamp="1603495751656" />
+    <state width="1546" height="294" key="GridCell.Tab.0.right/0.23.2560.1577@0.23.2560.1577" timestamp="1603508817816" />
     <state width="1546" height="338" key="GridCell.Tab.1.bottom" timestamp="1603484014832">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
@@ -485,10 +490,10 @@
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="973" y="299" key="SettingsEditor/0.23.2560.1577@0.23.2560.1577" timestamp="1603436653597" />
-    <state x="1050" y="545" key="Vcs.Push.Dialog.v2" timestamp="1603482451685">
+    <state x="1050" y="545" key="Vcs.Push.Dialog.v2" timestamp="1603495932331">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state x="1050" y="545" key="Vcs.Push.Dialog.v2/0.23.2560.1577@0.23.2560.1577" timestamp="1603482451685" />
+    <state x="1050" y="545" key="Vcs.Push.Dialog.v2/0.23.2560.1577@0.23.2560.1577" timestamp="1603495932331" />
     <state width="779" height="782" key="XDebugger.FullValuePopup" timestamp="1603056763863">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
@@ -509,10 +514,10 @@
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="1546" y="197" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.23.2560.1577@0.23.2560.1577" timestamp="1596513829459" />
-    <state x="1335" y="282" width="1077" height="721" key="find.popup" timestamp="1603484192993">
+    <state x="1335" y="282" width="1077" height="721" key="find.popup" timestamp="1603509016267">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state x="1335" y="282" width="1077" height="721" key="find.popup/0.23.2560.1577@0.23.2560.1577" timestamp="1603484192993" />
+    <state x="1335" y="282" width="1077" height="721" key="find.popup/0.23.2560.1577@0.23.2560.1577" timestamp="1603509016267" />
     <state x="895" y="434" key="new project wizard" timestamp="1601861891668">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
