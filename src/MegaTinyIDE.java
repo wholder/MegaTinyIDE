@@ -395,7 +395,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     });
     listPane.addDebugListener(this);
     hexPane =  new MyTextPane(tabPane, "Hex Output", "Intel Hex Output file for programmer");
-    infoPane = new MyTextPane(tabPane, "Info", "Displays additional information about IDE and error messages");
+    infoPane = new MyTextPane(tabPane, "Monitor", "Displays additional information about IDE and OCD and error messages");
     hexPane.setEditable(false);
     infoPane.setEditable(false);
     infoPane.append("os.name: " + osName + "\n");
@@ -407,6 +407,24 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
         infoPane.append("  " + font + "\n");
       }
     }
+    infoPane.addMouseListener(new MouseAdapter() {
+      @Override
+      public void mouseClicked (MouseEvent ev) {
+        super.mouseClicked(ev);
+        if (SwingUtilities.isRightMouseButton(ev)) {
+          JPopupMenu popup = new JPopupMenu();
+          JMenuItem menuItem = new JMenuItem("Clear Screen");
+          menuItem.addActionListener(e -> {
+            SwingUtilities.invokeLater(() -> {
+              infoPane.setText("");
+            });
+          });
+          popup.add(menuItem);
+          popup.show(ev.getComponent(), ev.getX(), ev.getY());
+        }
+      }
+    });
+
     // Add menu bar and menus
     JMenuBar menuBar = new JMenuBar();
     // Add "File" Menu
@@ -986,6 +1004,12 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
       showErrorDialog("Code not built!");
     }
     return false;
+  }
+
+  void appendToInfoPane (String text) {
+    if (infoPane != null) {
+      infoPane.append(text);
+    }
   }
 
   static class ProgressBar extends JFrame {

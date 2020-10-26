@@ -102,6 +102,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
   private boolean                             physicalActive;
   private boolean                             debugActive;
   private boolean                             programActive;
+  private OcdListener                         ocdListener;
   //                                                                ( prog/debug)
   private static final int MEMTYPE_SRAM                   = 0x20;   // (--/RW) - Absolute SRAM address
   private static final int MEMTYPE_EEPROM                 = 0x22;   // (RW/RW) - Absolute EEPROM address
@@ -133,6 +134,14 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
     if (DEBUG_PRINT) {
       System.out.println(msg);
     }
+  }
+
+  interface OcdListener {
+    void msgReceived (String text);
+  }
+
+  public void setOcdListener (OcdListener ocdListener) {
+    this.ocdListener = ocdListener;
   }
 
   static class Programmer {
@@ -1649,7 +1658,9 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
           char cc = (char) rsp[2];
           msg.append(cc);
           if (cc == '\n') {
-            System.out.print(msg.toString());
+            if (ocdListener != null) {
+              ocdListener.msgReceived(msg.toString());
+            }
             msg.setLength(0);
           }
           timeout = 20;
@@ -1658,6 +1669,9 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
         }
       }
       Thread.sleep(50);
+    }
+    if (ocdListener != null) {
+      ocdListener.msgReceived("timeout\n");
     }
     throw new EDBGException("breakWait() timeout");
   }

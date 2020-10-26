@@ -251,6 +251,11 @@ public class ListingPane extends JScrollPane {
             try {
               debugger = new EDBG(prog, info, false);
               debugger.resetTarget();
+              debugger.setOcdListener(text -> {
+                if (running) {
+                  ide.appendToInfoPane(text);
+                }
+              });
             } catch (Exception ex) {
               ide.showErrorDialog("Unable to open Programmer: " + prog.name);
               debugger = null;
@@ -301,6 +306,7 @@ public class ListingPane extends JScrollPane {
       for (DebugListener debugListener : debugListeners) {
         debugListener.debugState(active);
       }
+      ide.appendToInfoPane("Debugger " + (active ? "Attached" : "Detached") + "\n");
     }
 
     private void setRunningState () {

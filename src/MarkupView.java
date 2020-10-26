@@ -266,7 +266,7 @@ class MarkupView extends JPanel {
     // Setup some basic markdown styles (Note: limited to HTML 3.2)
     // see: https://stackoverflow.com/questions/25147141/why-isnt-my-css-working-right-in-java
     StyleSheet styleSheet = kit.getStyleSheet();
-    styleSheet.addRule("body {color:#000; font-family: Bookman, Arial, Helvetica; margin: 4px;}");
+    styleSheet.addRule("body {color:#000; font-family: Arial, DejaVu Sans, Helvetica; margin: 4px;}");
     styleSheet.addRule("h1 {font-size: 24px; font-weight: 500;}");
     styleSheet.addRule("h2 {font-size: 20px; font-weight: 500;}");
     styleSheet.addRule("h3 {font-size: 16px; font-weight: 500;}");

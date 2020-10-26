@@ -34,9 +34,9 @@ class Utility {
   static String parseClockSpeed (String clock) {
     clock = clock.replaceAll(",", "").toLowerCase().trim();
     if (clock.endsWith("mhz")) {
-      return clock.substring(0, clock.length() - 3).trim() + "000000";
+      return Integer.toString((int) (Double.parseDouble(clock.substring(0, clock.length() - 3).trim()) * 1000000));
     } else if (clock.endsWith("khz")) {
-      return clock.substring(0, clock.length() - 3).trim() + "000";
+      return Integer.toString((int) (Double.parseDouble(clock.substring(0, clock.length() - 3).trim()) * 1000));
     } else if (clock.endsWith("hz")) {
       return clock.substring(0, clock.length() - 2).trim();
     } else {
