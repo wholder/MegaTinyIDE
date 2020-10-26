@@ -415,16 +415,14 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
           JPopupMenu popup = new JPopupMenu();
           JMenuItem menuItem = new JMenuItem("Clear Screen");
           menuItem.addActionListener(e -> {
-            SwingUtilities.invokeLater(() -> {
-              infoPane.setText("");
-            });
+            SwingUtilities.invokeLater(() -> infoPane.setText(""));
           });
           popup.add(menuItem);
           popup.show(ev.getComponent(), ev.getX(), ev.getY());
         }
       }
     });
-
+    infoPane.setToolTipText("<html>Click Right Mouse Button<br>for Command Menu</html>");
     // Add menu bar and menus
     JMenuBar menuBar = new JMenuBar();
     // Add "File" Menu
