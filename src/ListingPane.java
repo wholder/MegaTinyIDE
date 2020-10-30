@@ -209,7 +209,7 @@ public class ListingPane extends JPanel {
     if (prefs.getBoolean("vector_names", false)) {
       try {
         MegaTinyIDE.ChipInfo chip = MegaTinyIDE.getChipInfo(ide.getAvrChip());
-        vecs = Utility.getResourceMap("vecs" + chip.get("vecs") + ".props");
+        vecs = Utility.getResourceMap("vecset" + chip.get("vecs") + ".props");
         addressSize = chip.getInt("flash") >= 16 ? 4 : 2;
         for (String key : vecs.keySet()) {
           maxVector = Math.max(maxVector, Integer.parseInt(key));
