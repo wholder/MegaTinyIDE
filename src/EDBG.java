@@ -1664,7 +1664,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
             msg.setLength(0);
           }
           timeout = 20;
-          Thread.sleep(1);
+          Thread.sleep(10);
           continue;
         }
       }

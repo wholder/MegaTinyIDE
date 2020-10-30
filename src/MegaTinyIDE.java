@@ -384,7 +384,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     tabPane.addTab("How To", null, howToPane, "This is the documentation page");
     tabPane.addTab("Source Code", null, codePane, "This is the editor pane where you enter source code");
     listPane = new ListingPane(tabPane, "Listing", "Select this pane to view the assembler listing", this, prefs);
-    listPane.getEditPane().addHyperlinkListener(ev -> {
+    listPane.addHyperlinkListener(ev -> {
       if (ev.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
         String [] tmp = ev.getDescription().split(":");
         selectTab(Tab.SRC);
@@ -414,9 +414,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
         if (SwingUtilities.isRightMouseButton(ev)) {
           JPopupMenu popup = new JPopupMenu();
           JMenuItem menuItem = new JMenuItem("Clear Screen");
-          menuItem.addActionListener(e -> {
-            SwingUtilities.invokeLater(() -> infoPane.setText(""));
-          });
+          menuItem.addActionListener(e -> SwingUtilities.invokeLater(() -> infoPane.setText("")));
           popup.add(menuItem);
           popup.show(ev.getComponent(), ev.getX(), ev.getY());
         }

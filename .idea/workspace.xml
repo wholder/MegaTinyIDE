@@ -14,7 +14,10 @@
   <component name="ChangeListManager">
     <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/documentation/linux.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/linux.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/EDBG.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/EDBG.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ListingPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ListingPane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MegaTinyIDE.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MegaTinyIDE.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,19 +60,19 @@
       <recent name="test" />
       <recent name="" />
     </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/resources/test" />
-    </key>
-    <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="tools" />
-      <recent name="" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/docs" />
       <recent name="$PROJECT_DIR$/images" />
       <recent name="$PROJECT_DIR$/resources/images" />
       <recent name="$PROJECT_DIR$/resources/documentation/images" />
       <recent name="$PROJECT_DIR$/resources/toolchains" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="tools" />
+      <recent name="" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/resources/test" />
     </key>
   </component>
   <component name="RunManager" selected="Application.MegaTinyIDE">
@@ -406,7 +409,14 @@
       <option name="project" value="LOCAL" />
       <updated>1603746241710</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="Add PID values">
+      <created>1603766260368</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1603766260368</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -442,7 +452,8 @@
     <MESSAGE value="Font fix for Linux" />
     <MESSAGE value="Prelim new features check in (Monitor code)" />
     <MESSAGE value="Add right click pop up &quot;Clear Screen&quot; for Monitor tab" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add right click pop up &quot;Clear Screen&quot; for Monitor tab" />
+    <MESSAGE value="Add PID values" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add PID values" />
   </component>
   <component name="WindowStateProjectService">
     <state x="246" y="88" width="1651" height="1365" key="#com.intellij.debugger.actions.ViewTextAction" timestamp="1603510392732">
@@ -501,10 +512,10 @@
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="1252" y="688" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.23.2560.1577@0.23.2560.1577" timestamp="1596512936793" />
-    <state x="1084" y="401" width="844" height="984" key="CommitChangelistDialog2" timestamp="1603746235836">
+    <state x="1084" y="401" width="844" height="984" key="CommitChangelistDialog2" timestamp="1603766254594">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state x="1084" y="401" width="844" height="984" key="CommitChangelistDialog2/0.23.2560.1577@0.23.2560.1577" timestamp="1603746235836" />
+    <state x="1084" y="401" width="844" height="984" key="CommitChangelistDialog2/0.23.2560.1577@0.23.2560.1577" timestamp="1603766254594" />
     <state x="822" y="123" width="1340" height="1377" key="DiffContextDialog" timestamp="1602450393001">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
@@ -517,22 +528,22 @@
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="1601" y="401" width="729" height="678" key="Github.UntrackedFilesDialog/0.23.2560.1577@0.23.2560.1577" timestamp="1602205585314" />
-    <state width="1546" height="294" key="GridCell.Tab.0.bottom" timestamp="1603765518138">
+    <state width="1546" height="294" key="GridCell.Tab.0.bottom" timestamp="1604016003757">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="294" key="GridCell.Tab.0.bottom/0.23.2560.1577@0.23.2560.1577" timestamp="1603765518138" />
-    <state width="1546" height="294" key="GridCell.Tab.0.center" timestamp="1603765518137">
+    <state width="1546" height="294" key="GridCell.Tab.0.bottom/0.23.2560.1577@0.23.2560.1577" timestamp="1604016003757" />
+    <state width="1546" height="294" key="GridCell.Tab.0.center" timestamp="1604016003756">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="294" key="GridCell.Tab.0.center/0.23.2560.1577@0.23.2560.1577" timestamp="1603765518137" />
-    <state width="1546" height="294" key="GridCell.Tab.0.left" timestamp="1603765518137">
+    <state width="1546" height="294" key="GridCell.Tab.0.center/0.23.2560.1577@0.23.2560.1577" timestamp="1604016003756" />
+    <state width="1546" height="294" key="GridCell.Tab.0.left" timestamp="1604016003756">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="294" key="GridCell.Tab.0.left/0.23.2560.1577@0.23.2560.1577" timestamp="1603765518137" />
-    <state width="1546" height="294" key="GridCell.Tab.0.right" timestamp="1603765518138">
+    <state width="1546" height="294" key="GridCell.Tab.0.left/0.23.2560.1577@0.23.2560.1577" timestamp="1604016003756" />
+    <state width="1546" height="294" key="GridCell.Tab.0.right" timestamp="1604016003757">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="294" key="GridCell.Tab.0.right/0.23.2560.1577@0.23.2560.1577" timestamp="1603765518138" />
+    <state width="1546" height="294" key="GridCell.Tab.0.right/0.23.2560.1577@0.23.2560.1577" timestamp="1604016003757" />
     <state width="1546" height="338" key="GridCell.Tab.1.bottom" timestamp="1603653818525">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
@@ -553,10 +564,10 @@
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="973" y="299" key="SettingsEditor/0.23.2560.1577@0.23.2560.1577" timestamp="1603436653597" />
-    <state x="1050" y="545" key="Vcs.Push.Dialog.v2" timestamp="1603746244254">
+    <state x="1050" y="545" key="Vcs.Push.Dialog.v2" timestamp="1603766261671">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state x="1050" y="545" key="Vcs.Push.Dialog.v2/0.23.2560.1577@0.23.2560.1577" timestamp="1603746244254" />
+    <state x="1050" y="545" key="Vcs.Push.Dialog.v2/0.23.2560.1577@0.23.2560.1577" timestamp="1603766261671" />
     <state width="779" height="782" key="XDebugger.FullValuePopup" timestamp="1603056763863">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
@@ -569,26 +580,30 @@
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="822" y="123" width="1340" height="1377" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog/0.23.2560.1577@0.23.2560.1577" timestamp="1596407113233" />
-    <state x="723" y="123" width="1340" height="1377" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1600907708708">
+    <state x="1068" y="203" width="1340" height="1377" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1604009456740">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state x="723" y="123" width="1340" height="1377" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.23.2560.1577@0.23.2560.1577" timestamp="1600907708708" />
+    <state x="1068" y="203" width="1340" height="1377" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.23.2560.1577@0.23.2560.1577" timestamp="1604009456740" />
+    <state x="623" y="123" width="1388" height="1355" key="com.intellij.history.integration.ui.views.SelectionHistoryDialog" timestamp="1604008875606">
+      <screen x="0" y="23" width="2560" height="1577" />
+    </state>
+    <state x="623" y="123" width="1388" height="1355" key="com.intellij.history.integration.ui.views.SelectionHistoryDialog/0.23.2560.1577@0.23.2560.1577" timestamp="1604008875606" />
     <state x="1546" y="197" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1603581515544">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="1546" y="197" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.23.2560.1577@0.23.2560.1577" timestamp="1603581515544" />
-    <state x="1335" y="282" width="1077" height="721" key="find.popup" timestamp="1603694374041">
+    <state x="1273" y="276" width="1083" height="978" key="find.popup" timestamp="1604015166912">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state x="1335" y="282" width="1077" height="721" key="find.popup/0.23.2560.1577@0.23.2560.1577" timestamp="1603694374041" />
+    <state x="1273" y="276" width="1083" height="978" key="find.popup/0.23.2560.1577@0.23.2560.1577" timestamp="1604015166912" />
     <state x="895" y="434" key="new project wizard" timestamp="1601861891668">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="895" y="434" key="new project wizard/0.23.2560.1577@0.23.2560.1577" timestamp="1601861891668" />
-    <state x="1115" y="385" width="670" height="676" key="search.everywhere.popup" timestamp="1603604900906">
+    <state x="1115" y="385" width="670" height="676" key="search.everywhere.popup" timestamp="1604014472289">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state x="1115" y="385" width="670" height="676" key="search.everywhere.popup/0.23.2560.1577@0.23.2560.1577" timestamp="1603604900906" />
+    <state x="1115" y="385" width="670" height="676" key="search.everywhere.popup/0.23.2560.1577@0.23.2560.1577" timestamp="1604014472289" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

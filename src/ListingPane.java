@@ -2,6 +2,9 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.HyperlinkListener;
 import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -15,7 +18,7 @@ import java.util.prefs.Preferences;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ListingPane extends JScrollPane {
+public class ListingPane extends JPanel {
   private static final Pattern        DEBUG_LINE = Pattern.compile("\\s+([0-9a-fA-F]+):\\s[0-9a-fA-F]{2}\\s[0-9a-fA-F]{2}\\s");
   private static final int            FONT_SIZE = 12;
   private static final int            DEFAULT_R_MARGIN = 7;
@@ -27,7 +30,8 @@ public class ListingPane extends JScrollPane {
   private static final Color          STATUS_BACK = new Color(221, 221, 221);
   private static final Color          CHANGED_COLOR = new Color(191, 196, 255);
   private static final boolean        SINGLE_BREAK = true;
-  private final JTextPane             debugPane;
+  private final JTextPane             listingPane;
+  private final JTextPane             messagePane;
   private final FontMetrics           fontMetrics;
   private final BitSet                breakpoints = new BitSet();
   private final BitSet                breakLines = new BitSet();
@@ -38,8 +42,9 @@ public class ListingPane extends JScrollPane {
   private final Preferences           prefs;
   private final int                   lineHeight;
   StatusPane                          statusPane;
-  JPanel                              outerPane;
+  JScrollPane                         listingScroll;
   boolean                             showStatusPane;
+  boolean                             showMessagePane = true;
   MegaTinyIDE                         ide;
   private boolean                     hasSelection;
   private int                         sPos;
@@ -53,65 +58,114 @@ public class ListingPane extends JScrollPane {
     debugListeners.add(debugListener);
   }
 
-  ListingPane (JTabbedPane tabs, String tabName, String hoverText, MegaTinyIDE ide, Preferences prefs) {
-    getVerticalScrollBar().setUnitIncrement(16);
+  static class MySplitPane extends JSplitPane {
+    boolean opened = false;
+
+    MySplitPane (int newOrientation) {
+      super(newOrientation);
+      SwingUtilities.invokeLater(() -> setDividerLocation(0.9999));
+    }
+
+    @Override
+    public void setDividerLocation (int loc) {
+      Dimension dim = getSize();
+      if (dim.height - loc < 40) {
+        loc = dim.height;
+        opened = false;
+      } else {
+        opened = true;
+      }
+      super.setDividerLocation(loc);
+    }
+
+    public void openPane () {
+      if (!opened) {
+        SwingUtilities.invokeLater(() -> setDividerLocation(0.9));
+      }
+    }
+  }
+
+    ListingPane (JTabbedPane tabs, String tabName, String hoverText, MegaTinyIDE ide, Preferences prefs) {
     this.ide = ide;
     this.prefs = prefs;
-    debugPane = new JTextPane();
-    // Kludge needed to allow horizontal scrolling, which is needed to keep breakpoints on proper lines
-    JPanel panel = new JPanel(new BorderLayout());
-    panel.add(ListingPane.this.debugPane);
-    ListingPane.this.debugPane.setBorder(new EmptyBorder(0, 5, 0, 0));
-    boolean windows = System.getProperty("os.name").toLowerCase().contains("win");
+    setLayout(new BorderLayout());
+    listingPane = new JTextPane();
+    listingPane.setBorder(new EmptyBorder(0, 5, 0, 0));
     Font font = Utility.getCodeFont(12);
     fontMetrics = getFontMetrics(font);
-    lineHeight = ListingPane.this.fontMetrics.getHeight();
-    Document doc = ListingPane.this.debugPane.getDocument();
+    lineHeight = fontMetrics.getHeight();
+    Document doc = listingPane.getDocument();
     doc.putProperty(PlainDocument.tabSizeAttribute, 4);
-    setViewportView(panel);
-    setRowHeaderView(new DebugRibbon());
-    ListingPane.this.debugPane.setFont(font);
-    ListingPane.this.debugPane.setEditable(false);
-    outerPane = new JPanel(new BorderLayout());
+    listingPane.setFont(font);
+    listingPane.setEditable(false);
+    listingScroll = new JScrollPane();
+    // Panel is part of kludge needed to allow horizontal scrolling which keeps breakpoints on proper lines
+    JPanel panel = new JPanel(new BorderLayout());
+    panel.add(listingPane);
+    listingScroll.setViewportView(panel);
+    listingScroll.setRowHeaderView(new DebugRibbon());
+    listingScroll.getVerticalScrollBar().setUnitIncrement(16);
     statusPane = new StatusPane();
+    // Setup OCD Message Pane
+    messagePane = new JTextPane();
+    messagePane.setBorder(new EmptyBorder(0, 5, 0, 0));
+    messagePane.setFont(font);
+    messagePane.setEditable(false);
+    // Build complete layout
     build();
-    tabs.addTab(tabName, null, outerPane, hoverText);
+    tabs.addTab(tabName, null, this, hoverText);
   }
 
   private void build  () {
-    outerPane.removeAll();
+    removeAll();
     if (showStatusPane) {
-      outerPane.add(statusPane, BorderLayout.NORTH);
+      add(statusPane, BorderLayout.NORTH);
     }
     statusPane.setActive(false);
-    JPanel list = new JPanel(new BorderLayout());
-    list.add(this, BorderLayout.CENTER);
-    outerPane.add(list, BorderLayout.CENTER);
+    if (showMessagePane) {
+      MySplitPane split = new MySplitPane(JSplitPane.VERTICAL_SPLIT);
+      split.add(new JScrollPane(listingScroll), JSplitPane.TOP);
+      messagePane.setBorder(BorderFactory.createTitledBorder("OCD Messages"));
+      split.add(new JScrollPane(messagePane), JSplitPane.BOTTOM);
+      messagePane.getDocument().addDocumentListener(new DocumentListener() {
+        public void insertUpdate (DocumentEvent e) {
+          split.openPane();
+        }
+
+        public void removeUpdate (DocumentEvent e) { }
+
+        public void changedUpdate (DocumentEvent e) { }
+      });
+      add(split, BorderLayout.CENTER);
+      SwingUtilities.invokeLater(() -> split.setDividerLocation(0.9999));
+    } else {
+      add(listingScroll, BorderLayout.CENTER);
+    }
   }
 
   void showStatusPane (boolean show) {
     showStatusPane = show;
     build();
-    EventQueue.invokeLater(outerPane::updateUI);
+    EventQueue.invokeLater(this::updateUI);
   }
 
-  public JTextPane getEditPane () {
-    return debugPane;
+  public void addHyperlinkListener(HyperlinkListener listener) {
+    listingPane.addHyperlinkListener(listener);
   }
 
   private int getDocumentPosition (int line) {
-    int lineHeight = debugPane.getFontMetrics(debugPane.getFont()).getHeight();
+    int lineHeight = listingPane.getFontMetrics(listingPane.getFont()).getHeight();
     int y = line * lineHeight;
     Point pt = new Point(0, y);
-    return debugPane.viewToModel(pt);
+    return listingPane.viewToModel(pt);
   }
 
   public void clearSelection () {
     if (hasSelection) {
       SwingUtilities.invokeLater(() -> {
         SimpleAttributeSet sas = new SimpleAttributeSet();
-        StyleConstants.setBackground(sas, debugPane.getBackground());
-        StyledDocument doc = debugPane.getStyledDocument();
+        StyleConstants.setBackground(sas, listingPane.getBackground());
+        StyledDocument doc = listingPane.getStyledDocument();
         doc.setCharacterAttributes(sPos, ePos - sPos, sas, false);
       });
       hasSelection = false;
@@ -126,13 +180,13 @@ public class ListingPane extends JScrollPane {
       ePos = getDocumentPosition(lineNum);
       SimpleAttributeSet sas = new SimpleAttributeSet();
       StyleConstants.setBackground(sas, OVAL_COLOR);
-      StyledDocument doc = debugPane.getStyledDocument();
+      StyledDocument doc = listingPane.getStyledDocument();
       doc.setCharacterAttributes(sPos, ePos - sPos, sas, false);
     });
   }
 
   public void gotoLine (int lineNum) {
-    Container container = SwingUtilities.getAncestorOfClass(JViewport.class, debugPane);
+    Container container = SwingUtilities.getAncestorOfClass(JViewport.class, listingPane);
     if (container != null) {
       SwingUtilities.invokeLater(() -> {
         JViewport viewport = (JViewport) container;
@@ -146,7 +200,7 @@ public class ListingPane extends JScrollPane {
    * @param list listing
    */
   public void setText (String list) {
-    debugPane.setContentType("text/lst");
+    listingPane.setContentType("text/lst");
     breakLines.clear();
     lineNumToAddress.clear();
     Map<String,String> vecs = null;
@@ -197,16 +251,16 @@ public class ListingPane extends JScrollPane {
       buf.append(line);
       buf.append("\n");
     }
-    debugPane.setText(buf.toString());
+    listingPane.setText(buf.toString());
   }
 
   public String getText () {
-    return debugPane.getText();
+    return listingPane.getText();
   }
 
   public void setErrorText (String test) {
-    debugPane.setContentType("text/html");
-    debugPane.setText(test);
+    listingPane.setContentType("text/html");
+    listingPane.setText(test);
   }
 
   public void highlightAddress (int address) {
@@ -253,7 +307,14 @@ public class ListingPane extends JScrollPane {
               debugger.resetTarget();
               debugger.setOcdListener(text -> {
                 if (running) {
-                  ide.appendToInfoPane(text);
+                  Document doc = messagePane.getDocument();
+                  try {
+                    doc.insertString(doc.getLength(), text, null);
+                    messagePane.setCaretPosition(messagePane.getCaretPosition() + text.length());
+                    repaint();
+                  } catch (Exception ex) {
+                    ex.printStackTrace();
+                  }
                 }
               });
             } catch (Exception ex) {
@@ -449,9 +510,7 @@ public class ListingPane extends JScrollPane {
       JPanel buttons = new JPanel(new GridLayout(1, 5));
       buttons.setBorder(Utility.getBorder(BorderFactory.createLineBorder(Color.BLACK, 1), 1, 1, 1, 1));
       buttons.add(attach = new JButton("ATTACH"));
-      attach.addActionListener((ActionEvent ev) -> {
-        setActive(active = !active);
-      });
+      attach.addActionListener((ActionEvent ev) -> setActive(active = !active));
       buttons.add(run = new JButton("RUN"));
       run.addActionListener(ev -> {
         if (debugger != null) {
@@ -657,7 +716,7 @@ public class ListingPane extends JScrollPane {
       hints.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
       g2.setRenderingHints(hints);
       Insets insets = getInsets();
-      int maxLines = debugPane.getDocument().getDefaultRootElement().getElementIndex(debugPane.getDocument().getLength() - 1);
+      int maxLines = listingPane.getDocument().getDefaultRootElement().getElementIndex(listingPane.getDocument().getLength() - 1);
       Rectangle clip = g.getClip().getBounds();
       int topLine = (int) (clip.getY() / lineHeight);
       int bottomLine = Math.min(maxLines, (int) (clip.getHeight() + lineHeight - 1) / lineHeight + topLine + 1);
