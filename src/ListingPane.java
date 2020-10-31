@@ -30,8 +30,11 @@ public class ListingPane extends JPanel {
   private static final Color          STATUS_BACK = new Color(221, 221, 221);
   private static final Color          CHANGED_COLOR = new Color(191, 196, 255);
   private static final boolean        SINGLE_BREAK = true;
-  private final JTextPane             listingPane;
-  private final JTextPane             messagePane;
+  private final MyJTextPane           listingPane;
+  private final MyJTextPane           messagePane;
+  private final JScrollPane           listingScroll;
+  private final JScrollPane           messageScroll;
+  private final MySplitPane           split;
   private final FontMetrics           fontMetrics;
   private final BitSet                breakpoints = new BitSet();
   private final BitSet                breakLines = new BitSet();
@@ -42,9 +45,7 @@ public class ListingPane extends JPanel {
   private final Preferences           prefs;
   private final int                   lineHeight;
   StatusPane                          statusPane;
-  JScrollPane                         listingScroll;
   boolean                             showStatusPane;
-  boolean                             showMessagePane = true;
   MegaTinyIDE                         ide;
   private boolean                     hasSelection;
   private int                         sPos;
@@ -69,7 +70,7 @@ public class ListingPane extends JPanel {
     @Override
     public void setDividerLocation (int loc) {
       Dimension dim = getSize();
-      if (dim.height - loc < 40) {
+      if (dim.height - loc < 60) {
         loc = dim.height;
         opened = false;
       } else {
@@ -78,18 +79,21 @@ public class ListingPane extends JPanel {
       super.setDividerLocation(loc);
     }
 
-    public void openPane () {
-      if (!opened) {
-        SwingUtilities.invokeLater(() -> setDividerLocation(0.9));
-      }
+  }
+
+  static class MyJTextPane extends JTextPane {
+    // Allow horizontal scrollbar to appear
+    @Override
+    public boolean getScrollableTracksViewportWidth() {
+      return false;
     }
   }
 
-    ListingPane (JTabbedPane tabs, String tabName, String hoverText, MegaTinyIDE ide, Preferences prefs) {
+  ListingPane (JTabbedPane tabs, String tabName, String hoverText, MegaTinyIDE ide, Preferences prefs) {
     this.ide = ide;
     this.prefs = prefs;
     setLayout(new BorderLayout());
-    listingPane = new JTextPane();
+    listingPane = new MyJTextPane();
     listingPane.setBorder(new EmptyBorder(0, 5, 0, 0));
     Font font = Utility.getCodeFont(12);
     fontMetrics = getFontMetrics(font);
@@ -98,19 +102,34 @@ public class ListingPane extends JPanel {
     doc.putProperty(PlainDocument.tabSizeAttribute, 4);
     listingPane.setFont(font);
     listingPane.setEditable(false);
-    listingScroll = new JScrollPane();
-    // Panel is part of kludge needed to allow horizontal scrolling which keeps breakpoints on proper lines
-    JPanel panel = new JPanel(new BorderLayout());
-    panel.add(listingPane);
-    listingScroll.setViewportView(panel);
+    listingScroll = new JScrollPane(listingPane);
+    listingScroll.setWheelScrollingEnabled(true);
     listingScroll.setRowHeaderView(new DebugRibbon());
     listingScroll.getVerticalScrollBar().setUnitIncrement(16);
     statusPane = new StatusPane();
     // Setup OCD Message Pane
-    messagePane = new JTextPane();
+    messagePane = new MyJTextPane();
     messagePane.setBorder(new EmptyBorder(0, 5, 0, 0));
     messagePane.setFont(font);
     messagePane.setEditable(false);
+    messageScroll = new JScrollPane(messagePane);
+    messageScroll.setBorder(BorderFactory.createTitledBorder("OCD Messages"));
+    // Setup JSplitPane
+    split = new MySplitPane(JSplitPane.VERTICAL_SPLIT);
+    split.add(listingScroll, JSplitPane.TOP);
+    split.add(messageScroll, JSplitPane.BOTTOM);
+    messagePane.getDocument().addDocumentListener(new DocumentListener() {
+      public void insertUpdate (DocumentEvent e) {
+        // Open OCD Message window if not already open
+        if (!split.opened) {
+          SwingUtilities.invokeLater(() -> split.setDividerLocation(0.9));
+        }
+      }
+
+      public void removeUpdate (DocumentEvent e) { }
+
+      public void changedUpdate (DocumentEvent e) { }
+    });
     // Build complete layout
     build();
     tabs.addTab(tabName, null, this, hoverText);
@@ -122,25 +141,8 @@ public class ListingPane extends JPanel {
       add(statusPane, BorderLayout.NORTH);
     }
     statusPane.setActive(false);
-    if (showMessagePane) {
-      MySplitPane split = new MySplitPane(JSplitPane.VERTICAL_SPLIT);
-      split.add(new JScrollPane(listingScroll), JSplitPane.TOP);
-      messagePane.setBorder(BorderFactory.createTitledBorder("OCD Messages"));
-      split.add(new JScrollPane(messagePane), JSplitPane.BOTTOM);
-      messagePane.getDocument().addDocumentListener(new DocumentListener() {
-        public void insertUpdate (DocumentEvent e) {
-          split.openPane();
-        }
-
-        public void removeUpdate (DocumentEvent e) { }
-
-        public void changedUpdate (DocumentEvent e) { }
-      });
-      add(split, BorderLayout.CENTER);
-      SwingUtilities.invokeLater(() -> split.setDividerLocation(0.9999));
-    } else {
-      add(listingScroll, BorderLayout.CENTER);
-    }
+    add(split, BorderLayout.CENTER);
+    SwingUtilities.invokeLater(() -> split.setDividerLocation(0.9999));
   }
 
   void showStatusPane (boolean show) {
