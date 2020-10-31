@@ -13,13 +13,11 @@
 #### Pinout Guides
 <table>
 	<tr>
-	    <td style="width:10px;">&nbsp;</td>
 		<td align="center"><b>ATtiny 1-Series Pinouts</b></td>
 	    <td style="width:10px;">&nbsp;</td>
 		<td align="center"><b>ATtiny 0-Series Pinouts</b></td>
 	</tr>
 	<tr valign="top">
-	    <td>&nbsp;</td>
 		<td> 
 		<table style="background-color:#EEEEEE;">
 			<tr>
