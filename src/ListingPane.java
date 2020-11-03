@@ -4,7 +4,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.event.HyperlinkListener;
+import javax.swing.event.HyperlinkEvent;
 import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -18,8 +18,9 @@ import java.util.prefs.Preferences;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ListingPane extends JPanel {
-  private static final Pattern        DEBUG_LINE = Pattern.compile("\\s+([0-9a-fA-F]+):\\s[0-9a-fA-F]{2}\\s[0-9a-fA-F]{2}\\s");
+public class ListingPane extends JPanel {   // https://regex101.com
+  private static final Pattern        DBG_LINE = Pattern.compile("\\s+([0-9a-fA-F]+):\\s[0-9a-fA-F]{2}\\s[0-9a-fA-F]{2}\\s");
+  private static final Pattern        VAR_LINE = Pattern.compile("([0-9a-fA-F]{8}).{9}(.+)\t([0-9a-fA-F]{8})\\s+(.*)");
   private static final int            FONT_SIZE = 12;
   private static final int            DEFAULT_R_MARGIN = 7;
   private static final int            DEFAULT_L_MARGIN = 5;
@@ -32,10 +33,7 @@ public class ListingPane extends JPanel {
   private static final boolean        SINGLE_BREAK = true;
   private final MyJTextPane           listingPane;
   private final MyJTextPane           messagePane;
-  private final JScrollPane           listingScroll;
-  private final JScrollPane           messageScroll;
   private final MySplitPane           split;
-  private final FontMetrics           fontMetrics;
   private final BitSet                breakpoints = new BitSet();
   private final BitSet                breakLines = new BitSet();
   private final Set<Integer>          breakAddresses = new TreeSet<>();
@@ -43,13 +41,15 @@ public class ListingPane extends JPanel {
   private final Map<Integer,Integer>  addressToLineNum = new HashMap<>();
   private final List<DebugListener>   debugListeners = new ArrayList<>();
   private final Preferences           prefs;
-  private final int                   lineHeight;
   StatusPane                          statusPane;
   boolean                             showStatusPane;
   MegaTinyIDE                         ide;
   private boolean                     hasSelection;
   private int                         sPos;
   private int                         ePos;
+  private int                         lineCount;
+  private boolean                     active, running;
+  private EDBG                        debugger;
 
   interface DebugListener {
     void debugState (boolean active);
@@ -94,15 +94,13 @@ public class ListingPane extends JPanel {
     this.prefs = prefs;
     setLayout(new BorderLayout());
     listingPane = new MyJTextPane();
-    listingPane.setBorder(new EmptyBorder(0, 5, 0, 0));
-    Font font = Utility.getCodeFont(12);
-    fontMetrics = getFontMetrics(font);
-    lineHeight = fontMetrics.getHeight();
+    listingPane.setBorder(new EmptyBorder(-4, 5, 0, 0));
+    Font font = Utility.getCodeFont(FONT_SIZE);
     Document doc = listingPane.getDocument();
-    doc.putProperty(PlainDocument.tabSizeAttribute, 4);
+    doc.putProperty(PlainDocument.tabSizeAttribute, 8);
     listingPane.setFont(font);
     listingPane.setEditable(false);
-    listingScroll = new JScrollPane(listingPane);
+    JScrollPane listingScroll = new JScrollPane(listingPane);
     listingScroll.setWheelScrollingEnabled(true);
     listingScroll.setRowHeaderView(new DebugRibbon());
     listingScroll.getVerticalScrollBar().setUnitIncrement(16);
@@ -112,7 +110,7 @@ public class ListingPane extends JPanel {
     messagePane.setBorder(new EmptyBorder(0, 5, 0, 0));
     messagePane.setFont(font);
     messagePane.setEditable(false);
-    messageScroll = new JScrollPane(messagePane);
+    JScrollPane messageScroll = new JScrollPane(messagePane);
     messageScroll.setBorder(BorderFactory.createTitledBorder("OCD Messages"));
     // Setup JSplitPane
     split = new MySplitPane(JSplitPane.VERTICAL_SPLIT);
@@ -130,9 +128,92 @@ public class ListingPane extends JPanel {
 
       public void changedUpdate (DocumentEvent e) { }
     });
+    listingPane.addHyperlinkListener(ev -> {
+      if (ev.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+        String [] parts = ev.getDescription().split(":");
+        if (parts.length == 3 && "err".equals(parts[0])) {
+          ide.selectTab(MegaTinyIDE.Tab.SRC);
+          int line = Integer.parseInt(parts[1]);
+          int column = Integer.parseInt(parts[2]);
+          ide.codePane.setPosition(line, column);
+        } else if (parts.length >= 4 && "var".equals(parts[0])) {
+          if (debugger != null && active && !running) {
+            int add = Integer.parseInt(parts[2]);
+            int len = Integer.parseInt(parts[3]);
+            byte[] data = debugger.readSRam(add, len);
+            showVariable (parts[0], add, data);
+          } else {
+            ide.showErrorDialog("Debugger must be attached and in stop mode to view variables!");
+          }
+        }
+      }
+    });
     // Build complete layout
     build();
     tabs.addTab(tabName, null, this, hoverText);
+  }
+
+  static class MyJTextPane2 extends MyJTextPane {
+    int rowHeight;
+    int rows;
+
+    MyJTextPane2 (Font font, int maxRows, Border border) {
+      this.rows = maxRows;
+      setFont(font);
+      setBorder(border);
+      FontMetrics fontMetrics = getFontMetrics(font);
+      rowHeight = fontMetrics.getHeight();
+    }
+
+    int getScrollHeight () {
+      return rowHeight;
+    }
+
+    @Override
+    public Dimension getPreferredScrollableViewportSize() {
+      Dimension base = super.getPreferredSize();
+      Insets insets = getInsets();
+      int width = base.width + insets.left + insets.right;
+      int estimatedRows = Math.min(rows, (int) (base.getHeight() / rowHeight));
+      int height = estimatedRows * rowHeight + insets.top + insets.bottom;
+      return new Dimension(width, height);
+    }
+  }
+
+  private void showVariable (String name, int add, byte[] data) {
+    int cols = 8;
+    MyJTextPane2 pane = new MyJTextPane2(Utility.getCodeFont(12), 8, BorderFactory.createEmptyBorder(2, 3, 2, 4));
+    pane.setEditable(false);
+    JScrollPane scroll = new JScrollPane(pane);
+    scroll.getVerticalScrollBar().setUnitIncrement(pane.getScrollHeight());
+    StringBuilder buf = new StringBuilder();
+    int count = cols;
+    int base = 0;
+    for (int ii = 0; ii < data.length; ii++) {
+      if ((ii % cols) == 0) {
+        if (ii != 0) {
+          buf.append("\n");
+          count = cols;
+          base = ii;
+        }
+        buf.append(String.format("0x%04X: ", add + ii));
+      }
+      buf.append(String.format("0x%02X ", data[ii]));
+      count--;
+      if (count == 0 || ii == data.length - 1) {
+        while (count-- > 0 && ii >= cols) {
+          buf.append("     ");
+        }
+        buf.append("| ");
+        for (int jj = 0; jj < cols && (base + jj) < data.length; jj++) {
+          int val =  (int) data[base + jj] & 0xFF;
+          buf.append(String.format("%c", (val <= 0x7F && val >= 0x20 ? val : '.')));
+        }
+      }
+    }
+    pane.setText(buf.toString());
+    String title =  "Variable: " + name + " (" + data.length + " bytes)";
+    JOptionPane.showConfirmDialog(this, scroll, title, JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
   }
 
   private void build  () {
@@ -149,10 +230,6 @@ public class ListingPane extends JPanel {
     showStatusPane = show;
     build();
     EventQueue.invokeLater(this::updateUI);
-  }
-
-  public void addHyperlinkListener(HyperlinkListener listener) {
-    listingPane.addHyperlinkListener(listener);
   }
 
   private int getDocumentPosition (int line) {
@@ -192,9 +269,16 @@ public class ListingPane extends JPanel {
     if (container != null) {
       SwingUtilities.invokeLater(() -> {
         JViewport viewport = (JViewport) container;
+        int lineHeight = listingPane.getFontMetrics(listingPane.getFont()).getHeight();
         viewport.setViewPosition(new Point(0, lineHeight * (lineNum - 1)));
       });
     }
+  }
+
+  private static String getFontStyle (Font font) {
+    String fName = font.getFontName();
+    int size = font.getSize();
+    return "style=\"font-family:" + fName + ";font-size:" + size + ";margin: 1em 0;display: block;";
   }
 
   /**
@@ -202,7 +286,9 @@ public class ListingPane extends JPanel {
    * @param list listing
    */
   public void setText (String list) {
-    listingPane.setContentType("text/lst");
+    listingPane.setContentType("text/html");
+    Font font = Utility.getCodeFont(FONT_SIZE);
+    listingPane.setFont(font);
     breakLines.clear();
     lineNumToAddress.clear();
     Map<String,String> vecs = null;
@@ -220,7 +306,8 @@ public class ListingPane extends JPanel {
         ide.showErrorDialog("Unable to load vector set");
       }
     }
-    StringBuilder buf = new StringBuilder();
+    StringBuilder buf = new StringBuilder("<html><pre " + getFontStyle(font) + "\">");
+    lineCount = 0;
     String[] lines = list.split("\n");
     boolean lastBlank = false;
     int lineNum = 1;
@@ -230,10 +317,10 @@ public class ListingPane extends JPanel {
         continue;
       }
       lastBlank = isBlank;
-      Matcher mat = DEBUG_LINE.matcher(line);
-      if (mat.find()) {
+      Matcher matcher;
+      if ((matcher = DBG_LINE.matcher(line)).find()) {
         breakLines.set(lineNum);
-        String hexAdd = mat.group(1);
+        String hexAdd = matcher.group(1);
         int address = Integer.parseInt(hexAdd, 16);
         lineNumToAddress.put(lineNum, address);
         addressToLineNum.put(address, lineNum);
@@ -246,13 +333,27 @@ public class ListingPane extends JPanel {
             line = line + " - " + vecName;
           }
         }
+      } else if ((matcher = VAR_LINE.matcher(line)).find()) {
+        String type = matcher.group(2);
+        int num = Integer.parseInt(matcher.group(3), 16);
+        if (".bss".equals(type) && num > 0) {
+          int add = Integer.parseInt(matcher.group(1).substring(4), 16);
+          String name = matcher.group(4);
+          int start = matcher.start(3);
+          String prefix = line.substring(0, start);
+          line = prefix + "sram variable: " + "<a href=\"var:" + name + ":" + add + ":" + num + "\">" + name + "</a>";
+        } else {
+          continue;
+        }
       } else {
         line = Utility.condenseTabs(line);
       }
       lineNum++;
       buf.append(line);
+      lineCount++;
       buf.append("\n");
     }
+    buf.append("</pre></html>");
     listingPane.setText(buf.toString());
   }
 
@@ -267,7 +368,7 @@ public class ListingPane extends JPanel {
 
   public void highlightAddress (int address) {
     if (addressToLineNum.containsKey(address)) {
-      selectLine(addressToLineNum.get(address));
+      selectLine(addressToLineNum.get(address) + 1);
     }
   }
 
@@ -278,8 +379,6 @@ public class ListingPane extends JPanel {
     private final HexPanel          regs;
     private final HexPanel          sRegs;
     private final JButton           attach, run, stop, step, reset;
-    private EDBG                    debugger;
-    private boolean                 active, running;
     private Thread                  runThread;
     private int                     portMask;
 
@@ -656,11 +755,12 @@ public class ListingPane extends JPanel {
   }
 
   private class DebugRibbon extends JPanel {
-    private DebugRibbon () {
+    DebugRibbon () {
       setForeground(FORE_COLOR);
       setBackground(BACK_COLOR);
       setBorder(BorderFactory.createEmptyBorder(0, DEFAULT_L_MARGIN, 0, DEFAULT_R_MARGIN));
       Insets insets = getInsets();
+      FontMetrics fontMetrics = listingPane.getFontMetrics(listingPane.getFont());
       int width = insets.left + insets.right + fontMetrics.getAscent();
       Dimension dim = new Dimension(width, MAX_HEIGHT);
       setPreferredSize(dim);
@@ -670,12 +770,13 @@ public class ListingPane extends JPanel {
         public void mouseClicked (MouseEvent ev) {
           super.mouseClicked(ev);
           if (SwingUtilities.isLeftMouseButton(ev)) {
+            int lineHeight = listingPane.getFontMetrics(listingPane.getFont()).getHeight();
             int line = ev.getY() / lineHeight + 1;
             if (SINGLE_BREAK) {
               breakAddresses.clear();
               if (breakpoints.get(line)) {
                 breakpoints.clear();
-              } else {
+              } else if (lineNumToAddress.containsKey(line)) {
                 breakpoints.clear();
                 breakpoints.set(line);
                 breakAddresses.add(lineNumToAddress.get(line));
@@ -718,11 +819,14 @@ public class ListingPane extends JPanel {
       hints.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
       g2.setRenderingHints(hints);
       Insets insets = getInsets();
-      int maxLines = listingPane.getDocument().getDefaultRootElement().getElementIndex(listingPane.getDocument().getLength() - 1);
+      //Document doc = listingPane.getDocument();
+      int maxLines = lineCount - 1;// doc.getDefaultRootElement().getElementIndex(doc.getLength() - 1);
       Rectangle clip = g.getClip().getBounds();
+      int lineHeight = listingPane.getFontMetrics(listingPane.getFont()).getHeight();
       int topLine = (int) (clip.getY() / lineHeight);
       int bottomLine = Math.min(maxLines, (int) (clip.getHeight() + lineHeight - 1) / lineHeight + topLine + 1);
       // Draw available and active breakpoint controls
+      g2.setStroke(new BasicStroke(1.3f));
       for (int line = topLine; line <= bottomLine; line++) {
         int lineNum = line + 1;
         int yLoc = line * lineHeight + insets.top;

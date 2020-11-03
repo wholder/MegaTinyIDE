@@ -38,6 +38,8 @@
       0x0D  divide by 64  0000 1011   312.5 kHz
 */
 
+char var1[32];
+
 int main () {
   CPU_CCP = 0xD8;                 		// Enable Configuration Change Protected register
 	CLKCTRL.MCLKCTRLB = 0x00;						// Set Clock to 20 MHz

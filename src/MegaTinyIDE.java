@@ -21,7 +21,6 @@ import java.util.zip.ZipFile;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 import javax.swing.filechooser.FileFilter;
@@ -52,14 +51,14 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
   private static final KeyStroke  DEBUG_KEY = KeyStroke.getKeyStroke(KeyEvent.VK_D, cmdMask) ;
   static Map<String,ChipInfo>     chipTypes = new LinkedHashMap<>();
   static Map<String,ChipInfo>     chipSignatures = new LinkedHashMap<>();
-  private enum                    Tab {DOC(0), SRC(1), LIST(2), HEX(3), INFO(4);
+  public enum                     Tab {DOC(0), SRC(1), LIST(2), HEX(3), INFO(4);
                                          final int num; Tab(int num) {this.num = num;}}
   private final String            osName = System.getProperty("os.name").toLowerCase();
   private enum                    OpSys {MAC, WIN, LINUX}
   private OpSys                   os;
   private String                  osCode;
   private final JTabbedPane       tabPane;
-  private final CodeEditPane      codePane;
+  public final CodeEditPane       codePane;
   private ListingPane             listPane;
   private MyTextPane              hexPane;
   private final MyTextPane        infoPane;
@@ -294,12 +293,12 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     return fc;
   }
 
-  private void selectTab (Tab tab) {
+  public void selectTab (Tab tab) {
     tabPane.setSelectedIndex(tab.num);
   }
 
   private void setDirtyIndicator (boolean dirty) {
-    this.setTitle("ATTinyC: " + (editFile != null ? editFile : "") + (dirty ? " [unsaved]" : ""));
+    this.setTitle("MegaTinyIDE: " + (editFile != null ? editFile : "") + (dirty ? " [unsaved]" : ""));
   }
 
   private void showAboutBox () {
@@ -322,34 +321,24 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
   }
 
   private void showPreferences (int modifiers) {
-    List<ParmDialog.ParmItem> items = new ArrayList<>();
-    items.add(new ParmDialog.ParmItem("Generate Prototypes (Experimental){*[GEN_PROTOS]*}", prefs.getBoolean("gen_prototypes", true)));
-    items.add(new ParmDialog.ParmItem("Interleave Source and ASM{*[INTERLEAVE]*}",  prefs.getBoolean("interleave", true)));
-    items.add(new ParmDialog.ParmItem("Include Symbol Table in Listing{*[SYMTABLE]*}",  prefs.getBoolean("symbol_table", false)));
-    items.add(new ParmDialog.ParmItem("Add Vector Names in Listing{*[VECNAMES]*}",  prefs.getBoolean("vector_names", false)));
+    List<ParmDialog.Item> items = new ArrayList<>();
+    items.add(new ParmDialog.Item("Generate Prototypes (Experimental)", "*[GEN_PROTOS]*", "gen_prototypes", true));
+    items.add(new ParmDialog.Item("Interleave Source and ASM", "*[INTERLEAVE]*", "interleave", true));
+    items.add(new ParmDialog.Item("Include Symbol Table in Listing", "*[SYMTABLE]*", "symbol_table", false));
+    items.add(new ParmDialog.Item("Add Vector Names in Listing", "*[VECNAMES]*", "vector_names", false));
     boolean devFeatures = (modifiers & InputEvent.CTRL_MASK) != 0;
     if (devFeatures) {
-      items.add(new ParmDialog.ParmItem("Enable Preprocessing (Developer){*[PREPROCESS]*}", prefs.getBoolean("enable_preprocessing", false)));
-      items.add(new ParmDialog.ParmItem("Enable Developer Features{*[DEV_ONLY]*}", prefs.getBoolean("developer_features", false)));
+      items.add(new ParmDialog.Item("Enable Preprocessing (Developer)", "*[PREPROCESS]*", "enable_preprocessing", false));
+      items.add(new ParmDialog.Item("Enable Developer Features", "*[DEV_ONLY]*", "developer_features", false));
     }
-    ParmDialog.ParmItem[] parmSet = items.toArray(new ParmDialog.ParmItem[0]);
-    ParmDialog dialog = new ParmDialog(new ParmDialog.ParmItem[][] {parmSet}, null, new String[] {"Save", "Cancel"});
+    ParmDialog.Item[] parmSet = items.toArray(new ParmDialog.Item[0]);
+    ParmDialog dialog = (new ParmDialog("Edit Preferences", parmSet, new String[] {"Save", "Cancel"}));
     dialog.setLocationRelativeTo(this);
     dialog.setVisible(true);              // Note: this call invokes dialog
-    if (dialog.wasPressed()) {
-      prefs.putBoolean("gen_prototypes",          parmSet[0].value);
-      prefs.putBoolean("interleave",              parmSet[1].value);
-      prefs.putBoolean("symbol_table",            parmSet[2].value);
-      prefs.putBoolean("vector_names",            parmSet[3].value);
-      if (devFeatures) {
-        prefs.putBoolean("enable_preprocessing",  parmSet[4].value);
-        prefs.putBoolean("developer_features",    parmSet[5].value);
-      }
-    }
   }
 
   private MegaTinyIDE () {
-    super("ATTinyC");
+    super("MegaTinyIDE");
     // Setup temp directory for code compilation and toolchain
     try {
       tmpDir = Utility.createDir(tempBase + "avr-temp-code");
@@ -384,15 +373,6 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     tabPane.addTab("How To", null, howToPane, "This is the documentation page");
     tabPane.addTab("Source Code", null, codePane, "This is the editor pane where you enter source code");
     listPane = new ListingPane(tabPane, "Listing", "Select this pane to view the assembler listing", this, prefs);
-    listPane.addHyperlinkListener(ev -> {
-      if (ev.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-        String [] tmp = ev.getDescription().split(":");
-        selectTab(Tab.SRC);
-        int line = Integer.parseInt(tmp[0]);
-        int column = Integer.parseInt(tmp[1]);
-        codePane.setPosition(line, column);
-      }
-    });
     listPane.addDebugListener(this);
     hexPane =  new MyTextPane(tabPane, "Hex Output", "Intel Hex Output file for programmer");
     infoPane = new MyTextPane(tabPane, "Monitor", "Displays additional information about IDE and OCD and error messages");
@@ -609,7 +589,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
               while (mat.find()) {
                 String seq = mat.group(1);
                 if (seq != null) {
-                  mat.appendReplacement(buf, "<a href=\"" + mat.group(2) +  "\">" + seq + "</a>");
+                  mat.appendReplacement(buf, "<a href=\"err:" + mat.group(2) +  "\">" + seq + "</a>");
                 }
               }
               mat.appendTail(buf);
@@ -628,9 +608,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
               tmp.append( compileMap.get("SIZE"));
               tmp.append(compileMap.get("LST"));
               String listing = tmp.toString();
-              compName = compName.substring(0, compName.indexOf("."));
-              trueName = trueName.substring(0, trueName.indexOf("."));
-              listPane.setText(listing.replace(tmpDir + compName, trueName));
+              listPane.setText(listing.replace(tmpDir, ""));
               hexPane.setForeground(Color.black);
               hexPane.setText(compileMap.get("HEX"));
               avrChip = compileMap.get("CHIP");

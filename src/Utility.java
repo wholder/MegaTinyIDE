@@ -74,6 +74,35 @@ class Utility {
     return tmp.toString();
   }
 
+  static String detabLine (int spacing, String line) {
+    StringBuilder buf = new StringBuilder();
+    int idx;
+    int last = 0;
+    int col = 0;
+    while ((idx = line.indexOf('\t', last)) >= 0) {
+      String seg = line.substring(last, idx);
+      buf.append(seg);
+      col += seg.length();
+      int remain = spacing - (col % spacing);
+      for (int ii = 0; ii < remain; ii++) {
+        buf.append((' '));
+        col++;
+      }
+      last = idx + 1;
+    }
+    buf.append(line.substring(last));
+    return buf.toString();
+  }
+
+  public static void main (String[] args) {
+    System.out.println("'" + detabLine(4, "0123\t0123\t0123") + "'");
+    System.out.println("'" + detabLine(4, "\t0123\t0123\t0123") + "'");
+    System.out.println("'" + detabLine(4, "0\t1234") + "'");
+    System.out.println("'" + detabLine(4, "01\t2345") + "'");
+    System.out.println("'" + detabLine(4, "012\t4567") + "'");
+    System.out.println("'" + detabLine(4, "01234567\t0123") + "'");
+  }
+
   static void saveFile (File file, String text) {
     try {
       FileOutputStream out = new FileOutputStream(file);
