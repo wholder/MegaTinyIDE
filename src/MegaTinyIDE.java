@@ -582,10 +582,13 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
               listPane.setForeground(Color.red);
               // Remove path to tmpDir from error messages
               String errText = compileMap.get("ERR").replace(tmpDir + compName, trueName);
+              errText = errText.replaceAll("<", "&lt;");
+              errText = errText.replaceAll(">", "&gt;");
               errText = errText.replace("\n", "<br>");
               Pattern lineRef = Pattern.compile("(" + trueName + ":([0-9]+?:[0-9]+?):) (fatal error|error|note):");
               Matcher mat = lineRef.matcher(errText);
-              StringBuffer buf = new StringBuffer("<html><body><tt>");
+              Font font = Utility.getCodeFont(12);
+              StringBuffer buf = new StringBuffer("<html><pre " + Utility.getFontStyle(font) + ">");
               while (mat.find()) {
                 String seq = mat.group(1);
                 if (seq != null) {
@@ -593,7 +596,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
                 }
               }
               mat.appendTail(buf);
-              buf.append("</tt></body></html>");
+              buf.append("</pre></html>");
               listPane.setErrorText(buf.toString());
               compiled = false;
             } else {

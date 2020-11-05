@@ -275,17 +275,13 @@ public class ListingPane extends JPanel {   // https://regex101.com
     }
   }
 
-  private static String getFontStyle (Font font) {
-    String fName = font.getFontName();
-    int size = font.getSize();
-    return "style=\"font-family:" + fName + ";font-size:" + size + ";margin: 1em 0;display: block;";
-  }
-
   /**
    * Set test into debugPane and setup breakpoint controls
    * @param list listing
    */
   public void setText (String list) {
+    list = list.replaceAll("<", "&lt;");
+    list = list.replaceAll(">", "&gt;");
     listingPane.setContentType("text/html");
     Font font = Utility.getCodeFont(FONT_SIZE);
     listingPane.setFont(font);
@@ -306,7 +302,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
         ide.showErrorDialog("Unable to load vector set");
       }
     }
-    StringBuilder buf = new StringBuilder("<html><pre " + getFontStyle(font) + "\">");
+    StringBuilder buf = new StringBuilder("<html><pre " + Utility.getFontStyle(font) + ">");
     lineCount = 0;
     String[] lines = list.split("\n");
     boolean lastBlank = false;

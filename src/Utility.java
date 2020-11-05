@@ -94,15 +94,6 @@ class Utility {
     return buf.toString();
   }
 
-  public static void main (String[] args) {
-    System.out.println("'" + detabLine(4, "0123\t0123\t0123") + "'");
-    System.out.println("'" + detabLine(4, "\t0123\t0123\t0123") + "'");
-    System.out.println("'" + detabLine(4, "0\t1234") + "'");
-    System.out.println("'" + detabLine(4, "01\t2345") + "'");
-    System.out.println("'" + detabLine(4, "012\t4567") + "'");
-    System.out.println("'" + detabLine(4, "01234567\t0123") + "'");
-  }
-
   static void saveFile (File file, String text) {
     try {
       FileOutputStream out = new FileOutputStream(file);
@@ -204,6 +195,12 @@ class Utility {
       }
     }
     return map;
+  }
+
+  static String getFontStyle (Font font) {
+    String fName = font.getFontName();
+    int size = font.getSize();
+    return "style=\"font-family:" + fName + ";font-size:" + size + ";margin: 1em 0;display: block;\"";
   }
 
   interface TagCallback {
