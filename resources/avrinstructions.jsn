@@ -1,0 +1,1005 @@
+{
+ "ADC" : {
+  "args" : "Rd,Rr",
+  "desc" : "Add with Carry",
+  "ops" : "Rd ← Rd + Rr + C",
+  "flags" : "Z,C,N,V,S,H",
+  "cycles" : "1"
+ },
+ "ADD" : {
+  "args" : "Rd,Rr",
+  "desc" : "Add without Carry",
+  "ops" : "Rd ← Rd + Rr",
+  "flags" : "Z,C,N,V,S,H",
+  "cycles" : "1"
+ },
+ "ADIW" : {
+  "args" : "Rd,K",
+  "desc" : "Add Immediate to Word",
+  "ops" : "R[d + 1]:Rd ← R[d + 1]:Rd + K",
+  "flags" : "Z,C,N,V,S",
+  "cycles" : "2"
+ },
+ "AND" : {
+  "args" : "Rd,Rr",
+  "desc" : "Logical AND",
+  "ops" : "Rd ← Rd ∧ Rr",
+  "flags" : "Z,N,V,S",
+  "cycles" : "1"
+ },
+ "ANDI" : {
+  "args" : "Rd,K",
+  "desc" : "Logical AND with Immediate",
+  "ops" : "Rd ← Rd ∧ K",
+  "flags" : "Z,N,V,S",
+  "cycles" : "1"
+ },
+ "ASR" : {
+  "args" : "Rd",
+  "desc" : "Arithmetic Shift Right",
+  "ops" : "C ← Rd(0); Rd(n) ← Rd(n+1), n=0..6; Rd(7) ← Rd(7)",
+  "flags" : "Z,C,N,V",
+  "cycles" : "1"
+ },
+ "BCLR" : {
+  "args" : "s",
+  "desc" : "Flag Clear",
+  "ops" : "SREG(s) ← 0",
+  "flags" : "SREG(s)",
+  "cycles" : "1"
+ },
+ "BLD" : {
+  "args" : "Rd,b",
+  "desc" : "Bit load from T to Register",
+  "ops" : "Rd(b) ← T",
+  "flags" : "None",
+  "cycles" : "1"
+ },
+ "BRBC" : {
+  "args" : "s,k",
+  "desc" : "Branch if Status Flag Cleared",
+  "ops" : "if (SREG(s) == 0) then ← PC + k + 1 PC",
+  "flags" : "None",
+  "cycles" : "1/2"
+ },
+ "BRBS" : {
+  "args" : "s,k",
+  "desc" : "Branch if Status Flag Set",
+  "ops" : "if (SREG(s) == 1) then ← PC + k + 1 PC",
+  "flags" : "None",
+  "cycles" : "1/2"
+ },
+ "BRCC" : {
+  "args" : "k",
+  "desc" : "Branch if Carry Cleared",
+  "ops" : "if (C == 0) then PC ← PC + k + 1",
+  "flags" : "None",
+  "cycles" : "1/2"
+ },
+ "BRCS" : {
+  "args" : "k",
+  "desc" : "Branch if Carry Set",
+  "ops" : "if (C == 1) then PC ← PC + k + 1",
+  "flags" : "None",
+  "cycles" : "1/2"
+ },
+ "BREAK" : {
+  "args" : "",
+  "regx" : "^$",
+  "desc" : "Break",
+  "ops" : "See the debug interface description",
+  "flags" : "None",
+  "cycles" : "1"
+ },
+ "BREQ" : {
+  "args" : "k",
+  "desc" : "Branch if Equal",
+  "ops" : "if (Z == 1) then PC ← PC + k + 1",
+  "flags" : "None",
+  "cycles" : "1/2"
+ },
+ "BRGE" : {
+  "args" : "k",
+  "desc" : "Branch if Greater or Equal, Signed",
+  "ops" : "if (S == 0) then PC ← PC + k + 1",
+  "flags" : "None",
+  "cycles" : "1/2"
+ },
+ "BRHC" : {
+  "args" : "k",
+  "desc" : "Branch if Half Carry Flag Cleared",
+  "ops" : "if (H == 0) then PC ← PC + k + 1",
+  "flags" : "None",
+  "cycles" : "1/2"
+ },
+ "BRHS" : {
+  "args" : "k",
+  "desc" : "Branch if Half Carry Flag Set",
+  "ops" : "if (H == 1) then PC ← PC + k + 1",
+  "flags" : "None",
+  "cycles" : "1/2"
+ },
+ "BRID" : {
+  "args" : "k",
+  "desc" : "Branch if Interrupt Disabled",
+  "ops" : "if (I == 0) then PC ← PC + k + 1",
+  "flags" : "None",
+  "cycles" : "1/2"
+ },
+ "BRIE" : {
+  "args" : "k",
+  "desc" : "Branch if Interrupt Enabled",
+  "ops" : "if (I == 1) then PC ← PC + k + 1",
+  "flags" : "None",
+  "cycles" : "1/2"
+ },
+ "BRLO" : {
+  "args" : "k",
+  "desc" : "Branch if Lower",
+  "ops" : "if (C == 1) then PC ← PC + k + 1",
+  "flags" : "None",
+  "cycles" : "1/2"
+ },
+ "BRLT" : {
+  "args" : "k",
+  "desc" : "Branch if Less Than, Signed",
+  "ops" : "if (S == 1) then PC ← PC + k + 1",
+  "flags" : "None",
+  "cycles" : "1/2"
+ },
+ "BRMI" : {
+  "args" : "k",
+  "desc" : "Branch if Minus",
+  "ops" : "if (N == 1) then PC ← PC + k + 1",
+  "flags" : "None",
+  "cycles" : "1/2"
+ },
+ "BRNE" : {
+  "args" : "k",
+  "desc" : "Branch if Not Equal",
+  "ops" : "if (Z == 0) then PC ← PC + k + 1",
+  "flags" : "None",
+  "cycles" : "1/2"
+ },
+ "BRPL" : {
+  "args" : "k",
+  "desc" : "Branch if Plus",
+  "ops" : "if (N == 0) then PC ← PC + k + 1",
+  "flags" : "None",
+  "cycles" : "1/2"
+ },
+ "BRSH" : {
+  "args" : "k",
+  "desc" : "Branch if Same or Higher",
+  "ops" : "if (C == 0) then PC ← PC + k + 1",
+  "flags" : "None",
+  "cycles" : "1/2"
+ },
+ "BRTC" : {
+  "args" : "k",
+  "desc" : "Branch if T Bit Cleared",
+  "ops" : "if (T == 0) then PC ← PC + k + 1",
+  "flags" : "None",
+  "cycles" : "1/2"
+ },
+ "BRTS" : {
+  "args" : "k",
+  "desc" : "Branch if T Bit Set",
+  "ops" : "if (T == 1) then PC ← PC + k + 1",
+  "flags" : "None",
+  "cycles" : "1/2"
+ },
+ "BRVC" : {
+  "args" : "k",
+  "desc" : "Branch if Overflow Flag is Cleared",
+  "ops" : "if (V == 0) then PC ← PC + k + 1",
+  "flags" : "None",
+  "cycles" : "1/2"
+ },
+ "BRVS" : {
+  "args" : "k",
+  "desc" : "Branch if Overflow Flag is Set",
+  "ops" : "if (V == 1) then PC ← PC + k + 1",
+  "flags" : "None",
+  "cycles" : "1/2"
+ },
+ "BSET" : {
+  "args" : "s",
+  "desc" : "Flag Set",
+  "ops" : "SREG(s) ← 1",
+  "flags" : "SREG(s)",
+  "cycles" : "1"
+ },
+ "BST" : {
+  "args" : "Rr,b",
+  "desc" : "Bit Store from Register to T",
+  "ops" : "T ← Rr(b)",
+  "flags" : "T",
+  "cycles" : "1"
+ },
+ "CALL" : {
+  "args" : "k",
+  "desc" : "Call Subroutine",
+  "ops" : "PC ← k",
+  "flags" : "None",
+  "cycles" : "4/5"
+ },
+ "CBI" : {
+  "args" : "A,b",
+  "desc" : "Clear Bit in I/O Register",
+  "ops" : "I/O(A, b) ← 0",
+  "flags" : "None",
+  "cycles" : "2"
+ },
+ "CBR" : {
+  "args" : "Rd,K",
+  "desc" : "Clear Bit(s) in Register",
+  "ops" : "Rd ← Rd ∧ (0xFFh - K)",
+  "flags" : "Z,N,V,S",
+  "cycles" : "1"
+ },
+ "CLC" : {
+  "args" : "",
+  "regx" : "^$",
+  "desc" : "Clear Carry",
+  "ops" : "C ← 0",
+  "flags" : "C",
+  "cycles" : "1"
+ },
+ "CLH" : {
+  "args" : "",
+  "regx" : "^$",
+  "desc" : "Clear Half Carry Flag in SREG",
+  "ops" : "H ← 0",
+  "flags" : "H",
+  "cycles" : "1"
+ },
+ "CLI" : {
+  "args" : "",
+  "regx" : "^$",
+  "desc" : "Global Interrupt Disable",
+  "ops" : "I ← 0",
+  "flags" : "I",
+  "cycles" : "1"
+ },
+ "CLN" : {
+  "args" : "",
+  "regx" : "^$",
+  "desc" : "Clear Negative Flag",
+  "ops" : "N ← 0",
+  "flags" : "N",
+  "cycles" : "1"
+ },
+ "CLR" : {
+  "args" : "Rd",
+  "desc" : "Clear Register",
+  "ops" : "Rd ← Rd ⊕ Rd",
+  "flags" : "Z,N,V,S",
+  "cycles" : "1"
+ },
+ "CLS" : {
+  "args" : "",
+  "regx" : "^$",
+  "desc" : "Clear Sign Bit",
+  "ops" : "S ← 0",
+  "flags" : "S",
+  "cycles" : "1"
+ },
+ "CLT" : {
+  "args" : "",
+  "regx" : "^$",
+  "desc" : "Clear T in SREG",
+  "ops" : "T←0",
+  "flags" : "T",
+  "cycles" : "1"
+ },
+ "CLV" : {
+  "args" : "",
+  "regx" : "^$",
+  "desc" : "Clear Two’s Complement Overflow",
+  "ops" : "V ← 0",
+  "flags" : "V",
+  "cycles" : "1"
+ },
+ "CLZ" : {
+  "args" : "",
+  "regx" : "^$",
+  "desc" : "Clear Zero Flag",
+  "ops" : "Z ← 0",
+  "flags" : "Z",
+  "cycles" : "1"
+ },
+ "COM" : {
+  "args" : "Rd",
+  "desc" : "One’s Complement",
+  "ops" : "Rd ← 0xFF - Rd",
+  "flags" : "Z,C,N,V,S",
+  "cycles" : "1"
+ },
+ "CP" : {
+  "args" : "Rd,Rr",
+  "desc" : "Compare",
+  "ops" : "Rd - Rr",
+  "flags" : "Z,C,N,V,S,H",
+  "cycles" : "1"
+ },
+ "CPC" : {
+  "args" : "Rd,Rr",
+  "desc" : "Compare with Carry",
+  "ops" : "Rd - Rr - C",
+  "flags" : "Z,C,N,V,S,H",
+  "cycles" : "1"
+ },
+ "CPI" : {
+  "args" : "Rd,K",
+  "desc" : "Compare with Immediate",
+  "ops" : "Rd - K",
+  "flags" : "Z,C,N,V,S,H",
+  "cycles" : "1"
+ },
+ "CPSE" : {
+  "args" : "Rd,Rr",
+  "desc" : "Compare, skip if Equal",
+  "ops" : "if (Rd == Rr) PC ← PC + 2 or 3",
+  "flags" : "None",
+  "cycles" : "1/2/3"
+ },
+ "DEC" : {
+  "args" : "Rd",
+  "desc" : "Decrement",
+  "ops" : "Rd ← Rd - 1",
+  "flags" : "Z,N,V,S",
+  "cycles" : "1"
+ },
+ "EICALL" : {
+  "args" : "",
+  "regx" : "^$",
+  "desc" : "Extended Indirect Call to (Z)",
+  "ops" : "PC(15:0) ← Z",
+  "flags" : "None",
+  "cycles" : "4"
+ },
+ "EIJMP" : {
+  "args" : "",
+  "regx" : "^$",
+  "desc" : "Extended Indirect Jump to (Z)",
+  "ops" : "PC(15:0) ← Z",
+  "flags" : "None",
+  "cycles" : "2"
+ },
+ "ELPM" : [
+  {
+   "args" : "",
+   "regx" : "^$",
+   "desc" : "Extended Load Program Memory",
+   "ops" : "R0 ← PS(RAMPZ:Z)",
+   "flags" : "None",
+   "cycles" : "3"
+  },
+  {
+   "args" : "Rd,Z",
+   "regx" : "[rR][0-9]{1,2},[zZ]",
+   "desc" : "Extended Load Program Memory",
+   "ops" : "Rd ← PS(RAMPZ:Z)",
+   "flags" : "None",
+   "cycles" : "3"
+  },
+  {
+   "args" : "Rd,Z+",
+   "regx" : "[rR][0-9]{1,2},[zZ]\+",
+   "desc" : "Extended Load Program Memory and Post-Increment",
+   "ops" : "Rd ← PS(RAMPZ:Z); (RAMPZ:Z) ← (RAMPZ:Z) + 1",
+   "flags" : "None",
+   "cycles" : "3"
+  }
+ ],
+ "EOR" : {
+  "args" : "Rd,Rr",
+  "desc" : "Exclusive OR",
+  "ops" : "Rd ← Rd ⊕ Rr",
+  "flags" : "Z,N,V,S",
+  "cycles" : "1"
+ },
+ "FMUL" : {
+  "args" : "Rd,Rr",
+  "desc" : "Fractional Multiply Unsigned",
+  "ops" : "R1:R0 ← Rd x Rr << 1 (UU)",
+  "flags" : "Z,C",
+  "cycles" : "2"
+ },
+ "FMULS" : {
+  "args" : "Rd,Rr",
+  "desc" : "Fractional Multiply Signed",
+  "ops" : "R1:R0 ← Rd x Rr << 1 (SS)",
+  "flags" : "Z,C",
+  "cycles" : "2"
+ },
+ "FMULSU" : {
+  "args" : "Rd,Rr",
+  "desc" : "Fractional Multiply Signed with Unsigned",
+  "ops" : "R1:R0 ← Rd x Rr << 1 (SU)",
+  "flags" : "Z,C",
+  "cycles" : "2"
+ },
+ "ICALL" : {
+  "args" : "",
+  "regx" : "^$",
+  "desc" : "Indirect Call to (Z)",
+  "ops" : "PC(15:0) ← Z",
+  "flags" : "None",
+  "cycles" : "3/4"
+ },
+ "IJMP" : {
+  "args" : "",
+  "regx" : "^$",
+  "desc" : "Indirect Jump to (Z)",
+  "ops" : "PC(15:0) ← Z",
+  "flags" : "None",
+  "cycles" : "2"
+ },
+ "IN" : {
+  "args" : "Rd,A",
+  "desc" : "In From I/O Location",
+  "ops" : "Rd ← I/O(A)",
+  "flags" : "None",
+  "cycles" : "1"
+ },
+ "INC" : {
+  "args" : "Rd",
+  "desc" : "Increment",
+  "ops" : "Rd ← Rd + 1",
+  "flags" : "Z,N,V,S",
+  "cycles" : "1"
+ },
+ "JMP" : {
+  "args" : "k",
+  "desc" : "Jump",
+  "ops" : "PC ← k",
+  "flags" : "None",
+  "cycles" : "3"
+ },
+ "LD" : [
+  {
+   "args" : "Rd,X",
+   "regx" : "[rR][0-9]{1,2},[xX]",
+   "desc" : "Load Indirect",
+   "ops" : "Rd ← DS(X)",
+   "flags" : "None",
+   "cycles" : "2"
+  },
+  {
+   "args" : "Rd,X+",
+   "regx" : "[rR][0-9]{1,2},[xX]\+",
+   "desc" : "Load Indirect and Post-Increment",
+   "ops" : "Rd ← DS(X); X ← X+ 1",
+   "flags" : "None",
+   "cycles" : "2"
+  },
+  {
+   "args" : "Rd,-X",
+   "regx" : "[rR][0-9]{1,2},-[xX]",
+   "desc" : "Load Indirect and Pre-Decrement",
+   "ops" : "X ← X - 1;R d ← DS(X)",
+   "flags" : "None",
+   "cycles" : "2"
+  },
+  {
+   "args" : "Rd,Y",
+   "regx" : "[rR][0-9]{1,2},[yY]",
+   "desc" : "Load Indirect",
+   "ops" : "Rd ← DS(Y); Y ← Y+ 1",
+   "flags" : "None",
+   "cycles" : "2"
+  },
+  {
+   "args" : "Rd,-Y",
+   "regx" : "[rR][0-9]{1,2},-[yY]",
+   "desc" : "Load Indirect and Pre-Decrement",
+   "ops" : "Y ← Y -1; Rd ← DS(Y)",
+   "flags" : "None",
+   "cycles" : "2"
+  },
+  {
+   "args" : "Rd,Z",
+   "regx" : "[rR][0-9]{1,2},[zZ]",
+   "desc" : "Load Indirect",
+   "ops" : "Rd ← DS(Z)",
+   "flags" : "None",
+   "cycles" : "2"
+  },
+  {
+   "args" : "Rd,Z+",
+   "regx" : "[rR][0-9]{1,2},[zZ]\+",
+   "desc" : "Load Indirect and Post-Increment",
+   "ops" : "Rd ← DS(Z); Z ← Z+1",
+   "flags" : "None",
+   "cycles" : "2"
+  },
+  {
+   "args" : "Rd,-Z",
+   "regx" : "[rR][0-9]{1,2},-[zZ]",
+   "desc" : "Load Indirect and Pre-Decrement",
+   "ops" : "Z ← Z- 1;R d ← DS(Z)",
+   "flags" : "None",
+   "cycles" : "2"
+  }
+ ],
+ "LDD" : [
+  {
+   "args" : "Rd,Y+q",
+   "regx" : "[rR][0-9]{1,2},[yY]\+",
+   "desc" : "Load Indirect with Displacement",
+   "ops" : "Rd ← DS(Y + q)",
+   "flags" : "None",
+   "cycles" : "2"
+  },
+  {
+   "args" : "Rd,Z+q",
+   "regx" : "[rR][0-9]{1,2},[zZ]\+",
+   "desc" : "Load Indirect with Displacement",
+   "ops" : "Rd ← DS(Z + q)",
+   "flags" : "None",
+   "cycles" : "2"
+  }
+ ],
+ "LDI" : {
+  "args" : "Rd,K",
+  "desc" : "Load Immediate",
+  "ops" : "Rd ← K",
+  "flags" : "None",
+  "cycles" : "1"
+ },
+ "LDS" : {
+  "args" : "Rd,k",
+  "desc" : "Load Direct from Data Space",
+  "ops" : "Rd ← DS(k)",
+  "flags" : "None",
+  "cycles" : "2"
+ },
+ "LPM" : [
+  {
+   "args" : "",
+   "regx" : "^$",
+   "desc" : "Load Program Memory",
+   "ops" : "R0 ← PS(Z)",
+   "flags" : "None",
+   "cycles" : "3"
+  },
+  {
+   "args" : "Rd,Z",
+   "regx" : "[rR][0-9]{1,2},[zZ]",
+   "desc" : "Load Program Memory",
+   "ops" : "Rd ← PS(Z)",
+   "flags" : "None",
+   "cycles" : "3"
+  },
+  {
+   "args" : "Rd,Z+",
+   "regx" : "[rR][0-9]{1,2},[zZ]\+",
+   "desc" : "Load Program Memory and Post-Increment",
+   "ops" : "Rd ← PS(Z); Z ← Z+ 1",
+   "flags" : "None",
+   "cycles" : "3"
+  }
+ ],
+ "LSL" : {
+  "args" : "Rd",
+  "desc" : "Logical Shift Left",
+  "ops" : "C ← Rd(7); Rd(n+1) ← Rd(n), n=6...0; Rd(0) ← 0",
+  "flags" : "Z,C,N,V,H",
+  "cycles" : "1"
+ },
+ "LSR" : {
+  "args" : "Rd",
+  "desc" : "Logical Shift Right",
+  "ops" : "C ← Rd(0); Rd(n) ← Rd(n+1), n=0...6; Rd(7) ← 0",
+  "flags" : "Z,C,N,V",
+  "cycles" : "1"
+ },
+ "MOV" : {
+  "args" : "Rd,Rr",
+  "desc" : "Copy Register",
+  "ops" : "Rd ← Rr",
+  "flags" : "None",
+  "cycles" : "1"
+ },
+ "MOVW" : {
+  "args" : "Rd,Rr",
+  "desc" : "Copy Register Pair",
+  "ops" : "R[d + 1]:Rd ← R[r + 1]:Rr",
+  "flags" : "None",
+  "cycles" : "1"
+ },
+ "MUL" : {
+  "args" : "Rd,Rr",
+  "desc" : "Multiply Unsigned",
+  "ops" : "R1:R0 ← Rd x Rr (UU)",
+  "flags" : "Z,C",
+  "cycles" : "2"
+ },
+ "MULS" : {
+  "args" : "Rd,Rr",
+  "desc" : "Multiply Signed",
+  "ops" : "R1:R0 ← Rd x Rr (SS)",
+  "flags" : "Z,C",
+  "cycles" : "2"
+ },
+ "MULSU" : {
+  "args" : "Rd,Rr",
+  "desc" : "Multiply Signed with Unsigned",
+  "ops" : "R1:R0 ← Rd x Rr (SU)",
+  "flags" : "Z,C",
+  "cycles" : "2"
+ },
+ "NEG" : {
+  "args" : "Rd",
+  "desc" : "Two’s Complement",
+  "ops" : "Rd ← 0x00 - Rd",
+  "flags" : "Z,C,N,V,S,H",
+  "cycles" : "1"
+ },
+ "NOP" : {
+  "args" : "",
+  "regx" : "^$",
+  "desc" : "No Operation",
+  "ops" : "Does nothing",
+  "flags" : "None",
+  "cycles" : "1"
+ },
+ "OR" : {
+  "args" : "Rd,Rr",
+  "desc" : "Logical OR",
+  "ops" : "Rd ← Rd v Rr",
+  "flags" : "Z,N,V,S",
+  "cycles" : "1"
+ },
+ "ORI" : {
+  "args" : "Rd,K",
+  "desc" : "Logical OR with Immediate",
+  "ops" : "Rd ← Rd v K",
+  "flags" : "Z,N,V,S",
+  "cycles" : "1"
+ },
+ "OUT" : {
+  "args" : "A,Rr",
+  "desc" : "Out To I/O Location",
+  "ops" : "I/O(A) ← Rr",
+  "flags" : "None",
+  "cycles" : "1"
+ },
+ "POP" : {
+  "args" : "Rd",
+  "desc" : "Pop Register from Stack",
+  "ops" : "Rd ← STACK",
+  "flags" : "None",
+  "cycles" : "2"
+ },
+ "PUSH" : {
+  "args" : "Rr",
+  "desc" : "Push Register on Stack",
+  "ops" : "STACK ← Rr",
+  "flags" : "None",
+  "cycles" : "2"
+ },
+ "RCALL" : {
+  "args" : "k",
+  "desc" : "Relative Call Subroutine",
+  "ops" : "PC ← PC + k + 1",
+  "flags" : "None",
+  "cycles" : "3/4"
+ },
+ "RET" : {
+  "args" : "",
+  "regx" : "^$",
+  "desc" : "Subroutine Return",
+  "ops" : "PC ← STACK",
+  "flags" : "None",
+  "cycles" : "4/5"
+ },
+ "RETI" : {
+  "args" : "",
+  "regx" : "^$",
+  "desc" : "Interrupt Return",
+  "ops" : "PC ← STACK",
+  "flags" : "I",
+  "cycles" : "4/5"
+ },
+ "RJMP" : {
+  "args" : "k",
+  "desc" : "Relative Jump",
+  "ops" : "PC ← PC + k + 1",
+  "flags" : "None",
+  "cycles" : "2"
+ },
+ "ROL" : {
+  "args" : "Rd",
+  "desc" : "Rotate Left Through Carry",
+  "ops" : "temp ← C; C ← Rd(7), Rd(n+1) ← Rd(n), n=6...0; Rd(0) ← temp",
+  "flags" : "Z,C,N,V,H",
+  "cycles" : "1"
+ },
+ "ROR" : {
+  "args" : "Rd",
+  "desc" : "Rotate Right Through Carry",
+  "ops" : "temp ← C, C ← Rd(0);Rd(n) ← Rd(n+1), n=0...6;Rd(7) ← temp",
+  "flags" : "Z,C,N,V",
+  "cycles" : "1"
+ },
+ "SBC" : {
+  "args" : "Rd,Rr",
+  "desc" : "Subtract with Carry",
+  "ops" : "Rd ← Rd - Rr - C",
+  "flags" : "Z,C,N,V,S,H",
+  "cycles" : "1"
+ },
+ "SBCI" : {
+  "args" : "Rd,K",
+  "desc" : "Subtract Immediate with Carry",
+  "ops" : "Rd ← Rd - K - C",
+  "flags" : "Z,C,N,V,S,H",
+  "cycles" : "1"
+ },
+ "SBI" : {
+  "args" : "A,b",
+  "desc" : "Set Bit in I/O Register",
+  "ops" : "I/O(A, b) ← 1",
+  "flags" : "None",
+  "cycles" : "2"
+ },
+ "SBIC" : {
+  "args" : "A,b",
+  "desc" : "Skip if Bit in I/O Register Cleared",
+  "ops" : "if (I/O(A,b) == 0) PC ← PC + 2 or 3",
+  "flags" : "None",
+  "cycles" : "1/2/3"
+ },
+ "SBIS" : {
+  "args" : "A,b",
+  "desc" : "Skip if Bit in I/O Register Set",
+  "ops" : "If (I/O(A,b) == 1) PC ← PC + 2 or 3",
+  "flags" : "None",
+  "cycles" : "1/2/3"
+ },
+ "SBIW" : {
+  "args" : "Rd,K",
+  "desc" : "Subtract Immediate from Word",
+  "ops" : "R[d + 1]:Rd ← R[d + 1]:Rd - K",
+  "flags" : "Z,C,N,V,S",
+  "cycles" : "2"
+ },
+ "SBR" : {
+  "args" : "Rd,K",
+  "desc" : "Set Bit(s) in Register",
+  "ops" : "Rd ← Rd v K",
+  "flags" : "Z,N,V,S",
+  "cycles" : "1"
+ },
+ "SBRC" : {
+  "args" : "Rr,b",
+  "desc" : "Skip if Bit in Register Cleared",
+  "ops" : "if (Rr(b) == 0) PC ← PC + 2 or 3",
+  "flags" : "None",
+  "cycles" : "1/2/3"
+ },
+ "SBRS" : {
+  "args" : "Rr,b",
+  "desc" : "Skip if Bit in Register Set",
+  "ops" : "if (Rr(b) == 1) PC ← PC + 2 or 3",
+  "flags" : "None",
+  "cycles" : "1/2/3"
+ },
+ "SEC" : {
+  "args" : "",
+  "regx" : "^$",
+  "desc" : "Set Carry",
+  "ops" : "C ← 1",
+  "flags" : "C",
+  "cycles" : "1"
+ },
+ "SEH" : {
+  "args" : "",
+  "regx" : "^$",
+  "desc" : "Set Half Carry Flag in SREG",
+  "ops" : "H←1",
+  "flags" : "H",
+  "cycles" : "1"
+ },
+ "SEI" : {
+  "args" : "",
+  "regx" : "^$",
+  "desc" : "Global Interrupt Enable",
+  "ops" : "I ← 1",
+  "flags" : "I",
+  "cycles" : "1"
+ },
+ "SEN" : {
+  "args" : "",
+  "regx" : "^$",
+  "desc" : "Set Negative Flag",
+  "ops" : "N ← 1",
+  "flags" : "N",
+  "cycles" : "1"
+ },
+ "SER" : {
+  "args" : "Rd",
+  "desc" : "Set Register",
+  "ops" : "Rd ← 0xFF",
+  "flags" : "None",
+  "cycles" : "1"
+ },
+ "SES" : {
+  "args" : "",
+  "regx" : "^$",
+  "desc" : "Set Sign Bit",
+  "ops" : "S ← 1",
+  "flags" : "S",
+  "cycles" : "1"
+ },
+ "SET" : {
+  "args" : "",
+  "regx" : "^$",
+  "desc" : "Set T in SREG",
+  "ops" : "T←1",
+  "flags" : "T",
+  "cycles" : "1"
+ },
+ "SEV" : {
+  "args" : "",
+  "regx" : "^$",
+  "desc" : "Set Two’s Complement Overflow",
+  "ops" : "V ← 1",
+  "flags" : "V",
+  "cycles" : "1"
+ },
+ "SEZ" : {
+  "args" : "",
+  "regx" : "^$",
+  "desc" : "Set Zero Flag",
+  "ops" : "Z ← 1",
+  "flags" : "Z",
+  "cycles" : "1"
+ },
+ "SLEEP" : {
+  "args" : "",
+  "regx" : "^$",
+  "desc" : "Sleep",
+  "ops" : "See the power management and sleep description",
+  "flags" : "None",
+  "cycles" : "1"
+ },
+ "SPM" : {
+  "args" : "",
+  "regx" : "^$",
+  "desc" : "Store Program Memory",
+  "ops" : "PS(RAMPZ:Z) ← R1:R0",
+  "flags" : "None",
+  "cycles" : "-"
+ },
+ "ST" : [
+  {
+   "args" : "X,Rr",
+   "regx" : "[xX],[rR][0-9]{1,2}",
+   "desc" : "Store Indirect",
+   "ops" : "DS(X) ← Rr",
+   "flags" : "None",
+   "cycles" : "2"
+  },
+  {
+   "args" : "X+,Rr",
+   "regx" : "[xX]\+,[rR][0-9]{1,2}",
+   "desc" : "Store Indirect and Post-Increment",
+   "ops" : "DS(X) ← Rr; X ← X+ 1",
+   "flags" : "None",
+   "cycles" : "2"
+  },
+  {
+   "args" : "-X,Rr",
+   "regx" : "-[xX],[rR][0-9]{1,2}",
+   "desc" : "Store Indirect and Pre-Decrement",
+   "ops" : "X ← X -1; DS(X) ← Rr",
+   "flags" : "None",
+   "cycles" : "2"
+  },
+  {
+   "args" : "Y,Rr",
+   "regx" : "[yY],[rR][0-9]{1,2}",
+   "desc" : "Store Indirect",
+   "ops" : "DS(Y) ← Rr",
+   "flags" : "None",
+   "cycles" : "2"
+  },
+  {
+   "args" : "Y+,Rr",
+   "regx" : "[yY]\+,[rR][0-9]{1,2}",
+   "desc" : "Store Indirect and Post-Increment",
+   "ops" : "DS(Y) ← Rr; Y ← Y+ 1",
+   "flags" : "None",
+   "cycles" : "2"
+  },
+  {
+   "args" : "-Y,Rr",
+   "regx" : "-[yY],[rR][0-9]{1,2}",
+   "desc" : "Store Indirect and Pre-Decrement",
+   "ops" : "Y ← Y - 1; DS(Y) ← Rr",
+   "flags" : "None",
+   "cycles" : "2"
+  },
+  {
+   "args" : "Z,Rr",
+   "regx" : "[zZ],[rR][0-9]{1,2}",
+   "desc" : "Store Indirect",
+   "ops" : "DS(Z) ← Rr",
+   "flags" : "None",
+   "cycles" : "2"
+  },
+  {
+   "args" : "Z+,Rr",
+   "regx" : "[zZ]\+,[rR][0-9]{1,2}",
+   "desc" : "Store Indirect and Post-Increment",
+   "ops" : "DS(Z) ← Rr; Z ← Z+ 1",
+   "flags" : "None",
+   "cycles" : "2"
+  },
+  {
+   "args" : "-Z,Rr",
+   "regx" : "-[zZ],[rR][0-9]{1,2}",
+   "desc" : "Store Indirect and Pre-Decrement",
+   "ops" : "Z ← Z - 1; DS(Z) ← Rr",
+   "flags" : "None",
+   "cycles" : "2"
+  }
+ ],
+ "STD" : [
+  {
+   "args" : "Y+q,Rr",
+   "regx" : "[yY]\+.+,[rR][0-9]{1,2}",
+   "desc" : "Store Indirect with Displacement",
+   "ops" : "DS(Y + q) ← Rr",
+   "flags" : "None",
+   "cycles" : "2"
+  },
+  {
+   "args" : "Z+q,Rr",
+   "regx" : "[zZ]\+.+,[rR][0-9]{1,2}",
+   "desc" : "Store Indirect with Displacement",
+   "ops" : "DS(Z + q) ← Rr",
+   "flags" : "None",
+   "cycles" : "2"
+  }
+ ],
+ "STS" : {
+  "args" : "k,Rr",
+  "desc" : "Store Direct to Data Space",
+  "ops" : "DS(k) ← Rd",
+  "flags" : "None",
+  "cycles" : "2"
+ },
+ "SUB" : {
+  "args" : "Rd,Rr",
+  "desc" : "Subtract without Carry",
+  "ops" : "Rd ← Rd - Rr",
+  "flags" : "Z,C,N,V,S,H",
+  "cycles" : "1"
+ },
+ "SUBI" : {
+  "args" : "Rd,K",
+  "desc" : "Subtract Immediate",
+  "ops" : "Rd ← Rd - K",
+  "flags" : "Z,C,N,V,S,H",
+  "cycles" : "1"
+ },
+ "SWAP" : {
+  "args" : "Rd",
+  "desc" : "Swap Nibbles",
+  "ops" : "Rd(3..0) ↔ Rd(7..4)",
+  "flags" : "None",
+  "cycles" : "1"
+ },
+ "TST" : {
+  "args" : "Rd",
+  "desc" : "Test for Zero or Minus",
+  "ops" : "Rd ← Rd ∧ Rd",
+  "flags" : "Z,N,V,S",
+  "cycles" : "1"
+ }
+}

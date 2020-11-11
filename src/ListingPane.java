@@ -18,8 +18,11 @@ import java.util.prefs.Preferences;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION;
+import static javax.swing.border.TitledBorder.DEFAULT_POSITION;
+
 public class ListingPane extends JPanel {   // https://regex101.com
-  private static final Pattern        DBG_LINE = Pattern.compile("\\s+([0-9a-fA-F]+):\\s[0-9a-fA-F]{2}\\s[0-9a-fA-F]{2}\\s");
+  private static final Pattern        DBG_LINE = Pattern.compile("\\s+([0-9a-fA-F]+):\\s([0-9a-fA-F]{2})\\s([0-9a-fA-F]{2})\\s+([a-z]+)([^;]+)");
   private static final Pattern        VAR_LINE = Pattern.compile("([0-9a-fA-F]{8}).{9}(.+)\t([0-9a-fA-F]{8})\\s+(.*)");
   private static final int            FONT_SIZE = 12;
   private static final int            DEFAULT_R_MARGIN = 7;
@@ -50,6 +53,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
   private int                         lineCount;
   private boolean                     active, running;
   private EDBG                        debugger;
+  private String                      rawSrc = "";
 
   interface DebugListener {
     void debugState (boolean active);
@@ -81,6 +85,96 @@ public class ListingPane extends JPanel {   // https://regex101.com
 
   }
 
+  static class AvrTooltipHandler extends JToolTip {
+    Map<String,Object>    avrIns;
+    final JTextPane       comp;
+    final TitledBorder    border;
+    final String          style;
+
+    AvrTooltipHandler (JComponent jComp) {
+      setComponent(jComp);
+      try {
+        avrIns = JSONtoMap.parse(Utility.getFile("res:avrinstructions.jsn"));
+      } catch (IOException ex) {
+        ex.printStackTrace();
+      }
+      ToolTipManager.sharedInstance().setDismissDelay(20000);
+      setOpaque(true);
+      comp = new JTextPane();
+      comp.setContentType("text/html");
+      Font tFont = jComp.getFont().deriveFont(22f);
+      border = BorderFactory.createTitledBorder(null, "", DEFAULT_JUSTIFICATION, DEFAULT_POSITION, tFont);
+      Border outside = BorderFactory.createEmptyBorder(4, 4, 4, 4);
+      Border inside = BorderFactory.createEmptyBorder(0, 4, 4, 4);
+      comp.setBorder(BorderFactory.createCompoundBorder(outside, BorderFactory.createCompoundBorder(border, inside)));
+      Font iFont = new Font("Arial", Font.PLAIN, 18);
+      comp.setFont(iFont);
+      String fName = iFont.getFontName();
+      int size = iFont.getSize();
+      style = "font-family:" + fName + ";font-size:" + size + ";margin: 1em 0;display: block;";
+    }
+
+    public boolean isAvrInsrtuction (String ins) {
+      return avrIns.containsKey(ins);
+    }
+
+    @Override
+    public Dimension getPreferredSize () {
+      Dimension dim = comp.getPreferredSize();
+      return new Dimension((int) dim.getWidth(), (int) dim.getHeight());
+    }
+
+    @Override
+    public void paintComponent (Graphics g) {
+      Graphics2D g2 = (Graphics2D) g;
+      g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+      Dimension d = comp.getPreferredSize();
+      JPanel panel = new JPanel();
+      SwingUtilities.paintComponent(g2, comp, panel, 0, 0, d.width, d.height);
+    }
+
+    @Override
+    public void setTipText (String text) {
+      if (text != null) {
+        String[] tmp = text.split(":");
+        text = tmp[0];
+        border.setTitle(text);
+        if (avrIns != null) {
+          Object parms = avrIns.get(text.toUpperCase());
+          if (parms instanceof List && tmp.length > 1) {
+            List<Map<String, String>> lst = (List) parms;
+            for (Map<String, String> map : lst) {
+              String regx = map.get("regx");
+              if (tmp[1].matches(regx)) {
+                parms = map;
+                break;
+              }
+            }
+          }
+          if (parms instanceof Map) {
+            Map<String, String> map = (Map) parms;
+            border.setTitle(text.toUpperCase() + " " + map.get("args"));
+            StringBuilder buf = new StringBuilder("<html>");
+            buf.append("<style>.desc{color:#444444;").append(style).append("}</style>");
+            buf.append("<style>.ops{color:green;").append(style).append("}</style>");
+            buf.append("<style>.flags{color:blue;").append(style).append("}</style>");
+            buf.append("<style>.cycles{color:orange;").append(style).append("}</style>");
+            buf.append("<p class=\"desc\">").append(map.get("desc")).append("</p>");
+            for (String op : map.get("ops").split(";")) {
+              buf.append("<p class=\"ops\">").append(op).append("</p>");
+            }
+            buf.append("<p class=\"flags\">Flags: ").append(map.get("flags")).append("</p>");
+            buf.append("<p class=\"cycles\">Cycles: ").append(map.get("cycles")).append("</p>");
+            buf.append("</html>");
+            comp.setText(buf.toString());
+          } else {
+            comp.setText("Instruction lookup not available");
+          }
+        }
+      }
+    }
+  }
+
   static class MyJTextPane extends JTextPane {
     // Allow horizontal scrollbar to appear
     @Override
@@ -89,16 +183,77 @@ public class ListingPane extends JPanel {   // https://regex101.com
     }
   }
 
+  class AvrListingPane extends MyJTextPane {
+    private final AvrTooltipHandler tooltip = new AvrTooltipHandler(this);
+    private String                  lastHit;
+    private final int               lineHeight;
+
+    AvrListingPane (Font font) {
+      FontMetrics fontMetrics = getFontMetrics(font);
+      lineHeight = fontMetrics.getHeight();
+    }
+
+    @Override
+    public JToolTip createToolTip () {
+      return tooltip;
+    }
+
+    @Override
+    public String getToolTipText (MouseEvent event) {
+      Point point = event.getPoint();
+      int lineNum = (int) point.getY() / lineHeight + 1;
+      if (!lineNumToAddress.containsKey(lineNum)) {
+        return null;
+      }
+      int offset = viewToModel(point);
+      if (offset >= 0) {
+        Document doc = getDocument();
+        try {
+          int start;
+          if (Character.isAlphabetic(doc.getText(offset, 1).charAt(0)) ||
+              (offset > 0 &&Character.isAlphabetic(doc.getText(offset - 1, 1).charAt(0)) )) {
+            start = offset;
+            while (start > 0 && Character.isAlphabetic(doc.getText(start - 1, 1).charAt(0))) {
+              start--;
+            }
+            int end = offset;
+            while (end < doc.getLength() && Character.isAlphabetic(doc.getText(end, 1).charAt(0))) {
+              end++;
+            }
+            if (end > start) {
+              String text = doc.getText(start, end - start);
+              if (!text.equals(lastHit)) {
+                int eol = end + 1;
+                while (eol < doc.getLength() && doc.getText(eol, 1).charAt(0) != '\n' &&
+                    doc.getText(eol, 1).charAt(0) != ';') {
+                  eol++;
+                }
+                String remain = Utility.removeWhitespace(doc.getText(end, eol - end).trim());
+                if (tooltip.isAvrInsrtuction(text.toUpperCase())) {
+                  return text + ':' + remain;
+                }
+              }
+              lastHit = text;
+            }
+          }
+        } catch (BadLocationException ex) {
+          ex.printStackTrace();
+        }
+      }
+      return null;
+    }
+  }
+
   ListingPane (JTabbedPane tabs, String tabName, String hoverText, MegaTinyIDE ide, Preferences prefs) {
     this.ide = ide;
     this.prefs = prefs;
     setLayout(new BorderLayout());
-    listingPane = new MyJTextPane();
-    listingPane.setBorder(new EmptyBorder(-4, 5, 0, 0));
     Font font = Utility.getCodeFont(FONT_SIZE);
+    listingPane = new AvrListingPane(font);
+    listingPane.setToolTipText("");
+    listingPane.setBorder(new EmptyBorder(-4, 5, 0, 0));
     Document doc = listingPane.getDocument();
     doc.putProperty(PlainDocument.tabSizeAttribute, 8);
-    listingPane.setFont(font);
     listingPane.setEditable(false);
     JScrollPane listingScroll = new JScrollPane(listingPane);
     listingScroll.setWheelScrollingEnabled(true);
@@ -277,11 +432,12 @@ public class ListingPane extends JPanel {   // https://regex101.com
 
   /**
    * Set test into debugPane and setup breakpoint controls
-   * @param list listing
+   * @param text listing
    */
-  public void setText (String list) {
-    list = list.replaceAll("<", "&lt;");
-    list = list.replaceAll(">", "&gt;");
+  public void setText (String text) {
+    rawSrc = text;
+    String src = text.replaceAll("<", "&lt;");
+    src = src.replaceAll(">", "&gt;");
     listingPane.setContentType("text/html");
     Font font = Utility.getCodeFont(FONT_SIZE);
     listingPane.setFont(font);
@@ -304,7 +460,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
     }
     StringBuilder buf = new StringBuilder("<html><pre " + Utility.getFontStyle(font) + ">");
     lineCount = 0;
-    String[] lines = list.split("\n");
+    String[] lines = src.split("\n");
     boolean lastBlank = false;
     int lineNum = 1;
     for (String line : lines) {
@@ -354,7 +510,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
   }
 
   public String getText () {
-    return listingPane.getText();
+    return rawSrc;
   }
 
   public void setErrorText (String test) {
@@ -766,7 +922,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
         public void mouseClicked (MouseEvent ev) {
           super.mouseClicked(ev);
           if (SwingUtilities.isLeftMouseButton(ev)) {
-            int lineHeight = listingPane.getFontMetrics(listingPane.getFont()).getHeight();
+            int lineHeight = fontMetrics.getHeight();
             int line = ev.getY() / lineHeight + 1;
             if (SINGLE_BREAK) {
               breakAddresses.clear();

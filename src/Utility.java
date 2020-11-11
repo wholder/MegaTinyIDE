@@ -45,6 +45,21 @@ class Utility {
   }
 
   /**
+   * Reformat String to remove all whitespace characters
+   * @param text Input text
+   * @return Reformatted output
+   */
+  static String removeWhitespace (String text) {
+    StringTokenizer tok = new StringTokenizer(text);
+    StringBuilder buf = new StringBuilder();
+    while (tok.hasMoreTokens()) {
+      String line = tok.nextToken();
+      buf.append(line);
+    }
+    return buf.toString().trim();
+  }
+
+  /**
    * Reformat String to reduce all whitespace to a single space
    * @param text Input text
    * @return Reformatted output
