@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="AnalysisUIOptions">
-    <option name="SCOPE_TYPE" value="3" />
-  </component>
   <component name="ArtifactsWorkspaceSettings">
     <artifacts-to-build>
       <artifact name="MegaTinyIDE:jar" />
@@ -14,8 +11,9 @@
   <component name="ChangeListManager">
     <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/JSONtoMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/JSONtoMap.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ListingPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ListingPane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MarkupView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MarkupView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MegaTinyIDE.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MegaTinyIDE.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -477,7 +475,14 @@
       <option name="project" value="LOCAL" />
       <updated>1605139232145</updated>
     </task>
-    <option name="localTasksCounter" value="49" />
+    <task id="LOCAL-00049" summary="Code cleanup">
+      <created>1605151094127</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1605151094127</updated>
+    </task>
+    <option name="localTasksCounter" value="50" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -499,7 +504,6 @@
     <MESSAGE value="Revise screenshots" />
     <MESSAGE value="Fix assembly of .s files" />
     <MESSAGE value="Update docs on Linux rules issue." />
-    <MESSAGE value="Code cleanup" />
     <MESSAGE value="Added basic chip pinout diagrams" />
     <MESSAGE value="Enhancements to chip pinout diagrams" />
     <MESSAGE value="Revise built-in docs on how to setup a Linux &quot;rules&quot; file" />
@@ -518,7 +522,8 @@
     <MESSAGE value="Misc fixes and improvements" />
     <MESSAGE value="Add AVR instruction tooltips to Listing Pane" />
     <MESSAGE value="Revise README" />
-    <option name="LAST_COMMIT_MESSAGE" value="Revise README" />
+    <MESSAGE value="Code cleanup" />
+    <option name="LAST_COMMIT_MESSAGE" value="Code cleanup" />
   </component>
   <component name="WindowStateProjectService">
     <state x="158" y="89" width="592" height="675" key="#com.intellij.debugger.actions.ViewTextAction" timestamp="1604357923820">
@@ -573,14 +578,14 @@
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="1189" y="522" key="#xdebugger.evaluate/0.23.2560.1577@0.23.2560.1577" timestamp="1600993645459" />
-    <state x="1252" y="688" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1596512936793">
+    <state x="1252" y="688" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1605151115580">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state x="1252" y="688" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.23.2560.1577@0.23.2560.1577" timestamp="1596512936793" />
-    <state x="1084" y="401" width="844" height="984" key="CommitChangelistDialog2" timestamp="1605139231978">
+    <state x="1252" y="688" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.23.2560.1577@0.23.2560.1577" timestamp="1605151115580" />
+    <state x="1084" y="401" width="844" height="984" key="CommitChangelistDialog2" timestamp="1605151088586">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state x="1084" y="401" width="844" height="984" key="CommitChangelistDialog2/0.23.2560.1577@0.23.2560.1577" timestamp="1605139231978" />
+    <state x="1084" y="401" width="844" height="984" key="CommitChangelistDialog2/0.23.2560.1577@0.23.2560.1577" timestamp="1605151088586" />
     <state x="822" y="123" width="1340" height="1377" key="DiffContextDialog" timestamp="1602450393001">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
@@ -593,46 +598,46 @@
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="1601" y="401" width="729" height="678" key="Github.UntrackedFilesDialog/0.23.2560.1577@0.23.2560.1577" timestamp="1602205585314" />
-    <state width="1546" height="294" key="GridCell.Tab.0.bottom" timestamp="1605140947068">
+    <state width="1546" height="338" key="GridCell.Tab.0.bottom" timestamp="1605168473005">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="294" key="GridCell.Tab.0.bottom/0.23.2560.1577@0.23.2560.1577" timestamp="1605140947068" />
-    <state width="1546" height="294" key="GridCell.Tab.0.center" timestamp="1605140947067">
+    <state width="1546" height="338" key="GridCell.Tab.0.bottom/0.23.2560.1577@0.23.2560.1577" timestamp="1605168473005" />
+    <state width="1546" height="338" key="GridCell.Tab.0.center" timestamp="1605168473004">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="294" key="GridCell.Tab.0.center/0.23.2560.1577@0.23.2560.1577" timestamp="1605140947067" />
-    <state width="1546" height="294" key="GridCell.Tab.0.left" timestamp="1605140947067">
+    <state width="1546" height="338" key="GridCell.Tab.0.center/0.23.2560.1577@0.23.2560.1577" timestamp="1605168473004" />
+    <state width="1546" height="338" key="GridCell.Tab.0.left" timestamp="1605168473003">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="294" key="GridCell.Tab.0.left/0.23.2560.1577@0.23.2560.1577" timestamp="1605140947067" />
-    <state width="1546" height="294" key="GridCell.Tab.0.right" timestamp="1605140947067">
+    <state width="1546" height="338" key="GridCell.Tab.0.left/0.23.2560.1577@0.23.2560.1577" timestamp="1605168473003" />
+    <state width="1546" height="338" key="GridCell.Tab.0.right" timestamp="1605168473004">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="294" key="GridCell.Tab.0.right/0.23.2560.1577@0.23.2560.1577" timestamp="1605140947067" />
-    <state width="1546" height="338" key="GridCell.Tab.1.bottom" timestamp="1605138102161">
+    <state width="1546" height="338" key="GridCell.Tab.0.right/0.23.2560.1577@0.23.2560.1577" timestamp="1605168473004" />
+    <state width="1546" height="338" key="GridCell.Tab.1.bottom" timestamp="1605168476633">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="338" key="GridCell.Tab.1.bottom/0.23.2560.1577@0.23.2560.1577" timestamp="1605138102161" />
-    <state width="1546" height="338" key="GridCell.Tab.1.center" timestamp="1605138102161">
+    <state width="1546" height="338" key="GridCell.Tab.1.bottom/0.23.2560.1577@0.23.2560.1577" timestamp="1605168476633" />
+    <state width="1546" height="338" key="GridCell.Tab.1.center" timestamp="1605168476632">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="338" key="GridCell.Tab.1.center/0.23.2560.1577@0.23.2560.1577" timestamp="1605138102161" />
-    <state width="1546" height="338" key="GridCell.Tab.1.left" timestamp="1605138102160">
+    <state width="1546" height="338" key="GridCell.Tab.1.center/0.23.2560.1577@0.23.2560.1577" timestamp="1605168476632" />
+    <state width="1546" height="338" key="GridCell.Tab.1.left" timestamp="1605168476632">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="338" key="GridCell.Tab.1.left/0.23.2560.1577@0.23.2560.1577" timestamp="1605138102160" />
-    <state width="1546" height="338" key="GridCell.Tab.1.right" timestamp="1605138102161">
+    <state width="1546" height="338" key="GridCell.Tab.1.left/0.23.2560.1577@0.23.2560.1577" timestamp="1605168476632" />
+    <state width="1546" height="338" key="GridCell.Tab.1.right" timestamp="1605168476633">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="338" key="GridCell.Tab.1.right/0.23.2560.1577@0.23.2560.1577" timestamp="1605138102161" />
+    <state width="1546" height="338" key="GridCell.Tab.1.right/0.23.2560.1577@0.23.2560.1577" timestamp="1605168476633" />
     <state x="973" y="299" key="SettingsEditor" timestamp="1605140278967">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="973" y="299" key="SettingsEditor/0.23.2560.1577@0.23.2560.1577" timestamp="1605140278967" />
-    <state x="1050" y="545" key="Vcs.Push.Dialog.v2" timestamp="1605139233567">
+    <state x="1050" y="545" key="Vcs.Push.Dialog.v2" timestamp="1605151096236">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state x="1050" y="545" key="Vcs.Push.Dialog.v2/0.23.2560.1577@0.23.2560.1577" timestamp="1605139233567" />
+    <state x="1050" y="545" key="Vcs.Push.Dialog.v2/0.23.2560.1577@0.23.2560.1577" timestamp="1605151096236" />
     <state width="779" height="782" key="XDebugger.FullValuePopup" timestamp="1604358658140">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
@@ -669,17 +674,6 @@
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="1115" y="385" width="670" height="676" key="search.everywhere.popup/0.23.2560.1577@0.23.2560.1577" timestamp="1604014472289" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/MarkupView.java</url>
-          <line>154</line>
-          <option name="timeStamp" value="10" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/MegaTinyIDE$MegaTinyIDE.ic" NAME="MegaTinyIDE Coverage Results" MODIFIED="1602453257039" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />

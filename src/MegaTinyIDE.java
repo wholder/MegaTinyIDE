@@ -786,16 +786,16 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
           ChipInfo chip = chipSignatures.get(code);
           byte[] ser = edbg.getDeviceSerialNumber();      // 13 bytes
           Object[][] data = {
-              {"Type:", (chip != null ? chip.name : "unknown")},
-              {"Pins:", chip.get("pins") + " pins"},
+              {"Type:", chip != null ? chip.name : "unknown"},
+              {"Pins:", chip != null ? chip.pins + " pins" : "unknown"},
               {"Signature:", String.format("%02X, %02X, %02X", sig[0] & 0xFF, sig[1] & 0xFF, sig[2] & 0xFF)},
               {"Serial Num:", String.format("%02X, %02X, %02X, %02X, %02X, %02X, %02X, %02X, %02X, %02X, %02X, %02X, %02X",
                                             ser[0] & 0xFF, ser[1] & 0xFF, ser[2] & 0xFF, ser[3] & 0xFF, ser[4] & 0xFF,
                                             ser[5] & 0xFF, ser[6] & 0xFF, ser[7] & 0xFF, ser[8] & 0xFF, ser[9] & 0xFF,
                                             ser[10] & 0xFF, ser[11] & 0xFF, ser[12])},
-              {"Flash:", chip.get("flash") + "k bytes"},
-              {"EEProm:", chip.get("eeprom") + " bytes"},
-              {"SRam:", chip.get("sram") + " bytes"},
+              {"Flash:",  chip != null ? chip.get("flash") + "k bytes" : "unknown"},
+              {"EEProm:", chip != null ? chip.get("eeprom") + " bytes" : "unknown"},
+              {"SRam:",   chip != null ? chip.get("sram") + " bytes" : "unknown"},
           };
           JPanel panel = new JPanel(new BorderLayout());
           //                                                                            ot ol ob or it il ib ir

@@ -22,9 +22,10 @@ import static javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION;
 import static javax.swing.border.TitledBorder.DEFAULT_POSITION;
 
 public class ListingPane extends JPanel {   // https://regex101.com
-  private static final Pattern        DBG_LINE = Pattern.compile("\\s+([0-9a-fA-F]+):\\s([0-9a-fA-F]{2})\\s([0-9a-fA-F]{2})\\s+([a-z]+)([^;]+)");
+  private static final Pattern        DBG_LINE = Pattern.compile("\\s?([0-9a-fA-F]+):(?:\\s(?:[0-9a-fA-F]{2})){2,4}\\s+([a-z]+)([^;]+)");
   private static final Pattern        VAR_LINE = Pattern.compile("([0-9a-fA-F]{8}).{9}(.+)\t([0-9a-fA-F]{8})\\s+(.*)");
   private static final int            FONT_SIZE = 12;
+  private static final Font           codeFont = Utility.getCodeFont(FONT_SIZE);
   private static final int            DEFAULT_R_MARGIN = 7;
   private static final int            DEFAULT_L_MARGIN = 5;
   private final static int            MAX_HEIGHT = Integer.MAX_VALUE - 1000000;
@@ -195,8 +196,8 @@ public class ListingPane extends JPanel {   // https://regex101.com
     private String                  lastHit;
     private final int               lineHeight;
 
-    AvrListingPane (Font font) {
-      FontMetrics fontMetrics = getFontMetrics(font);
+    AvrListingPane () {
+      FontMetrics fontMetrics = getFontMetrics(codeFont);
       lineHeight = fontMetrics.getHeight();
     }
 
@@ -255,8 +256,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
     this.ide = ide;
     this.prefs = prefs;
     setLayout(new BorderLayout());
-    Font font = Utility.getCodeFont(FONT_SIZE);
-    listingPane = new AvrListingPane(font);
+    listingPane = new AvrListingPane();
     listingPane.setToolTipText("");
     listingPane.setBorder(new EmptyBorder(-4, 5, 0, 0));
     Document doc = listingPane.getDocument();
@@ -270,7 +270,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
     // Setup OCD Message Pane
     messagePane = new MyJTextPane();
     messagePane.setBorder(new EmptyBorder(0, 5, 0, 0));
-    messagePane.setFont(font);
+    messagePane.setFont(codeFont);
     messagePane.setEditable(false);
     JScrollPane messageScroll = new JScrollPane(messagePane);
     messageScroll.setBorder(BorderFactory.createTitledBorder("OCD Messages"));
@@ -344,7 +344,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
 
   private void showVariable (String name, int add, byte[] data) {
     int cols = 8;
-    MyJTextPane2 pane = new MyJTextPane2(Utility.getCodeFont(12), 8, BorderFactory.createEmptyBorder(2, 3, 2, 4));
+    MyJTextPane2 pane = new MyJTextPane2(codeFont, 8, BorderFactory.createEmptyBorder(2, 3, 2, 4));
     pane.setEditable(false);
     JScrollPane scroll = new JScrollPane(pane);
     scroll.getVerticalScrollBar().setUnitIncrement(pane.getScrollHeight());
@@ -446,8 +446,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
     String src = text.replaceAll("<", "&lt;");
     src = src.replaceAll(">", "&gt;");
     listingPane.setContentType("text/html");
-    Font font = Utility.getCodeFont(FONT_SIZE);
-    listingPane.setFont(font);
+    listingPane.setFont(codeFont);
     breakLines.clear();
     lineNumToAddress.clear();
     Map<String,String> vecs = null;
@@ -465,7 +464,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
         ide.showErrorDialog("Unable to load vector set");
       }
     }
-    StringBuilder buf = new StringBuilder("<html><pre " + Utility.getFontStyle(font) + ">");
+    StringBuilder buf = new StringBuilder("<html><pre " + Utility.getFontStyle(codeFont) + ">");
     lineCount = 0;
     String[] lines = src.split("\n");
     boolean lastBlank = false;
@@ -697,14 +696,13 @@ public class ListingPane extends JPanel {   // https://regex101.com
         titleBorder = BorderFactory.createTitledBorder(title);
         // Padding                              ot ol ob or it il ib ir
         setBorder(Utility.getBorder(titleBorder, 2, 2, 0, 2, 1, 3, 0, 3));
-        Font font = Utility.getCodeFont(FONT_SIZE);
         for (int row = 0; row < rows; row++) {
           for (int col = 0; col < cols; col++) {
             int idx = col + row * cols;
             JLabel lbl;
             if (fieldLabels != null) {
               add(lbl = new JLabel(fieldLabels[idx]));
-              lbl.setFont(font);
+              lbl.setFont(codeFont);
             } else {
               add(lbl = new JLabel(Integer.toString(idx)));
             }
@@ -724,7 +722,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
                 val.setToolTipText(tooltip);
               }
             }
-            val.setFont(font);
+            val.setFont(codeFont);
             vals.add(val);
             val.setBackground(Color.white);
             val.setOpaque(true);
@@ -919,7 +917,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
       setBackground(BACK_COLOR);
       setBorder(BorderFactory.createEmptyBorder(0, DEFAULT_L_MARGIN, 0, DEFAULT_R_MARGIN));
       Insets insets = getInsets();
-      FontMetrics fontMetrics = listingPane.getFontMetrics(listingPane.getFont());
+      FontMetrics fontMetrics = listingPane.getFontMetrics(codeFont);
       int width = insets.left + insets.right + fontMetrics.getAscent();
       Dimension dim = new Dimension(width, MAX_HEIGHT);
       setPreferredSize(dim);

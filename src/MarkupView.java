@@ -23,7 +23,6 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Map;
-import java.util.List;
 import java.util.prefs.Preferences;
 
 class MarkupView extends JPanel {
@@ -57,14 +56,13 @@ class MarkupView extends JPanel {
 
   class MyImageView extends ImageView {
     private String                loc;
-    private AttributeSet          attributes;
     private Image                 img;
     private ChipLayout.DrawSpace  ds;
 
     private MyImageView (Element elem) {
       super(elem);
       try {
-        attributes = elem.getAttributes();
+        AttributeSet attributes = elem.getAttributes();
         loc = URLDecoder.decode((String) attributes.getAttribute(HTML.Attribute.SRC), "UTF-8");
       } catch (UnsupportedEncodingException ex) {
         ex.printStackTrace();
@@ -109,16 +107,6 @@ class MarkupView extends JPanel {
       return getClass().getResource(basePath + loc);
     }
 
-    private int getInt (String name, int defVal) {
-      if (attributes.isDefined(name)) {
-        Object val = attributes.getAttribute(name);
-        if (val instanceof String) {
-          return Integer.parseInt((String) val);
-        }
-      }
-      return defVal;
-    }
-
     @Override
     public Image getImage () {
       // Check if image was already loaded
@@ -139,7 +127,7 @@ class MarkupView extends JPanel {
           }
         } else if (loc.startsWith("chiplayout:")) {
           this.ds = ChipLayout.getLayout(parmMap.get("CHIP"), parmMap.get("PKG"));
-          return img = ds.img;
+          return img = ds != null ? ds.img : null;
         }
       }
       return img = super.getImage();
@@ -232,9 +220,7 @@ class MarkupView extends JPanel {
             if (anchor != null) {
               jEditorPane.scrollToReference(anchor);
             }
-            SwingUtilities.invokeLater(() -> {
-              back.setVisible(stack.size() > 0);
-            });
+            SwingUtilities.invokeLater(() -> back.setVisible(stack.size() > 0));
           }
         } else if (ev.getEventType() == HyperlinkEvent.EventType.ENTERED) {
           tooltip = editor.getToolTipText();
