@@ -17,6 +17,7 @@ While more testing is still needed, I am declaring the code as operational (Beta
   - Graphical interface for FUSE values
   - Hardware Debugging using UPDI interface and compatible programmer/debugger (more below)
   - Built-in Pinout Reference Diagrams (with pin-level tooltips)
+  - Pop up AVR Instruction Guide tooltips in Listing Pane (hover over instruction name)
 
 ### Debugging Support
 

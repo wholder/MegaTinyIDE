@@ -12,14 +12,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/resources/avrinstructions.jsn" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/JSONtoMap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ListingPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ListingPane.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Utility.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Utility.java" afterDir="false" />
-    </list>
+    <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -466,7 +459,14 @@
       <option name="project" value="LOCAL" />
       <updated>1604613972276</updated>
     </task>
-    <option name="localTasksCounter" value="47" />
+    <task id="LOCAL-00047" summary="Add AVR instruction tooltips to Listing Pane">
+      <created>1605139014988</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1605139014988</updated>
+    </task>
+    <option name="localTasksCounter" value="48" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -482,7 +482,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Regression fix" />
     <MESSAGE value="Fix default clock speed" />
     <MESSAGE value="Improve #pragma parsing" />
     <MESSAGE value="Add option to display vector names in listing" />
@@ -507,7 +506,8 @@
     <MESSAGE value="Revise doc page" />
     <MESSAGE value="Code cleanup and new features" />
     <MESSAGE value="Misc fixes and improvements" />
-    <option name="LAST_COMMIT_MESSAGE" value="Misc fixes and improvements" />
+    <MESSAGE value="Add AVR instruction tooltips to Listing Pane" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add AVR instruction tooltips to Listing Pane" />
   </component>
   <component name="WindowStateProjectService">
     <state x="158" y="89" width="592" height="675" key="#com.intellij.debugger.actions.ViewTextAction" timestamp="1604357923820">
@@ -566,10 +566,10 @@
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="1252" y="688" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.23.2560.1577@0.23.2560.1577" timestamp="1596512936793" />
-    <state x="1084" y="401" width="844" height="984" key="CommitChangelistDialog2" timestamp="1604613966000">
+    <state x="1084" y="401" width="844" height="984" key="CommitChangelistDialog2" timestamp="1605139008945">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state x="1084" y="401" width="844" height="984" key="CommitChangelistDialog2/0.23.2560.1577@0.23.2560.1577" timestamp="1604613966000" />
+    <state x="1084" y="401" width="844" height="984" key="CommitChangelistDialog2/0.23.2560.1577@0.23.2560.1577" timestamp="1605139008945" />
     <state x="822" y="123" width="1340" height="1377" key="DiffContextDialog" timestamp="1602450393001">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
@@ -582,22 +582,22 @@
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="1601" y="401" width="729" height="678" key="Github.UntrackedFilesDialog/0.23.2560.1577@0.23.2560.1577" timestamp="1602205585314" />
-    <state width="1546" height="338" key="GridCell.Tab.0.bottom" timestamp="1605138102160">
+    <state width="1546" height="294" key="GridCell.Tab.0.bottom" timestamp="1605138839323">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="338" key="GridCell.Tab.0.bottom/0.23.2560.1577@0.23.2560.1577" timestamp="1605138102160" />
-    <state width="1546" height="338" key="GridCell.Tab.0.center" timestamp="1605138102159">
+    <state width="1546" height="294" key="GridCell.Tab.0.bottom/0.23.2560.1577@0.23.2560.1577" timestamp="1605138839323" />
+    <state width="1546" height="294" key="GridCell.Tab.0.center" timestamp="1605138839322">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="338" key="GridCell.Tab.0.center/0.23.2560.1577@0.23.2560.1577" timestamp="1605138102159" />
-    <state width="1546" height="338" key="GridCell.Tab.0.left" timestamp="1605138102159">
+    <state width="1546" height="294" key="GridCell.Tab.0.center/0.23.2560.1577@0.23.2560.1577" timestamp="1605138839322" />
+    <state width="1546" height="294" key="GridCell.Tab.0.left" timestamp="1605138839322">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="338" key="GridCell.Tab.0.left/0.23.2560.1577@0.23.2560.1577" timestamp="1605138102159" />
-    <state width="1546" height="338" key="GridCell.Tab.0.right" timestamp="1605138102160">
+    <state width="1546" height="294" key="GridCell.Tab.0.left/0.23.2560.1577@0.23.2560.1577" timestamp="1605138839322" />
+    <state width="1546" height="294" key="GridCell.Tab.0.right" timestamp="1605138839323">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="338" key="GridCell.Tab.0.right/0.23.2560.1577@0.23.2560.1577" timestamp="1605138102160" />
+    <state width="1546" height="294" key="GridCell.Tab.0.right/0.23.2560.1577@0.23.2560.1577" timestamp="1605138839323" />
     <state width="1546" height="338" key="GridCell.Tab.1.bottom" timestamp="1605138102161">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
@@ -618,10 +618,10 @@
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="973" y="299" key="SettingsEditor/0.23.2560.1577@0.23.2560.1577" timestamp="1604699432450" />
-    <state x="1050" y="545" key="Vcs.Push.Dialog.v2" timestamp="1604613974488">
+    <state x="1050" y="545" key="Vcs.Push.Dialog.v2" timestamp="1605139016657">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state x="1050" y="545" key="Vcs.Push.Dialog.v2/0.23.2560.1577@0.23.2560.1577" timestamp="1604613974488" />
+    <state x="1050" y="545" key="Vcs.Push.Dialog.v2/0.23.2560.1577@0.23.2560.1577" timestamp="1605139016657" />
     <state width="779" height="782" key="XDebugger.FullValuePopup" timestamp="1604358658140">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
