@@ -12,7 +12,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="" />
+    <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/JSONtoMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/JSONtoMap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ListingPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ListingPane.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -466,7 +470,14 @@
       <option name="project" value="LOCAL" />
       <updated>1605139014988</updated>
     </task>
-    <option name="localTasksCounter" value="48" />
+    <task id="LOCAL-00048" summary="Revise README">
+      <created>1605139232145</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1605139232145</updated>
+    </task>
+    <option name="localTasksCounter" value="49" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -495,7 +506,6 @@
     <MESSAGE value="Fixes to debugger" />
     <MESSAGE value="Fix regression of toolchain that broke compilation" />
     <MESSAGE value="Revise README image" />
-    <MESSAGE value="Revise README" />
     <MESSAGE value="Font fix for Linux" />
     <MESSAGE value="Prelim new features check in (Monitor code)" />
     <MESSAGE value="Add right click pop up &quot;Clear Screen&quot; for Monitor tab" />
@@ -507,7 +517,8 @@
     <MESSAGE value="Code cleanup and new features" />
     <MESSAGE value="Misc fixes and improvements" />
     <MESSAGE value="Add AVR instruction tooltips to Listing Pane" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add AVR instruction tooltips to Listing Pane" />
+    <MESSAGE value="Revise README" />
+    <option name="LAST_COMMIT_MESSAGE" value="Revise README" />
   </component>
   <component name="WindowStateProjectService">
     <state x="158" y="89" width="592" height="675" key="#com.intellij.debugger.actions.ViewTextAction" timestamp="1604357923820">
@@ -566,10 +577,10 @@
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="1252" y="688" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.23.2560.1577@0.23.2560.1577" timestamp="1596512936793" />
-    <state x="1084" y="401" width="844" height="984" key="CommitChangelistDialog2" timestamp="1605139008945">
+    <state x="1084" y="401" width="844" height="984" key="CommitChangelistDialog2" timestamp="1605139231978">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state x="1084" y="401" width="844" height="984" key="CommitChangelistDialog2/0.23.2560.1577@0.23.2560.1577" timestamp="1605139008945" />
+    <state x="1084" y="401" width="844" height="984" key="CommitChangelistDialog2/0.23.2560.1577@0.23.2560.1577" timestamp="1605139231978" />
     <state x="822" y="123" width="1340" height="1377" key="DiffContextDialog" timestamp="1602450393001">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
@@ -582,22 +593,22 @@
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="1601" y="401" width="729" height="678" key="Github.UntrackedFilesDialog/0.23.2560.1577@0.23.2560.1577" timestamp="1602205585314" />
-    <state width="1546" height="294" key="GridCell.Tab.0.bottom" timestamp="1605138839323">
+    <state width="1546" height="294" key="GridCell.Tab.0.bottom" timestamp="1605140947068">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="294" key="GridCell.Tab.0.bottom/0.23.2560.1577@0.23.2560.1577" timestamp="1605138839323" />
-    <state width="1546" height="294" key="GridCell.Tab.0.center" timestamp="1605138839322">
+    <state width="1546" height="294" key="GridCell.Tab.0.bottom/0.23.2560.1577@0.23.2560.1577" timestamp="1605140947068" />
+    <state width="1546" height="294" key="GridCell.Tab.0.center" timestamp="1605140947067">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="294" key="GridCell.Tab.0.center/0.23.2560.1577@0.23.2560.1577" timestamp="1605138839322" />
-    <state width="1546" height="294" key="GridCell.Tab.0.left" timestamp="1605138839322">
+    <state width="1546" height="294" key="GridCell.Tab.0.center/0.23.2560.1577@0.23.2560.1577" timestamp="1605140947067" />
+    <state width="1546" height="294" key="GridCell.Tab.0.left" timestamp="1605140947067">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="294" key="GridCell.Tab.0.left/0.23.2560.1577@0.23.2560.1577" timestamp="1605138839322" />
-    <state width="1546" height="294" key="GridCell.Tab.0.right" timestamp="1605138839323">
+    <state width="1546" height="294" key="GridCell.Tab.0.left/0.23.2560.1577@0.23.2560.1577" timestamp="1605140947067" />
+    <state width="1546" height="294" key="GridCell.Tab.0.right" timestamp="1605140947067">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="294" key="GridCell.Tab.0.right/0.23.2560.1577@0.23.2560.1577" timestamp="1605138839323" />
+    <state width="1546" height="294" key="GridCell.Tab.0.right/0.23.2560.1577@0.23.2560.1577" timestamp="1605140947067" />
     <state width="1546" height="338" key="GridCell.Tab.1.bottom" timestamp="1605138102161">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
@@ -614,14 +625,14 @@
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state width="1546" height="338" key="GridCell.Tab.1.right/0.23.2560.1577@0.23.2560.1577" timestamp="1605138102161" />
-    <state x="973" y="299" key="SettingsEditor" timestamp="1604699432450">
+    <state x="973" y="299" key="SettingsEditor" timestamp="1605140278967">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state x="973" y="299" key="SettingsEditor/0.23.2560.1577@0.23.2560.1577" timestamp="1604699432450" />
-    <state x="1050" y="545" key="Vcs.Push.Dialog.v2" timestamp="1605139016657">
+    <state x="973" y="299" key="SettingsEditor/0.23.2560.1577@0.23.2560.1577" timestamp="1605140278967" />
+    <state x="1050" y="545" key="Vcs.Push.Dialog.v2" timestamp="1605139233567">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state x="1050" y="545" key="Vcs.Push.Dialog.v2/0.23.2560.1577@0.23.2560.1577" timestamp="1605139016657" />
+    <state x="1050" y="545" key="Vcs.Push.Dialog.v2/0.23.2560.1577@0.23.2560.1577" timestamp="1605139233567" />
     <state width="779" height="782" key="XDebugger.FullValuePopup" timestamp="1604358658140">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>

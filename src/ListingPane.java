@@ -141,18 +141,22 @@ public class ListingPane extends JPanel {   // https://regex101.com
         border.setTitle(text);
         if (avrIns != null) {
           Object parms = avrIns.get(text.toUpperCase());
-          if (parms instanceof List && tmp.length > 1) {
-            List<Map<String, String>> lst = (List) parms;
-            for (Map<String, String> map : lst) {
-              String regx = map.get("regx");
-              if (tmp[1].matches(regx)) {
-                parms = map;
-                break;
+          if (parms instanceof List<?> && tmp.length > 1) {
+            List<?> lst = (List<?>) parms;
+            for (Object map : lst) {
+              if (map instanceof Map<?,?>) {
+                Object regx = ((Map<?, ?>) map).get("regx");
+                if (regx instanceof String) {
+                  if (tmp[1].matches((String) regx)) {
+                    parms = map;
+                    break;
+                  }
+                }
               }
             }
           }
-          if (parms instanceof Map) {
-            Map<String, String> map = (Map) parms;
+          if (parms instanceof Map<?,?>) {
+            Map<?,?> map = (Map<?,?>) parms;
             border.setTitle(text.toUpperCase() + " " + map.get("args"));
             StringBuilder buf = new StringBuilder("<html>");
             buf.append("<style>.desc{color:#444444;").append(style).append("}</style>");
@@ -160,8 +164,11 @@ public class ListingPane extends JPanel {   // https://regex101.com
             buf.append("<style>.flags{color:blue;").append(style).append("}</style>");
             buf.append("<style>.cycles{color:orange;").append(style).append("}</style>");
             buf.append("<p class=\"desc\">").append(map.get("desc")).append("</p>");
-            for (String op : map.get("ops").split(";")) {
-              buf.append("<p class=\"ops\">").append(op).append("</p>");
+            Object ops = map.get("ops");
+            if (ops instanceof String) {
+              for (String op : ((String) ops).split(";")) {
+                buf.append("<p class=\"ops\">").append(op).append("</p>");
+              }
             }
             buf.append("<p class=\"flags\">Flags: ").append(map.get("flags")).append("</p>");
             buf.append("<p class=\"cycles\">Cycles: ").append(map.get("cycles")).append("</p>");
