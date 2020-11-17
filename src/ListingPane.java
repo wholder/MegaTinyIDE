@@ -83,7 +83,6 @@ public class ListingPane extends JPanel {   // https://regex101.com
       }
       super.setDividerLocation(loc);
     }
-
   }
 
   static class AvrTooltipHandler extends JToolTip {

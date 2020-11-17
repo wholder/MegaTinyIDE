@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/*
+  /*
    *  This class is used to generate pinout images for the various members of the 0-series and 1-series ATtiny chips
    */
 

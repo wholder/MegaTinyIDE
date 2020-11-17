@@ -304,7 +304,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
   private void showAboutBox () {
     ImageIcon icon = null;
     try {
-      icon = new ImageIcon(getClass().getResource("images/avrLogo.png"));
+      icon = new ImageIcon(getClass().getResource("images/MegaTinyIDE.png"));
     } catch (Exception ex) {
       ex.printStackTrace();
     }
@@ -1074,8 +1074,8 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     public void run () {
       try {
         File dst = new File(tmpExe);
-        if (!dst.exists()) {
-          dst.mkdirs();
+        if (!dst.exists() && !dst.mkdirs()) {
+          throw new IllegalStateException("Unable to create directory: " + dst);
         }
         infoPane.append("srcZip: " + srcZip + "\n");
         ZipFile zip = null;
@@ -1109,11 +1109,11 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
               }
               File dstFile = new File(dst, src);
               File dstDir = dstFile.getParentFile();
-              if (!dstDir.exists()) {
-                dstDir.mkdirs();
+              if (!dstDir.exists() && !dstDir.mkdirs()) {
+                throw new IllegalStateException("Unable to create directory: " + dstDir);
               }
-              if (entry.isDirectory()) {
-                dstFile.mkdirs();
+              if (entry.isDirectory() && !dstFile.mkdirs()) {
+                throw new IllegalStateException("Unable to create directory: " + dstFile);
               } else {
                 try (ReadableByteChannel srcChan = Channels.newChannel(zip.getInputStream(entry));
                      FileChannel dstChan = new FileOutputStream(dstFile).getChannel()) {
