@@ -512,6 +512,8 @@ public class ListingPane extends JPanel {   // https://regex101.com
     }
     buf.append("</pre></html>");
     listingPane.setText(buf.toString());
+    validate();
+    SwingUtilities.invokeLater(this::repaint);
   }
 
   public String getText () {

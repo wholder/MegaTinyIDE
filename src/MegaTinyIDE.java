@@ -378,8 +378,11 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     infoPane = new MyTextPane(tabPane, "Monitor", "Displays additional information about IDE and OCD and error messages");
     hexPane.setEditable(false);
     infoPane.setEditable(false);
-    infoPane.append("os.name: " + osName + "\n");
-    infoPane.append("os:      " + os.toString() + "\n");
+    infoPane.append("os.name:      " + osName + "\n");
+    infoPane.append("os:           " + os.toString() + "\n");
+    infoPane.append("java.home:    " + System.getProperty("java.home") + "\n");
+    infoPane.append("java.version: " + System.getProperty("java.version") + "\n");
+
     if (prefs.getBoolean("developer_features", false)) {
       String[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
       infoPane.append("Installed fonts:\n");
@@ -1077,7 +1080,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
         if (!dst.exists() && !dst.mkdirs()) {
           throw new IllegalStateException("Unable to create directory: " + dst);
         }
-        infoPane.append("srcZip: " + srcZip + "\n");
+        infoPane.append("srcZip:       " + srcZip + "\n");
         ZipFile zip = null;
         try {
           Path file = Files.createTempFile(null, ".zip");

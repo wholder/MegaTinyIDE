@@ -71,6 +71,7 @@ class MarkupView extends JPanel {
 
     /**
      * This is needed to get the JEditorPane to allocate space for BufferedImages...
+     *  Note: img tag must must set with and height or this code will throw null pointer exception
      * @param axis either View.X_AXIS or View.Y_AXIS
      * @return the preferred X or Y span
      */
@@ -79,7 +80,7 @@ class MarkupView extends JPanel {
       if (img instanceof BufferedImage) {
         if (axis == View.X_AXIS) {
           return ((BufferedImage) img).getWidth();
-        } else {
+        } else if (axis == View.Y_AXIS) {
           return ((BufferedImage) img).getHeight();
         }
       }

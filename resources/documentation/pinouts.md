@@ -1,6 +1,6 @@
 ## *[NAME]* in *[PKG]* Package
-
-<p align="center"><img src="chiplayout:*[CHIP]*"></p>
+<!-- Note: must set with and height or MarkupView.MyImageView.getPreferredSpan() will throw null pointer exception -->
+<p align="center"><img src="chiplayout:*[CHIP]*" width="800" height="800"></p>
 **Note:** Alternate pin configurations available using Port Multiplexer not shown.  See datasheet for details.
 
 ## Specifications
