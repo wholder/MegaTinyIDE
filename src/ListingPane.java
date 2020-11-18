@@ -437,7 +437,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
   }
 
   /**
-   * Set test into debugPane and setup breakpoint controls
+   * Set text into debugPane and setup breakpoint controls
    * @param text listing
    */
   public void setText (String text) {
@@ -520,9 +520,9 @@ public class ListingPane extends JPanel {   // https://regex101.com
     return rawSrc;
   }
 
-  public void setErrorText (String test) {
+  public void setErrorText (String text) {
     listingPane.setContentType("text/html");
-    listingPane.setText(test);
+    listingPane.setText(text);
   }
 
   public void highlightAddress (int address) {

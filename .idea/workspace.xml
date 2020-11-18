@@ -12,18 +12,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="Revise Logo file">
+    <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="MIsc fixes">
       <change afterPath="$PROJECT_DIR$/NativeBuilder/NativeBuilder.iml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/ToolBuilder/ToolBuilder.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/documentation/pinouts.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/pinouts.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/toolchains/combined.zip" beforeDir="false" afterPath="$PROJECT_DIR$/resources/toolchains/combined.zip" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ListingPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ListingPane.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MarkupView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MarkupView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MegaTinyIDE.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MegaTinyIDE.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,7 +47,7 @@
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.ChangelistConflict" />
     <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/src/StatusPane.java" />
     <property name="two.files.diff.last.used.folder" value="$PROJECT_DIR$/toolchains-7.3.0/avr-gcc-7.3.0-atmel3.6.1-arduino5-x86_64-apple-darwin14/avr" />
   </component>
@@ -126,8 +120,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.NativeBuilder" />
         <item itemvalue="Application.MegaTinyIDE" />
+        <item itemvalue="Application.NativeBuilder" />
         <item itemvalue="Application.ToolchainCombiner (1)" />
         <item itemvalue="Application.ListingPane" />
         <item itemvalue="Application.ParmDialog" />
@@ -142,13 +136,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1596315993204</updated>
-    </task>
-    <task id="LOCAL-00003" summary="Fix README">
-      <created>1602206688786</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1602206688786</updated>
     </task>
     <task id="LOCAL-00004" summary="Regression fix">
       <created>1602207688539</created>
@@ -486,7 +473,14 @@
       <option name="project" value="LOCAL" />
       <updated>1605573896368</updated>
     </task>
-    <option name="localTasksCounter" value="52" />
+    <task id="LOCAL-00052" summary="Revise Logo file">
+      <created>1605740800537</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1605740800538</updated>
+    </task>
+    <option name="localTasksCounter" value="53" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -594,10 +588,10 @@
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="1252" y="688" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.23.2560.1577@0.23.2560.1577" timestamp="1605564762425" />
-    <state x="1084" y="401" width="844" height="984" key="CommitChangelistDialog2" timestamp="1605651240944">
+    <state x="1084" y="401" width="844" height="984" key="CommitChangelistDialog2" timestamp="1605742084791">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state x="1084" y="401" width="844" height="984" key="CommitChangelistDialog2/0.23.2560.1577@0.23.2560.1577" timestamp="1605651240944" />
+    <state x="1084" y="401" width="844" height="984" key="CommitChangelistDialog2/0.23.2560.1577@0.23.2560.1577" timestamp="1605742084791" />
     <state x="822" y="123" width="1340" height="1377" key="DiffContextDialog" timestamp="1605563290612">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
@@ -610,22 +604,22 @@
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="1601" y="401" width="729" height="678" key="Github.UntrackedFilesDialog/0.23.2560.1577@0.23.2560.1577" timestamp="1602205585314" />
-    <state width="1546" height="294" key="GridCell.Tab.0.bottom" timestamp="1605740181441">
+    <state width="1546" height="294" key="GridCell.Tab.0.bottom" timestamp="1605741893779">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="294" key="GridCell.Tab.0.bottom/0.23.2560.1577@0.23.2560.1577" timestamp="1605740181441" />
-    <state width="1546" height="294" key="GridCell.Tab.0.center" timestamp="1605740181440">
+    <state width="1546" height="294" key="GridCell.Tab.0.bottom/0.23.2560.1577@0.23.2560.1577" timestamp="1605741893779" />
+    <state width="1546" height="294" key="GridCell.Tab.0.center" timestamp="1605741893778">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="294" key="GridCell.Tab.0.center/0.23.2560.1577@0.23.2560.1577" timestamp="1605740181440" />
-    <state width="1546" height="294" key="GridCell.Tab.0.left" timestamp="1605740181440">
+    <state width="1546" height="294" key="GridCell.Tab.0.center/0.23.2560.1577@0.23.2560.1577" timestamp="1605741893778" />
+    <state width="1546" height="294" key="GridCell.Tab.0.left" timestamp="1605741893777">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="294" key="GridCell.Tab.0.left/0.23.2560.1577@0.23.2560.1577" timestamp="1605740181440" />
-    <state width="1546" height="294" key="GridCell.Tab.0.right" timestamp="1605740181441">
+    <state width="1546" height="294" key="GridCell.Tab.0.left/0.23.2560.1577@0.23.2560.1577" timestamp="1605741893777" />
+    <state width="1546" height="294" key="GridCell.Tab.0.right" timestamp="1605741893778">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="294" key="GridCell.Tab.0.right/0.23.2560.1577@0.23.2560.1577" timestamp="1605740181441" />
+    <state width="1546" height="294" key="GridCell.Tab.0.right/0.23.2560.1577@0.23.2560.1577" timestamp="1605741893778" />
     <state width="1546" height="338" key="GridCell.Tab.1.bottom" timestamp="1605691261414">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
@@ -642,14 +636,14 @@
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state width="1546" height="338" key="GridCell.Tab.1.right/0.23.2560.1577@0.23.2560.1577" timestamp="1605691261414" />
-    <state x="973" y="299" key="SettingsEditor" timestamp="1605691682513">
+    <state x="973" y="299" key="SettingsEditor" timestamp="1605742248063">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state x="973" y="299" key="SettingsEditor/0.23.2560.1577@0.23.2560.1577" timestamp="1605691682513" />
-    <state x="1050" y="545" key="Vcs.Push.Dialog.v2" timestamp="1605573899008">
+    <state x="973" y="299" key="SettingsEditor/0.23.2560.1577@0.23.2560.1577" timestamp="1605742248063" />
+    <state x="1050" y="545" key="Vcs.Push.Dialog.v2" timestamp="1605740802256">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state x="1050" y="545" key="Vcs.Push.Dialog.v2/0.23.2560.1577@0.23.2560.1577" timestamp="1605573899008" />
+    <state x="1050" y="545" key="Vcs.Push.Dialog.v2/0.23.2560.1577@0.23.2560.1577" timestamp="1605740802256" />
     <state x="1151" y="541" key="VcsDiffUtil.ChangesDialog" timestamp="1605563286082">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
@@ -678,10 +672,10 @@
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="1546" y="197" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.23.2560.1577@0.23.2560.1577" timestamp="1603581515544" />
-    <state x="1273" y="276" width="1083" height="978" key="find.popup" timestamp="1605739506581">
+    <state x="1273" y="276" width="1083" height="978" key="find.popup" timestamp="1605741791419">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state x="1273" y="276" width="1083" height="978" key="find.popup/0.23.2560.1577@0.23.2560.1577" timestamp="1605739506581" />
+    <state x="1273" y="276" width="1083" height="978" key="find.popup/0.23.2560.1577@0.23.2560.1577" timestamp="1605741791419" />
     <state x="895" y="434" key="new project wizard" timestamp="1605657550313">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
