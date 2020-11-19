@@ -17,7 +17,8 @@
       <change afterPath="$PROJECT_DIR$/ToolBuilder/ToolBuilder.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ListingPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ListingPane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/toolchains/combined.zip" beforeDir="false" afterPath="$PROJECT_DIR$/resources/toolchains/combined.zip" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MegaTinyIDE.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MegaTinyIDE.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -136,13 +137,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1596315993204</updated>
-    </task>
-    <task id="LOCAL-00004" summary="Regression fix">
-      <created>1602207688539</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1602207688539</updated>
     </task>
     <task id="LOCAL-00005" summary="Revise README">
       <created>1602274979847</created>
@@ -480,7 +474,14 @@
       <option name="project" value="LOCAL" />
       <updated>1605740800538</updated>
     </task>
-    <option name="localTasksCounter" value="53" />
+    <task id="LOCAL-00053" summary="Misc fixes">
+      <created>1605742383370</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1605742383370</updated>
+    </task>
+    <option name="localTasksCounter" value="54" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -496,7 +497,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Add option to display vector names in listing" />
     <MESSAGE value="Revise screenshots" />
     <MESSAGE value="Fix assembly of .s files" />
     <MESSAGE value="Update docs on Linux rules issue." />
@@ -521,7 +521,8 @@
     <MESSAGE value="Code cleanup" />
     <MESSAGE value="Bug and regression fix (breakpoints offset)" />
     <MESSAGE value="Revise Logo file" />
-    <option name="LAST_COMMIT_MESSAGE" value="Revise Logo file" />
+    <MESSAGE value="Misc fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Misc fixes" />
   </component>
   <component name="WindowStateProjectService">
     <state x="823" y="382" key="#Project_Structure" timestamp="1605606665706">
@@ -576,10 +577,10 @@
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="1223" y="479" key="#com.intellij.util.ui.classpath.ChooseLibrariesDialog/0.23.2560.1577@0.23.2560.1577" timestamp="1605657806453" />
-    <state x="177" y="133" width="1009" height="1366" key="#xdebugger.XInspectDialog" timestamp="1605169694728">
+    <state x="61" y="87" width="472" height="1394" key="#xdebugger.XInspectDialog" timestamp="1605826462801">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state x="177" y="133" width="1009" height="1366" key="#xdebugger.XInspectDialog/0.23.2560.1577@0.23.2560.1577" timestamp="1605169694728" />
+    <state x="61" y="87" width="472" height="1394" key="#xdebugger.XInspectDialog/0.23.2560.1577@0.23.2560.1577" timestamp="1605826462801" />
     <state x="1189" y="522" key="#xdebugger.evaluate" timestamp="1600993645459">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
@@ -588,10 +589,10 @@
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="1252" y="688" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.23.2560.1577@0.23.2560.1577" timestamp="1605564762425" />
-    <state x="1084" y="401" width="844" height="984" key="CommitChangelistDialog2" timestamp="1605742084791">
+    <state x="1084" y="401" width="844" height="984" key="CommitChangelistDialog2" timestamp="1605742449497">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state x="1084" y="401" width="844" height="984" key="CommitChangelistDialog2/0.23.2560.1577@0.23.2560.1577" timestamp="1605742084791" />
+    <state x="1084" y="401" width="844" height="984" key="CommitChangelistDialog2/0.23.2560.1577@0.23.2560.1577" timestamp="1605742449497" />
     <state x="822" y="123" width="1340" height="1377" key="DiffContextDialog" timestamp="1605563290612">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
@@ -604,46 +605,46 @@
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="1601" y="401" width="729" height="678" key="Github.UntrackedFilesDialog/0.23.2560.1577@0.23.2560.1577" timestamp="1602205585314" />
-    <state width="1546" height="294" key="GridCell.Tab.0.bottom" timestamp="1605741893779">
+    <state width="1546" height="294" key="GridCell.Tab.0.bottom" timestamp="1605826434315">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="294" key="GridCell.Tab.0.bottom/0.23.2560.1577@0.23.2560.1577" timestamp="1605741893779" />
-    <state width="1546" height="294" key="GridCell.Tab.0.center" timestamp="1605741893778">
+    <state width="1546" height="294" key="GridCell.Tab.0.bottom/0.23.2560.1577@0.23.2560.1577" timestamp="1605826434315" />
+    <state width="1546" height="294" key="GridCell.Tab.0.center" timestamp="1605826434314">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="294" key="GridCell.Tab.0.center/0.23.2560.1577@0.23.2560.1577" timestamp="1605741893778" />
-    <state width="1546" height="294" key="GridCell.Tab.0.left" timestamp="1605741893777">
+    <state width="1546" height="294" key="GridCell.Tab.0.center/0.23.2560.1577@0.23.2560.1577" timestamp="1605826434314" />
+    <state width="1546" height="294" key="GridCell.Tab.0.left" timestamp="1605826434314">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="294" key="GridCell.Tab.0.left/0.23.2560.1577@0.23.2560.1577" timestamp="1605741893777" />
-    <state width="1546" height="294" key="GridCell.Tab.0.right" timestamp="1605741893778">
+    <state width="1546" height="294" key="GridCell.Tab.0.left/0.23.2560.1577@0.23.2560.1577" timestamp="1605826434314" />
+    <state width="1546" height="294" key="GridCell.Tab.0.right" timestamp="1605826434315">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="294" key="GridCell.Tab.0.right/0.23.2560.1577@0.23.2560.1577" timestamp="1605741893778" />
-    <state width="1546" height="338" key="GridCell.Tab.1.bottom" timestamp="1605691261414">
+    <state width="1546" height="294" key="GridCell.Tab.0.right/0.23.2560.1577@0.23.2560.1577" timestamp="1605826434315" />
+    <state width="1546" height="338" key="GridCell.Tab.1.bottom" timestamp="1605826177069">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="338" key="GridCell.Tab.1.bottom/0.23.2560.1577@0.23.2560.1577" timestamp="1605691261414" />
-    <state width="1546" height="338" key="GridCell.Tab.1.center" timestamp="1605691261414">
+    <state width="1546" height="338" key="GridCell.Tab.1.bottom/0.23.2560.1577@0.23.2560.1577" timestamp="1605826177069" />
+    <state width="1546" height="338" key="GridCell.Tab.1.center" timestamp="1605826177069">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="338" key="GridCell.Tab.1.center/0.23.2560.1577@0.23.2560.1577" timestamp="1605691261414" />
-    <state width="1546" height="338" key="GridCell.Tab.1.left" timestamp="1605691261413">
+    <state width="1546" height="338" key="GridCell.Tab.1.center/0.23.2560.1577@0.23.2560.1577" timestamp="1605826177069" />
+    <state width="1546" height="338" key="GridCell.Tab.1.left" timestamp="1605826177068">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="338" key="GridCell.Tab.1.left/0.23.2560.1577@0.23.2560.1577" timestamp="1605691261413" />
-    <state width="1546" height="338" key="GridCell.Tab.1.right" timestamp="1605691261414">
+    <state width="1546" height="338" key="GridCell.Tab.1.left/0.23.2560.1577@0.23.2560.1577" timestamp="1605826177068" />
+    <state width="1546" height="338" key="GridCell.Tab.1.right" timestamp="1605826177069">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="338" key="GridCell.Tab.1.right/0.23.2560.1577@0.23.2560.1577" timestamp="1605691261414" />
+    <state width="1546" height="338" key="GridCell.Tab.1.right/0.23.2560.1577@0.23.2560.1577" timestamp="1605826177069" />
     <state x="973" y="299" key="SettingsEditor" timestamp="1605742248063">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="973" y="299" key="SettingsEditor/0.23.2560.1577@0.23.2560.1577" timestamp="1605742248063" />
-    <state x="1050" y="545" key="Vcs.Push.Dialog.v2" timestamp="1605740802256">
+    <state x="1050" y="545" key="Vcs.Push.Dialog.v2" timestamp="1605742385054">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state x="1050" y="545" key="Vcs.Push.Dialog.v2/0.23.2560.1577@0.23.2560.1577" timestamp="1605740802256" />
+    <state x="1050" y="545" key="Vcs.Push.Dialog.v2/0.23.2560.1577@0.23.2560.1577" timestamp="1605742385054" />
     <state x="1151" y="541" key="VcsDiffUtil.ChangesDialog" timestamp="1605563286082">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
@@ -688,6 +689,22 @@
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="1065" y="644" key="vcs.readOnlyHandler.ReadOnlyStatusDialog/0.23.2560.1577@0.23.2560.1577" timestamp="1605738225340" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/ToolBuilder/src/ToolchainCombiner.java</url>
+          <line>119</line>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/ToolBuilder/src/ToolchainCombiner.java</url>
+          <line>109</line>
+          <option name="timeStamp" value="15" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/MegaTinyIDE$MegaTinyIDE.ic" NAME="MegaTinyIDE Coverage Results" MODIFIED="1602453257039" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />

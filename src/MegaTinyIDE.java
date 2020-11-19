@@ -7,9 +7,6 @@ import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 
 import java.util.*;
 import java.util.List;
@@ -1080,16 +1077,12 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
         if (!dst.exists() && !dst.mkdirs()) {
           throw new IllegalStateException("Unable to create directory: " + dst);
         }
-        infoPane.append("srcZip:       " + srcZip + "\n");
         ZipFile zip = null;
         try {
-          Path file = Files.createTempFile(null, ".zip");
-          InputStream stream = MegaTinyIDE.class.getClassLoader().getResourceAsStream(srcZip);
-          if (stream != null) {
-            Files.copy(stream, file, StandardCopyOption.REPLACE_EXISTING);
-            File srcFile = file.toFile();
-            srcFile.deleteOnExit();
-            zip = new ZipFile(srcFile);
+          URL zipUrl = MegaTinyIDE.class.getResource(srcZip);
+          if (zipUrl != null) {
+            File zipFile = new File(zipUrl.toURI());
+            zip = new ZipFile(zipFile);
             int entryCount = 0, lastEntryCount = 0;
             progress.setMaximum(zip.size());
             Enumeration<? extends ZipEntry> entries = zip.entries();
@@ -1132,7 +1125,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
               }
             }
           } else {
-            showErrorDialog("Unable to open " + srcZip + file);
+            showErrorDialog("Unable to open " + srcZip);
           }
         } finally {
           if (zip != null) {
