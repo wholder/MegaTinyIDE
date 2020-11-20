@@ -424,34 +424,32 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
           String[] newParts = newVersion.split("\\.");
           if (oldParts.length == newParts.length) {
             try {
-              boolean newer = false;
               for (int ii = 0; ii < newParts.length; ii++) {
                 int newVal = Integer.parseInt(newParts[ii]);
                 int oldVal = Integer.parseInt(oldParts[ii]);
                 if (newVal > oldVal) {
-                  newer = true;
-                  break;
-                }
-              }
-              if (newer) {
-                String status = latest.get("status");
-                String version = newVersion + (status != null && status.length() > 0 ? " " + status : "");
-                ImageIcon icon = new ImageIcon(Utility.class.getResource("images/info-32x32.png"));
-                if (JOptionPane.showConfirmDialog(this, "<html>A new version (" + version + ") is available!<br>" +
-                                                      "Do you want to go to the download page?</html>", "Warning", JOptionPane.YES_NO_OPTION,
-                                                  JOptionPane.WARNING_MESSAGE, icon) == JOptionPane.OK_OPTION) {
-                  if (Desktop.isDesktopSupported()) {
-                    try {
-                      Desktop.getDesktop().browse(new URI(DOWNLOAD));
-                    } catch (Exception ex) {
-                      ex.printStackTrace();
+                  String status = latest.get("status");
+                  String version = newVersion + (status != null && status.length() > 0 ? " " + status : "");
+                  ImageIcon icon = new ImageIcon(Utility.class.getResource("images/info-32x32.png"));
+                  if (JOptionPane.showConfirmDialog(this, "<html>A new version (" + version + ") is available!<br>" +
+                                                        "Do you want to go to the download page?</html>", "Warning", JOptionPane.YES_NO_OPTION,
+                                                    JOptionPane.WARNING_MESSAGE, icon) == JOptionPane.OK_OPTION) {
+                    if (Desktop.isDesktopSupported()) {
+                      try {
+                        Desktop.getDesktop().browse(new URI(DOWNLOAD));
+                      } catch (Exception ex) {
+                        ex.printStackTrace();
+                      }
                     }
                   }
+                  return;
+                } else if (newVal < oldVal) {
+                  showErrorDialog("This version is newer than the github release.");
+                  return;
                 }
-              } else {
-                ImageIcon icon = new ImageIcon(Utility.class.getResource("images/info-32x32.png"));
-                JOptionPane.showMessageDialog(this, "You have the latest version.", "Attention", INFORMATION_MESSAGE, icon);
               }
+              ImageIcon icon = new ImageIcon(Utility.class.getResource("images/info-32x32.png"));
+              JOptionPane.showMessageDialog(this, "You have the latest version.", "Attention", INFORMATION_MESSAGE, icon);
             } catch (NumberFormatException ex) {
               ex.printStackTrace();
             }
