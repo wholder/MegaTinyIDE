@@ -14,6 +14,8 @@ import jssc.*;
  *    libjSSC-2.8_x86.jnilib
  *    libjSSC-2.8_x86_64.jnilib
  *
+ *  Note: should update to newer code at: https://github.com/java-native/jssc/releases
+ *
  *  Author: Wayne Holder, 2015-2017 (first version 10/30/2015)
  */
 
@@ -25,7 +27,7 @@ public class JSSCPort implements SerialPortEventListener {
   private static final int    dataBits = 8;
   private static final int    stopBits = 1;
   private static final int    parity = 0;
-  private int                 eventMasks;   // See: SerialPort.MASK_RXCHAR, MASK_TXEMPTY, MASK_CTS, MASK_DSR
+  private static final int    eventMasks = 0;   // See: SerialPort.MASK_RXCHAR, MASK_TXEMPTY, MASK_CTS, MASK_DSR
   private static final int    flowCtrl = SerialPort.FLOWCONTROL_NONE;
   private SerialPort          serialPort;
   private boolean             hasListener;
@@ -55,6 +57,10 @@ public class JSSCPort implements SerialPortEventListener {
   JSSCPort () {
   }
 
+  /**
+   * Determine if port is currently open
+   * @return true if open, else false
+   */
   public boolean isOpen () {
     if (serialPort != null) {
       return serialPort.isOpened();
@@ -62,15 +68,27 @@ public class JSSCPort implements SerialPortEventListener {
     return false;
   }
 
+  /**
+   * Select port that will be opened by call to open()
+   * @param port port name (as returned by getPortNames())
+   */
   public void setPort (String port) {
     portName = port;
   }
 
+  /**
+   * Set the baud rate
+   * @param rate baud rate
+   */
   public void setRate (String rate) {
     baudRate = baudRates.get(rate);
   }
 
-  static String[] getPortNames () {
+  /**
+   * Get available ports
+   * @return array of available ports by name
+   */
+  public static String[] getPortNames () {
     // Determine OS Type
     switch (SerialNativeInterface.getOsType()) {
       case SerialNativeInterface.OS_LINUX:
@@ -84,11 +102,21 @@ public class JSSCPort implements SerialPortEventListener {
     }
   }
 
-  static String[] getBaudRates () {
+  /**
+   * Get available baud rates
+   * @return array of available vaud rates
+   */
+  public static String[] getBaudRates () {
     List<String> rates = new ArrayList<>(baudRates.keySet());
     return rates.toArray(new String[0]);
   }
 
+  /**
+   * Open serial port and assign RX handler
+   * @param handler RX handler
+   * @return true if port was opened, else false
+   * @throws SerialPortException on error
+   */
   public boolean open (RXEvent handler) throws SerialPortException {
     if (serialPort != null) {
       if (serialPort.isOpened()) {
@@ -109,7 +137,10 @@ public class JSSCPort implements SerialPortEventListener {
     return false;
   }
 
-  void close () {
+  /**
+   * Close serial port
+   */
+  public void close () {
     if (serialPort != null && serialPort.isOpened()) {
       try {
         synchronized (this) {
@@ -127,6 +158,10 @@ public class JSSCPort implements SerialPortEventListener {
     }
   }
 
+  /**
+   * Implements SerialPortEventListener
+   * @param se serial event
+   */
   public void serialEvent (SerialPortEvent se) {
     try {
       if (se.getEventType() == SerialPortEvent.RXCHAR) {
@@ -157,7 +192,21 @@ public class JSSCPort implements SerialPortEventListener {
     }
   }
 
-  void sendString (String data) throws SerialPortException {
+  /**
+   * Send string to TX
+   * @param data string to send
+   * @throws SerialPortException on error
+   */
+  public void sendString (String data) throws SerialPortException {
     serialPort.writeString(data);
+  }
+
+  /**
+   * Send BREAK on TX line
+   * @param duration break interval in milliseconds
+   * @throws SerialPortException on error
+   */
+  public void sendBreak (int duration) throws SerialPortException {
+    serialPort.sendBreak(duration);
   }
 }

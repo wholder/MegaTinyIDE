@@ -89,26 +89,6 @@ class Utility {
     return tmp.toString();
   }
 
-  static String detabLine (int spacing, String line) {
-    StringBuilder buf = new StringBuilder();
-    int idx;
-    int last = 0;
-    int col = 0;
-    while ((idx = line.indexOf('\t', last)) >= 0) {
-      String seg = line.substring(last, idx);
-      buf.append(seg);
-      col += seg.length();
-      int remain = spacing - (col % spacing);
-      for (int ii = 0; ii < remain; ii++) {
-        buf.append((' '));
-        col++;
-      }
-      last = idx + 1;
-    }
-    buf.append(line.substring(last));
-    return buf.toString();
-  }
-
   static void saveFile (File file, String text) {
     try {
       FileOutputStream out = new FileOutputStream(file);
