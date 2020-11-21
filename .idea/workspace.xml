@@ -15,7 +15,6 @@
     <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="Revise version numbering to 1.0.0">
       <change afterPath="$PROJECT_DIR$/NativeBuilder/NativeBuilder.iml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/ToolBuilder/ToolBuilder.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.MD" beforeDir="false" afterPath="$PROJECT_DIR$/README.MD" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -135,13 +134,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1596315993204</updated>
-    </task>
-    <task id="LOCAL-00009" summary="Revise README">
-      <created>1602372399777</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1602372399777</updated>
     </task>
     <task id="LOCAL-00010" summary="Revise README">
       <created>1602372529260</created>
@@ -479,7 +471,14 @@
       <option name="project" value="LOCAL" />
       <updated>1605927942419</updated>
     </task>
-    <option name="localTasksCounter" value="58" />
+    <task id="LOCAL-00058" summary="Revise README">
+      <created>1605930132105</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1605930132105</updated>
+    </task>
+    <option name="localTasksCounter" value="59" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -511,7 +510,6 @@
     <MESSAGE value="Code cleanup and new features" />
     <MESSAGE value="Misc fixes and improvements" />
     <MESSAGE value="Add AVR instruction tooltips to Listing Pane" />
-    <MESSAGE value="Revise README" />
     <MESSAGE value="Code cleanup" />
     <MESSAGE value="Bug and regression fix (breakpoints offset)" />
     <MESSAGE value="Revise Logo file" />
@@ -520,7 +518,8 @@
     <MESSAGE value="Revise version numbering to 1.0.0" />
     <MESSAGE value="Revise version check code" />
     <MESSAGE value="Fix regression in load toolchain" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix regression in load toolchain" />
+    <MESSAGE value="Revise README" />
+    <option name="LAST_COMMIT_MESSAGE" value="Revise README" />
   </component>
   <component name="WindowStateProjectService">
     <state x="823" y="382" key="#Project_Structure" timestamp="1605606665706">
@@ -587,10 +586,10 @@
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="1252" y="688" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.23.2560.1577@0.23.2560.1577" timestamp="1605905416150" />
-    <state x="1084" y="401" width="844" height="984" key="CommitChangelistDialog2" timestamp="1605927934070">
+    <state x="1084" y="401" width="844" height="984" key="CommitChangelistDialog2" timestamp="1605930131936">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state x="1084" y="401" width="844" height="984" key="CommitChangelistDialog2/0.23.2560.1577@0.23.2560.1577" timestamp="1605927934070" />
+    <state x="1084" y="401" width="844" height="984" key="CommitChangelistDialog2/0.23.2560.1577@0.23.2560.1577" timestamp="1605930131936" />
     <state x="822" y="123" width="1340" height="1377" key="DiffContextDialog" timestamp="1605563290612">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
@@ -639,10 +638,10 @@
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="973" y="299" key="SettingsEditor/0.23.2560.1577@0.23.2560.1577" timestamp="1605742248063" />
-    <state x="1050" y="545" key="Vcs.Push.Dialog.v2" timestamp="1605927945301">
+    <state x="1050" y="545" key="Vcs.Push.Dialog.v2" timestamp="1605930134387">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state x="1050" y="545" key="Vcs.Push.Dialog.v2/0.23.2560.1577@0.23.2560.1577" timestamp="1605927945301" />
+    <state x="1050" y="545" key="Vcs.Push.Dialog.v2/0.23.2560.1577@0.23.2560.1577" timestamp="1605930134387" />
     <state x="1151" y="541" key="VcsDiffUtil.ChangesDialog" timestamp="1605563286082">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
