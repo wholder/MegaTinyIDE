@@ -3,7 +3,7 @@
 
 ## MegaTinyIDE (for 64 bit macOS, Windows & Linux)
 
-MegaTinyIDE is a simple, GNU-based IDE that's derived from another project of mine called ATTiny10IDE, which I originally wrote to simplify writing code for the ATTiny10 Series Microcontrollers using C. C++ or Assembly language.  This new version is intended to support coding for the new MegaTiny chips (tinyAVR® 1-series and 0-series), such as the ATtiny212, which feature a greatly expanded set of features compared to the original, Atmel-designed ATTiny series chips.
+MegaTinyIDE is a simple, GNU-based IDE that's derived from another project of mine called [ATTiny10IDE](https://github.com/wholder/ATTiny10IDE), which I originally wrote to simplify writing code for the ATTiny10 Series Microcontrollers using C. C++ or Assembly language.  This new version is intended to support coding for the new MegaTiny chips (tinyAVR® 1-series and 0-series), such as the ATtiny212, which feature a greatly expanded set of features compared to the original, Atmel-designed ATTiny series chips.
 
 ### Project status
 
@@ -18,7 +18,7 @@ While more testing is still needed, I am declaring the code as operational (Beta
   - Hardware Debugging using UPDI interface and compatible programmer/debugger (more below)
   - Built-in Pinout Reference Diagrams (with pin-level tooltips)
   - Pop up AVR Instruction Guide tooltips in Listing Pane (hover over instruction name)
-  - **Native Versions with an embedded JVM are now available (see "Releases" near the top right of this page)**
+  - **Native Versions with an embedded JVM are now available (see "[Releases](https://github.com/wholder/MegaTinyIDE/releases)")**
 
 ### Debugging Support
 

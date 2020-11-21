@@ -14,22 +14,33 @@ The nice thing about about the UPDI interface is that, in addition to Vcc and Gn
 
 <p align="center"><img src="images/Atmel-ICE.jpg"></p>
 
-The [Atmel-ICE](https://www.microchip.com/DevelopmentTools/ProductDetails/ATATMEL-ICE) is currently the most expensive ([~$102 at Mouser](https://www.mouser.com/ProductDetail/Microchip-Technology-Atmel/ATATMEL-ICE-BASIC?qs=KLFHFgXTQiAG498QgmqIdw%3D%3D)) and least flexible of Microchip's UPDI-compatible programmers.  In addition older versions of the Atmel-ICE may need to be updated and modified using Microchip's MPLAB software before MegaTinyIDE will be able to detect them, as the USB interface has changed over time.
+The [Atmel-ICE](https://www.microchip.com/DevelopmentTools/ProductDetails/ATATMEL-ICE) is currently the most expensive ([~$102 at Mouser](https://www.mouser.com/ProductDetail/Microchip-Technology-Atmel/ATATMEL-ICE-BASIC?qs=KLFHFgXTQiAG498QgmqIdw%3D%3D)) and least flexible of Microchip's UPDI-compatible programmers.  In addition older versions of the Atmel-ICE may need to be updated and modified using Microchip's MPLAB software before MegaTinyIDE will be able to detect them, as the USB interface has changed over time.  Debugging with the Snap requires making three connections to the target ATtiny using the 6-pin adapter usually provided with the Atmel ICE kit, as follows:
 
+<p align="center"><img src="images/Adapter.png"></p>
+
+  - Connect pin 1 of the adapter cable to UPDI on the target
+  - Connect pin 2 of the adapter cable to Vcc on the target
+  - Connect pin 6 of the adapter cable to Gnd on the target
 
 ## PICKit-4<a name='PICKit-4'></a>
 
 <p align="center"><img src="images/PICKit-4.jpg"></p>
 
-The [Atmel-ICE](https://www.microchip.com/DevelopmentTools/ProductDetails/ATATMEL-ICE) is less expensive ([~$60 at Mouser](https://www.mouser.com/ProductDetail/Microchip-Technology/PG164140?qs=sGAEpiMZZMu3sxpa5v1qrvyz3TtLhlhta1L5sRADGIM%3D)) and more flexible than the Atmel-ICE, as it can also be used with PIC-based MCUs and is also capable of High Voltage program, which can be used to unlocked locked chips (not currently supported by MegaTinyIDE.)
+The [Atmel-ICE](https://www.microchip.com/DevelopmentTools/ProductDetails/ATATMEL-ICE) is less expensive ([~$60 at Mouser](https://www.mouser.com/ProductDetail/Microchip-Technology/PG164140?qs=sGAEpiMZZMu3sxpa5v1qrvyz3TtLhlhta1L5sRADGIM%3D)) and more flexible than the Atmel-ICE, as it can also be used with PIC-based MCUs and is also capable of High Voltage program, which can be used to unlocked locked chips (not currently supported by MegaTinyIDE.)  Debugging with the Snap requires making three connections to the target ATtiny, as follows:
 
+  - Connect PICKit-4 pin 2 to Vcc on the target (note: pin 1 is indicated by the triangle)
+  - Connect PICKit-4 pin 3 to Gnd on the target
+  - Connect PICKit-4 pin 4 to UPDI on the target
 
 ## MPLAB Snap<a name='Snap'></a>
 
-<p align="center">Photo Needed</p>
+<p align="center"><img src="images/Snap.png"></p>
 
-The [MPLAB Snap In-Circuit Debugger/Programmer](https://www.microchip.com/developmenttools/ProductDetails/PartNO/PG164100) is a less expensive ([~$25 at Mouser](https://www.mouser.com/ProductDetail/Microchip-Technology/PG164100?qs=w%2Fv1CP2dgqoaLDDBjfzhMQ%3D%3D)), stripped down version of the PICKit-4 that comes in the form of a naked PC board, but the files needed to 3D print a case can be [downloaded from Thingiverse](https://www.thingiverse.com/thing:3074301).  However, unlike the PICKit-4, the Snap cannot perform High Voltage programming.
+The [MPLAB Snap In-Circuit Debugger/Programmer](https://www.microchip.com/developmenttools/ProductDetails/PartNO/PG164100) is a less expensive ([~$25 at Mouser](https://www.mouser.com/ProductDetail/Microchip-Technology/PG164100?qs=w%2Fv1CP2dgqoaLDDBjfzhMQ%3D%3D)), stripped down version of the PICKit-4 that comes in the form of a naked PC board, but the files needed to 3D print a case can be [downloaded from Thingiverse](https://www.thingiverse.com/thing:3074301).  However, unlike the PICKit-4, the Snap cannot perform High Voltage programming.  Debugging with the Snap requires making three connections to the target ATtiny, as follows:
 
+  - Connect Snap pin 2 to Vcc on the target
+  - Connect Snap pin 3 to Gnd on the target
+  - Connect Snap pin 4 to UPDI on the target
 
 ## ATTiny3217-Curiosity-Nano<a name='3217Nano'></a>
 
