@@ -4,17 +4,16 @@ import java.awt.event.*;
 import java.io.*;
 import java.net.URI;
 import java.net.URL;
-import java.nio.channels.Channels;
-import java.nio.channels.FileChannel;
-import java.nio.channels.ReadableByteChannel;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.List;
 import java.util.prefs.Preferences;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -1085,62 +1084,60 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     public void run () {
       try {
         File dst = new File(tmpExe);
+        //Utility.removeFiles(dst);           // causes comppile to fail? (need to investigate)
         if (!dst.exists() && !dst.mkdirs()) {
           throw new IllegalStateException("Unable to create directory: " + dst);
         }
-        ZipFile zip = null;
+        ZipInputStream zipStream = null;
         try {
-          URL zipUrl = MegaTinyIDE.class.getResource(srcZip);
-          if (zipUrl != null) {
-            File zipFile = new File(zipUrl.toURI());
-            zip = new ZipFile(zipFile);
-            int entryCount = 0, lastEntryCount = 0;
-            progress.setMaximum(zip.size());
-            Enumeration<? extends ZipEntry> entries = zip.entries();
-            while (entries.hasMoreElements()) {
-              ZipEntry entry = entries.nextElement();
-              entryCount++;
-              if (entryCount - lastEntryCount > 100) {
-                progress.setValue(lastEntryCount = entryCount);
-              }
-              String src = entry.getName();
-              int idx = src.indexOf(":");
-              if (idx >= 0) {
-                int pIdx = src.lastIndexOf("/");
-                // Only copy files prefixed
-                String code = src.substring(pIdx + 1, idx);
-                src = src.substring(0, pIdx + 1) + src.substring(idx + 1);
-                if (!code.contains(osCode)) {
-                  continue;
-                }
-              }
-              File dstFile = new File(dst, src);
-              File dstDir = dstFile.getParentFile();
-              if (!dstDir.exists() && !dstDir.mkdirs()) {
-                throw new IllegalStateException("Unable to create directory: " + dstDir);
-              }
-              if (entry.isDirectory() && !dstFile.mkdirs()) {
-                throw new IllegalStateException("Unable to create directory: " + dstFile);
-              } else {
-                try (ReadableByteChannel srcChan = Channels.newChannel(zip.getInputStream(entry));
-                     FileChannel dstChan = new FileOutputStream(dstFile).getChannel()) {
-                  dstChan.transferFrom(srcChan, 0, entry.getSize());
-                }
-                // Must set permissions after file is written or it doesn't take...
-                String fName = dstFile.getName();
-                if (!fName.contains(".")) {
-                  if (!dstFile.setExecutable(true)) {
-                    showErrorDialog("Unable to set permissions for " + fName);
-                  }
-                }
+          InputStream in = MegaTinyIDE.class.getResourceAsStream(srcZip);
+          int fileSize = in.available();
+          zipStream = new ZipInputStream(in);
+          byte[] buffer = new byte[2048];
+          Path outDir = Paths.get(dst.getPath());
+          int bytesRead = 0;
+          progress.setMaximum(100);
+          ZipEntry entry;
+          while ((entry = zipStream.getNextEntry()) != null) {
+            String src = entry.getName();
+            int idx = src.indexOf(":");
+            if (idx >= 0) {
+              int pIdx = src.lastIndexOf("/");
+              // Only copy files prefixed
+              String code = src.substring(pIdx + 1, idx);
+              src = src.substring(0, pIdx + 1) + src.substring(idx + 1);
+              if (!code.contains(osCode)) {
+                continue;
               }
             }
-          } else {
-            showErrorDialog("Unable to open " + srcZip);
+            Path filePath = outDir.resolve(src);
+            File dstDir = filePath.toFile().getParentFile();
+            if (!dstDir.exists() && !dstDir.mkdirs()) {
+              throw new IllegalStateException("Unable to create directory: " + dstDir);
+            }
+            File dstFile = filePath.toFile();
+            FileOutputStream fos = new FileOutputStream(dstFile);
+            BufferedOutputStream bos = new BufferedOutputStream(fos, buffer.length);
+            int len;
+            while ((len = zipStream.read(buffer)) > 0) {
+              bos.write(buffer, 0, len);
+              bytesRead += len;
+            }
+            bos.close();
+            fos.close();
+            // Must set permissions after file is written or it doesn't take...
+            String file = dstFile.getName();
+            if (!file.contains(".") || file.toLowerCase().endsWith(".exe")) {
+              if (!dstFile.setExecutable(true)) {
+                showErrorDialog("Unable to set permissions for " + dstFile);
+              }
+            }
+            float percent = ((float) bytesRead / fileSize) * 100;
+            progress.setValue((int) percent);
           }
         } finally {
-          if (zip != null) {
-            zip.close();
+          if (zipStream != null) {
+            zipStream.close();
           }
         }
       } catch (Exception ex) {
