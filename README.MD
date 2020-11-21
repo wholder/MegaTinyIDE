@@ -18,6 +18,7 @@ While more testing is still needed, I am declaring the code as operational (Beta
   - Hardware Debugging using UPDI interface and compatible programmer/debugger (more below)
   - Built-in Pinout Reference Diagrams (with pin-level tooltips)
   - Pop up AVR Instruction Guide tooltips in Listing Pane (hover over instruction name)
+  - **Native Versions with an embedded JVM are now available (see "Releases" near the top right of this page)**
 
 ### Debugging Support
 
@@ -47,9 +48,11 @@ MegaTinyIDE's built-in documentation pages include a complete set of pinout diag
   - Support for other UPDI-based programmers (and possibly debugging)
   - A console monitor feature that communicates over UPDI
 
-### One JAR File supports 64-bit Mac, Windows and Linux
+### Universal JAR File supports 64-bit Mac, Windows and Linux
 
-If you just want to try out the program, you don't need to download and compile the source code, as I maintain a pre-built, executable JAR file in the [out/artifacts/MegaTinyIDE_jar](https://github.com/wholder/MegaTinyIDE/blob/master/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar) folder from which you can download and run MegaTinyIDE as long as you have Java 8, or later installed on your system.  On a Mac, simply double click the MegaTinyIDE.jar file to run it once you've downloaded it, although you'll probably have to right click and select "Open" the  first time you run MegaTinyIDE due to the Mac OS X security check and the fact that I'm currently unable to digitally sign the JAR file.  You should also be able to double click and run using Windows, but some versions of Windows may require you to [enable this ability](https://www.addictivetips.com/windows-tips/run-a-jar-file-on-windows/) first.  You'll need to give the .jar file RUN permission to execute on Linux and using a USB-based device programmer, such as the AVRISP MkII, may also require you to [create an install a rules file](https://stackoverflow.com/questions/5412727/avrisp-mkii-doesnt-work-with-avrdude-on-linux).  The needed GNU-based AVR toolchains are built into MegaTinyIDE and the appropriate toolchain will be automatically installed when you run the MegaTinyIDE JAR file.
+The Native code releases of MegaTinyIDE, which include an OpenJDM JVM are recommended (see "Releases" near the top right of this page.) However, I also maintain a pre-built, executable universal JAR file in the [out/artifacts/MegaTinyIDE_jar](https://github.com/wholder/MegaTinyIDE/blob/master/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar) folder.  This version is designed to run on 64 bit versions of macOs, Windows 10 and Linux as long as you have Java 8, or later installed on your system.
+
+To use the universal version on a Mac, simply double click the MegaTinyIDE.jar file to run it once you've downloaded it, although you'll probably have to right click and select "Open" the  first time you run MegaTinyIDE due to the Mac OS X security check and the fact that I'm currently unable to digitally sign the JAR file.  You should also be able to double click and run using Windows, but some versions of Windows may require you to [enable this ability](https://www.addictivetips.com/windows-tips/run-a-jar-file-on-windows/) first.  You'll need to give the .jar file RUN permission to execute on Linux and using a USB-based device programmer, such as the AVRISP MkII, may also require you to [create an install a rules file](https://stackoverflow.com/questions/5412727/avrisp-mkii-doesnt-work-with-avrdude-on-linux).  The needed GNU-based AVR toolchains are built into MegaTinyIDE and the appropriate toolchain will be automatically installed when you run the MegaTinyIDE JAR file.
 
 ### Help Requested
 So far this is just a one man project and I struggle at times to do adequate testing, especially on Windows and Linux, when I release a new version. So, if anyone spots a problem, or has a question or a suggestion, [please post an issue](https://github.com/wholder/MegaTinyIDE/issues) so I can investigate.  You can also email me at questions4wayne at gmail dot com.
