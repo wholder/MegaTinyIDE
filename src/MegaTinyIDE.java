@@ -586,6 +586,9 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
               tags.put("PREPROCESS", "GENPROTOS");
             }
             compileMap = MegaTinyCompiler.compile(codePane.getText(), tags, prefs, this);
+            if (compileMap == null) {
+              return;
+            }
             String compName = "Sketch.cpp";
             String trueName = cFile.getName();
             if (compileMap.containsKey("ERR")) {
@@ -628,6 +631,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
               compiled = true;
               listPane.statusPane.setActive(false);
             }
+            selectTab(Tab.LIST);
           } catch (Exception ex) {
             prefs.putBoolean("reload_toolchain", true);
             ex.printStackTrace();
@@ -638,10 +642,10 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
             ex.printStackTrace(pOut);
             pOut.close();
             infoPane.append(bOut.toString() + "\n");
+            selectTab(Tab.INFO);
           }
         });
         cThread.start();
-        selectTab(Tab.LIST);
       } else {
         showErrorDialog("Please save file first!");
       }
@@ -667,6 +671,9 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
               tags.put("FNAME", fName);
               tags.put("PREPROCESS", "PREONLY");
               compileMap = MegaTinyCompiler.compile(codePane.getText(), tags, prefs, this);
+              if (compileMap == null) {
+                return;
+              }
               if (compileMap.containsKey("ERR")) {
                 listPane.setForeground(Color.red);
                 listPane.setText(compileMap.get("ERR"));
@@ -675,6 +682,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
                 listPane.setForeground(Color.black);
                 listPane.setText(compileMap.get("PRE"));
               }
+              selectTab(Tab.LIST);
             } catch (Exception ex) {
               ex.printStackTrace();
               infoPane.append("Stack Trace:\n");
@@ -683,13 +691,13 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
               ex.printStackTrace(pOut);
               pOut.close();
               infoPane.append(bOut.toString() + "\n");
+              selectTab(Tab.INFO);
             }
           });
           cThread.start();
         } else {
           listPane.setText("Must be .c or .cpp file");
         }
-        selectTab(Tab.LIST);
       } else {
         showErrorDialog("Please save file first!");
       }

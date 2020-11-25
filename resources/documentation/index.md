@@ -2,6 +2,9 @@
    + [Linux Users - Please Read](linux.md)
    + [Troubleshooting](trouble.md)
    
+#### Special Features
+   + [Pragmas](pragmas.md)
+
 #### [Compatible Programmers/Debuggers & Development Boards](programmers.md)
    + [Atmel-ICE](programmers.md#Atmel-ICE)
    + [PICKit-4](programmers.md#PICKit-4)

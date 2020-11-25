@@ -34,9 +34,28 @@ class ParmDialog extends JDialog {
     Object          value, valueType;
     boolean         readOnly, lblValue, enabled = true;
 
+    Item (String line) {
+      int idx1 = line.indexOf("(");
+      int idx2 = line.indexOf(")");
+      String parm = idx1 >= 0 && idx2 > idx1 ? line.substring(idx1 + 1, idx2).trim() : "";
+      idx1 = line.indexOf("{");
+      idx2 = line.indexOf("}");
+      String info = idx1 > 0 && idx2 > idx1 ? line.substring(idx1 + 1, idx2).trim() : "";
+      String[] items = parm.split(",");
+      if (items.length == 2) {
+        setup(items[0].trim(), info, null, items[1].trim());
+      } else {
+        throw new IllegalStateException();
+      }
+    }
+
     Item (String name, String info, String parm,  Object value) {
+      setup(name, info, parm, value);
+    }
+
+    private void setup (String name, String info, String parm,  Object value) {
       this.name = Utility.replaceTags(name, dialogInfo);
-      this.info = Utility.replaceTags(info, dialogInfo);
+      this.info = info != null ? Utility.replaceTags(info, dialogInfo) : null;
       this.pref = parm;
       if (parm != null) {
         Preferences prefs = Preferences.userRoot().node(MegaTinyIDE.class.getName());
@@ -168,7 +187,7 @@ class ParmDialog extends JDialog {
   static String[] getLabels (String[] vals) {
     String[] tmp = new String[vals.length];
     for (int ii = 0; ii < vals.length; ii++) {
-      tmp[ii] = vals[ii].contains("|") ? vals[ii].substring(0, vals[ii].indexOf("|")) : vals[ii];
+      tmp[ii] = vals[ii].contains("=") ? vals[ii].substring(0, vals[ii].indexOf("=")) : vals[ii];
     }
     return tmp;
   }
@@ -176,7 +195,7 @@ class ParmDialog extends JDialog {
   static String[] getValues (String[] vals) {
     String[] tmp = new String[vals.length];
     for (int ii = 0; ii < vals.length; ii++) {
-      tmp[ii] = vals[ii].contains("|") ? vals[ii].substring(vals[ii].indexOf("|") + 1) : vals[ii];
+      tmp[ii] = vals[ii].contains("=") ? vals[ii].substring(vals[ii].indexOf("=") + 1) : vals[ii];
     }
     return tmp;
   }
@@ -236,7 +255,7 @@ class ParmDialog extends JDialog {
           if (parm.value instanceof Integer) {
             select.setSelectedIndex(Arrays.asList(values).indexOf(Integer.toString((Integer) parm.value)));
           } else {
-            select.setSelectedIndex(Arrays.asList(values).indexOf(parm.value));
+            select.setSelectedIndex(Arrays.asList(values).indexOf(parm.value.toString()));
           }
           fields.add(parm.field = select, getGbc(1, jj));
         } else if (parm.valueType instanceof int[]) {
@@ -251,7 +270,7 @@ class ParmDialog extends JDialog {
           String val = parm.value.toString();
           if (parm.lblValue) {
             // If label name starts with "@" display value as JLabel
-            JLabel lbl = new JLabel(val, SwingConstants.RIGHT);
+            JLabel lbl = new JLabel(val, SwingConstants.CENTER);
             fields.add(parm.field = lbl, getGbc(1, jj));
           } else {
             JTextField tf = new JTextField(val, 8);
@@ -261,7 +280,7 @@ class ParmDialog extends JDialog {
             if (parm.readOnly) {
               tf.setForeground(Color.gray);
             }
-            tf.setHorizontalAlignment(JTextField.RIGHT);
+            tf.setHorizontalAlignment(JTextField.CENTER);
             fields.add(parm.field = tf, getGbc(1, jj));
             parm.field.addFocusListener(new FocusAdapter() {
               @Override
@@ -273,7 +292,7 @@ class ParmDialog extends JDialog {
           }
         }
         int col = 2;
-        if (parm.info != null) {
+        if (parm.info != null && parm.info.length() > 0) {
           // Add popup Info dialog
           try {
             final String[] tmp = parm.info.split("--");
@@ -281,7 +300,7 @@ class ParmDialog extends JDialog {
             JButton iBut = new JButton(icon);
             Dimension dim = iBut.getPreferredSize();
             iBut.setPreferredSize(new Dimension(dim.width - 4, dim.height - 4));
-            fields.add(iBut, getGbc(col++, jj));
+            fields.add(iBut, getGbc(col, jj));
             iBut.addActionListener(ev -> {
               JEditorPane textArea = new JEditorPane();
               textArea.setContentType("text/html");
@@ -300,7 +319,7 @@ class ParmDialog extends JDialog {
             ex.printStackTrace();
           }
         } else {
-          add(new JLabel(""), getGbc(col, jj));
+          fields.add(new JLabel(""), getGbc(col, jj));
         }
         if (parm.info != null) {
           parm.field.setToolTipText(parm.info);
@@ -392,7 +411,8 @@ class ParmDialog extends JDialog {
 
   public static void main (String... args) {
     Item[] parmSet = {
-        new Item("Motor:Item 1|0:Item 2|1:Item 3|2:Item 4|3:Item 5|4", "*[GEN_PROTOS]*", null, "2"),
+        new Item("(CYCLES, 1)"),
+        new Item("(PATTERN:Random=0:Chaser=1:Disco=2:Cylon=3:Stripes=4, 1)"),
     };
     ParmDialog dialog = (new ParmDialog("Edit Parameters", parmSet, new String[] {"Save", "Cancel"}));
     dialog.setLocationRelativeTo(null);

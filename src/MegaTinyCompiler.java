@@ -167,6 +167,7 @@ class MegaTinyCompiler {
     String clock = null;
     String chip = prefs.get("programmer.target", "attiny212");
     StringBuilder defines = new StringBuilder();
+    List<ParmDialog.Item> parms = new ArrayList<>();
     Map<String, String> out = new HashMap<>();
     List<String> warnings = new ArrayList<>();
     // Process #pragma and #include directives
@@ -198,8 +199,15 @@ class MegaTinyCompiler {
             case "target":
               chip = parts[1];
               break;
-            case "define":                                        // Sets -D compile option to parts[1]
-              defines.append("-D").append(parts[1]).append(" ");
+            case "define":                                        // Sets -D compile option to parts[1] - parts[n]
+              defines.append("-D");
+              for (int ii = 1; ii < parts.length; ii++) {
+                defines.append(parts[ii]);
+              }
+              defines.append(" ");
+              break;
+            case "parm":
+              parms.add(new ParmDialog.Item(line));
               break;
             default:
               warnings.add("Unknown pragma: \"" + line + "\" (ignored)");
@@ -213,6 +221,19 @@ class MegaTinyCompiler {
         }
       } else if (line.startsWith("#include")) {
         LastIncludeLine = Math.max(LastIncludeLine, lineNum);
+      }
+    }
+    if (parms.size() > 0) {
+      ParmDialog.Item[] parmSet = parms.toArray(new ParmDialog.Item[0]);
+      ParmDialog dialog = (new ParmDialog("Edit Parameters", parmSet, new String[] {"OK", "Cancel"}));
+      dialog.setLocationRelativeTo(tinyIde);
+      dialog.setVisible(true);              // Note: this call invokes dialog
+      if (dialog.wasPressed()) {
+        for (ParmDialog.Item parm : parmSet) {
+          defines.append("-D").append(parm.name).append("=").append(parm.value).append(" ");
+        }
+      } else {
+        return null;
       }
     }
     tags.put("CHIP", chip);
