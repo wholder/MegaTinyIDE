@@ -521,7 +521,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
           int start = matcher.start(3);
           String prefix = line.substring(0, start);
           line = prefix + "sram variable: " + "<a href=\"var:" + name + ":" + add + ":" + num + "\">" + name + "</a>";
-        } else if (prefs.getBoolean("symbol_table", true)) {
+        } else if (!prefs.getBoolean("symbol_table", true)) {
           continue;
         }
       } else {
