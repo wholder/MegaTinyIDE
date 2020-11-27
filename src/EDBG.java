@@ -88,7 +88,7 @@ import java.util.*;
 
 public class EDBG /* implements JSSCPort.RXEvent */ {
   private static final int                    MaxPkt = 60;
-  private static final int                    UPDIClock = 500;      // UPDI CLock (in kHz)
+  public  static final int                    UPDIClock = 500;      // UPDI CLock (in kHz)
   private static final boolean                DEBUG_PRINT = false;  // If true, show debug messages
   private static final boolean                DEBUG_DECODE = false; // If true, show decoded messages
   private static final boolean                DEBUG_IO = false;     // If true, show sendCmd() cmd and response data

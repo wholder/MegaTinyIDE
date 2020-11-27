@@ -1,3 +1,5 @@
+import jssc.SerialPortException;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
@@ -11,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
@@ -52,12 +55,30 @@ public class ListingPane extends JPanel {   // https://regex101.com
   private int                         sPos;
   private int                         ePos;
   private int                         lineCount;
-  private boolean                     active, running;
+  private boolean                     active, running, decodeUpdi;
   private EDBG                        debugger;
   private String                      rawSrc = "";
+  private final ByteArrayOutputStream rxOut = new ByteArrayOutputStream();
 
   interface DebugListener {
     void debugState (boolean active);
+  }
+
+  private void printUpdi (String type) {
+    if (decodeUpdi) {
+      ide.infoPrint(type);
+      // Allow time for final bytes to trickle into rxOut buffer
+      try {
+        Thread.sleep(100);
+      } catch (InterruptedException ex) {
+        // do nothing
+      }
+      byte[] temp = rxOut.toByteArray();
+      //Utility.printHex(temp);
+      String updi = UPDIDecoder.decode(temp);
+      ide.infoPrint(updi);
+      rxOut.reset();
+    }
   }
 
   public void addDebugListener (DebugListener debugListener) {
@@ -302,6 +323,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
             int add = Integer.parseInt(parts[2]);
             int len = Integer.parseInt(parts[3]);
             byte[] data = debugger.readSRam(add, len);
+            printUpdi(String.format("readSRam(0x%04X, 0x%04X)", add, len));
             showVariable (parts[0], add, data);
           } else {
             ide.showErrorDialog("Debugger must be attached and in stop mode to view variables!");
@@ -499,7 +521,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
           int start = matcher.start(3);
           String prefix = line.substring(0, start);
           line = prefix + "sram variable: " + "<a href=\"var:" + name + ":" + add + ":" + num + "\">" + name + "</a>";
-        } else {
+        } else if (prefs.getBoolean("symbol_table", true)) {
           continue;
         }
       } else {
@@ -551,6 +573,31 @@ public class ListingPane extends JPanel {   // https://regex101.com
     }
 
     public void setActive (boolean active) {
+      if (ide.decodeUpdi()) {
+        JSSCPort jPort = ide.getSerialPort();
+        if (jPort != null) {
+          try {
+            if (active) {
+              jPort.open(new JSSCPort.RXEvent() {
+                @Override
+                public void rxChar (byte cc) {
+                  rxOut.write(cc);
+                }
+                @Override
+                public void breakEvent () {
+                  ide.infoPrint("BREAK");
+                }
+              });
+              decodeUpdi = true;
+            } else {
+              decodeUpdi = false;
+              jPort.close();
+            }
+          } catch (SerialPortException ex) {
+            ex.printStackTrace();
+          }
+        }
+      }
       if (active) {
         String avrChip = ide.getAvrChip();
         if (avrChip != null) {
@@ -577,6 +624,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
                   }
                 }
               });
+              printUpdi("resetTarget()");
             } catch (Exception ex) {
               ide.showErrorDialog("Unable to open Programmer: " + prog.name);
               debugger = null;
@@ -605,6 +653,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
         }
         if (debugger != null){
           debugger.close();
+          printUpdi("close()");
           debugger = null;
         }
         clearSelection();
@@ -782,12 +831,14 @@ public class ListingPane extends JPanel {   // https://regex101.com
                 if (breakpoints.length == 1) {
                   int address = breakpoints[0];
                   debugger.runToAddress(address);
+                  printUpdi(String.format("runToAddress(0x%04X)", address));
                 } else {
                   debugger.runTarget();
                 }
               } catch (InterruptedException ex) {
                 try {
                   debugger.stopTarget();
+                  printUpdi("stopTarget()");
                 } catch (InterruptedException ex2) {
                   ex2.printStackTrace();
                 }
@@ -823,6 +874,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
       step.addActionListener(ev -> {
         if (debugger != null) {
           debugger.stepTarget();
+          printUpdi("stepTarget()");
           updateState(true);
         }
       });
@@ -840,6 +892,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
             }
           }
           debugger.resetTarget();
+          printUpdi("resetTarget()");
           updateState(false);
         }
       });
@@ -852,15 +905,21 @@ public class ListingPane extends JPanel {   // https://regex101.com
         if (debugger != null) {
           byte[] regs = debugger.readRegisters(0, 32);
           int pc = debugger.getProgramCounter();
+          printUpdi("getProgramCounter()");
           highlightAddress(pc);
           byte flags = debugger.getStatusRegister();
+          printUpdi("getStatusRegister()");
           int sp = debugger.getStackPointer();
+          printUpdi("getStackPointer()");
           boolean portAUsed = (portMask & 0xFF) != 0;
           byte prta = portAUsed ? debugger.readSRam(0x0002, 1)[0] : 0;      // PORTA.IN
+          printUpdi("readSRam(0x0002, 1) - PORTA.IN");
           boolean portBUsed = (portMask & 0xFF00) != 0;
           byte prtb = portBUsed ? debugger.readSRam(0x0006, 1)[0] : 0;      // PORTB.IN
+          printUpdi("readSRam(0x0006, 1) - PORTB.IN ");
           boolean portCUsed = (portMask & 0xFF0000) != 0;
           byte prtc = portCUsed ? debugger.readSRam(0x000A, 1)[0] : 0;      // PORTC.IN
+          printUpdi("readSRam(0x000A, 1) - PORTC.IN");
           SwingUtilities.invokeLater(() -> {
             setRegs(regs, showChange);
             setPC(pc, showChange);
@@ -881,6 +940,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
         ex.printStackTrace();
         ide.showErrorDialog(ex.getMessage());
         debugger.close();
+        printUpdi("close()");
         debugger = null;
       }
     }

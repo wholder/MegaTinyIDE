@@ -1,6 +1,6 @@
 ### Pragmas
 
-The `#pragma` directive is the method specified by the C standard for providing additional information to the compiler.  MegaTinyIDE defines a set of pragmas that you can use to set special features, such as telling the compiler what clock rate the clock rate the target is using so that calls to functions like `delay()` can calculate the proper timing.  The following pragma are currently available:
+The [`#pragma`](https://en.wikipedia.org/wiki/Directive_(programming)) directive is the method specified by the C standard for providing additional information to the compiler.  MegaTinyIDE defines a set of pragmas that you can use to set special features, such as telling the compiler what clock rate the clock rate the target is using so that calls to functions like `delay()` can calculate the proper timing.  The following pragma are currently available:
 
   + `#pragma clock`
   + `#pragma target `(or `chip`)
@@ -9,14 +9,14 @@ The `#pragma` directive is the method specified by the C standard for providing 
   
 ### `#pragma clock (Mhz, kHz, Hz)`
 
-The `clock` pragma is used to define the value that should be passed to the compiler using the `-DF_CPU=nn` switch.  The clock rate can be defined in units of Mhz, kHz, or Hz, such as:
+The `clock` pragma is used to define the value that should be passed to the compiler using the `-DF_CPU=nn` switch.  However, with the `clock` pragma, the clock rate can be set using units of Mhz, kHz, or Hz, such as:
 
      #pragma clock 20,000,000 Hz
      #pragma clock 20 Mhz
      #pragma clock 20,000 kHz
      pragma clock 20000000
    
-All of the able examples are equivalent set the clock rate parameter to 20 Mhz.  Note: this values does not set the clock rate that the target chip uses, it simply tells the compiler what clock rate the chip is set to use.  The physical clock rate in the target attiny needs to be set by fuses and/or programmed instructions.
+All of the above examples are equivalent set the clock rate parameter to 20 Mhz.  Note: this values does not set the clock rate that the target chip uses, it simply tells the compiler what clock rate the chip is set to use.  The physical clock rate in the target attiny needs to be set using fuses and/or programmed instructions that select the source of the clock and the prescaler.
 
 ### `#pragma target (or chip)`
 
@@ -38,7 +38,7 @@ However, unlike the `clock` pragma, only a numeric value (without commas and in 
 
 <p align="center"><img src="images/parms.png"></p>
 
-The `parm` `pragma` is used to dynamically create a pop up GUI that appears with the "Build" option is invoked and which you can use to prompt for various compile time options.  For example, the follow `parm` pragma will prompt you to select from one of 5 values (1-5) with the default value of 2 being preselected:
+The `parm` pragma is used to dynamically create a pop up GUI that appears when the "Build" option is invoked which you can use to prompt for various compile time options.  For example, the follow `parm` pragma will prompt you to select from one of 5 values (1-5) with the default value of 2 being preselected:
 
     #pragma parm (BIT:1:2:3:4:5, 2)
 

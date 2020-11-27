@@ -1,40 +1,49 @@
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.prefs.Preferences;
 import java.util.regex.Pattern;
 
 import jssc.*;
+
+import javax.swing.*;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 
 /*
  * Encapsulates JSSC functionality into an easy to use class
  * See: https://code.google.com/p/java-simple-serial-connector/
  * And: https://github.com/scream3r/java-simple-serial-connector/releases
  *
- * Native drivers installed at path: ~/.jssc/mac_os_x/
- *    libjSSC-2.6_x86_64.jnilib
- *    libjSSC-2.8_x86.jnilib
- *    libjSSC-2.8_x86_64.jnilib
+ *  Author: Wayne Holder, 2015-2020 (first version 10/30/2015)
  *
- *  Note: should update to newer code at: https://github.com/java-native/jssc/releases
+ *  Note: updated code to: 2.9.2, see: https://github.com/java-native/jssc/releases, requires slf4j-simple-1.7.9.jar
  *
- *  Author: Wayne Holder, 2015-2017 (first version 10/30/2015)
+ *  CH340E (~ indicates active Low, 3 mA source, 4 mA sink for all outputs)
+ *
+ *                +--------+
+ *      D+      1 |        | 10 V3 (0.1uF to Gnd for 5V Vcc)
+ *      D-      2 |        | 9  RxD
+ *      Gnd     3 |        | 8  TxD
+ *     ~RTS     4 |        | 7  Vcc
+ *     ~CTS     5 |        | 6  TNOW Tx Active High
+ *                +--------+
  */
 
 public class JSSCPort implements SerialPortEventListener {
   private static final Map<String,Integer>  baudRates = new LinkedHashMap<>();
   private final ArrayBlockingQueue<Integer> queue = new ArrayBlockingQueue<>(1000);
-  private String              portName;
-  private int                 baudRate;
-  private static final int    dataBits = 8;
-  private static final int    stopBits = 1;
-  private static final int    parity = 0;
-  private static final int    eventMasks = 0;   // See: SerialPort.MASK_RXCHAR, MASK_TXEMPTY, MASK_CTS, MASK_DSR
-  private static final int    flowCtrl = SerialPort.FLOWCONTROL_NONE;
-  private SerialPort          serialPort;
-  private boolean             hasListener;
-  private final List<RXEvent> rxHandlers = new ArrayList<>();
+  private static Pattern                    macPat = Pattern.compile("cu.");
+  private static final int                  flowCtrl = SerialPort.FLOWCONTROL_NONE;
+  private static final int                  eventMasks = SerialPort.MASK_RXCHAR | SerialPort.MASK_BREAK;
+  private final Preferences                 prefs;
+  private String                            portName;
+  private int                               baudRate;
+  private SerialPort                        serialPort;
+  private final List<RXEvent>               rxHandlers = new ArrayList<>();
 
   interface RXEvent {
     void rxChar (byte cc);
+    void breakEvent ();
   }
 
   static {
@@ -42,7 +51,7 @@ public class JSSCPort implements SerialPortEventListener {
     baudRates.put("300",    SerialPort.BAUDRATE_300);
     baudRates.put("600",    SerialPort.BAUDRATE_600);
     baudRates.put("1200",   SerialPort.BAUDRATE_1200);
-    baudRates.put("2400",   2400);    // Note: constant missing in JSSC
+    baudRates.put("2400",   SerialPort.BAUDRATE_2400);
     baudRates.put("4800",   SerialPort.BAUDRATE_4800);
     baudRates.put("9600",   SerialPort.BAUDRATE_9600);
     baudRates.put("14400",  SerialPort.BAUDRATE_14400);
@@ -54,7 +63,37 @@ public class JSSCPort implements SerialPortEventListener {
     baudRates.put("256000", SerialPort.BAUDRATE_256000);
   }
 
-  JSSCPort () {
+  /**
+   * Create JSSCPort and use prefs to select the port and baud rate (if previously set)
+   * Note: does not open port.
+   * @param prefs Preferences object
+   */
+  JSSCPort (Preferences prefs) {
+    this.prefs = prefs;
+    // Determine OS Type
+    switch (SerialNativeInterface.getOsType()) {
+    case SerialNativeInterface.OS_LINUX:
+      macPat = Pattern.compile("(ttyS|ttyUSB|ttyACM|ttyAMA|rfcomm)[0-9]{1,3}");
+      break;
+    case SerialNativeInterface.OS_MAC_OS_X:
+      break;
+    case SerialNativeInterface.OS_WINDOWS:
+      macPat = Pattern.compile("");
+      break;
+    default:
+      macPat = Pattern.compile("tty.*");
+      break;
+    }
+    portName = prefs.get("serial.port", null);
+    baudRate = prefs.getInt("serial.baud", SerialPort.BAUDRATE_115200);
+  }
+
+  /**
+   * Checks if user has selected a Serial Port
+   * @return true if selected, else false
+   */
+  boolean postSelected () {
+    return portName != null;
   }
 
   /**
@@ -85,24 +124,6 @@ public class JSSCPort implements SerialPortEventListener {
   }
 
   /**
-   * Get available ports
-   * @return array of available ports by name
-   */
-  public static String[] getPortNames () {
-    // Determine OS Type
-    switch (SerialNativeInterface.getOsType()) {
-      case SerialNativeInterface.OS_LINUX:
-        return SerialPortList.getPortNames(Pattern.compile("(ttyS|ttyUSB|ttyACM|ttyAMA|rfcomm)[0-9]{1,3}"));
-      case SerialNativeInterface.OS_MAC_OS_X:
-        return SerialPortList.getPortNames( Pattern.compile("cu."));
-      case SerialNativeInterface.OS_WINDOWS:
-        return SerialPortList.getPortNames(Pattern.compile(""));
-      default:
-        return SerialPortList.getPortNames(Pattern.compile("tty.*"));
-    }
-  }
-
-  /**
    * Get available baud rates
    * @return array of available vaud rates
    */
@@ -111,34 +132,51 @@ public class JSSCPort implements SerialPortEventListener {
     return rates.toArray(new String[0]);
   }
 
+  public void setParameters (int baudRate, int dataBits, int stopBits, int parity) {
+    if (serialPort != null) {
+      try {
+        serialPort.setParams(baudRate, dataBits, stopBits, parity, false, false);
+      } catch (SerialPortException ex) {
+        ex.printStackTrace();
+      }
+    }
+  }
+
   /**
    * Open serial port and assign RX handler
    * @param handler RX handler
    * @return true if port was opened, else false
    * @throws SerialPortException on error
    */
-  public boolean open (RXEvent handler) throws SerialPortException {
+  boolean open (RXEvent handler) throws SerialPortException {
     if (serialPort != null) {
       if (serialPort.isOpened()) {
         close();
       }
     }
     if (portName != null) {
-      serialPort = new SerialPort(portName);
-      serialPort.openPort();
-      serialPort.setParams(baudRate, dataBits, stopBits, parity, false, false);  // baud, 8 bits, 1 stop bit, no parity
-      serialPort.setEventsMask(eventMasks);
-      serialPort.setFlowControlMode(flowCtrl);
-      serialPort.addEventListener(JSSCPort.this);
-      setRXHandler(handler);
-      hasListener = true;
-      return true;
+      try {
+        synchronized (this) {
+          rxHandlers.add(handler);
+        }
+        serialPort = new SerialPort(portName);
+        serialPort.openPort();
+        serialPort.purgePort(SerialPort.PURGE_RXCLEAR | SerialPort.PURGE_TXCLEAR);
+        serialPort.setParams(baudRate, 8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE, false, false);
+        serialPort.setEventsMask(eventMasks);
+        serialPort.setFlowControlMode(flowCtrl);
+        serialPort.addEventListener(this);
+        return true;
+      } catch (SerialPortException ex) {
+        prefs.remove("serial.port");
+        throw ex;
+      }
     }
     return false;
   }
 
   /**
-   * Close serial port
+   * Close serial port, open
    */
   public void close () {
     if (serialPort != null && serialPort.isOpened()) {
@@ -146,10 +184,8 @@ public class JSSCPort implements SerialPortEventListener {
         synchronized (this) {
           rxHandlers.clear();
         }
-        if (hasListener) {
-          serialPort.removeEventListener();
-          hasListener = false;
-        }
+        serialPort.removeEventListener();
+        serialPort.purgePort(SerialPort.PURGE_RXCLEAR | SerialPort.PURGE_TXCLEAR);
         serialPort.closePort();
         serialPort = null;
       } catch (SerialPortException ex) {
@@ -159,12 +195,13 @@ public class JSSCPort implements SerialPortEventListener {
   }
 
   /**
-   * Implements SerialPortEventListener
+   * Implements SerialPortEventListener for RXCHAR and BREAK
    * @param se serial event
    */
   public void serialEvent (SerialPortEvent se) {
     try {
-      if (se.getEventType() == SerialPortEvent.RXCHAR) {
+      int type = se.getEventType();
+      if (type == SerialPortEvent.RXCHAR) {
         int rxCount = se.getEventValue();
         byte[] inChars = serialPort.readBytes(rxCount);
         if (rxHandlers.size() > 0) {
@@ -180,16 +217,30 @@ public class JSSCPort implements SerialPortEventListener {
             }
           }
         }
+      } else if (type == SerialPortEvent.BREAK) {
+        int val = se.getEventValue();
       }
     } catch (Exception ex) {
       ex.printStackTrace();
     }
   }
 
-  private void setRXHandler (RXEvent handler) {
-    synchronized (this) {
-      rxHandlers.add(handler);
-    }
+  /**
+   * Send break lasting duration milliseconds
+   * @param duration duration of break (in milliseconds)
+   * @throws SerialPortException
+   */
+  public void sendBreak (int duration) throws SerialPortException {
+    serialPort.sendBreak(duration);
+  }
+
+  /**
+   * Send byte of data to TX
+   * @param data byte to send
+   * @throws SerialPortException on error
+   */
+  void sendByte (byte data) throws SerialPortException {
+    serialPort.writeByte(data);
   }
 
   /**
@@ -197,16 +248,61 @@ public class JSSCPort implements SerialPortEventListener {
    * @param data string to send
    * @throws SerialPortException on error
    */
-  public void sendString (String data) throws SerialPortException {
+  void sendString (String data) throws SerialPortException {
     serialPort.writeString(data);
   }
 
   /**
-   * Send BREAK on TX line
-   * @param duration break interval in milliseconds
-   * @throws SerialPortException on error
+   * Returns JMenu that can be used to select a serial port
+   * @return Serial Port JMenu
    */
-  public void sendBreak (int duration) throws SerialPortException {
-    serialPort.sendBreak(duration);
+  JMenu getPortMenu () {
+    JMenu menu = new JMenu("Port");
+    menu.addMenuListener(new MenuListener() {
+      @Override
+      public void menuSelected (MenuEvent e) {
+        // Populate menu on demand
+        menu.removeAll();
+        ButtonGroup group = new ButtonGroup();
+        for (String pName : SerialPortList.getPortNames(macPat)) {
+          JRadioButtonMenuItem item = new JRadioButtonMenuItem(pName, pName.equals(portName));
+          menu.setVisible(true);
+          menu.add(item);
+          group.add(item);
+          item.addActionListener((ev) -> {
+            portName = ev.getActionCommand();
+            prefs.put("serial.port", portName);
+          });
+        }
+      }
+
+      @Override
+      public void menuDeselected (MenuEvent e) { }
+
+      @Override
+      public void menuCanceled (MenuEvent e) { }
+    });
+    return menu;
+  }
+
+  /**
+   * Returns JMenu that can be used to select the serial port's baud rate
+   * @return Baud rate JMenu
+   */
+  JMenu getBaudMenu () {
+    JMenu menu = new JMenu("Baud Rate");
+    ButtonGroup group = new ButtonGroup();
+    for (String bRate : baudRates.keySet()) {
+      int rate = baudRates.get(bRate);
+      JRadioButtonMenuItem item = new JRadioButtonMenuItem(bRate, baudRate == rate);
+      menu.add(item);
+      menu.setVisible(true);
+      group.add(item);
+      item.addActionListener((ev) -> {
+        String cmd = ev.getActionCommand();
+        prefs.putInt("serial.baud", baudRate = Integer.parseInt(cmd));
+      });
+    }
+    return menu;
   }
 }

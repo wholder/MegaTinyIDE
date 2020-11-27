@@ -122,7 +122,7 @@ class MegaTinyCompiler {
   private static final String list = "avr-objdump " +                 // https://linux.die.net/man/1/avr-objdump
                                         "-d " +                       // Disassemble code
                                         "*[INTLV]* " +                // If enabled, source code intermixed with disassembly
-                                        "*[SYMT]* " +                 // If enabled, print the symbol table entries
+                                        "-t " +                       // Print the symbol table entries
                                         "*[TDIR]**[BASE]*.elf";       // Input file
 
   private static final String tohex = "avr-objcopy " +                // https://linux.die.net/man/1/avr-objcopy
@@ -238,7 +238,6 @@ class MegaTinyCompiler {
     }
     tags.put("CHIP", chip);
     tags.put("INTLV", prefs.getBoolean("interleave", true) ? "-S" : "");
-    tags.put("SYMT", prefs.getBoolean("symbol_table", true) ? "-t" : "");
     tags.put("CLOCK", clock != null ? clock : "20000000");
     tags.put("DEFINES", defines.toString());
     // Build list of files we need to compile and link

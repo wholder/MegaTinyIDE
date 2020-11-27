@@ -24,6 +24,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.Document;
 
 import jssc.SerialNativeInterface;
+import jssc.SerialPort;
 
 import static javax.swing.JOptionPane.*;
 
@@ -69,6 +70,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
   private final JMenuItem         idTarget;
   private final JMenu             progMenu;
   private final Preferences       prefs = Preferences.userRoot().node(this.getClass().getName());
+  private final JSSCPort          jPort = new JSSCPort(prefs);
   private String                  tmpDir, tmpExe;
   private String                  programmer;
   private String                  avrChip;
@@ -109,6 +111,18 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     readFuses.setEnabled(!active);
     idTarget.setEnabled(!active);
     progMenu.setEnabled(!active);
+  }
+
+  public boolean decodeUpdi () {
+    return prefs.getBoolean("decode_updi", false);
+  }
+
+  public JSSCPort getSerialPort () {
+    return jPort;
+  }
+
+  public void infoPrint (String msg) {
+    infoPane.append(msg + "\n");
   }
 
   public String getAvrChip () {
@@ -247,6 +261,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     prefs.putBoolean("vector_names", prefs.getBoolean("vector_names", true));
     prefs.putBoolean("enable_preprocessing", prefs.getBoolean("enable_preprocessing", false));
     prefs.putBoolean("developer_features", prefs.getBoolean("developer_features", false));
+    prefs.putBoolean("decode_updi", prefs.getBoolean("decode_updi", false));
   }
 
   private JFileChooser getFileChooser () {
@@ -320,12 +335,13 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     List<ParmDialog.Item> items = new ArrayList<>();
     items.add(new ParmDialog.Item("Generate Prototypes (Experimental)", "*[GEN_PROTOS]*", "gen_prototypes", true));
     items.add(new ParmDialog.Item("Interleave Source and ASM", "*[INTERLEAVE]*", "interleave", true));
-    items.add(new ParmDialog.Item("Include Symbol Table in Listing", "*[SYMTABLE]*", "symbol_table", false));
-    items.add(new ParmDialog.Item("Add Vector Names in Listing", "*[VECNAMES]*", "vector_names", false));
+    items.add(new ParmDialog.Item("Add Vector Names in Listing", "*[VECNAMES]*", "vector_names", true));
+    items.add(new ParmDialog.Item("Include Full Symbol Table in Listing", "*[SYMTABLE]*", "symbol_table", false));
     boolean devFeatures = (modifiers & InputEvent.CTRL_MASK) != 0;
     if (devFeatures) {
       items.add(new ParmDialog.Item("Enable Preprocessing (Developer)", "*[PREPROCESS]*", "enable_preprocessing", false));
       items.add(new ParmDialog.Item("Enable Developer Features", "*[DEV_ONLY]*", "developer_features", false));
+      items.add(new ParmDialog.Item("Decode UPDI Commands", "*[UPDI_DECODE]*", "decode_updi", false));
     }
     ParmDialog.Item[] parmSet = items.toArray(new ParmDialog.Item[0]);
     ParmDialog dialog = (new ParmDialog("Edit Preferences", parmSet, new String[] {"Save", "Cancel"}));
@@ -856,7 +872,16 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     // Add "Font Size" Menu with submenu
     settings.add(codePane.getFontSizeMenu());
     settings.addSeparator();
-    // Add Programmer Menu
+    // Add Serial Port Menu, if enabled
+    if (prefs.getBoolean("decode_updi", false)) {
+      jPort.setParameters (EDBG.UPDIClock * 1000, 8, 2, SerialPort.PARITY_EVEN);
+      JMenu serialPort = new JMenu("Serial Port");
+      serialPort.add(jPort.getPortMenu());
+      //serialPort.add(jPort.getBaudMenu());
+      settings.add(serialPort);
+      settings.addSeparator();
+    }
+    // Add "Programmer" Menu
     progMenu = new JMenu("Programmer");
     programmer = prefs.get("programmer", "");
     progMenu.addMenuListener(new MenuListener() {
