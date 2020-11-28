@@ -13,12 +13,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="Add docs on #pragma commands">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/ToolBuilder/ToolBuilder.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/EDBG.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/EDBG.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ListingPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ListingPane.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Utility.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Utility.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -137,13 +134,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1596315993204</updated>
-    </task>
-    <task id="LOCAL-00015" summary="Add option to display vector names in listing">
-      <created>1602465332654</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1602465332654</updated>
     </task>
     <task id="LOCAL-00016" summary="Add option to display vector names in listing">
       <created>1602528209301</created>
@@ -481,7 +471,14 @@
       <option name="project" value="LOCAL" />
       <updated>1606514421379</updated>
     </task>
-    <option name="localTasksCounter" value="64" />
+    <task id="LOCAL-00064" summary="Interim check in for EDIT_STATUS code">
+      <created>1606599845706</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1606599845706</updated>
+    </task>
+    <option name="localTasksCounter" value="65" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -497,7 +494,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Revise README image" />
     <MESSAGE value="Font fix for Linux" />
     <MESSAGE value="Prelim new features check in (Monitor code)" />
     <MESSAGE value="Add right click pop up &quot;Clear Screen&quot; for Monitor tab" />
@@ -522,7 +518,8 @@
     <MESSAGE value="Update docs on #pragma commands" />
     <MESSAGE value="Update to JSCC 2.9.2 and add Prelim support for UPDI decoding" />
     <MESSAGE value="Bug fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="Bug fix" />
+    <MESSAGE value="Interim check in for EDIT_STATUS code" />
+    <option name="LAST_COMMIT_MESSAGE" value="Interim check in for EDIT_STATUS code" />
   </component>
   <component name="WindowStateProjectService">
     <state x="823" y="382" key="#Project_Structure" timestamp="1605606665706">
@@ -589,10 +586,10 @@
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="1252" y="688" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.23.2560.1577@0.23.2560.1577" timestamp="1605905416150" />
-    <state x="1080" y="265" width="849" height="1064" key="CommitChangelistDialog2" timestamp="1606514420812">
+    <state x="1048" y="332" width="849" height="1064" key="CommitChangelistDialog2" timestamp="1606599839400">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state x="1080" y="265" width="849" height="1064" key="CommitChangelistDialog2/0.23.2560.1577@0.23.2560.1577" timestamp="1606514420812" />
+    <state x="1048" y="332" width="849" height="1064" key="CommitChangelistDialog2/0.23.2560.1577@0.23.2560.1577" timestamp="1606599839400" />
     <state x="822" y="123" width="1340" height="1377" key="DiffContextDialog" timestamp="1605563290612">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
@@ -641,10 +638,10 @@
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="973" y="299" key="SettingsEditor/0.23.2560.1577@0.23.2560.1577" timestamp="1606423717024" />
-    <state x="1050" y="545" key="Vcs.Push.Dialog.v2" timestamp="1606514423979">
+    <state x="1050" y="545" key="Vcs.Push.Dialog.v2" timestamp="1606599849973">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state x="1050" y="545" key="Vcs.Push.Dialog.v2/0.23.2560.1577@0.23.2560.1577" timestamp="1606514423979" />
+    <state x="1050" y="545" key="Vcs.Push.Dialog.v2/0.23.2560.1577@0.23.2560.1577" timestamp="1606599849973" />
     <state x="1151" y="541" key="VcsDiffUtil.ChangesDialog" timestamp="1605563286082">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>

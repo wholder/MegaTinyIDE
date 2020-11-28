@@ -306,8 +306,8 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
       ByteArrayOutputStream bout1 = new ByteArrayOutputStream();
       bout1.write(0x0E);                    // SOF
       bout1.write(0x00);                    // Protocol version (always 0x00)
-      bout1.write(lsb(sequence));           // LSB of Sequence ID
-      bout1.write(msb(sequence));           // MSB  of Sequence ID
+      bout1.write(Utility.lsb(sequence));   // LSB of Sequence ID
+      bout1.write(Utility.msb(sequence));   // MSB  of Sequence ID
       bout1.write(cmd, 0, cmd.length);      // Append CMD starting with Destination sub-protocol handler ID
       sequence++;
       byte[] cmd8 = bout1.toByteArray();
@@ -319,8 +319,8 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
         bout2.write(0x80);                  // AVR_CMD
         byte tmp = (byte) ((ii + 1 << 4) + numPkts);
         bout2.write(tmp);                   // Packet n of m (starts at 1)
-        bout2.write(msb(len));              // MSB of Number of bytes in the wrapped AVR packet
-        bout2.write(lsb(len));              // LSB of Number of bytes in the wrapped AVR packet
+        bout2.write(Utility.msb(len));      // MSB of Number of bytes in the wrapped AVR packet
+        bout2.write(Utility.lsb(len));      // LSB of Number of bytes in the wrapped AVR packet
         bout2.write(cmd8, index, len);
         sequence++;
         byte[] pkt = bout2.toByteArray();
@@ -403,14 +403,6 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
     return data;
   }
 
-  private static byte lsb (int val) {
-    return (byte) (val & 0xFF);
-  }
-
-  private static byte msb (int val) {
-    return (byte) ((val >> 8) & 0xFF);
-  }
-
   private static int getUnsigned16 (byte[] data, int off) {
     return ((int) data[off] & 0xFF) + (((int) data[off + 1] & 0xFF) << 8);
   }
@@ -483,9 +475,9 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
     public int   hwRev, fwMajor, fwMinor, fwBuild;
 
     ProgInfo (byte[] data) {
-      hwRev = lsb(data[0]);
-      fwMajor = lsb(data[1]);
-      fwMinor = lsb(data[2]);
+      hwRev = Utility.lsb(data[0]);
+      fwMajor = Utility.lsb(data[1]);
+      fwMinor = Utility.lsb(data[2]);
       fwBuild = getUnsigned16(data, 3);
     }
 
@@ -578,14 +570,14 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
           0x02,                 // Command context (AVR8_CTXT_DEVICE)
           0x00,                 // address (PROG_BASE)
           0x08,                 // write 8 bytes
-          lsb(pBase),           // PROG_BASE (LSB)
-          msb(pBase),           // PROG_BASE (MSB)
-          lsb(fBytes),          // FLASH_PAGE_BYTES
-          lsb(eeBytes),         // EEPROM_PAGE_BYTES
-          lsb(nvmMod),          // NVMCTRL_MODULE (LSB)
-          msb(nvmMod),          // NVMCTRL_MODULE (MSB)
-          lsb(ocdMod),          // OCD_MODULE (LSB)
-          msb(ocdMod),          // OCD_MODULE (MSB)
+          Utility.lsb(pBase),   // PROG_BASE (LSB)
+          Utility.msb(pBase),   // PROG_BASE (MSB)
+          Utility.lsb(fBytes),  // FLASH_PAGE_BYTES
+          Utility.lsb(eeBytes), // EEPROM_PAGE_BYTES
+          Utility.lsb(nvmMod),  // NVMCTRL_MODULE (LSB)
+          Utility.msb(nvmMod),  // NVMCTRL_MODULE (MSB)
+          Utility.lsb(ocdMod),  // OCD_MODULE (LSB)
+          Utility.msb(ocdMod),  // OCD_MODULE (MSB)
       });
     } else {
       throw new EDBGException("Call to setUPDIDeviceInfo() when session is not active");
@@ -853,8 +845,8 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
           0x12,                 // AVR8GENERIC
           0x33,                 // Command ID (CMD_AVR8_RUN_TO_ADDRESS)
           0x00,                 // Command version (always 0x00)
-          lsb(address),         // Address LSB
-          msb(address),         // Address MSB
+          Utility.lsb(address), // Address LSB
+          Utility.msb(address), // Address MSB
           0x00,                 //
           0x00,                 // Address (4 byte MSB)
       });
@@ -918,8 +910,8 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
           0x12,                 // AVR8GENERIC
           0x36,                 // Command ID (CMD_AVR8_PC_WRITE)
           0x00,                 // Command version (always 0x00)
-          lsb(address),         // PC LSB
-          msb(address),         // PC LSB
+          Utility.lsb(address), // PC LSB
+          Utility.msb(address), // PC LSB
           0x00,                 //
           0x00,                 // PC (4 byte MSB)
       });
@@ -1019,8 +1011,8 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
           0x01,                 // Command context (AVR8_CTXT_PHYSICAL)
           0x31,                 // address (AVR8_PHY_XM_PDI_CLK)
           0x02,                 // write 2 bytes
-          lsb(kHz),             // UPDI Clock (kHz) (lsb)
-          msb(kHz),             // UPDI Clock (kHz) (msb)
+          Utility.lsb(kHz),     // UPDI Clock (kHz) (lsb)
+          Utility.msb(kHz),     // UPDI Clock (kHz) (msb)
       });
     } else {
       throw new EDBGException("Call to setClockUPDI() when session is not active");
@@ -1087,8 +1079,8 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
           0x20,                 // Command ID (CMD_AVR8_ERASE)
           0x00,                 // Command version (always (0x00)
           (byte) mode,          // Mode (see table 7-25)
-          lsb(address),         // Address LSB
-          msb(address),         // Address MSB
+          Utility.lsb(address), // Address LSB
+          Utility.msb(address), // Address MSB
           0x00,
           0x00,                 // Address (4 byte MSB)
       });
@@ -1111,13 +1103,13 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
         0x12,                 // AVR8GENERIC
         0x21,                 // Command ID (CMD_AVR8_MEMORY_READ)
         0x00,                 // Command version (always (0x00)
-        lsb(memType),         // Type (UPDI - table 7-46)
-        lsb(address),         // Address LSB
-        msb(address),         // Address MSB
+        Utility.lsb(memType), // Type (UPDI - table 7-46)
+        Utility.lsb(address), // Address LSB
+        Utility.msb(address), // Address MSB
         0x00,
         0x00,                 // Address (4 byte MSB)
-        lsb(length),          // Bytes to read (LSB)
-        msb(length),           // Bytes to read (MSB)
+        Utility.lsb(length),  // Bytes to read (LSB)
+        Utility.msb(length),  // Bytes to read (MSB)
         0x00,
         0x00,                 // Bytes to read (4 byte MSB)
     });
@@ -1135,19 +1127,19 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    */
   private void memoryWrite (int address, int memType, byte[] data) {
     byte[] cmd = new byte[] {
-        0x12,                 // AVR8GENERIC
-        0x23,                 // Command ID (CMD_AVR8_MEMORY_WRITE)
-        0x00,                 // Command version (always (0x00)
-        lsb(memType),         // Type (UPDI - table 7-46)
-        lsb(address),         // Address LSB
-        msb(address),         // Address MSB
+        0x12,                     // AVR8GENERIC
+        0x23,                     // Command ID (CMD_AVR8_MEMORY_WRITE)
+        0x00,                     // Command version (always (0x00)
+        Utility.lsb(memType),     // Type (UPDI - table 7-46)
+        Utility.lsb(address),     // Address LSB
+        Utility.msb(address),     // Address MSB
         0x00,
-        0x00,                 // Address (4 byte MSB)
-        lsb(data.length),     // Bytes to write (LSB)
-        msb(data.length),     // Bytes to write (MSB)
+        0x00,                     // Address (4 byte MSB)
+        Utility.lsb(data.length), // Bytes to write (LSB)
+        Utility.msb(data.length), // Bytes to write (MSB)
         0x00,
-        0x00,                 // Bytes to read (4 byte MSB)
-        0x00,                 // 0x00 = write first, then reply, 0x01 = reply first, then write
+        0x00,                     // Bytes to read (4 byte MSB)
+        0x00,                     // 0x00 = write first, then reply, 0x01 = reply first, then write
     };
     byte[] tmp = new byte[cmd.length + data.length];
     System.arraycopy(cmd, 0, tmp, 0, cmd.length);
@@ -1459,9 +1451,9 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
           0x40,                 // Command ID (CMD_AVR8_HW_BREAK_SET)
           0x00,                 // Command version (always (0x00)
           0x01,                 // Type (0x01 = program break)
-          lsb(num),             // Number (Breakpoint number to set (1, 2, or 3))
-          lsb(address),         // Address LSB (word address)
-          msb(address),         // Address MSB
+          Utility.lsb(num),     // Number (Breakpoint number to set (1, 2, or 3))
+          Utility.lsb(address), // Address LSB (word address)
+          Utility.msb(address), // Address MSB
           0x00,
           0x00,                 // Address (4 byte MSB)
           0x03,                 // Mode (0x03 = program break)
@@ -1483,7 +1475,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
           0x12,                 // AVR8GENERIC
           0x41,                 // Command ID (CMD_AVR8_HW_BREAK_CLR)
           0x00,                 // Command version (always (0x00)
-          lsb(num),             // Number (Breakpoint number to set (1, 2, or 3))
+          Utility.lsb(num),      // Number (Breakpoint number to set (1, 2, or 3))
       });
     } else {
       throw new EDBGException("Call to clearHardwareBreakpoint() when debug mode is not active");
@@ -1499,15 +1491,15 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
   public void setSoftwareBreakpointSet (int[] addresses) {
     if (debugActive) {
       ByteArrayOutputStream bout = new ByteArrayOutputStream();
-      bout.write(0x12);         // AVR8GENERIC
-      bout.write(0x43);         // Command ID (CMD_AVR8_SW_BREAK_SET)
-      bout.write(0x00);         // Command version (always (0x00)
+      bout.write(0x12);                 // AVR8GENERIC
+      bout.write(0x43);                 // Command ID (CMD_AVR8_SW_BREAK_SET)
+      bout.write(0x00);                 // Command version (always (0x00)
       for (int add : addresses) {
         add >>= 1;
-        bout.write(lsb(add));   // Address LSB (word address)
-        bout.write(msb(add));   // Address MSB
-        bout.write(0x00);       //
-        bout.write(0x00);       // Address (4 byte MSB)
+        bout.write(Utility.lsb(add));   // Address LSB (word address)
+        bout.write(Utility.msb(add));   // Address MSB
+        bout.write(0x00);               //
+        bout.write(0x00);               // Address (4 byte MSB)
       }
       sendAvrCmd(bout.toByteArray());
     } else {
@@ -1524,15 +1516,15 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
   public void clearSoftwareBreakpointSet (int[] addresses) {
     if (debugActive) {
       ByteArrayOutputStream bout = new ByteArrayOutputStream();
-      bout.write(0x12);         // AVR8GENERIC
-      bout.write(0x44);         // Command ID (CMD_AVR8_SW_BREAK_CLEAR)
-      bout.write(0x00);         // Command version (always (0x00)
+      bout.write(0x12);                 // AVR8GENERIC
+      bout.write(0x44);                 // Command ID (CMD_AVR8_SW_BREAK_CLEAR)
+      bout.write(0x00);                 // Command version (always (0x00)
       for (int add : addresses) {
         add >>= 1;
-        bout.write(lsb(add));   // Address LSB (word address)
-        bout.write(msb(add));   // Address MSB
-        bout.write(0x00);       //
-        bout.write(0x00);       // Address (4 byte MSB)
+        bout.write(Utility.lsb(add));   // Address LSB (word address)
+        bout.write(Utility.msb(add));   // Address MSB
+        bout.write(0x00);               //
+        bout.write(0x00);               // Address (4 byte MSB)
       }
       sendAvrCmd(bout.toByteArray());
     } else {
