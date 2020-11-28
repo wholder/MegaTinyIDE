@@ -13,9 +13,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="Add docs on #pragma commands">
-      <change afterPath="$PROJECT_DIR$/NativeBuilder/NativeBuilder.iml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/ToolBuilder/ToolBuilder.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/UPDIDecoder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/EDBG.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/EDBG.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ListingPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ListingPane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Utility.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Utility.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,8 +77,15 @@
     </key>
   </component>
   <component name="RunManager" selected="Application.MegaTinyIDE">
-    <configuration name="ListingPane" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="ListingPane" />
+    <configuration name="FusePane" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="FusePane" />
+      <module name="MegaTinyIDE" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="JWindowTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="JWindowTest" />
       <module name="MegaTinyIDE" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -84,13 +94,6 @@
     <configuration name="MegaTinyIDE" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="MegaTinyIDE" />
       <module name="MegaTinyIDE" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="NativeBuilder" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="NativeBuilder" />
-      <module name="NativeBuilder" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -119,10 +122,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.MegaTinyIDE" />
+        <item itemvalue="Application.JWindowTest" />
+        <item itemvalue="Application.FusePane" />
         <item itemvalue="Application.ToolchainCombiner (1)" />
         <item itemvalue="Application.ParmDialog" />
-        <item itemvalue="Application.NativeBuilder" />
-        <item itemvalue="Application.ListingPane" />
       </list>
     </recent_temporary>
   </component>
@@ -134,13 +137,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1596315993204</updated>
-    </task>
-    <task id="LOCAL-00014" summary="Improve #pragma parsing">
-      <created>1602450201912</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1602450201912</updated>
     </task>
     <task id="LOCAL-00015" summary="Add option to display vector names in listing">
       <created>1602465332654</created>
@@ -478,7 +474,14 @@
       <option name="project" value="LOCAL" />
       <updated>1606514095034</updated>
     </task>
-    <option name="localTasksCounter" value="63" />
+    <task id="LOCAL-00063" summary="Bug fix">
+      <created>1606514421379</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1606514421379</updated>
+    </task>
+    <option name="localTasksCounter" value="64" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -494,7 +497,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Fix regression of toolchain that broke compilation" />
     <MESSAGE value="Revise README image" />
     <MESSAGE value="Font fix for Linux" />
     <MESSAGE value="Prelim new features check in (Monitor code)" />
@@ -519,7 +521,8 @@
     <MESSAGE value="Update built-in docs" />
     <MESSAGE value="Update docs on #pragma commands" />
     <MESSAGE value="Update to JSCC 2.9.2 and add Prelim support for UPDI decoding" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update to JSCC 2.9.2 and add Prelim support for UPDI decoding" />
+    <MESSAGE value="Bug fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="Bug fix" />
   </component>
   <component name="WindowStateProjectService">
     <state x="823" y="382" key="#Project_Structure" timestamp="1605606665706">
@@ -534,10 +537,10 @@
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="1112" y="621" key="#com.intellij.fileTypes.FileTypeChooser/0.23.2560.1577@0.23.2560.1577" timestamp="1603050050327" />
-    <state x="1247" y="525" key="#com.intellij.ide.util.MemberChooser" timestamp="1601760722683">
+    <state x="1247" y="525" key="#com.intellij.ide.util.MemberChooser" timestamp="1606528258921">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state x="1247" y="525" key="#com.intellij.ide.util.MemberChooser/0.23.2560.1577@0.23.2560.1577" timestamp="1601760722683" />
+    <state x="1247" y="525" key="#com.intellij.ide.util.MemberChooser/0.23.2560.1577@0.23.2560.1577" timestamp="1606528258921" />
     <state x="1230" y="609" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1602293560859">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
@@ -586,10 +589,10 @@
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="1252" y="688" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.23.2560.1577@0.23.2560.1577" timestamp="1605905416150" />
-    <state x="1080" y="265" width="849" height="1064" key="CommitChangelistDialog2" timestamp="1606514088730">
+    <state x="1080" y="265" width="849" height="1064" key="CommitChangelistDialog2" timestamp="1606514420812">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state x="1080" y="265" width="849" height="1064" key="CommitChangelistDialog2/0.23.2560.1577@0.23.2560.1577" timestamp="1606514088730" />
+    <state x="1080" y="265" width="849" height="1064" key="CommitChangelistDialog2/0.23.2560.1577@0.23.2560.1577" timestamp="1606514420812" />
     <state x="822" y="123" width="1340" height="1377" key="DiffContextDialog" timestamp="1605563290612">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
@@ -602,46 +605,46 @@
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="1601" y="401" width="729" height="678" key="Github.UntrackedFilesDialog/0.23.2560.1577@0.23.2560.1577" timestamp="1602205585314" />
-    <state width="1546" height="294" key="GridCell.Tab.0.bottom" timestamp="1606514283373">
+    <state width="1546" height="294" key="GridCell.Tab.0.bottom" timestamp="1606596095528">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="294" key="GridCell.Tab.0.bottom/0.23.2560.1577@0.23.2560.1577" timestamp="1606514283373" />
-    <state width="1546" height="294" key="GridCell.Tab.0.center" timestamp="1606514283372">
+    <state width="1546" height="294" key="GridCell.Tab.0.bottom/0.23.2560.1577@0.23.2560.1577" timestamp="1606596095528" />
+    <state width="1546" height="294" key="GridCell.Tab.0.center" timestamp="1606596095527">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="294" key="GridCell.Tab.0.center/0.23.2560.1577@0.23.2560.1577" timestamp="1606514283372" />
-    <state width="1546" height="294" key="GridCell.Tab.0.left" timestamp="1606514283371">
+    <state width="1546" height="294" key="GridCell.Tab.0.center/0.23.2560.1577@0.23.2560.1577" timestamp="1606596095527" />
+    <state width="1546" height="294" key="GridCell.Tab.0.left" timestamp="1606596095527">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="294" key="GridCell.Tab.0.left/0.23.2560.1577@0.23.2560.1577" timestamp="1606514283371" />
-    <state width="1546" height="294" key="GridCell.Tab.0.right" timestamp="1606514283372">
+    <state width="1546" height="294" key="GridCell.Tab.0.left/0.23.2560.1577@0.23.2560.1577" timestamp="1606596095527" />
+    <state width="1546" height="294" key="GridCell.Tab.0.right" timestamp="1606596095528">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="294" key="GridCell.Tab.0.right/0.23.2560.1577@0.23.2560.1577" timestamp="1606514283372" />
-    <state width="1546" height="338" key="GridCell.Tab.1.bottom" timestamp="1606338123934">
+    <state width="1546" height="294" key="GridCell.Tab.0.right/0.23.2560.1577@0.23.2560.1577" timestamp="1606596095528" />
+    <state width="1546" height="338" key="GridCell.Tab.1.bottom" timestamp="1606528660809">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="338" key="GridCell.Tab.1.bottom/0.23.2560.1577@0.23.2560.1577" timestamp="1606338123934" />
-    <state width="1546" height="338" key="GridCell.Tab.1.center" timestamp="1606338123933">
+    <state width="1546" height="338" key="GridCell.Tab.1.bottom/0.23.2560.1577@0.23.2560.1577" timestamp="1606528660809" />
+    <state width="1546" height="338" key="GridCell.Tab.1.center" timestamp="1606528660808">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="338" key="GridCell.Tab.1.center/0.23.2560.1577@0.23.2560.1577" timestamp="1606338123933" />
-    <state width="1546" height="338" key="GridCell.Tab.1.left" timestamp="1606338123933">
+    <state width="1546" height="338" key="GridCell.Tab.1.center/0.23.2560.1577@0.23.2560.1577" timestamp="1606528660808" />
+    <state width="1546" height="338" key="GridCell.Tab.1.left" timestamp="1606528660808">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="338" key="GridCell.Tab.1.left/0.23.2560.1577@0.23.2560.1577" timestamp="1606338123933" />
-    <state width="1546" height="338" key="GridCell.Tab.1.right" timestamp="1606338123933">
+    <state width="1546" height="338" key="GridCell.Tab.1.left/0.23.2560.1577@0.23.2560.1577" timestamp="1606528660808" />
+    <state width="1546" height="338" key="GridCell.Tab.1.right" timestamp="1606528660809">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="338" key="GridCell.Tab.1.right/0.23.2560.1577@0.23.2560.1577" timestamp="1606338123933" />
+    <state width="1546" height="338" key="GridCell.Tab.1.right/0.23.2560.1577@0.23.2560.1577" timestamp="1606528660809" />
     <state x="973" y="299" key="SettingsEditor" timestamp="1606423717024">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="973" y="299" key="SettingsEditor/0.23.2560.1577@0.23.2560.1577" timestamp="1606423717024" />
-    <state x="1050" y="545" key="Vcs.Push.Dialog.v2" timestamp="1606514101036">
+    <state x="1050" y="545" key="Vcs.Push.Dialog.v2" timestamp="1606514423979">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state x="1050" y="545" key="Vcs.Push.Dialog.v2/0.23.2560.1577@0.23.2560.1577" timestamp="1606514101036" />
+    <state x="1050" y="545" key="Vcs.Push.Dialog.v2/0.23.2560.1577@0.23.2560.1577" timestamp="1606514423979" />
     <state x="1151" y="541" key="VcsDiffUtil.ChangesDialog" timestamp="1605563286082">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
@@ -670,10 +673,10 @@
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="1546" y="197" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.23.2560.1577@0.23.2560.1577" timestamp="1605917839956" />
-    <state x="1273" y="276" width="1083" height="978" key="find.popup" timestamp="1606513772103">
+    <state x="1273" y="276" width="1083" height="978" key="find.popup" timestamp="1606549348103">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state x="1273" y="276" width="1083" height="978" key="find.popup/0.23.2560.1577@0.23.2560.1577" timestamp="1606513772103" />
+    <state x="1273" y="276" width="1083" height="978" key="find.popup/0.23.2560.1577@0.23.2560.1577" timestamp="1606549348103" />
     <state x="895" y="434" key="new project wizard" timestamp="1605657550313">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>

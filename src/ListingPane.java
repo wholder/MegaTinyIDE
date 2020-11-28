@@ -21,6 +21,7 @@ import java.util.prefs.Preferences;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static javax.swing.JOptionPane.showMessageDialog;
 import static javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION;
 import static javax.swing.border.TitledBorder.DEFAULT_POSITION;
 
@@ -28,6 +29,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
   private static final Pattern        DBG_LINE = Pattern.compile("\\s?([0-9a-fA-F]+):(?:\\s(?:[0-9a-fA-F]{2})){2,4}\\s+([a-z]+)([^;]+)");
   private static final Pattern        VAR_LINE = Pattern.compile("([0-9a-fA-F]{8}).{9}(.+)\t([0-9a-fA-F]{8})\\s+(.*)");
   private static final int            FONT_SIZE = 12;
+  private static final boolean        EDIT_STATUS = false;
   private static final Font           codeFont = Utility.getCodeFont(FONT_SIZE);
   private static final int            DEFAULT_R_MARGIN = 7;
   private static final int            DEFAULT_L_MARGIN = 5;
@@ -62,6 +64,10 @@ public class ListingPane extends JPanel {   // https://regex101.com
 
   interface DebugListener {
     void debugState (boolean active);
+  }
+
+  interface NewVal {
+    void newVal (int newVal);
   }
 
   private void printUpdi (String type) {
@@ -694,8 +700,9 @@ public class ListingPane extends JPanel {   // https://regex101.com
       class HexTextfield extends JTextField {
         private final Border  activeBorder = BorderFactory.createLineBorder(Color.black, 1);
         private final Border  inactiveBorder = BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1);
-        private final String      format;
-        private int               value;
+        private final String  format;
+        private int           value;
+        private NewVal        valueChange;
 
         HexTextfield (int width) {
           setEditable(false);
@@ -704,6 +711,75 @@ public class ListingPane extends JPanel {   // https://regex101.com
           setHorizontalAlignment(CENTER);
           setEnabled(false);
           setText(String.format(format, 0));
+          if (EDIT_STATUS) {
+            addMouseListener(new MouseAdapter() {
+              @Override
+              public void mouseClicked (MouseEvent ev) {
+                if (SwingUtilities.isRightMouseButton(ev) && isEnabled()) {
+                  if (debugger != null && active && !running && valueChange != null) {
+                    setToolTipText(null);
+                    repaint();
+                    JPanel panel = new JPanel();
+                    panel.setLayout(new FlowLayout());
+                    JLabel lbl = new JLabel("New Value:");
+                    panel.add(lbl);
+                    JTextField field = new JTextField(width);
+                    field.setText(String.format(format, 0));
+                    field.setEnabled(true);
+                    field.setEditable(true);
+                    field.setHorizontalAlignment(SwingConstants.CENTER);
+                    panel.add(field);
+                    JButton okBtn = new JButton("OK");
+                    okBtn.setPreferredSize(new Dimension(30, 20));
+                    panel.add(okBtn);
+                    JButton exitBtn = new JButton("X");
+                    exitBtn.setForeground(Color.red);
+                    exitBtn.setPreferredSize(new Dimension(20, 20));
+                    panel.add(exitBtn);
+                    JDialog popup = new JDialog(ide);
+                    okBtn.addMouseListener(new MouseAdapter() {
+                      @Override
+                      public void mousePressed (MouseEvent ev) {
+                        String val = field.getText();
+                        try {
+                          int nVal = Integer.parseInt(val, 16);
+                          valueChange.newVal(nVal);
+                          popup.dispose();
+                        } catch (Exception ex) {
+                          ImageIcon icon = new ImageIcon(Utility.class.getResource("images/warning-32x32.png"));
+                          showMessageDialog(popup, "Must be hexidecimal", "Invalid value", JOptionPane.PLAIN_MESSAGE, icon);
+                        }
+                      }
+                    });
+                    exitBtn.addMouseListener(new MouseAdapter() {
+                      @Override
+                      public void mousePressed (MouseEvent ev) {
+                        popup.dispose();
+                      }
+                    });
+                    popup.setUndecorated(true);
+                    popup.setModal(true);
+                    popup.setLayout(new BorderLayout());
+                    popup.getContentPane().add(panel, BorderLayout.CENTER);
+                    popup.setLocationRelativeTo(HexTextfield.this);
+                    Point temp = popup.getLocation();
+                    popup.setLocation(temp.x + 20, temp.y - 20);
+                    field.requestFocusInWindow();
+                    field.selectAll();
+                    popup.pack();
+                    popup.setVisible(true);
+                  } else {
+                    ImageIcon icon = new ImageIcon(Utility.class.getResource("images/warning-32x32.png"));
+                    showMessageDialog(HexTextfield.this, "Debugger must be attached and in stop mode", "Error", JOptionPane.PLAIN_MESSAGE, icon);
+                  }
+                }
+              }
+            });
+          }
+        }
+
+        void addValueHandler (NewVal valueChange) {
+          this.valueChange = valueChange;
         }
 
         public void setValue (int value, boolean showChange) {
@@ -740,7 +816,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
         }
       }
 
-      HexPanel (String title, int rows, int cols, String[] fieldLabels, String[] tooltips, int fieldWidth) {
+      HexPanel (String title, int rows, int cols, String[] fieldLabels, String[] tooltips, int fieldWidth, boolean canEdit) {
         super(new GridLayout(rows, 2 * cols));
         setBackground(STATUS_BACK);
         titleBorder = BorderFactory.createTitledBorder(title);
@@ -762,21 +838,62 @@ public class ListingPane extends JPanel {   // https://regex101.com
             lbl.setFont(lbl.getFont().deriveFont(11.0f));
             lbl.setBackground(Color.white);
             lbl.setOpaque(true);
-            HexTextfield val = fieldWidth > 1 ? new HexTextfield(fieldWidth) : new BinTextfield();
+            HexTextfield field = fieldWidth > 1 ? new HexTextfield(fieldWidth) : new BinTextfield();
+            if (EDIT_STATUS && canEdit) {
+              int index = row * rows + col;
+              field.addValueHandler(newVal -> {
+                System.out.println(title + ": " + index + ", " + fieldWidth + " = " + newVal);
+                int oldVal = field.value;
+                if ("Registers".equals(title)) {
+                  debugger.writeSRam(index, new byte[] {(byte) newVal});
+                  setValue(index, newVal, true);
+                } else if ("Special Registers".equals(title)) {
+                  int address;
+                  switch (index) {
+                  case 0:   // Program Counter
+                    debugger.setProgramCounter(newVal);
+                    break;
+                  case 1:   // Stack Pointer
+                    address = 0x003D;
+                    debugger.writeSRam(0x003D, new byte[] {Utility.lsb(newVal), Utility.msb(newVal)});
+                    break;
+                  case 2:   // X Register (regs 27:26)
+                    debugger.writeSRam(26, new byte[] {Utility.lsb(newVal), Utility.msb(newVal)});
+                    break;
+                  case 3:   // Y Register (regs 29:28)
+                    debugger.writeSRam(28, new byte[] {Utility.lsb(newVal), Utility.msb(newVal)});
+                    break;
+                  case 4:   // Z Register (regs 31:30)
+                    debugger.writeSRam(30, new byte[] {Utility.lsb(newVal), Utility.msb(newVal)});
+                    break;
+                  }
+                  setValue(index, newVal, true);
+                } else if ("Flags".equals(title)) {
+                  int bit = 1 << (7 - index);
+                  int tmp = (oldVal & ~bit) | (newVal << (7 - index));
+                  debugger.writeStatusRegister((byte) tmp);
+                  setValue(index, newVal, true);
+                }
+              });
+            }
             String tooltip = tooltips != null ? tooltips[idx] : null;
             if (tooltip != null) {
               if ("-".equals(tooltip)) {
-                val.setEnabled(false);
-                val.setToolTipText("reserved");
+                field.setEnabled(false);
+                field.setToolTipText("reserved");
               } else {
-                val.setToolTipText(tooltip);
+                if (EDIT_STATUS && canEdit) {
+                  field.setToolTipText("<html>" + tooltip + "<br>(Right click to edit value)</html>");
+                } else {
+                  field.setToolTipText("<html>" + tooltip + "</html>");
+                }
               }
             }
-            val.setFont(codeFont);
-            vals.add(val);
-            val.setBackground(Color.white);
-            val.setOpaque(true);
-            add(val);
+            field.setFont(codeFont);
+            vals.add(field);
+            field.setBackground(Color.white);
+            field.setOpaque(true);
+            add(field);
           }
         }
       }
@@ -792,20 +909,20 @@ public class ListingPane extends JPanel {   // https://regex101.com
       // Build Ports Status Display
       String[] portLabels = new String[] {"7", "6", "5", "4", "3", "2", "1", "0"};
       JPanel ports = new JPanel(new GridLayout(1,3));
-      ports.add(portC = new HexPanel("PORTC.IN", 1, 8, portLabels, null, 1));
-      ports.add(portB = new HexPanel("PORTB.IN", 1, 8, portLabels, null, 1));
-      ports.add(portA = new HexPanel("PORTA.IN", 1, 8, portLabels, null, 1));
+      ports.add(portC = new HexPanel("PORTC.IN", 1, 8, portLabels, null, 1, false));
+      ports.add(portB = new HexPanel("PORTB.IN", 1, 8, portLabels, null, 1, false));
+      ports.add(portA = new HexPanel("PORTA.IN", 1, 8, portLabels, null, 1, false));
       // Build Flags Status Display
       String[] flagLabels = new String[] {"I", "T", "H", "S", "V", "N", "Z", "C"};
       String[] flagNames = new String[] {"Global Interrupt Enable", "Copy Storage", "Half Carry", "Sign",
                                          "Two's Compliment Overflow", "Negative", "Zero", "Carry"};
-      flags = new HexPanel("Flags", 1, 8, flagLabels, flagNames, 1);
+      flags = new HexPanel("Flags", 1, 8, flagLabels, flagNames, 1, true);
       // Build Registers Status Display
-      regs = new HexPanel("Registers", 2, 16, null, null, 2);
+      regs = new HexPanel("Registers", 2, 16, null, null, 2, true);
       String[] sRegLabels = new String[] {"PC", "SP", "X", "Y", "Z"};
       String[] sRegNames = new String[] {"Program Counter", "Stack Pointer", "X Register (regs 27:26)",
                                          "Y Register (regs 29:28)", "Z Register (regs 31:30)"};
-      sRegs = new HexPanel("Special Registers", 1, 5, sRegLabels, sRegNames, 4);
+      sRegs = new HexPanel("Special Registers", 1, 5, sRegLabels, sRegNames, 4, true);
       JPanel top = new JPanel(new BorderLayout());
       top.add(ports, BorderLayout.NORTH);
       top.add(regs, BorderLayout.CENTER);

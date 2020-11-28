@@ -1404,6 +1404,19 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
   }
 
   /**
+   * Write target's status register (flags)
+   */
+  public byte[] writeStatusRegister (byte data) {
+    byte[] tmp = new byte[] {data};
+    if (debugActive) {
+      writeMemLoop(STATUS_REGISTER, MEMTYPE_SRAM, tmp);
+    } else {
+      throw new EDBGException("Call to writeStatusRegister() when debug mode is not active");
+    }
+    return tmp;
+  }
+
+  /**
    * Get 3 byte device signature of target device
    * Note: must be in program, or debug to call
    *

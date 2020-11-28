@@ -582,4 +582,12 @@ class Utility {
       return new Font("Courier", Font.PLAIN, points);
     }
   }
+
+  public static byte lsb (int val) {
+    return (byte) (val & 0xFF);
+  }
+
+  public static byte msb (int val) {
+    return (byte) ((val >> 8) & 0xFF);
+  }
 }
