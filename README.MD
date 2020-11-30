@@ -7,14 +7,14 @@ MegaTinyIDE is a simple, GNU-based IDE that's derived from another project of mi
 
 ### Project status
 
-While more testing is still needed, I am declaring the code as operational (Beta status) on Mac, Windows 10 and Linux.  However, MegaTinyIDE is still in development and likely has more than a few bugs, or rough edges.
+While more testing is needed, I am declaring the code as operational (Beta status) on Mac, Windows 10 and Linux.  However, MegaTinyIDE is still in development and likely has more than a few bugs, or rough edges.
 
 ### New Features
 
   - Now supports include of user files using `#include "file.h"` notation
   - Automatically annotate interrupt vectors in listing file (optional)
   - Interleave code and generated asm in listing file (optional)
-  - Graphical interface for FUSE values
+  - Graphical interface for editing FUSE values
   - Hardware Debugging using UPDI interface and compatible programmer/debugger (more below)
   - Built-in Pinout Reference Diagrams (with pin-level tooltips)
   - Pop up AVR Instruction Guide tooltips in Listing Pane (hover over instruction name)
@@ -40,6 +40,12 @@ MegaTinyIDE supports on-chip debugging of using the one pin UPDI interface.  Cur
   <p align="center"><img src="/images/MegaTinyIDE%20Pinouts.png"></p>
   
 MegaTinyIDE's built-in documentation pages include a complete set of pinout diagrams along with the basic specifications for each Chip.  _Note: this is a work in prograam, so some diagrams may be incomplete (currently, secondary I/O units are not listed), or incorrect._
+
+### Fuse Editor
+
+  <p align="center"><img src="/images/MegaTinyIDE%20Fuses.png"></p>
+  
+MegaTinyIDE's built-in Fuse Editor lets you read the current fuse setting from a target device using the UPDI interface, change as needed and then write back the changed values.
 
 ### Other Features in Development
 

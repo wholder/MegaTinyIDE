@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.prefs.Preferences;
 
+import static javax.swing.JOptionPane.OK_CANCEL_OPTION;
+import static javax.swing.JOptionPane.PLAIN_MESSAGE;
+
 /*
  *  Fuse Bytes
  *    0   WDTCFG - Watchdog Configuration (after reset = 0x00)
@@ -329,9 +332,6 @@ public class FusePane extends JPanel {
   public static void main (String[] args) {
     EventQueue.invokeLater(() -> {
       try {
-        JFrame frame = new JFrame("FusePane");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLayout(new BorderLayout());
         MegaTinyIDE.ChipInfo chip = MegaTinyIDE.chipTypes.get("attiny412");
         FusePane fusePane = new FusePane(chip);
         // Set reset data from attiny3217
@@ -344,29 +344,10 @@ public class FusePane extends JPanel {
         fusePane.setFuse(0x07, (byte) 0x00);   // APPEND
         fusePane.setFuse(0x08, (byte) 0x00);   // BOOTEND
         fusePane.setFuse(0x0A, (byte) 0xC5);   // LOCKBIT
-        frame.add(fusePane, BorderLayout.CENTER);
-        frame.pack();
-        //frame.setResizable(false);
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        Preferences prefs = Preferences.userRoot().node(FusePane.class.getName());
-        frame.setLocation(prefs.getInt("window.x", 10), prefs.getInt("window.y", 10));
-        // Track window resize/move events and save in prefs
-        frame.addComponentListener(new ComponentAdapter() {
-          public void componentMoved (ComponentEvent ev) {
-            Rectangle bounds = ev.getComponent().getBounds();
-            prefs.putInt("window.x", bounds.x);
-            prefs.putInt("window.y", bounds.y);
-          }
-        });
-        frame.setVisible(true);
-        frame.addWindowListener(new WindowAdapter() {
-          @Override
-          public void windowClosing(WindowEvent e) {
-            System.out.println("APPEND  = " + fusePane.getFuse(7));
-            System.out.println("BOOTEND = " + fusePane.getFuse(8));
-            e.getWindow().dispose();
-          }
-        });
+
+        if (JOptionPane.showConfirmDialog(null, fusePane, "FUSES for " + chip.name, OK_CANCEL_OPTION, PLAIN_MESSAGE) == 0) {
+          System.out.println("exit");
+        }
       } catch (Exception e) {
         e.printStackTrace();
       }

@@ -766,7 +766,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
           for (int ii = 0; ii < offsets.length; ii++) {
             fusePane.setFuse(offsets[ii], fuses[ii]);
           }
-          if (JOptionPane.showConfirmDialog(this, fusePane, "FUSES", OK_CANCEL_OPTION, PLAIN_MESSAGE) == 0) {
+          if (JOptionPane.showConfirmDialog(this, fusePane, "FUSES for " + info.name, OK_CANCEL_OPTION, PLAIN_MESSAGE) == 0) {
             List<Integer> changedOffsets = new ArrayList<>();
             for (int offset : offsets) {
               if (fusePane.hasChanged(offset)) {
