@@ -4,6 +4,7 @@
    
 #### Special Features
    + [Pragmas](pragmas.md)
+   + [OCD Messaging](ocdmsg.md)
 
 #### [Compatible Programmers/Debuggers & Development Boards](programmers.md)
    + [Atmel-ICE](programmers.md#Atmel-ICE)

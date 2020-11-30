@@ -12,7 +12,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="" />
+    <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="Document OCD Messaging feature">
+      <change afterPath="$PROJECT_DIR$/examples/OCDTest.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/documentation/images/ocdmsg.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/documentation/ocdmsg.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.MD" beforeDir="false" afterPath="$PROJECT_DIR$/README.MD" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/documentation/index.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/index.md" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -55,8 +63,8 @@
       <recent name="test" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/images" />
       <recent name="$PROJECT_DIR$/resources/documentation/images" />
+      <recent name="$PROJECT_DIR$/images" />
       <recent name="$PROJECT_DIR$/docs" />
       <recent name="$PROJECT_DIR$/resources/images" />
       <recent name="$PROJECT_DIR$/resources/toolchains" />
@@ -128,13 +136,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1596315993204</updated>
-    </task>
-    <task id="LOCAL-00019" summary="Code cleanup">
-      <created>1602535229120</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1602535229120</updated>
     </task>
     <task id="LOCAL-00020" summary="Fix assembly of .s files">
       <created>1602876406751</created>
@@ -472,7 +473,14 @@
       <option name="project" value="LOCAL" />
       <updated>1606700507472</updated>
     </task>
-    <option name="localTasksCounter" value="68" />
+    <task id="LOCAL-00068" summary="Revise README to add &quot;brick&quot; warning">
+      <created>1606701030717</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1606701030717</updated>
+    </task>
+    <option name="localTasksCounter" value="69" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -488,7 +496,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Add right click pop up &quot;Clear Screen&quot; for Monitor tab" />
     <MESSAGE value="Add PID values" />
     <MESSAGE value="Added PopUp OCD Message subpane in Listing pane" />
     <MESSAGE value="Regression fix for vector names" />
@@ -513,7 +520,8 @@
     <MESSAGE value="Code cleanup" />
     <MESSAGE value="Add FUSE pane image to README" />
     <MESSAGE value="Warn against disabling UPDI fuse" />
-    <option name="LAST_COMMIT_MESSAGE" value="Warn against disabling UPDI fuse" />
+    <MESSAGE value="Revise README to add &quot;brick&quot; warning" />
+    <option name="LAST_COMMIT_MESSAGE" value="Revise README to add &quot;brick&quot; warning" />
   </component>
   <component name="WindowStateProjectService">
     <state x="823" y="382" key="#Project_Structure" timestamp="1605606665706">
@@ -584,10 +592,10 @@
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="1252" y="688" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.23.2560.1577@0.23.2560.1577" timestamp="1605905416150" />
-    <state x="1048" y="332" width="849" height="1064" key="CommitChangelistDialog2" timestamp="1606700501783">
+    <state x="1048" y="332" width="849" height="1064" key="CommitChangelistDialog2" timestamp="1606705918949">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state x="1048" y="332" width="849" height="1064" key="CommitChangelistDialog2/0.23.2560.1577@0.23.2560.1577" timestamp="1606700501783" />
+    <state x="1048" y="332" width="849" height="1064" key="CommitChangelistDialog2/0.23.2560.1577@0.23.2560.1577" timestamp="1606705918949" />
     <state x="822" y="123" width="1340" height="1377" key="DiffContextDialog" timestamp="1605563290612">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
@@ -600,46 +608,46 @@
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="1601" y="401" width="729" height="678" key="Github.UntrackedFilesDialog/0.23.2560.1577@0.23.2560.1577" timestamp="1602205585314" />
-    <state width="1546" height="294" key="GridCell.Tab.0.bottom" timestamp="1606700469855">
+    <state width="1546" height="294" key="GridCell.Tab.0.bottom" timestamp="1606705872110">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="294" key="GridCell.Tab.0.bottom/0.23.2560.1577@0.23.2560.1577" timestamp="1606700469855" />
-    <state width="1546" height="294" key="GridCell.Tab.0.center" timestamp="1606700469855">
+    <state width="1546" height="294" key="GridCell.Tab.0.bottom/0.23.2560.1577@0.23.2560.1577" timestamp="1606705872110" />
+    <state width="1546" height="294" key="GridCell.Tab.0.center" timestamp="1606705872109">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="294" key="GridCell.Tab.0.center/0.23.2560.1577@0.23.2560.1577" timestamp="1606700469855" />
-    <state width="1546" height="294" key="GridCell.Tab.0.left" timestamp="1606700469854">
+    <state width="1546" height="294" key="GridCell.Tab.0.center/0.23.2560.1577@0.23.2560.1577" timestamp="1606705872109" />
+    <state width="1546" height="294" key="GridCell.Tab.0.left" timestamp="1606705872109">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="294" key="GridCell.Tab.0.left/0.23.2560.1577@0.23.2560.1577" timestamp="1606700469854" />
-    <state width="1546" height="294" key="GridCell.Tab.0.right" timestamp="1606700469855">
+    <state width="1546" height="294" key="GridCell.Tab.0.left/0.23.2560.1577@0.23.2560.1577" timestamp="1606705872109" />
+    <state width="1546" height="294" key="GridCell.Tab.0.right" timestamp="1606705872110">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="294" key="GridCell.Tab.0.right/0.23.2560.1577@0.23.2560.1577" timestamp="1606700469855" />
-    <state width="1546" height="338" key="GridCell.Tab.1.bottom" timestamp="1606700140605">
+    <state width="1546" height="294" key="GridCell.Tab.0.right/0.23.2560.1577@0.23.2560.1577" timestamp="1606705872110" />
+    <state width="1546" height="338" key="GridCell.Tab.1.bottom" timestamp="1606705841875">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="338" key="GridCell.Tab.1.bottom/0.23.2560.1577@0.23.2560.1577" timestamp="1606700140605" />
-    <state width="1546" height="338" key="GridCell.Tab.1.center" timestamp="1606700140604">
+    <state width="1546" height="338" key="GridCell.Tab.1.bottom/0.23.2560.1577@0.23.2560.1577" timestamp="1606705841875" />
+    <state width="1546" height="338" key="GridCell.Tab.1.center" timestamp="1606705841874">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="338" key="GridCell.Tab.1.center/0.23.2560.1577@0.23.2560.1577" timestamp="1606700140604" />
-    <state width="1546" height="338" key="GridCell.Tab.1.left" timestamp="1606700140604">
+    <state width="1546" height="338" key="GridCell.Tab.1.center/0.23.2560.1577@0.23.2560.1577" timestamp="1606705841874" />
+    <state width="1546" height="338" key="GridCell.Tab.1.left" timestamp="1606705841874">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="338" key="GridCell.Tab.1.left/0.23.2560.1577@0.23.2560.1577" timestamp="1606700140604" />
-    <state width="1546" height="338" key="GridCell.Tab.1.right" timestamp="1606700140605">
+    <state width="1546" height="338" key="GridCell.Tab.1.left/0.23.2560.1577@0.23.2560.1577" timestamp="1606705841874" />
+    <state width="1546" height="338" key="GridCell.Tab.1.right" timestamp="1606705841874">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state width="1546" height="338" key="GridCell.Tab.1.right/0.23.2560.1577@0.23.2560.1577" timestamp="1606700140605" />
+    <state width="1546" height="338" key="GridCell.Tab.1.right/0.23.2560.1577@0.23.2560.1577" timestamp="1606705841874" />
     <state x="973" y="299" key="SettingsEditor" timestamp="1606423717024">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
     <state x="973" y="299" key="SettingsEditor/0.23.2560.1577@0.23.2560.1577" timestamp="1606423717024" />
-    <state x="1050" y="545" key="Vcs.Push.Dialog.v2" timestamp="1606700509117">
+    <state x="1050" y="545" key="Vcs.Push.Dialog.v2" timestamp="1606701032034">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>
-    <state x="1050" y="545" key="Vcs.Push.Dialog.v2/0.23.2560.1577@0.23.2560.1577" timestamp="1606700509117" />
+    <state x="1050" y="545" key="Vcs.Push.Dialog.v2/0.23.2560.1577@0.23.2560.1577" timestamp="1606701032034" />
     <state x="1151" y="541" key="VcsDiffUtil.ChangesDialog" timestamp="1605563286082">
       <screen x="0" y="23" width="2560" height="1577" />
     </state>

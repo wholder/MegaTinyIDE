@@ -18,6 +18,7 @@ While more testing is needed, I am declaring the code as operational (Beta statu
   - Hardware Debugging using UPDI interface and compatible programmer/debugger (more below)
   - Built-in Pinout Reference Diagrams (with pin-level tooltips)
   - Pop up AVR Instruction Guide tooltips in Listing Pane (hover over instruction name)
+  - A Console Monitor feature called OCD Messaging that can send text message to the debugger over UPDI
   - **Native Versions with an embedded JVM are now available (see "[Releases](https://github.com/wholder/MegaTinyIDE/releases)")**
 
 ### Debugging Support
@@ -53,7 +54,6 @@ MegaTinyIDE's built-in Fuse Editor lets you read the current fuse setting from a
   - More example code
   - Arduino-style coding using the [ATTinyCore](https://github.com/SpenceKonde/ATTinyCore) library by Spence Konde (aka Dr. Azzy)
   - Support for other UPDI-based programmers (and possibly debugging)
-  - A console monitor feature that communicates over UPDI
 
 ### Universal JAR File supports 64-bit Mac, Windows and Linux
 
