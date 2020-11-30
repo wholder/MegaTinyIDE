@@ -1,12 +1,11 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.prefs.Preferences;
 
-import static javax.swing.JOptionPane.OK_CANCEL_OPTION;
-import static javax.swing.JOptionPane.PLAIN_MESSAGE;
+import static javax.swing.JOptionPane.*;
 
 /*
  *  Fuse Bytes
@@ -56,26 +55,25 @@ public class FusePane extends JPanel {
   private final byte[]      priorVals = new byte[11];
   private final int[]       usedBitMasks = new int[] {0xFF, 0xFF, 0x83, 0x00, 0xFF, 0xDD, 0x07, 0xFF, 0xFF, 0x00, 0x00};
 
-  static class MyJComboBox  {
-    private final JComboBox<String>     cBox = new JComboBox<>();
+  static class MyJComboBox extends JComboBox<String> {
     private final Map<Integer,Integer>  valueIndex = new HashMap<>();
     private final Map<Integer,Integer>  indexValue = new HashMap<>();
     private int                         initialValue;
 
     MyJComboBox (String name, String[] values) {
-      cBox.setToolTipText(name);
-      cBox.setPrototypeDisplayValue("xx");
+      setToolTipText(name);
+      setPrototypeDisplayValue("xx");
       DefaultListCellRenderer listRenderer = new DefaultListCellRenderer();
       listRenderer.setHorizontalAlignment(DefaultListCellRenderer.CENTER);
-      cBox.setRenderer(listRenderer);
+      setRenderer(listRenderer);
       for (int ii = 0; ii < values.length; ii++) {
         String[] parts = values[ii].split(":");
         int val;
         if (parts.length > 1) {
-          cBox.addItem(parts[0].trim());
+          addItem(parts[0].trim());
           val = Integer.parseInt(parts[1].trim());
         } else {
-          cBox.addItem(values[ii].trim());
+         addItem(values[ii].trim());
           val = ii;
         }
         valueIndex.put(val, ii);
@@ -85,7 +83,7 @@ public class FusePane extends JPanel {
 
     public void setValue (int value) {
       initialValue = value;
-      cBox.setSelectedIndex(valueIndex.get(value));
+      setSelectedIndex(valueIndex.get(value));
     }
 
     public boolean hasChanged () {
@@ -93,26 +91,22 @@ public class FusePane extends JPanel {
     }
 
     public int getSelectedValue () {
-      int idx = cBox.getSelectedIndex();
+      int idx = getSelectedIndex();
       return indexValue.get(idx);
-    }
-
-    public void addActionListener (ActionListener listener) {
-      cBox.addActionListener(listener);
     }
   }
 
-  public void addField (String desc) {
+  public MyJComboBox addField (String desc) {
     String[] parts = desc.split("=");
     if (parts.length == 2) {
       String[] vals = parts[1].split(",");
-      addField(parts[0].trim(), vals);
+      return addField(parts[0].trim(), vals);
     } else {
       throw new IllegalStateException("addField() no '=' delimiter");
     }
   }
 
-  public void addField (String name, String[] values) {
+  public MyJComboBox addField (String name, String[] values) {
     String[] parts = name.split(":");
     int bits;
     if (parts.length > 1) {
@@ -122,13 +116,14 @@ public class FusePane extends JPanel {
       panel.setBorder(Utility.getBorder(BorderFactory.createLineBorder(Color.gray), 1, 1, 2, 1));
       MyJComboBox comp = new MyJComboBox(name, values);
       comps.put(name, comp);
-      panel.add(comp.cBox);
+      panel.add(comp);
       add(panel, new Rectangle(col, row, bits, 1));
       col += bits;
       if (col >= 8) {
         col = 0;
         row++;
       }
+      return comp;
     } else {
       throw new IllegalStateException("number of bits not specified");
     }
@@ -303,7 +298,17 @@ public class FusePane extends JPanel {
     addField("CRCSRC:2=All Flash:0,Boot:1,App and Boot,None:3");
     addReservedBits(1);
     addField("TOUTDIS:1=Enable NVM write block:0,Disable NVM write block:1");
-    addField("RSTPINCFG:2=GPIO:0,UPDI:1,RESET:2");
+    MyJComboBox tmp = addField("RSTPINCFG:2=GPIO:0,UPDI:1,RESET:2");
+    tmp.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed (ActionEvent ev) {
+        if (!"UPDI".equals(tmp.getSelectedItem())) {
+          ImageIcon icon = new ImageIcon(Utility.class.getResource("images/warning-32x32.png"));
+          showMessageDialog(tmp, "<html>Setting this value to anything other than \"UPDI\" will disable<br> the ability to edit fuses, " +
+              "program and debug the target</html>", "Warning!", JOptionPane.PLAIN_MESSAGE, icon);
+        }
+      }
+    });
     addReservedBits(1);
     addField("EESAVE:1=Enable EEPROM erase:0,Disable EEPROM erase:1");
     addReservedBits(5);
