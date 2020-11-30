@@ -45,7 +45,7 @@ MegaTinyIDE's built-in documentation pages include a complete set of pinout diag
 
   <p align="center"><img src="/images/MegaTinyIDE%20Fuses.png"></p>
   
-MegaTinyIDE's built-in Fuse Editor lets you read the current fuse setting from a target device using the UPDI interface, change as needed and then write back the changed values.
+MegaTinyIDE's built-in Fuse Editor lets you read the current fuse setting from a target device using the UPDI interface, change as needed and then write back the changed values.  _Note: changing the value of these fuses can alter the behavior of the target in unexpected ways and even "[brick](https://en.wikipedia.org/wiki/Brick_(electronics))" it if you are not careful.  Please be sure you consult the appropriate datasheet and know what you are doing before making any changes._
 
 ### Other Features in Development
 
