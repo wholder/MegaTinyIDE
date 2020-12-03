@@ -29,7 +29,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
   private static final Pattern        DBG_LINE = Pattern.compile("\\s?([0-9a-fA-F]+):(?:\\s(?:[0-9a-fA-F]{2})){2,4}\\s+([a-z]+)([^;]+)");
   private static final Pattern        VAR_LINE = Pattern.compile("([0-9a-fA-F]{8}).{9}(.+)\t([0-9a-fA-F]{8})\\s+(.*)");
   private static final int            FONT_SIZE = 12;
-  private static final boolean        EDIT_STATUS = false;
+  private static final boolean        EDIT_STATUS = true;
   private static final Font           codeFont = Utility.getCodeFont(FONT_SIZE);
   private static final int            DEFAULT_R_MARGIN = 7;
   private static final int            DEFAULT_L_MARGIN = 5;
@@ -72,7 +72,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
 
   private void printUpdi (String type) {
     if (decodeUpdi) {
-      ide.infoPrint(type);
+      ide.infoPrintln(type);
       // Allow time for final bytes to trickle into rxOut buffer
       try {
         Thread.sleep(100);
@@ -82,7 +82,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
       byte[] temp = rxOut.toByteArray();
       //Utility.printHex(temp);
       String updi = UPDIDecoder.decode(temp);
-      ide.infoPrint(updi);
+      ide.infoPrintln(updi);
       rxOut.reset();
     }
   }
@@ -141,7 +141,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
       style = "font-family:" + fName + ";font-size:" + size + ";margin: 1em 0;display: block;";
     }
 
-    public boolean isAvrInsrtuction (String ins) {
+    public boolean isAvrInstruction (String ins) {
       return avrIns.containsKey(ins);
     }
 
@@ -263,7 +263,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
                   eol++;
                 }
                 String remain = Utility.removeWhitespace(doc.getText(end, eol - end).trim());
-                if (tooltip.isAvrInsrtuction(text.toUpperCase())) {
+                if (tooltip.isAvrInstruction(text.toUpperCase())) {
                   return text + ':' + remain;
                 }
               }
@@ -579,6 +579,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
     }
 
     public void setActive (boolean active) {
+      ide.appendToInfoPane("Debugger " + (active ? "Attach" : "Detach") + "\n");
       if (ide.decodeUpdi()) {
         JSSCPort jPort = ide.getSerialPort();
         if (jPort != null) {
@@ -591,7 +592,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
                 }
                 @Override
                 public void breakEvent () {
-                  ide.infoPrint("BREAK");
+                  ide.infoPrintln("BREAK");
                 }
               });
               decodeUpdi = true;
@@ -617,7 +618,9 @@ public class ListingPane extends JPanel {   // https://regex101.com
           if (prog != null) {
             try {
               debugger = new EDBG(prog, info, false);
+              printUpdi("new EDBG()");
               debugger.resetTarget();
+              printUpdi("resetTarget()");
               debugger.setOcdListener(text -> {
                 if (running) {
                   Document doc = messagePane.getDocument();
@@ -630,7 +633,6 @@ public class ListingPane extends JPanel {   // https://regex101.com
                   }
                 }
               });
-              printUpdi("resetTarget()");
             } catch (Exception ex) {
               ide.showErrorDialog("Unable to open Programmer: " + prog.name);
               debugger = null;
@@ -840,39 +842,67 @@ public class ListingPane extends JPanel {   // https://regex101.com
             lbl.setOpaque(true);
             HexTextfield field = fieldWidth > 1 ? new HexTextfield(fieldWidth) : new BinTextfield();
             if (EDIT_STATUS && canEdit) {
-              int index = row * rows + col;
+              int index = row * 16 + col;
               field.addValueHandler(newVal -> {
-                System.out.println(title + ": " + index + ", " + fieldWidth + " = " + newVal);
-                int oldVal = field.value;
-                if ("Registers".equals(title)) {
-                  debugger.writeSRam(index, new byte[] {(byte) newVal});
-                  setValue(index, newVal, true);
-                } else if ("Special Registers".equals(title)) {
-                  int address;
-                  switch (index) {
-                  case 0:   // Program Counter
-                    debugger.setProgramCounter(newVal);
-                    break;
-                  case 1:   // Stack Pointer
-                    address = 0x003D;
-                    debugger.writeSRam(0x003D, new byte[] {Utility.lsb(newVal), Utility.msb(newVal)});
-                    break;
-                  case 2:   // X Register (regs 27:26)
-                    debugger.writeSRam(26, new byte[] {Utility.lsb(newVal), Utility.msb(newVal)});
-                    break;
-                  case 3:   // Y Register (regs 29:28)
-                    debugger.writeSRam(28, new byte[] {Utility.lsb(newVal), Utility.msb(newVal)});
-                    break;
-                  case 4:   // Z Register (regs 31:30)
-                    debugger.writeSRam(30, new byte[] {Utility.lsb(newVal), Utility.msb(newVal)});
-                    break;
+                try {
+                  System.out.printf("%s: %d , %d = 0x%02X\n", title, index, fieldWidth, newVal);
+                  int oldVal = field.value;
+                  if ("Registers".equals(title)) {
+                    debugger.writeSRam(index, new byte[] {(byte) newVal});
+                    regs.setValue(index, newVal, true);
+                    switch (index) {
+                     case 26:
+                       sRegs.setValue(2, (sRegs.getValue(2) & 0xFF00) + (newVal & 0xFF), true);
+                       break;
+                     case 27:
+                       sRegs.setValue(2, (sRegs.getValue(2) & 0xFF) + (newVal << 8), true);
+                       break;
+                     case 28:
+                       sRegs.setValue(3, (sRegs.getValue(2) & 0xFF00) + (newVal & 0xFF), true);
+                       break;
+                     case 29:
+                       sRegs.setValue(3, (sRegs.getValue(2) & 0xFF) + (newVal << 8), true);
+                       break;
+                     case 30:
+                       sRegs.setValue(4, (sRegs.getValue(2) & 0xFF00) + (newVal & 0xFF), true);
+                       break;
+                     case 31:
+                       sRegs.setValue(4, (sRegs.getValue(2) & 0xFF) + (newVal << 8), true);
+                       break;
+                    }
+                  } else if ("Special Registers".equals(title)) {
+                    switch (index) {
+                    case 0:   // Program Counter
+                      debugger.setProgramCounter(newVal);
+                      break;
+                    case 1:   // Stack Pointer
+                      debugger.writeSRam(0x003D, new byte[] {Utility.lsb(newVal), Utility.msb(newVal)});
+                      break;
+                    case 2:   // X Register (regs 27:26)
+                      debugger.writeSRam(26, new byte[] {Utility.lsb(newVal), Utility.msb(newVal)});
+                      regs.setValue(26, Utility.lsb(newVal), true);
+                      regs.setValue(27, Utility.msb(newVal), true);
+                      break;
+                    case 3:   // Y Register (regs 29:28)
+                      debugger.writeSRam(28, new byte[] {Utility.lsb(newVal), Utility.msb(newVal)});
+                      regs.setValue(28, Utility.lsb(newVal), true);
+                      regs.setValue(29, Utility.msb(newVal), true);
+                      break;
+                    case 4:   // Z Register (regs 31:30)
+                      debugger.writeSRam(30, new byte[] {Utility.lsb(newVal), Utility.msb(newVal)});
+                      regs.setValue(30, Utility.lsb(newVal), true);
+                      regs.setValue(31, Utility.msb(newVal), true);
+                      break;
+                    }
+                    sRegs.setValue(index, newVal, true);
+                  } else if ("Flags".equals(title)) {
+                    int bit = 1 << (7 - index);
+                    int tmp = (oldVal & ~bit) | (newVal << (7 - index));
+                    debugger.writeStatusRegister((byte) tmp);
+                    setValue(index, newVal, true);
                   }
-                  setValue(index, newVal, true);
-                } else if ("Flags".equals(title)) {
-                  int bit = 1 << (7 - index);
-                  int tmp = (oldVal & ~bit) | (newVal << (7 - index));
-                  debugger.writeStatusRegister((byte) tmp);
-                  setValue(index, newVal, true);
+                } catch (Exception ex) {
+                  ex.printStackTrace();
                 }
               });
             }
@@ -901,6 +931,10 @@ public class ListingPane extends JPanel {   // https://regex101.com
       public void setValue (int index, int value, boolean showChange) {
         HexPanel.HexTextfield fld = vals.get(index);
         fld.setValue(value,  showChange);
+      }
+
+      public int getValue (int index) {
+        return vals.get(index).value;
       }
     }
 
@@ -1028,28 +1062,38 @@ public class ListingPane extends JPanel {   // https://regex101.com
           printUpdi("getStatusRegister()");
           int sp = debugger.getStackPointer();
           printUpdi("getStackPointer()");
+          byte prta = 0, prtb = 0, prtc = 0;
           boolean portAUsed = (portMask & 0xFF) != 0;
-          byte prta = portAUsed ? debugger.readSRam(0x0002, 1)[0] : 0;      // PORTA.IN
-          printUpdi("readSRam(0x0002, 1) - PORTA.IN");
+          if (portAUsed) {
+            prta = debugger.readSRam(0x0002, 1)[0];         // PORTA.IN
+            printUpdi("readSRam(0x0002, 1) - PORTA.IN");
+          }
           boolean portBUsed = (portMask & 0xFF00) != 0;
-          byte prtb = portBUsed ? debugger.readSRam(0x0006, 1)[0] : 0;      // PORTB.IN
-          printUpdi("readSRam(0x0006, 1) - PORTB.IN ");
+          if (portBUsed) {
+            prtb = debugger.readSRam(0x0006, 1)[0];         // PORTB.IN
+            printUpdi("readSRam(0x0006, 1) - PORTB.IN ");
+          }
           boolean portCUsed = (portMask & 0xFF0000) != 0;
-          byte prtc = portCUsed ? debugger.readSRam(0x000A, 1)[0] : 0;      // PORTC.IN
-          printUpdi("readSRam(0x000A, 1) - PORTC.IN");
+          if (portCUsed) {
+            prtc = debugger.readSRam(0x000A, 1)[0];         // PORTC.IN
+            printUpdi("readSRam(0x000A, 1) - PORTC.IN");
+          }
+          byte tmpa = prta;
+          byte tmpb = prtb;
+          byte tmpc = prtc;
           SwingUtilities.invokeLater(() -> {
             setRegs(regs, showChange);
             setPC(pc, showChange);
             setBits(this.flags, flags, showChange);
             setSP(sp, showChange);
             if (portAUsed) {
-              setBits(portA, prta, showChange);
+              setBits(portA, tmpa, showChange);
             }
             if (portBUsed) {
-              setBits(portB, prtb, showChange);
+              setBits(portB, tmpb, showChange);
             }
             if (portCUsed) {
-              setBits(portC, prtc, showChange);
+              setBits(portC, tmpc, showChange);
             }
           });
         }

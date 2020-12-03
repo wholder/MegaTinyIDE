@@ -20,13 +20,13 @@ import javax.swing.event.MenuListener;
  *
  *  CH340E (~ indicates active Low, 3 mA source, 4 mA sink for all outputs)
  *
- *                +--------+
- *      D+      1 |        | 10 V3 (0.1uF to Gnd for 5V Vcc)
- *      D-      2 |        | 9  RxD
- *      Gnd     3 |        | 8  TxD
- *     ~RTS     4 |        | 7  Vcc
- *     ~CTS     5 |        | 6  TNOW Tx Active High
- *                +--------+
+ *                  +--------+
+ *     D+         1 |        | 10 V3 (0.1uF to Gnd for 5V Vcc)
+ *     D-         2 |        | 9  RxD (IN)  ------------+
+ *     Gnd        3 |        | 8  TxD (OUT) -----\/\/\--+---> UPDI
+ *    ~RTS (OUT)) 4 |        | 7  Vcc             4.7K
+ *    ~CTS (IN)   5 |        | 6  TNOW (OUT) Tx Activity (Active High)
+ *                  +--------+
  */
 
 public class JSSCPort implements SerialPortEventListener {
@@ -37,7 +37,7 @@ public class JSSCPort implements SerialPortEventListener {
   private static final int                  eventMasks = SerialPort.MASK_RXCHAR | SerialPort.MASK_BREAK;
   private final Preferences                 prefs;
   private String                            portName;
-  private int                               baudRate;
+  private int                               baudRate, dataBits, stopBits, parity;
   private SerialPort                        serialPort;
   private final List<RXEvent>               rxHandlers = new ArrayList<>();
 
@@ -133,13 +133,10 @@ public class JSSCPort implements SerialPortEventListener {
   }
 
   public void setParameters (int baudRate, int dataBits, int stopBits, int parity) {
-    if (serialPort != null) {
-      try {
-        serialPort.setParams(baudRate, dataBits, stopBits, parity, false, false);
-      } catch (SerialPortException ex) {
-        ex.printStackTrace();
-      }
-    }
+    this.baudRate = baudRate;
+    this.dataBits = dataBits;
+    this.stopBits = stopBits;
+    this.parity = parity;
   }
 
   /**
@@ -162,7 +159,7 @@ public class JSSCPort implements SerialPortEventListener {
         serialPort = new SerialPort(portName);
         serialPort.openPort();
         serialPort.purgePort(SerialPort.PURGE_RXCLEAR | SerialPort.PURGE_TXCLEAR);
-        serialPort.setParams(baudRate, 8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE, false, false);
+        serialPort.setParams(baudRate, dataBits, stopBits, parity, false, false);
         serialPort.setEventsMask(eventMasks);
         serialPort.setFlowControlMode(flowCtrl);
         serialPort.addEventListener(this);
@@ -218,7 +215,10 @@ public class JSSCPort implements SerialPortEventListener {
           }
         }
       } else if (type == SerialPortEvent.BREAK) {
-        int val = se.getEventValue();
+        //int val = se.getEventValue();
+        for (RXEvent handler : rxHandlers) {
+          handler.breakEvent();
+        }
       }
     } catch (Exception ex) {
       ex.printStackTrace();

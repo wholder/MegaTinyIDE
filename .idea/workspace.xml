@@ -12,14 +12,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="Document OCD Messaging feature">
-      <change afterPath="$PROJECT_DIR$/examples/OCDTest.c" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/documentation/images/ocdmsg.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/documentation/ocdmsg.md" afterDir="false" />
+    <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.MD" beforeDir="false" afterPath="$PROJECT_DIR$/README.MD" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/documentation/index.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/index.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/JSSCPort.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/JSSCPort.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ListingPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ListingPane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MegaTinyIDE.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MegaTinyIDE.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UPDIDecoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UPDIDecoder.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -122,9 +122,9 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.MegaTinyIDE" />
-        <item itemvalue="Application.FusePane" />
         <item itemvalue="Application.ToolchainCombiner (1)" />
         <item itemvalue="Application.ParmDialog" />
+        <item itemvalue="Application.FusePane" />
       </list>
     </recent_temporary>
   </component>
@@ -136,13 +136,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1596315993204</updated>
-    </task>
-    <task id="LOCAL-00020" summary="Fix assembly of .s files">
-      <created>1602876406751</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1602876406751</updated>
     </task>
     <task id="LOCAL-00021" summary="Update docs on Linux rules issue.">
       <created>1602886963625</created>
@@ -480,7 +473,14 @@
       <option name="project" value="LOCAL" />
       <updated>1606701030717</updated>
     </task>
-    <option name="localTasksCounter" value="69" />
+    <task id="LOCAL-00069" summary="Document OCD Messaging feature">
+      <created>1606712040636</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1606712040636</updated>
+    </task>
+    <option name="localTasksCounter" value="70" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -493,10 +493,20 @@
       </list>
     </option>
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Add PID values" />
     <MESSAGE value="Added PopUp OCD Message subpane in Listing pane" />
     <MESSAGE value="Regression fix for vector names" />
     <MESSAGE value="Rework interface for OCD Message pane" />
@@ -521,177 +531,8 @@
     <MESSAGE value="Add FUSE pane image to README" />
     <MESSAGE value="Warn against disabling UPDI fuse" />
     <MESSAGE value="Revise README to add &quot;brick&quot; warning" />
-    <option name="LAST_COMMIT_MESSAGE" value="Revise README to add &quot;brick&quot; warning" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="823" y="382" key="#Project_Structure" timestamp="1605606665706">
-      <screen x="0" y="23" width="2560" height="1577" />
-    </state>
-    <state x="823" y="382" key="#Project_Structure/0.23.2560.1577@0.23.2560.1577" timestamp="1605606665706" />
-    <state x="158" y="89" width="737" height="617" key="#com.intellij.debugger.actions.ViewTextAction" timestamp="1605926305806">
-      <screen x="0" y="23" width="2560" height="1577" />
-    </state>
-    <state x="158" y="89" width="737" height="617" key="#com.intellij.debugger.actions.ViewTextAction/0.23.2560.1577@0.23.2560.1577" timestamp="1605926305806" />
-    <state x="890" y="463" width="1071" height="700" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1606698787326">
-      <screen x="0" y="23" width="2560" height="1577" />
-    </state>
-    <state x="890" y="463" width="1071" height="700" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.2560.1577@0.23.2560.1577" timestamp="1606698787326" />
-    <state x="1112" y="621" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1603050050327">
-      <screen x="0" y="23" width="2560" height="1577" />
-    </state>
-    <state x="1112" y="621" key="#com.intellij.fileTypes.FileTypeChooser/0.23.2560.1577@0.23.2560.1577" timestamp="1603050050327" />
-    <state x="1247" y="525" key="#com.intellij.ide.util.MemberChooser" timestamp="1606528258921">
-      <screen x="0" y="23" width="2560" height="1577" />
-    </state>
-    <state x="1247" y="525" key="#com.intellij.ide.util.MemberChooser/0.23.2560.1577@0.23.2560.1577" timestamp="1606528258921" />
-    <state x="1230" y="609" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1602293560859">
-      <screen x="0" y="23" width="2560" height="1577" />
-    </state>
-    <state x="1230" y="609" key="#com.intellij.ide.util.TreeClassChooserDialog/0.23.2560.1577@0.23.2560.1577" timestamp="1602293560859" />
-    <state x="1033" y="548" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1606338092859">
-      <screen x="0" y="23" width="2560" height="1577" />
-    </state>
-    <state x="1033" y="548" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.23.2560.1577@0.23.2560.1577" timestamp="1606338092859" />
-    <state x="1090" y="685" key="#com.intellij.refactoring.memberPullUp.PullUpDialog" timestamp="1603310472358">
-      <screen x="0" y="23" width="2560" height="1577" />
-    </state>
-    <state x="1090" y="685" key="#com.intellij.refactoring.memberPullUp.PullUpDialog/0.23.2560.1577@0.23.2560.1577" timestamp="1603310472358" />
-    <state x="1090" y="701" key="#com.intellij.refactoring.memberPushDown.PushDownDialog" timestamp="1603310441489">
-      <screen x="0" y="23" width="2560" height="1577" />
-    </state>
-    <state x="1090" y="701" key="#com.intellij.refactoring.memberPushDown.PushDownDialog/0.23.2560.1577@0.23.2560.1577" timestamp="1603310441489" />
-    <state x="1157" y="713" width="472" height="256" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes" timestamp="1605651319381">
-      <screen x="0" y="23" width="2560" height="1577" />
-    </state>
-    <state x="1157" y="713" width="472" height="256" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.23.2560.1577@0.23.2560.1577" timestamp="1605651319381" />
-    <state x="1138" y="595" key="#com.intellij.refactoring.move.moveMembers.MoveMembersDialog" timestamp="1604613624652">
-      <screen x="0" y="23" width="2560" height="1577" />
-    </state>
-    <state x="1138" y="595" key="#com.intellij.refactoring.move.moveMembers.MoveMembersDialog/0.23.2560.1577@0.23.2560.1577" timestamp="1604613624652" />
-    <state x="935" y="23" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1605137991570">
-      <screen x="0" y="23" width="2560" height="1577" />
-    </state>
-    <state x="935" y="23" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.23.2560.1577@0.23.2560.1577" timestamp="1605137991570" />
-    <state x="1230" y="565" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1606258443274">
-      <screen x="0" y="23" width="2560" height="1577" />
-    </state>
-    <state x="1230" y="565" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.23.2560.1577@0.23.2560.1577" timestamp="1606258443274" />
-    <state x="1223" y="479" key="#com.intellij.util.ui.classpath.ChooseLibrariesDialog" timestamp="1605657806453">
-      <screen x="0" y="23" width="2560" height="1577" />
-    </state>
-    <state x="1223" y="479" key="#com.intellij.util.ui.classpath.ChooseLibrariesDialog/0.23.2560.1577@0.23.2560.1577" timestamp="1605657806453" />
-    <state x="61" y="87" width="472" height="1394" key="#xdebugger.XInspectDialog" timestamp="1605826462801">
-      <screen x="0" y="23" width="2560" height="1577" />
-    </state>
-    <state x="61" y="87" width="472" height="1394" key="#xdebugger.XInspectDialog/0.23.2560.1577@0.23.2560.1577" timestamp="1605826462801" />
-    <state x="1189" y="522" key="#xdebugger.evaluate" timestamp="1600993645459">
-      <screen x="0" y="23" width="2560" height="1577" />
-    </state>
-    <state x="1189" y="522" key="#xdebugger.evaluate/0.23.2560.1577@0.23.2560.1577" timestamp="1600993645459" />
-    <state x="1252" y="688" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1605905416150">
-      <screen x="0" y="23" width="2560" height="1577" />
-    </state>
-    <state x="1252" y="688" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.23.2560.1577@0.23.2560.1577" timestamp="1605905416150" />
-    <state x="1048" y="332" width="849" height="1064" key="CommitChangelistDialog2" timestamp="1606705918949">
-      <screen x="0" y="23" width="2560" height="1577" />
-    </state>
-    <state x="1048" y="332" width="849" height="1064" key="CommitChangelistDialog2/0.23.2560.1577@0.23.2560.1577" timestamp="1606705918949" />
-    <state x="822" y="123" width="1340" height="1377" key="DiffContextDialog" timestamp="1605563290612">
-      <screen x="0" y="23" width="2560" height="1577" />
-    </state>
-    <state x="822" y="123" width="1340" height="1377" key="DiffContextDialog/0.23.2560.1577@0.23.2560.1577" timestamp="1605563290612" />
-    <state x="1314" y="709" width="365" height="199" key="Github.ShareDialog" timestamp="1602206000310">
-      <screen x="0" y="23" width="2560" height="1577" />
-    </state>
-    <state x="1314" y="709" width="365" height="199" key="Github.ShareDialog/0.23.2560.1577@0.23.2560.1577" timestamp="1602206000310" />
-    <state x="1601" y="401" width="729" height="678" key="Github.UntrackedFilesDialog" timestamp="1602205585314">
-      <screen x="0" y="23" width="2560" height="1577" />
-    </state>
-    <state x="1601" y="401" width="729" height="678" key="Github.UntrackedFilesDialog/0.23.2560.1577@0.23.2560.1577" timestamp="1602205585314" />
-    <state width="1546" height="294" key="GridCell.Tab.0.bottom" timestamp="1606705872110">
-      <screen x="0" y="23" width="2560" height="1577" />
-    </state>
-    <state width="1546" height="294" key="GridCell.Tab.0.bottom/0.23.2560.1577@0.23.2560.1577" timestamp="1606705872110" />
-    <state width="1546" height="294" key="GridCell.Tab.0.center" timestamp="1606705872109">
-      <screen x="0" y="23" width="2560" height="1577" />
-    </state>
-    <state width="1546" height="294" key="GridCell.Tab.0.center/0.23.2560.1577@0.23.2560.1577" timestamp="1606705872109" />
-    <state width="1546" height="294" key="GridCell.Tab.0.left" timestamp="1606705872109">
-      <screen x="0" y="23" width="2560" height="1577" />
-    </state>
-    <state width="1546" height="294" key="GridCell.Tab.0.left/0.23.2560.1577@0.23.2560.1577" timestamp="1606705872109" />
-    <state width="1546" height="294" key="GridCell.Tab.0.right" timestamp="1606705872110">
-      <screen x="0" y="23" width="2560" height="1577" />
-    </state>
-    <state width="1546" height="294" key="GridCell.Tab.0.right/0.23.2560.1577@0.23.2560.1577" timestamp="1606705872110" />
-    <state width="1546" height="338" key="GridCell.Tab.1.bottom" timestamp="1606705841875">
-      <screen x="0" y="23" width="2560" height="1577" />
-    </state>
-    <state width="1546" height="338" key="GridCell.Tab.1.bottom/0.23.2560.1577@0.23.2560.1577" timestamp="1606705841875" />
-    <state width="1546" height="338" key="GridCell.Tab.1.center" timestamp="1606705841874">
-      <screen x="0" y="23" width="2560" height="1577" />
-    </state>
-    <state width="1546" height="338" key="GridCell.Tab.1.center/0.23.2560.1577@0.23.2560.1577" timestamp="1606705841874" />
-    <state width="1546" height="338" key="GridCell.Tab.1.left" timestamp="1606705841874">
-      <screen x="0" y="23" width="2560" height="1577" />
-    </state>
-    <state width="1546" height="338" key="GridCell.Tab.1.left/0.23.2560.1577@0.23.2560.1577" timestamp="1606705841874" />
-    <state width="1546" height="338" key="GridCell.Tab.1.right" timestamp="1606705841874">
-      <screen x="0" y="23" width="2560" height="1577" />
-    </state>
-    <state width="1546" height="338" key="GridCell.Tab.1.right/0.23.2560.1577@0.23.2560.1577" timestamp="1606705841874" />
-    <state x="973" y="299" key="SettingsEditor" timestamp="1606423717024">
-      <screen x="0" y="23" width="2560" height="1577" />
-    </state>
-    <state x="973" y="299" key="SettingsEditor/0.23.2560.1577@0.23.2560.1577" timestamp="1606423717024" />
-    <state x="1050" y="545" key="Vcs.Push.Dialog.v2" timestamp="1606701032034">
-      <screen x="0" y="23" width="2560" height="1577" />
-    </state>
-    <state x="1050" y="545" key="Vcs.Push.Dialog.v2/0.23.2560.1577@0.23.2560.1577" timestamp="1606701032034" />
-    <state x="1151" y="541" key="VcsDiffUtil.ChangesDialog" timestamp="1605563286082">
-      <screen x="0" y="23" width="2560" height="1577" />
-    </state>
-    <state x="1151" y="541" key="VcsDiffUtil.ChangesDialog/0.23.2560.1577@0.23.2560.1577" timestamp="1605563286082" />
-    <state width="779" height="782" key="XDebugger.FullValuePopup" timestamp="1604358658140">
-      <screen x="0" y="23" width="2560" height="1577" />
-    </state>
-    <state width="779" height="782" key="XDebugger.FullValuePopup/0.23.2560.1577@0.23.2560.1577" timestamp="1604358658140" />
-    <state x="1051" y="566" key="caller.chooser.dialog" timestamp="1601930515705">
-      <screen x="0" y="23" width="2560" height="1577" />
-    </state>
-    <state x="1051" y="566" key="caller.chooser.dialog/0.23.2560.1577@0.23.2560.1577" timestamp="1601930515705" />
-    <state x="641" y="123" width="1388" height="1355" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog" timestamp="1606338666133">
-      <screen x="0" y="23" width="2560" height="1577" />
-    </state>
-    <state x="641" y="123" width="1388" height="1355" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog/0.23.2560.1577@0.23.2560.1577" timestamp="1606338666133" />
-    <state x="1068" y="203" width="1340" height="1377" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1606338666133">
-      <screen x="0" y="23" width="2560" height="1577" />
-    </state>
-    <state x="1068" y="203" width="1340" height="1377" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.23.2560.1577@0.23.2560.1577" timestamp="1606338666133" />
-    <state x="623" y="123" width="1388" height="1355" key="com.intellij.history.integration.ui.views.SelectionHistoryDialog" timestamp="1605920999444">
-      <screen x="0" y="23" width="2560" height="1577" />
-    </state>
-    <state x="623" y="123" width="1388" height="1355" key="com.intellij.history.integration.ui.views.SelectionHistoryDialog/0.23.2560.1577@0.23.2560.1577" timestamp="1605920999444" />
-    <state x="1546" y="197" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1605917839956">
-      <screen x="0" y="23" width="2560" height="1577" />
-    </state>
-    <state x="1546" y="197" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.23.2560.1577@0.23.2560.1577" timestamp="1605917839956" />
-    <state x="1273" y="276" width="1083" height="978" key="find.popup" timestamp="1606549348103">
-      <screen x="0" y="23" width="2560" height="1577" />
-    </state>
-    <state x="1273" y="276" width="1083" height="978" key="find.popup/0.23.2560.1577@0.23.2560.1577" timestamp="1606549348103" />
-    <state x="895" y="434" key="new project wizard" timestamp="1605657550313">
-      <screen x="0" y="23" width="2560" height="1577" />
-    </state>
-    <state x="895" y="434" key="new project wizard/0.23.2560.1577@0.23.2560.1577" timestamp="1605657550313" />
-    <state x="1115" y="385" width="670" height="676" key="search.everywhere.popup" timestamp="1604014472289">
-      <screen x="0" y="23" width="2560" height="1577" />
-    </state>
-    <state x="1115" y="385" width="670" height="676" key="search.everywhere.popup/0.23.2560.1577@0.23.2560.1577" timestamp="1604014472289" />
-    <state x="1065" y="644" key="vcs.readOnlyHandler.ReadOnlyStatusDialog" timestamp="1605738225340">
-      <screen x="0" y="23" width="2560" height="1577" />
-    </state>
-    <state x="1065" y="644" key="vcs.readOnlyHandler.ReadOnlyStatusDialog/0.23.2560.1577@0.23.2560.1577" timestamp="1605738225340" />
+    <MESSAGE value="Document OCD Messaging feature" />
+    <option name="LAST_COMMIT_MESSAGE" value="Document OCD Messaging feature" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -710,7 +551,7 @@
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/MegaTinyIDE$MegaTinyIDE.ic" NAME="MegaTinyIDE Coverage Results" MODIFIED="1602453257039" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/MegaTinyIDE$BinFileCompare.ic" NAME="BinFileCompare Coverage Results" MODIFIED="1601853378592" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/MegaTinyIDE$MegaTinyIDE.ic" NAME="MegaTinyIDE Coverage Results" MODIFIED="1602453257039" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>

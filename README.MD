@@ -31,6 +31,7 @@ MegaTinyIDE supports on-chip debugging of using the one pin UPDI interface.  Cur
 
   - Set a Hardware Breakpoint by selecting the checkbox on an executable line of code in the Listing View
   - Single Step while the highlighted line in the Listing View shows the next line to execute
+  - Right cick on Registers and Status Flags in debugger pane to change value (I/O ports not currently supported)
   - Watch the I/O ports, Registers and Status Flags change while stepping through code (changed fields are highlighted)
   - Click on Links in Symbol table to view curent state variables
   

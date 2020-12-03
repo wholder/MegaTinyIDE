@@ -121,7 +121,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     return jPort;
   }
 
-  public void infoPrint (String msg) {
+  public void infoPrintln (String msg) {
     infoPane.append(msg + "\n");
   }
 

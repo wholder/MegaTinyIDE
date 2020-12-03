@@ -13,7 +13,12 @@ public class UPDIDecoder {
                                           "ASI_CRC_STATUS", "Reserved_D", "Reserved_E", "Reserved_F"};
 
   /*
-   *    NVM Control Module
+   *   Timing (based on default, 4 MHz UPDI clock)
+   *      BREAK for RESET       - 10 - 200 uS
+   *      BREAK end to SYNC     - SYNC must follow in less than 13.5ms
+   *      Dir Change Guard Time - CTRLA.GTVAL = 0 (default) is 128 cycles (idle bits) At 500 kHz, this is 36 uS
+   *
+   *  NVM Control Module
    *      0x1000  - base address
    *
    *    OCD Control Module
@@ -93,15 +98,15 @@ public class UPDIDecoder {
           int data = getData(bin, sizeB);
           if (sizeA == 0) {
             if (sizeB == 0) {
-              out.printf("  LDS from addr: 0x%02X returns data: 0x%02X\n", addr, data);
+              out.printf("  LDS from addr: 0x%02X returns: 0x%02X\n", addr, data);
             } else {
-              out.printf("  LDS from addr: 0x%02X returns data: 0x%04X\n", addr, data);
+              out.printf("  LDS from addr: 0x%02X returns: 0x%04X\n", addr, data);
             }
           } else {
             if (sizeB == 0) {
-              out.printf("  LDS from addr: 0x%04X returns data: 0x%02X\n", addr, data);
+              out.printf("  LDS from addr: 0x%04X returns: 0x%02X\n", addr, data);
             } else {
-              out.printf("  LDS from addr: 0x%04X returns data: 0x%04X\n", addr, data);
+              out.printf("  LDS from addr: 0x%04X returns: 0x%04X\n", addr, data);
             }
           }
         } break;
@@ -110,16 +115,16 @@ public class UPDIDecoder {
           int sizeAB = code & 0x03;
           int data = getData(bin, sizeAB);
           if (sizeAB == 0) {
-            out.printf("  LD load via %s return data: 0x%02X\n", ptrs[ptr], data);
+            out.printf("  LD load via %s returns: 0x%02X\n", ptrs[ptr], data);
           } else {
-            out.printf("  LD load via %s return data: 0x%04X\n", ptrs[ptr], data);
+            out.printf("  LD load via %s returns: 0x%04X\n", ptrs[ptr], data);
           }
           while (repeat-- > 0) {
             data = getData(bin, sizeAB);
             if (sizeAB == 0) {
-              out.printf("  LD load via %s return data: 0x%02X\n", ptrs[ptr], data);
+              out.printf("  LD load via %s returns: 0x%02X\n", ptrs[ptr], data);
             } else {
-              out.printf("  LD load via %s return data: 0x%04X\n", ptrs[ptr], data);
+              out.printf("  LD load via %s returns: 0x%04X\n", ptrs[ptr], data);
             }
           }
         } break;
@@ -179,11 +184,11 @@ public class UPDIDecoder {
         case 0x80: {                          // LDCS (load)
           int reg = code & 0x0F;
           int data = bin.read() & 0xFF;
-          out.printf("  LDCS load from %s returns data: 0x%02X\n", regs[reg], data);
+          out.printf("  LDCS load from %s returns: 0x%02X\n", regs[reg], data);
         } break;
         case 0xA0: {                          // REPEAT
           repeat = bin.read() & 0xFF;
-          out.printf("  REPEAT 0x%02X times\n", repeat);
+          out.printf("  REPEAT 0x%02X + 1 times\n", repeat);
          } break;
         case 0xC0: {                          // STCS (store)
           int reg = code & 0x0F;
