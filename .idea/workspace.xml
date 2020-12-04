@@ -15,8 +15,6 @@
     <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ListingPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ListingPane.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UPDIDecoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UPDIDecoder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Utility.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Utility.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -133,13 +131,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1596315993204</updated>
-    </task>
-    <task id="LOCAL-00022" summary="Update docs on Linux rules issue.">
-      <created>1602887135774</created>
-      <option name="number" value="00022" />
-      <option name="presentableId" value="LOCAL-00022" />
-      <option name="project" value="LOCAL" />
-      <updated>1602887135774</updated>
     </task>
     <task id="LOCAL-00023" summary="Code cleanup">
       <created>1602961560527</created>
@@ -477,7 +468,14 @@
       <option name="project" value="LOCAL" />
       <updated>1606957800443</updated>
     </task>
-    <option name="localTasksCounter" value="71" />
+    <task id="LOCAL-00071" summary="Misc enhancements/fixes">
+      <created>1607040724490</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1607040724491</updated>
+    </task>
+    <option name="localTasksCounter" value="72" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -504,7 +502,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Regression fix for vector names" />
     <MESSAGE value="Rework interface for OCD Message pane" />
     <MESSAGE value="Revise doc page" />
     <MESSAGE value="Code cleanup and new features" />
@@ -529,7 +526,8 @@
     <MESSAGE value="Revise README to add &quot;brick&quot; warning" />
     <MESSAGE value="Document OCD Messaging feature" />
     <MESSAGE value="Added ability to change reqister values while debugging" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added ability to change reqister values while debugging" />
+    <MESSAGE value="Misc enhancements/fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Misc enhancements/fixes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

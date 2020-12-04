@@ -10,6 +10,7 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
@@ -451,8 +452,14 @@ public class ListingPane extends JPanel {   // https://regex101.com
     }
   }
 
+  /**
+   * Highlights line to follow single step
+   * @param lineNum line number (1-n)
+   */
   public void selectLine (int lineNum) {
     clearSelection();
+    // Position the scrolling listing view so that lineNum is in the center of the view
+    gotoLine(lineNum - visibleLines() / 2);
     SwingUtilities.invokeLater(() -> {
       hasSelection = true;
       sPos = getDocumentPosition(lineNum - 1);
@@ -464,15 +471,29 @@ public class ListingPane extends JPanel {   // https://regex101.com
     });
   }
 
+  /**
+   * Position the scrolling listing view so that lineNum is the top line in the view
+   * @param lineNum line number (1-n)
+   */
   public void gotoLine (int lineNum) {
     Container container = SwingUtilities.getAncestorOfClass(JViewport.class, listingPane);
-    if (container != null) {
+    if (container != null && lineNum > 0) {
       SwingUtilities.invokeLater(() -> {
         JViewport viewport = (JViewport) container;
         int lineHeight = listingPane.getFontMetrics(listingPane.getFont()).getHeight();
         viewport.setViewPosition(new Point(0, lineHeight * (lineNum - 1)));
       });
     }
+  }
+
+  /**
+   * Compute the number of lines visible in the listing pane
+   * @return line count
+   */
+  private int visibleLines () {
+    Rectangle rect = listingPane.getVisibleRect();
+    int lineHeight = listingPane.getFontMetrics(listingPane.getFont()).getHeight();
+    return rect.height / lineHeight;
   }
 
   /**
@@ -713,13 +734,11 @@ public class ListingPane extends JPanel {   // https://regex101.com
         private final Border  activeBorder = BorderFactory.createLineBorder(Color.black, 1);
         private final Border  inactiveBorder = BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1);
         private final String  format;
-        private final boolean canEdit;
         private int           value;
         private NewVal        valueChange;
 
         HexTextfield (int width, boolean canEdit) {
           setEditable(false);
-          this.canEdit = canEdit;
           format = "%0" + width + "X";
           setColumns(width);
           setHorizontalAlignment(CENTER);
