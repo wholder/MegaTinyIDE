@@ -538,14 +538,17 @@ class Utility {
   }
 
   public static void printHex (byte[] data) {
-    printHex(data, 0, data.length);
+    printHex(System.out, "", data);
   }
 
-  public static void printHex (byte[] data, int off, int len) {
-    for (int ii = 0; ii < len; ii++) {
-      System.out.printf("0x%02X ", data[off + ii]);
-      if (((ii + 1) & 0x0F) == 0 || ii == len - 1) {
-        System.out.println();
+    public static void printHex (PrintStream out, String indent, byte[] data) {
+    for (int ii = 0; ii < data.length; ii++) {
+      if ((ii & 0x0F) == 0) {
+        out.println(indent);
+      }
+      out.printf("0x%02X ", data[ii]);
+      if (ii == data.length - 1) {
+        out.println();
       }
     }
   }

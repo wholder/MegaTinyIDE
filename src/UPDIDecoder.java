@@ -75,6 +75,14 @@ public class UPDIDecoder {
    *
    */
 
+  public static ByteArrayOutputStream bbin = new ByteArrayOutputStream();
+
+  static int read (ByteArrayInputStream bin) {
+    int data = bin.read() & 0xFF;
+    bbin.write(data);
+    return data;
+  }
+
   public static String decode (byte[] inp) {
     int state = 0;
     ByteArrayOutputStream bout = new ByteArrayOutputStream();
@@ -82,7 +90,7 @@ public class UPDIDecoder {
     ByteArrayInputStream bin = new ByteArrayInputStream(inp);
     int repeat = 0;
     while (bin.available() > 0) {
-      int code = bin.read() & 0xFF;
+      int code = read(bin);
       switch (state) {
       case 0:                                   // Waiting for SYNC (0x55)
         if (code == 0x55) {
@@ -132,10 +140,10 @@ public class UPDIDecoder {
           int sizeA = (code >> 2) & 0x03;
           int sizeB = code & 0x03;
           int addr = getData(bin, sizeA);
-          int ack1 = bin.read();
+          int ack1 = read(bin);
           if (ack1 == 0x40) {
             int data = getData(bin, sizeB);
-            int ack2 = bin.read();
+            int ack2 = read(bin);
             if (ack2 == 0x40) {
               if (sizeA == 0) {
                 if (sizeB == 0) {
@@ -157,7 +165,7 @@ public class UPDIDecoder {
           int ptr = (code >> 2) & 0x03;
           int sizeAB = code & 0x03;
           int data = getData(bin, sizeAB);
-          int ack1 = bin.read();
+          int ack1 = read(bin);
           if (ack1 == 0x40) {
             if (ptr == 2) {
               out.printf("  ST store data: 0x%04X into %s\n", data, ptrs[ptr]);
@@ -171,7 +179,7 @@ public class UPDIDecoder {
           }
           while (repeat-- > 0) {
             data = getData(bin, sizeAB);
-            ack1 = bin.read();
+            ack1 = read(bin);
             if (ack1 == 0x40) {
               if (sizeAB == 0) {
                 out.printf("  ST store data: 0x%02X via %s\n", data, ptrs[ptr]);
@@ -183,16 +191,16 @@ public class UPDIDecoder {
         } break;
         case 0x80: {                          // LDCS (load)
           int reg = code & 0x0F;
-          int data = bin.read() & 0xFF;
+          int data = read(bin);
           out.printf("  LDCS load from %s returns: 0x%02X\n", regs[reg], data);
         } break;
         case 0xA0: {                          // REPEAT
-          repeat = bin.read() & 0xFF;
-          out.printf("  REPEAT 0x%02X + 1 times\n", repeat);
+          repeat = read(bin);
+          out.printf("  REPEAT following instruction %d times\n", repeat + 1);
          } break;
         case 0xC0: {                          // STCS (store)
           int reg = code & 0x0F;
-          int data = bin.read() & 0xFF;
+          int data = read(bin);
           out.printf("  STCS store data 0x%02X into %s\n", data, regs[reg]);
         } break;
         case 0xE0: {                          // KEY
@@ -206,7 +214,7 @@ public class UPDIDecoder {
             data = new byte[8];
           }
           for (int ii = 0; ii < data.length; ii++) {
-            data[ii] = (byte) (bin.read() & 0xFF);
+            data[ii] = (byte) read(bin);;
           }
           for (byte cc : data) {
             out.printf("0x%02X ", ((int) cc & 0xFF));
@@ -233,9 +241,9 @@ public class UPDIDecoder {
 
   private static int getData (ByteArrayInputStream bin, int size) {
     if (size == 0) {
-      return bin.read() & 0xFF;
+      return read(bin);
     } else {
-      return (bin.read() & 0xFF) + ((bin.read() & 0xFF) << 8);
+      return (read(bin) & 0xFF) + (read(bin) << 8);
     }
   }
 }

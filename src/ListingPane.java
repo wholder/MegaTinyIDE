@@ -17,6 +17,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
+import java.util.prefs.PreferenceChangeEvent;
+import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -281,6 +283,15 @@ public class ListingPane extends JPanel {   // https://regex101.com
   ListingPane (JTabbedPane tabs, String tabName, String hoverText, MegaTinyIDE ide, Preferences prefs) {
     this.ide = ide;
     this.prefs = prefs;
+    prefs.addPreferenceChangeListener(evt -> {
+      if ("decode_updi".equals(evt.getKey())) {
+        // Disable RUN button when decode_updi is active (interferes with UPDI timing)
+        boolean state = prefs.getBoolean("decode_updi", false);
+        if (statusPane != null && active) {
+          statusPane.run.setEnabled(!state);
+        }
+      }
+    });
     setLayout(new BorderLayout());
     listingPane = new AvrListingPane();
     listingPane.setToolTipText("");
@@ -579,7 +590,6 @@ public class ListingPane extends JPanel {   // https://regex101.com
     }
 
     public void setActive (boolean active) {
-      ide.appendToInfoPane("Debugger " + (active ? "Attach" : "Detach") + "\n");
       if (ide.decodeUpdi()) {
         JSSCPort jPort = ide.getSerialPort();
         if (jPort != null) {
@@ -673,7 +683,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
       flags.setEnabled(active);
       regs.setEnabled(active);
       sRegs.setEnabled(active);
-      run.setEnabled(active && !running);
+      run.setEnabled(active && !running && !prefs.getBoolean("decode_updi", false));
       stop.setEnabled(active && running);
       step.setEnabled(active && !running);
       reset.setEnabled(active && !running);
@@ -703,17 +713,20 @@ public class ListingPane extends JPanel {   // https://regex101.com
         private final Border  activeBorder = BorderFactory.createLineBorder(Color.black, 1);
         private final Border  inactiveBorder = BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1);
         private final String  format;
+        private final boolean canEdit;
         private int           value;
         private NewVal        valueChange;
 
-        HexTextfield (int width) {
+        HexTextfield (int width, boolean canEdit) {
           setEditable(false);
+          this.canEdit = canEdit;
           format = "%0" + width + "X";
           setColumns(width);
           setHorizontalAlignment(CENTER);
           setEnabled(false);
           setText(String.format(format, 0));
-          if (EDIT_STATUS) {
+          if (EDIT_STATUS && canEdit) {
+            // Add listener to edit qualified fields
             addMouseListener(new MouseAdapter() {
               @Override
               public void mouseClicked (MouseEvent ev) {
@@ -813,8 +826,8 @@ public class ListingPane extends JPanel {   // https://regex101.com
       }
 
       class BinTextfield extends HexTextfield {
-        BinTextfield () {
-          super(1);
+        BinTextfield (boolean canEdit) {
+          super(1, canEdit);
         }
       }
 
@@ -840,7 +853,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
             lbl.setFont(lbl.getFont().deriveFont(11.0f));
             lbl.setBackground(Color.white);
             lbl.setOpaque(true);
-            HexTextfield field = fieldWidth > 1 ? new HexTextfield(fieldWidth) : new BinTextfield();
+            HexTextfield field = fieldWidth > 1 ? new HexTextfield(fieldWidth, canEdit) : new BinTextfield(canEdit);
             if (EDIT_STATUS && canEdit) {
               int index = row * 16 + col;
               field.addValueHandler(newVal -> {
