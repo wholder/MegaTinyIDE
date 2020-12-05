@@ -149,15 +149,20 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
     public final  int     vid;
     public final  String  name;
     public        String  product, serial;
+    public        boolean hasVRef;
 
-    private Programmer (int vid, int pid, String name) {
-      this.vid = vid;
-      this.pid = pid;
+    private Programmer (PropertyMap.ParmSet parmSet, String name) {
+      this.vid = parmSet.getInt("vid");
+      this.pid = parmSet.getInt("pid");
       this.name = name;
+      this.hasVRef = parmSet.getBoolean("vRef", false);
     }
 
     private Programmer (Programmer prog, String product, String serial) {
-      this(prog.vid, prog.pid, prog.name);
+      this.vid = prog.vid;
+      this.pid = prog.pid;
+      this.name = prog.name;
+      this.hasVRef = prog.hasVRef;
       this.product = product;
       this.serial = serial;
     }
@@ -172,7 +177,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
       PropertyMap progs = new PropertyMap("programmers.props");
       for (String key : progs.keySet()) {
         PropertyMap.ParmSet prog = progs.get(key);
-        programmers.put(key, new Programmer(prog.getInt("vid"), prog.getInt("pid"), key));
+        programmers.put(key, new Programmer(prog, key));
       }
     } catch (IOException ex) {
       ex.printStackTrace();

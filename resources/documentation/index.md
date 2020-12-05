@@ -1,3 +1,5 @@
+<p align="center"><img src="/images/MegaTinyIDE.png"></p>
+
 #### [Introducing MegaTinyIDE](ideintro.md)
    + [Linux Users - Please Read](linux.md)
    + [Troubleshooting](trouble.md)

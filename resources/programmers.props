@@ -1,4 +1,5 @@
 ATTiny3217-Curiosity-Nano: vid = 0x03EB, pid = 0x2175
 ATTiny416-Xplained-Nano/Mini: vid = 0x03EB, pid = 0x2145
-Atmel-ICE: vid = 0x03EB, pid = 0x2141
+Atmel-ICE: vid = 0x03EB, pid = 0x2141, vRef = true
 PICkit4: vid = 0x03EB, pid = 0x2177
+#Snap: vid = 0x03EB, pid = 0x2177

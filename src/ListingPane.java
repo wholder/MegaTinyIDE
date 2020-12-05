@@ -9,7 +9,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.text.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
@@ -57,7 +57,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
   private int                         sPos;
   private int                         ePos;
   private int                         lineCount;
-  private boolean                     active, running, decodeUpdi;
+  private boolean                     connected, running, decodeUpdi;
   private EDBG                        debugger;
   private String                      rawSrc = "";
   private final ByteArrayOutputStream rxOut = new ByteArrayOutputStream();
@@ -109,6 +109,21 @@ public class ListingPane extends JPanel {   // https://regex101.com
         opened = true;
       }
       super.setDividerLocation(loc);
+    }
+  }
+
+  static class OnOffButton extends JButton{
+    String  onName, offName;
+    boolean state;
+
+    OnOffButton (String onName, String offName, ActionListener event) {
+      super(offName);
+      this.onName = onName;
+      this.offName = offName;
+      addActionListener(ev -> {
+        setText((state = !state) ? onName : offName);
+        event.actionPerformed(ev);
+      });
     }
   }
 
@@ -285,7 +300,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
       if ("decode_updi".equals(evt.getKey())) {
         // Disable RUN button when decode_updi is active (interferes with UPDI timing)
         boolean state = prefs.getBoolean("decode_updi", false);
-        if (statusPane != null && active) {
+        if (statusPane != null) {
           statusPane.run.setEnabled(!state);
         }
       }
@@ -334,7 +349,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
           int column = Integer.parseInt(parts[2]);
           ide.codePane.setPosition(line, column);
         } else if (parts.length >= 4 && "var".equals(parts[0])) {
-          if (debugger != null && active && !running) {
+          if (debugger != null && connected && !running) {
             int add = Integer.parseInt(parts[2]);
             int len = Integer.parseInt(parts[3]);
             byte[] data = debugger.readSRam(add, len);
@@ -594,7 +609,9 @@ public class ListingPane extends JPanel {   // https://regex101.com
     private final HexPanel          flags;
     private final HexPanel          regs;
     private final HexPanel          sRegs;
-    private final JButton           attach, run, stop, step, reset;
+    private final JButton run;
+    private final JButton step;
+    private final JButton reset;
     private Thread                  runThread;
     private int                     portMask;
     private byte                    vPrtA = 0, vPrtB = 0, vPrtC = 0;
@@ -610,6 +627,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
     }
 
     public void setActive (boolean active) {
+      connected = active;
       if (ide.decodeUpdi()) {
         JSSCPort jPort = ide.getSerialPort();
         if (jPort != null) {
@@ -635,6 +653,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
           }
         }
       }
+      boolean hasVRef = false;
       if (active) {
         String avrChip = ide.getAvrChip();
         if (avrChip != null) {
@@ -646,6 +665,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
           portA.setActiveMask(portMask & 0xFF);
           EDBG.Programmer prog = EDBG.getProgrammer(ide.getProgrammer());
           if (prog != null) {
+            hasVRef = prog.hasVRef;
             try {
               debugger = new EDBG(prog, info, false);
               printUpdi("new EDBG()");
@@ -666,16 +686,16 @@ public class ListingPane extends JPanel {   // https://regex101.com
             } catch (Exception ex) {
               ide.showErrorDialog("Unable to open Programmer: " + prog.name);
               debugger = null;
-              active = false;
+              connected = false;
               running = false;
             }
           } else {
             ide.showErrorDialog("Programmer not available");
-            active = false;
+            connected = false;
           }
         } else {
           ide.showErrorDialog("Target device type not selected");
-          active = false;
+          connected = false;
         }
       } else {
         if (running) {
@@ -696,30 +716,31 @@ public class ListingPane extends JPanel {   // https://regex101.com
         }
         clearSelection();
       }
-      attach.setText(active ? "DETACH" : "ATTACH");
-      portC.setEnabled(active);
-      portB.setEnabled(active);
-      portA.setEnabled(active);
-      flags.setEnabled(active);
-      regs.setEnabled(active);
-      sRegs.setEnabled(active);
-      run.setEnabled(active && !running && !prefs.getBoolean("decode_updi", false));
-      stop.setEnabled(active && running);
-      step.setEnabled(active && !running);
-      reset.setEnabled(active && !running);
-      if (active & !running) {
+      portC.setEnabled(connected);
+      portB.setEnabled(connected);
+      portA.setEnabled(connected);
+      flags.setEnabled(connected);
+      regs.setEnabled(connected);
+      sRegs.setEnabled(connected);
+      run.setEnabled(connected && !running && !prefs.getBoolean("decode_updi", false));
+      step.setEnabled(connected && !running);
+      reset.setEnabled(connected && !running);
+      if (connected & !running) {
         updateState(false);
       }
       updateUI();
       for (DebugListener debugListener : debugListeners) {
-        debugListener.debugState(active);
+        debugListener.debugState(connected);
       }
-      ide.appendToInfoPane("Debugger " + (active ? "Attached" : "Detached") + "\n");
+      if (connected) {
+        ide.appendToInfoPane("Debugger Attached " + (hasVRef ? String.format("(vRef =  %1.2f volts)", debugger.getAnalogVoltageRef()) : "" ) + "\n");
+      } else {
+        ide.appendToInfoPane("Debugger Detached\n");
+      }
     }
 
-    private void setRunningState () {
-      run.setEnabled(!running);
-      stop.setEnabled(running);
+    private void setRunningState (boolean state) {
+      running = state;
       step.setEnabled(!running);
     }
 
@@ -750,7 +771,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
               @Override
               public void mouseClicked (MouseEvent ev) {
                 if (SwingUtilities.isRightMouseButton(ev) && isEnabled()) {
-                  if (debugger != null && active && !running && valueChange != null) {
+                  if (debugger != null && connected && !running && valueChange != null) {
                     setToolTipText(null);
                     repaint();
                     JPanel panel = new JPanel();
@@ -849,7 +870,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
           lbls.get(ii).setEnabled(active && enabled);
           vals.get(ii).setEnabled(active && enabled);
         }
-        titleBorder.setTitleColor(active ? Color.BLACK : Color.GRAY);
+        titleBorder.setTitleColor(connected ? Color.BLACK : Color.GRAY);
       }
 
       class BinTextfield extends HexTextfield {
@@ -1011,61 +1032,59 @@ public class ListingPane extends JPanel {   // https://regex101.com
       top.add(top2, BorderLayout.SOUTH);
       top.setBorder(Utility.getBorder(BorderFactory.createLineBorder(Color.BLACK, 1), 1, 1, 1, 1));
       add(top, BorderLayout.CENTER);
-      JPanel buttons = new JPanel(new GridLayout(1, 5));
+      JPanel buttons = new JPanel(new GridLayout(1, 4));
       buttons.setBorder(Utility.getBorder(BorderFactory.createLineBorder(Color.BLACK, 1), 1, 1, 1, 1));
-      buttons.add(attach = new JButton("ATTACH"));
-      attach.addActionListener((ActionEvent ev) -> setActive(active = !active));
-      buttons.add(run = new JButton("RUN"));
-      run.addActionListener(ev -> {
-        if (debugger != null) {
-          int[] breakpoints = breakAddresses.stream().mapToInt(Number::intValue).toArray();
-          if (breakpoints.length == 0 || breakpoints.length == 1) {
-            runThread = new Thread(() -> {
-              running = true;
-              setRunningState();
-              try {
-                if (breakpoints.length == 1) {
-                  int address = breakpoints[0];
-                  debugger.runToAddress(address);
-                  printUpdi(String.format("runToAddress(0x%04X)", address));
-                } else {
-                  debugger.runTarget();
-                }
-              } catch (InterruptedException ex) {
+      buttons.add(new OnOffButton("DETACH", "ATTACH", ev -> {
+        setActive(((OnOffButton) ev.getSource()).state);
+      }));
+      buttons.add(run = new OnOffButton("STOP", "RUN", ev -> {
+        if (((OnOffButton) ev.getSource()).state) {
+          if (debugger != null) {
+            int[] breakpoints = breakAddresses.stream().mapToInt(Number::intValue).toArray();
+            if (breakpoints.length == 0 || breakpoints.length == 1) {
+              runThread = new Thread(() -> {
+                setRunningState(true);
                 try {
-                  debugger.stopTarget();
-                  printUpdi("stopTarget()");
-                } catch (InterruptedException ex2) {
-                  ex2.printStackTrace();
+                  if (breakpoints.length == 1) {
+                    int address = breakpoints[0];
+                    debugger.runToAddress(address);
+                    printUpdi(String.format("runToAddress(0x%04X)", address));
+                  } else {
+                    debugger.runTarget();
+                  }
+                } catch (InterruptedException ex) {
+                  try {
+                    debugger.stopTarget();
+                    printUpdi("stopTarget()");
+                  } catch (InterruptedException ex2) {
+                    ex2.printStackTrace();
+                  }
                 }
-              }
-              running = false;
-              setRunningState();
-              SwingUtilities.invokeLater(() -> updateState(true));
-              runThread = null;
-            });
-            runThread.start();
-          } else {
-            // Note: can only get here if DebugPane.SINGLE_BREAK == false
-            ide.showErrorDialog("Multiple breakpoints not supported");
+                setRunningState(false);
+                SwingUtilities.invokeLater(() -> updateState(true));
+                runThread = null;
+              });
+              runThread.start();
+            } else {
+              // Note: can only get here if DebugPane.SINGLE_BREAK == false
+              ide.showErrorDialog("Multiple breakpoints not supported");
+            }
           }
-        }
-      });
-      buttons.add(stop = new JButton("STOP"));
-      stop.addActionListener(ev -> {
-        if (debugger != null) {
-          if (running) {
-            if (runThread != null && runThread.isAlive()) {
-              try {
-                runThread.interrupt();
-                runThread.join(200);
-              } catch (InterruptedException ex) {
-                // do nothing
+        } else {
+          if (debugger != null) {
+            if (running) {
+              if (runThread != null && runThread.isAlive()) {
+                try {
+                  runThread.interrupt();
+                  runThread.join(200);
+                } catch (InterruptedException ex) {
+                  // do nothing
+                }
               }
             }
           }
         }
-      });
+      }));
       buttons.add(step = new JButton("STEP"));
       step.addActionListener(ev -> {
         if (debugger != null) {

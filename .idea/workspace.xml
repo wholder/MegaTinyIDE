@@ -14,8 +14,13 @@
   <component name="ChangeListManager">
     <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/documentation/index.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/index.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/programmers.props" beforeDir="false" afterPath="$PROJECT_DIR$/resources/programmers.props" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/EDBG.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/EDBG.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ListingPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ListingPane.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UPDIDecoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UPDIDecoder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MarkupView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MarkupView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/PropertyMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/PropertyMap.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,7 +78,7 @@
       <recent name="$PROJECT_DIR$/resources/test" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.MegaTinyIDE">
+  <component name="RunManager" selected="Application.NativeBuilder">
     <configuration name="FusePane" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="FusePane" />
       <module name="MegaTinyIDE" />
@@ -84,6 +89,13 @@
     <configuration name="MegaTinyIDE" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="MegaTinyIDE" />
       <module name="MegaTinyIDE" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="NativeBuilder" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="NativeBuilder" />
+      <module name="NativeBuilder" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -114,9 +126,11 @@
       <item itemvalue="Application.MegaTinyIDE" />
       <item itemvalue="Application.ParmDialog" />
       <item itemvalue="Application.ToolchainCombiner (1)" />
+      <item itemvalue="Application.NativeBuilder" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.NativeBuilder" />
         <item itemvalue="Application.MegaTinyIDE" />
         <item itemvalue="Application.ToolchainCombiner (1)" />
         <item itemvalue="Application.ParmDialog" />
@@ -132,13 +146,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1596315993204</updated>
-    </task>
-    <task id="LOCAL-00024" summary="Added basic chip pinout diagrams">
-      <created>1603324553934</created>
-      <option name="number" value="00024" />
-      <option name="presentableId" value="LOCAL-00024" />
-      <option name="project" value="LOCAL" />
-      <updated>1603324553934</updated>
     </task>
     <task id="LOCAL-00025" summary="Added basic chip pinout diagrams">
       <created>1603325345759</created>
@@ -476,7 +483,14 @@
       <option name="project" value="LOCAL" />
       <updated>1607125530869</updated>
     </task>
-    <option name="localTasksCounter" value="73" />
+    <task id="LOCAL-00073" summary="Tooltip now shows IN/OUT state of PORTs">
+      <created>1607158204935</created>
+      <option name="number" value="00073" />
+      <option name="presentableId" value="LOCAL-00073" />
+      <option name="project" value="LOCAL" />
+      <updated>1607158204935</updated>
+    </task>
+    <option name="localTasksCounter" value="74" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -499,11 +513,11 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Revise doc page" />
     <MESSAGE value="Code cleanup and new features" />
     <MESSAGE value="Misc fixes and improvements" />
     <MESSAGE value="Add AVR instruction tooltips to Listing Pane" />
@@ -528,7 +542,8 @@
     <MESSAGE value="Added ability to change reqister values while debugging" />
     <MESSAGE value="Misc enhancements/fixes" />
     <MESSAGE value="Center line number when stepping in debugger" />
-    <option name="LAST_COMMIT_MESSAGE" value="Center line number when stepping in debugger" />
+    <MESSAGE value="Tooltip now shows IN/OUT state of PORTs" />
+    <option name="LAST_COMMIT_MESSAGE" value="Tooltip now shows IN/OUT state of PORTs" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

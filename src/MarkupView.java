@@ -105,6 +105,9 @@ class MarkupView extends JPanel {
 
     @Override
     public URL getImageURL () {
+      if (loc.startsWith("/")) {
+        return getClass().getResource(loc);
+      }
       return getClass().getResource(basePath + loc);
     }
 
