@@ -15,6 +15,7 @@
     <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ListingPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ListingPane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UPDIDecoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UPDIDecoder.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -131,13 +132,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1596315993204</updated>
-    </task>
-    <task id="LOCAL-00023" summary="Code cleanup">
-      <created>1602961560527</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1602961560527</updated>
     </task>
     <task id="LOCAL-00024" summary="Added basic chip pinout diagrams">
       <created>1603324553934</created>
@@ -475,7 +469,14 @@
       <option name="project" value="LOCAL" />
       <updated>1607040724491</updated>
     </task>
-    <option name="localTasksCounter" value="72" />
+    <task id="LOCAL-00072" summary="Center line number when stepping in debugger">
+      <created>1607125530869</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1607125530869</updated>
+    </task>
+    <option name="localTasksCounter" value="73" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -502,7 +503,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Rework interface for OCD Message pane" />
     <MESSAGE value="Revise doc page" />
     <MESSAGE value="Code cleanup and new features" />
     <MESSAGE value="Misc fixes and improvements" />
@@ -527,7 +527,8 @@
     <MESSAGE value="Document OCD Messaging feature" />
     <MESSAGE value="Added ability to change reqister values while debugging" />
     <MESSAGE value="Misc enhancements/fixes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Misc enhancements/fixes" />
+    <MESSAGE value="Center line number when stepping in debugger" />
+    <option name="LAST_COMMIT_MESSAGE" value="Center line number when stepping in debugger" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

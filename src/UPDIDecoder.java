@@ -44,7 +44,7 @@ public class UPDIDecoder {
    *      bit 6 - undocumented
    *      bit 7 - undocumented
    *
-   *    KEY Activation Signatures
+   *    KEY Activation Signatures (LSB to MSB)
    *      Chiperase       0x4E564D4572617365
    *      OCD             0x4F43442020202020
    *      NVMPROG         0x4E564D50726F6720
@@ -98,6 +98,7 @@ public class UPDIDecoder {
         }
         break;
       case 1:
+        out.printf("  0x55 0x%02X: ", code);
         switch (code & 0xE0) {
         case 0x00: {                            // LDS  (load)
           int sizeA = (code >> 2) & 0x03;
@@ -106,15 +107,15 @@ public class UPDIDecoder {
           int data = getData(bin, sizeB);
           if (sizeA == 0) {
             if (sizeB == 0) {
-              out.printf("  LDS from addr: 0x%02X returns: 0x%02X\n", addr, data);
+              out.printf("LDS from addr: 0x%02X returns: 0x%02X\n", addr, data);
             } else {
-              out.printf("  LDS from addr: 0x%02X returns: 0x%04X\n", addr, data);
+              out.printf("LDS from addr: 0x%02X returns: 0x%04X\n", addr, data);
             }
           } else {
             if (sizeB == 0) {
-              out.printf("  LDS from addr: 0x%04X returns: 0x%02X\n", addr, data);
+              out.printf("LDS from addr: 0x%04X returns: 0x%02X\n", addr, data);
             } else {
-              out.printf("  LDS from addr: 0x%04X returns: 0x%04X\n", addr, data);
+              out.printf("LDS from addr: 0x%04X returns: 0x%04X\n", addr, data);
             }
           }
         } break;
@@ -123,16 +124,16 @@ public class UPDIDecoder {
           int sizeAB = code & 0x03;
           int data = getData(bin, sizeAB);
           if (sizeAB == 0) {
-            out.printf("  LD load via %s returns: 0x%02X\n", ptrs[ptr], data);
+            out.printf("LD load via %s returns: 0x%02X\n", ptrs[ptr], data);
           } else {
-            out.printf("  LD load via %s returns: 0x%04X\n", ptrs[ptr], data);
+            out.printf("LD load via %s returns: 0x%04X\n", ptrs[ptr], data);
           }
           while (repeat-- > 0) {
             data = getData(bin, sizeAB);
             if (sizeAB == 0) {
-              out.printf("  LD load via %s returns: 0x%02X\n", ptrs[ptr], data);
+              out.printf("  RPT: LD load via %s returns: 0x%02X\n", ptrs[ptr], data);
             } else {
-              out.printf("  LD load via %s returns: 0x%04X\n", ptrs[ptr], data);
+              out.printf("  RPT: LD load via %s returns: 0x%04X\n", ptrs[ptr], data);
             }
           }
         } break;
@@ -147,15 +148,15 @@ public class UPDIDecoder {
             if (ack2 == 0x40) {
               if (sizeA == 0) {
                 if (sizeB == 0) {
-                  out.printf("  STS store data: 0x%02X into addr: 0x%02X\n", data, addr);
+                  out.printf("STS store data: 0x%02X into addr: 0x%02X\n", data, addr);
                 } else {
-                  out.printf("  STS store data: 0x%02X into addr: 0x%04X\n", data, addr);
+                  out.printf("STS store data: 0x%02X into addr: 0x%04X\n", data, addr);
                 }
               } else {
                 if (sizeB == 0) {
-                  out.printf("  STS store data: 0x%04X into addr: 0x%02X\n", data, addr);
+                  out.printf("STS store data: 0x%04X into addr: 0x%02X\n", data, addr);
                 } else {
-                  out.printf("  STS store data: 0x%04X into addr: 0x%04X\n", data, addr);
+                  out.printf("STS store data: 0x%04X into addr: 0x%04X\n", data, addr);
                 }
               }
             }
@@ -168,12 +169,12 @@ public class UPDIDecoder {
           int ack1 = read(bin);
           if (ack1 == 0x40) {
             if (ptr == 2) {
-              out.printf("  ST store data: 0x%04X into %s\n", data, ptrs[ptr]);
+              out.printf("ST store data: 0x%04X into %s\n", data, ptrs[ptr]);
             } else {
               if (sizeAB == 0) {
-                out.printf("  ST store data: 0x%02X via %s\n", data, ptrs[ptr]);
+                out.printf("ST store data: 0x%02X via %s\n", data, ptrs[ptr]);
               } else {
-                out.printf("  ST store data: 0x%04X via %s\n", data, ptrs[ptr]);
+                out.printf("ST store data: 0x%04X via %s\n", data, ptrs[ptr]);
               }
             }
           }
@@ -182,9 +183,9 @@ public class UPDIDecoder {
             ack1 = read(bin);
             if (ack1 == 0x40) {
               if (sizeAB == 0) {
-                out.printf("  ST store data: 0x%02X via %s\n", data, ptrs[ptr]);
+                out.printf("  RPT: ST store data: 0x%02X via %s\n", data, ptrs[ptr]);
               } else {
-                out.printf("  ST store data: 0x%04X via %s\n", data, ptrs[ptr]);
+                out.printf("  RPT: ST store data: 0x%04X via %s\n", data, ptrs[ptr]);
               }
             }
           }
@@ -192,11 +193,11 @@ public class UPDIDecoder {
         case 0x80: {                          // LDCS (load)
           int reg = code & 0x0F;
           int data = read(bin);
-          out.printf("  LDCS load from %s returns: 0x%02X\n", regs[reg], data);
+          out.printf("LDCS load from %s returns: 0x%02X\n", regs[reg], data);
         } break;
         case 0xA0: {                          // REPEAT
           repeat = read(bin);
-          out.printf("  REPEAT following instruction %d times\n", repeat + 1);
+          out.printf("REPEAT following instruction %d times\n", repeat + 1);
          } break;
         case 0xC0: {                          // STCS (store)
           int reg = code & 0x0F;
@@ -207,10 +208,10 @@ public class UPDIDecoder {
           boolean sib = (code & 0x04) != 0;
           byte[] data;
           if (sib) {
-            out.print("  SIB = ");
+            out.print("SIB = ");
             data = new byte[16];
           } else {
-            out.print("  KEY = ");
+            out.print("KEY = ");
             data = new byte[8];
           }
           for (int ii = 0; ii < data.length; ii++) {
@@ -219,7 +220,7 @@ public class UPDIDecoder {
           for (byte cc : data) {
             out.printf("0x%02X ", ((int) cc & 0xFF));
           }
-          out.print("\n         ");
+          out.print("\n                    ");
           for (byte cc : data) {
             out.printf("'%c'  ", (char) cc);
           }

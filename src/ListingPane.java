@@ -10,7 +10,6 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
@@ -18,8 +17,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
-import java.util.prefs.PreferenceChangeEvent;
-import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -600,6 +597,8 @@ public class ListingPane extends JPanel {   // https://regex101.com
     private final JButton           attach, run, stop, step, reset;
     private Thread                  runThread;
     private int                     portMask;
+    private byte                    vPrtA = 0, vPrtB = 0, vPrtC = 0;
+    private byte                    vDirA = 0, vDirB = 0, vDirC = 0;
 
     {                                   //      Port C              Port B              Port A
                                         // |7|6|5|4|3|2|1|0|   |7|6|5|4|3|2|1|0|   |7|6|5|4|3|2|1|0|
@@ -736,6 +735,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
         private final String  format;
         private int           value;
         private NewVal        valueChange;
+        private boolean       enabled;
 
         HexTextfield (int width, boolean canEdit) {
           setEditable(false);
@@ -822,9 +822,17 @@ public class ListingPane extends JPanel {   // https://regex101.com
           setText(String.format(format, value));
         }
 
+        public void setDir (boolean state) {
+          if (enabled) {
+            setToolTipText(state ? "OUTPUT" : "INPUT");
+          } else {
+            setToolTipText("");
+          }
+        }
+
         @Override
         public void setEnabled (boolean enabled) {
-          super.setEnabled(enabled);
+          super.setEnabled(this.enabled = enabled);
           setBorder(Utility.getBorder(enabled ? activeBorder : inactiveBorder, 2, 1, 2, 0));
         }
       }
@@ -965,6 +973,11 @@ public class ListingPane extends JPanel {   // https://regex101.com
         fld.setValue(value,  showChange);
       }
 
+      public void setDir (int index, boolean state) {
+        HexPanel.HexTextfield fld = vals.get(index);
+        fld.setDir(state);
+      }
+
       public int getValue (int index) {
         return vals.get(index).value;
       }
@@ -1094,38 +1107,43 @@ public class ListingPane extends JPanel {   // https://regex101.com
           printUpdi("getStatusRegister()");
           int sp = debugger.getStackPointer();
           printUpdi("getStackPointer()");
-          byte prta = 0, prtb = 0, prtc = 0;
           boolean portAUsed = (portMask & 0xFF) != 0;
           if (portAUsed) {
-            prta = debugger.readSRam(0x0002, 1)[0];         // PORTA.IN
+            vPrtA = debugger.readSRam(0x0002, 1)[0];         // PORTA.IN
             printUpdi("readSRam(0x0002, 1) - PORTA.IN");
+            vDirA = debugger.readSRam(0x0000, 1)[0];         // PORTA.DIR
+            printUpdi("readSRam(0x0000, 1) - PORTA.DIR");
           }
           boolean portBUsed = (portMask & 0xFF00) != 0;
           if (portBUsed) {
-            prtb = debugger.readSRam(0x0006, 1)[0];         // PORTB.IN
+            vPrtB = debugger.readSRam(0x0006, 1)[0];         // PORTB.IN
             printUpdi("readSRam(0x0006, 1) - PORTB.IN ");
+            vDirB = debugger.readSRam(0x0004, 1)[0];         // PORTB.DIR
+            printUpdi("readSRam(0x0004, 1) - PORTB.DIR");
           }
           boolean portCUsed = (portMask & 0xFF0000) != 0;
           if (portCUsed) {
-            prtc = debugger.readSRam(0x000A, 1)[0];         // PORTC.IN
+            vPrtC = debugger.readSRam(0x000A, 1)[0];         // PORTC.IN
             printUpdi("readSRam(0x000A, 1) - PORTC.IN");
+            vDirC = debugger.readSRam(0x0008, 1)[0];         // PORTC.DIR
+            printUpdi("readSRam(0x0008, 1) - PORTC.DIR");
           }
-          byte tmpa = prta;
-          byte tmpb = prtb;
-          byte tmpc = prtc;
           SwingUtilities.invokeLater(() -> {
             setRegs(regs, showChange);
             setPC(pc, showChange);
             setBits(this.flags, flags, showChange);
             setSP(sp, showChange);
             if (portAUsed) {
-              setBits(portA, tmpa, showChange);
+              setBits(portA, vPrtA, showChange);
+              setDir(portA, vDirA);
             }
             if (portBUsed) {
-              setBits(portB, tmpb, showChange);
+              setBits(portB, vPrtB, showChange);
+              setDir(portB, vDirB);
             }
             if (portCUsed) {
-              setBits(portC, tmpc, showChange);
+              setBits(portC, vPrtC, showChange);
+              setDir(portC, vDirC);
             }
           });
         }
@@ -1153,6 +1171,14 @@ public class ListingPane extends JPanel {   // https://regex101.com
         byte mask = (byte) (1 << (7 - ii));
         boolean bit = (val & mask) != 0;
         field.setValue(ii, bit ? 1 : 0, showChange);
+      }
+    }
+
+    public void setDir (HexPanel field, byte val) {
+      for (int ii = 0; ii < 8; ii++) {
+        byte mask = (byte) (1 << (7 - ii));
+        boolean bit = (val & mask) != 0;
+        field.setDir(ii, bit);
       }
     }
 
