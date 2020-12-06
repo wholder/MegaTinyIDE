@@ -1,5 +1,8 @@
-ATTiny3217-Curiosity-Nano: vid = 0x03EB, pid = 0x2175
-ATTiny416-Xplained-Nano/Mini: vid = 0x03EB, pid = 0x2145
-Atmel-ICE: vid = 0x03EB, pid = 0x2141, vRef = true
-PICkit4: vid = 0x03EB, pid = 0x2177
-#Snap: vid = 0x03EB, pid = 0x2177
+03EB-2175: name = ATTiny3217-Curiosity-Nano, vRef = true
+03EB-2145: name = ATTiny416-Xplained-Nano/Mini, vRef = true
+03EB-2141: name = Atmel-ICE, vRef = true
+03EB-2177: name = PICkit4, vRef = true
+03EB-2180: name = MPLAB Snap, vRef = true
+#04D8-9012: PICkit4 (?)
+#04D8-9015: ICD 4 (?)
+#04D8-9018: MPLAB Snap (?)

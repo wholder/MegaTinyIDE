@@ -145,39 +145,47 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
   }
 
   static class Programmer {
+    public final  String  key;
     public final  int     pid;
     public final  int     vid;
     public final  String  name;
     public        String  product, serial;
+    public        int     release;
     public        boolean hasVRef;
 
-    private Programmer (PropertyMap.ParmSet parmSet, String name) {
-      this.vid = parmSet.getInt("vid");
-      this.pid = parmSet.getInt("pid");
-      this.name = name;
-      this.hasVRef = parmSet.getBoolean("vRef", false);
+    private Programmer (PropertyMap.ParmSet parmSet, String key) {
+      this.key = key;
+      String[] parts = key.split("-");
+      if (parts.length == 2) {
+        this.vid = Integer.parseInt(parts[0], 16);
+        this.pid = Integer.parseInt(parts[1], 16);
+        this.name = parmSet.get("name");
+        this.hasVRef = parmSet.getBoolean("vRef", false);
+      } else {
+        throw new IllegalArgumentException("Unable to parse key: " + key);
+      }
     }
 
-    private Programmer (Programmer prog, String product, String serial) {
+    private Programmer (Programmer prog, String product, String serial, int release) {
+      this.key = prog.key;
       this.vid = prog.vid;
       this.pid = prog.pid;
       this.name = prog.name;
       this.hasVRef = prog.hasVRef;
       this.product = product;
       this.serial = serial;
+      this.release = release;
     }
 
-    public Programmer getInstance (String product, String serial) {
-      return new Programmer(this, product, serial);
-    }
   }
 
   static {
     try {
       PropertyMap progs = new PropertyMap("programmers.props");
       for (String key : progs.keySet()) {
-        PropertyMap.ParmSet prog = progs.get(key);
-        programmers.put(key, new Programmer(prog, key));
+        PropertyMap.ParmSet parmSet = progs.get(key);
+        Programmer prog = new Programmer(parmSet, key);
+        programmers.put(key, prog);
       }
     } catch (IOException ex) {
       ex.printStackTrace();
@@ -190,9 +198,10 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
     }
   }
 
-  EDBG (Programmer prog, MegaTinyIDE.ChipInfo chip, boolean program) {
+  EDBG (MegaTinyIDE ide, boolean program) {
+    Programmer prog = EDBG.getProgrammer(ide.getProgVidPid());
+    this.chip = MegaTinyIDE.chipTypes.get(ide.getAvrChip());
     hidServices = HidManager.getHidServices();
-    this.chip = chip;
     this.program = program;
     device = hidServices.getHidDevice(prog.vid, prog.pid, prog.serial);
     if (device != null) {
@@ -220,12 +229,12 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
         attachDebugger(true);
       }
     } else {
-      throw new EDBGException("Unable to find programmer: " + prog.name);
+      throw new EDBGException("Unable to connect to programmer: " + prog.name);
     }
   }
 
-  public static Programmer getProgrammer (String name) {
-    return programmers.get(name);
+  public static Programmer getProgrammer (String vidPid) {
+    return programmers.get(vidPid);
   }
 
   public static List<Programmer> getProgrammers () {
@@ -237,7 +246,8 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
       try {
         device = hidServices.getHidDevice(prog.vid, prog.pid, null);
         if (device != null) {
-          list.add(prog.getInstance(device.getProduct(), device.getSerialNumber()));
+
+          list.add(new Programmer(prog, device.getProduct(), device.getSerialNumber(), device.getReleaseNumber()));
         }
       } catch (Exception ex) {
         // ignore
@@ -264,7 +274,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
   }
 
   static class ProgrammerInfo {
-    int     vendId, prodId, iFace;
+    int     vendId, prodId, iFace, release;
     String  manf, product, serial;
     boolean isOpen;
 
@@ -274,6 +284,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
       manf = device.getManufacturer();
       product = device.getProduct();
       serial = device.getSerialNumber();
+      release = device.getReleaseNumber();
       isOpen = device.isOpen();
     }
 
@@ -1684,82 +1695,5 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
       ocdListener.msgReceived("timeout\n");
     }
     throw new EDBGException("breakWait() timeout");
-  }
-
-  //
-  //  Test code
-  //
-  public static void main (String[] args) {
-    List<Programmer> progs = EDBG.getProgrammers();
-    if (progs.size() > 0) {
-      Programmer programmer = progs.get(0);
-      System.out.println("Using programmer: " + programmer.name);
-      MegaTinyIDE.ChipInfo chip = MegaTinyIDE.chipTypes.get("attiny412");
-      // Connect to target in debug mode
-      EDBG prog = new EDBG(programmer, chip, false);
-      try {
-        byte[] sig = prog.getDeviceSignature();
-        if (sig != null) {
-          String code = String.format("%02X%02X%02X", sig[0], sig[1], sig[2]);
-          System.out.println("Device signature: " + code + " (LSB first)");
-          chip = MegaTinyIDE.chipSignatures.get(code);
-          System.out.println("Reading from:     " + chip.name);
-        }
-        // Read program counter
-        int pc = prog.getProgramCounter();
-        System.out.printf("PC:    0x%04X\n", pc);
-        // Read Stack Pointer
-        int sp = prog.getStackPointer();
-        System.out.printf("SP:    0x%04X\n", sp);
-        // Read status register
-        byte flags = prog.getStatusRegister();
-        System.out.printf("Flags: 0x%02X\n", flags);
-        // Write General Registers (32 sequential values 0x00 - 0x1F)
-        byte[] regs = new byte[32];
-        for (int ii = 0; ii < regs.length; ii++) {
-          regs[ii] = (byte) ii;
-        }
-        prog.writeRegisters(0x0000, regs);
-        // Read back General Registers
-        System.out.println("Reading " + regs.length + " General Registers");
-        regs = prog.readRegisters(0x0000, regs.length);
-        if (regs != null) {
-          Utility.printHex(regs);
-        }
-        // Write 32 bytes to SRAM (sequential values 0x00 - 0x1F)
-        int ramBase = chip.getInt("sbase");
-        byte[] sram = new byte[32];
-        for (int ii = 0; ii < sram.length; ii++) {
-          sram[ii] = (byte) ii;
-        }
-        prog.writeSRam(ramBase, sram);
-        // Read back 32 bytes of SRAM
-        System.out.println("Reading " + sram.length + " bytes of SRAM");
-        sram = prog.readSRam(ramBase, sram.length);
-        if (sram != null) {
-          Utility.printHex(sram);
-        }
-        // Fails on the ATTiny3217-Curiosity-Nano
-        // Read 16 bytes of EEPROM
-        System.out.println("16 bytes of EEPROM");
-        byte[] eeprom = prog.readEeprom(0, 16);
-        if (eeprom != null) {
-          Utility.printHex(eeprom);
-        }
-      } finally {
-        prog.close();
-      }
-      // Connect to target in program mode
-      prog = new EDBG(programmer, chip, true);
-      try {
-        // FUSES
-        System.out.println("11 bytes of FUSES");
-        int[] offsets = new int[] {0, 1, 2, 4, 5, 6, 7, 8, 10};
-        byte[] fuses = prog.readFuses(offsets);
-        Utility.printHex(fuses);
-      } finally {
-        prog.close();
-      }
-    }
   }
 }

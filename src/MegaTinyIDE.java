@@ -72,7 +72,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
   private final Preferences       prefs = Preferences.userRoot().node(this.getClass().getName());
   private final JSSCPort          jPort = new JSSCPort(prefs);
   private String                  tmpDir, tmpExe;
-  private String                  programmer;
+  private String                  progVidPid;
   private String                  avrChip;
   private String                  editFile;
   private boolean                 directHex, compiled, codeDirty, showDebugger;
@@ -133,8 +133,8 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     return chipTypes.get(name);
   }
 
-  public String getProgrammer () {
-    return programmer;
+  public String getProgVidPid () {
+    return progVidPid;
   }
 
   static class MyTextPane extends JEditorPane {
@@ -727,11 +727,11 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     progFlash.addActionListener(e -> {
       if (avrChip != null && canProgram()) {
         ChipInfo info = chipTypes.get(avrChip);
-        EDBG.Programmer prog = EDBG.getProgrammer(programmer);
+        EDBG.Programmer prog = EDBG.getProgrammer(progVidPid);
         if (prog != null) {
           try {
             Utility.CodeImage codeImg = Utility.parseIntelHex(hexPane.getText());
-            EDBG edbg = new EDBG(prog, info, true);
+            EDBG edbg = new EDBG(this, true);
             try {
               edbg.eraseTarget(0, 0);
               edbg.writeFlash(0, codeImg.data);
@@ -755,11 +755,11 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     readFuses.addActionListener(e -> {
       // Use chip type, if selected, else use attiny212 as proxy
       ChipInfo info = chipTypes.get(avrChip != null ? avrChip : "attiny212");
-      EDBG.Programmer prog = EDBG.getProgrammer(programmer);
+      EDBG.Programmer prog = EDBG.getProgrammer(progVidPid);
       if (prog != null) {
         EDBG edbg = null;
         try {
-          edbg = new EDBG(prog, info, true);
+          edbg = new EDBG(this, true);
           FusePane fusePane = new FusePane(info);
           int[] offsets = new int[] {0, 1, 2, 4, 5, 6, 7, 8 /*, 10*/};
           byte[] fuses = edbg.readFuses(offsets);
@@ -810,11 +810,11 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     idTarget.addActionListener(e -> {
       // Use chip type, if selected, else use attiny212 as proxy
       ChipInfo info = chipTypes.get(avrChip != null ? avrChip : "attiny212");
-      EDBG.Programmer prog = EDBG.getProgrammer(programmer);
+      EDBG.Programmer prog = EDBG.getProgrammer(progVidPid);
       if (prog != null) {
         EDBG edbg = null;
         try {
-          edbg = new EDBG(prog, info, true);
+          edbg = new EDBG(this, true);
           byte[] sig = edbg.getDeviceSignature();         // 3 bytes
           String code = String.format("%02X%02X%02X", sig[0], sig[1], sig[2]);
           ChipInfo chip = chipSignatures.get(code);
@@ -883,7 +883,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     }
     // Add "Programmer" Menu
     progMenu = new JMenu("Programmer");
-    programmer = prefs.get("programmer", "");
+    progVidPid = prefs.get("progVidPid", "");
     progMenu.addMenuListener(new MenuListener() {
       @Override
       public void menuSelected (MenuEvent e) {
@@ -891,13 +891,15 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
         progMenu.removeAll();
         ButtonGroup progGroup = new ButtonGroup();
         for (EDBG.Programmer prog : EDBG.getProgrammers()) {
-          JRadioButtonMenuItem item = new JRadioButtonMenuItem(prog.name, prog.name.equals(programmer));
-          item.setToolTipText(" " + prog.product + ", Serial: " + prog.serial + " ");
+          JRadioButtonMenuItem item = new JRadioButtonMenuItem(prog.name, prog.key.equals(progVidPid));
+          String tTip = String.format("<html><b>Product</b>: %s <br><b>VID</b>: 0x%04X<br><b>PID</b>: 0x%02X<br><b>Seria</b>l: %s " +
+                                          "<br><b>Release:</b> %d </html>",
+                                      prog.product, prog.vid, prog.pid, prog.serial, prog.release);
+          item.setToolTipText(tTip);
           progMenu.add(item);
           progGroup.add(item);
           item.addActionListener((ev) -> {
-            programmer = item.getText();
-            prefs.put("programmer", programmer);
+            prefs.put("progVidPid", progVidPid = prog.key);
           });
         }
       }
