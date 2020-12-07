@@ -246,7 +246,6 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
       try {
         device = hidServices.getHidDevice(prog.vid, prog.pid, null);
         if (device != null) {
-
           list.add(new Programmer(prog, device.getProduct(), device.getSerialNumber(), device.getReleaseNumber()));
         }
       } catch (Exception ex) {
