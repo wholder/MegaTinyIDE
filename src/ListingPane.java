@@ -816,7 +816,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
 
         public void setDir (boolean state) {
           if (enabled) {
-            setToolTipText(state ? "OUT" : "IN");
+            setToolTipText(state ? "OUTPUT" : "INPUT");
           } else {
             setToolTipText("");
           }
@@ -1100,26 +1100,35 @@ public class ListingPane extends JPanel {   // https://regex101.com
           printUpdi("getStatusRegister()");
           int sp = debugger.getStackPointer();
           printUpdi("getStackPointer()");
+          //                             Offset = 8          Offset = 0
+          // PORTA Base = 0x0400, PORTA.IN = 0x0408, PORTA.DIR = 0x0400
+          // PORTB Base = 0x0420, PORTB.IN = 0x0428, PORTB.DIR = 0x0420
+          // PORTC Base = 0x0440, PORTC.IN = 0x0448, PORTC.DIR = 0x0440
+          //
+          // PORTA.PINnCTRL Base = 0x0410 + pin number (set bit 3 to 1 to enable pullup, bits 0-3 for input/sense config)
+          // PORTB.PINnCTRL Base = 0x0430 + pin number
+          // PORTC.PINnCTRL Base = 0x0450 + pin number
+          //
           boolean portAUsed = (portMask & 0xFF) != 0;
           if (portAUsed) {
-            vPrtA = debugger.readSRam(0x0002, 1)[0];         // PORTA.IN
-            printUpdi("readSRam(0x0002, 1) - PORTA.IN");
-            vDirA = debugger.readSRam(0x0000, 1)[0];         // PORTA.DIR
-            printUpdi("readSRam(0x0000, 1) - PORTA.DIR");
+            vPrtA = debugger.readSRam(0x0408, 1)[0];         // PORTA.IN
+            printUpdi("readSRam(0x0408, 1) - PORTA.IN");
+            vDirA = debugger.readSRam(0x0400, 1)[0];         // PORTA.DIR
+            printUpdi("readSRam(0x0400, 1) - PORTA.DIR");
           }
           boolean portBUsed = (portMask & 0xFF00) != 0;
           if (portBUsed) {
-            vPrtB = debugger.readSRam(0x0006, 1)[0];         // PORTB.IN
-            printUpdi("readSRam(0x0006, 1) - PORTB.IN ");
-            vDirB = debugger.readSRam(0x0004, 1)[0];         // PORTB.DIR
-            printUpdi("readSRam(0x0004, 1) - PORTB.DIR");
+            vPrtB = debugger.readSRam(0x0428, 1)[0];         // PORTB.IN
+            printUpdi("readSRam(0x0428, 1) - PORTB.IN ");
+            vDirB = debugger.readSRam(0x0420, 1)[0];         // PORTB.DIR
+            printUpdi("readSRam(0x0420, 1) - PORTB.DIR");
           }
           boolean portCUsed = (portMask & 0xFF0000) != 0;
           if (portCUsed) {
-            vPrtC = debugger.readSRam(0x000A, 1)[0];         // PORTC.IN
-            printUpdi("readSRam(0x000A, 1) - PORTC.IN");
-            vDirC = debugger.readSRam(0x0008, 1)[0];         // PORTC.DIR
-            printUpdi("readSRam(0x0008, 1) - PORTC.DIR");
+            vPrtC = debugger.readSRam(0x0448, 1)[0];         // PORTC.IN
+            printUpdi("readSRam(0x0448, 1) - PORTC.IN");
+            vDirC = debugger.readSRam(0x0440, 1)[0];         // PORTC.DIR
+            printUpdi("readSRam(0x0440, 1) - PORTC.DIR");
           }
           SwingUtilities.invokeLater(() -> {
             setRegs(regs, showChange);

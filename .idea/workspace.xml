@@ -14,9 +14,7 @@
   <component name="ChangeListManager">
     <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/MegaTinyIDE Debugging.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/MegaTinyIDE Debugging.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/EDBG.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/EDBG.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.MD" beforeDir="false" afterPath="$PROJECT_DIR$/README.MD" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ListingPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ListingPane.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -52,27 +50,27 @@
     <property name="two.files.diff.last.used.folder" value="$PROJECT_DIR$/toolchains-7.3.0/avr-gcc-7.3.0-atmel3.6.1-arduino5-x86_64-apple-darwin14/avr" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/resources/test" />
+    </key>
     <key name="MoveMembersDialog.RECENTS_KEY">
       <recent name="Utility" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/images" />
+      <recent name="$PROJECT_DIR$/resources/documentation/images" />
+      <recent name="$PROJECT_DIR$/docs" />
+      <recent name="$PROJECT_DIR$/resources/images" />
+      <recent name="$PROJECT_DIR$/resources/toolchains" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="" />
       <recent name="tools" />
       <recent name="test" />
     </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/resources/documentation/images" />
-      <recent name="$PROJECT_DIR$/images" />
-      <recent name="$PROJECT_DIR$/docs" />
-      <recent name="$PROJECT_DIR$/resources/images" />
-      <recent name="$PROJECT_DIR$/resources/toolchains" />
-    </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="tools" />
       <recent name="" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/resources/test" />
     </key>
   </component>
   <component name="RunManager" selected="Application.MegaTinyIDE">
@@ -143,13 +141,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1596315993204</updated>
-    </task>
-    <task id="LOCAL-00027" summary="Revise README">
-      <created>1603413468829</created>
-      <option name="number" value="00027" />
-      <option name="presentableId" value="LOCAL-00027" />
-      <option name="project" value="LOCAL" />
-      <updated>1603413468829</updated>
     </task>
     <task id="LOCAL-00028" summary="Revise README">
       <created>1603414185451</created>
@@ -487,7 +478,14 @@
       <option name="project" value="LOCAL" />
       <updated>1607292669308</updated>
     </task>
-    <option name="localTasksCounter" value="76" />
+    <task id="LOCAL-00076" summary="Rework debugger interface">
+      <created>1607376592717</created>
+      <option name="number" value="00076" />
+      <option name="presentableId" value="LOCAL-00076" />
+      <option name="project" value="LOCAL" />
+      <updated>1607376592717</updated>
+    </task>
+    <option name="localTasksCounter" value="77" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -515,7 +513,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Misc fixes and improvements" />
     <MESSAGE value="Add AVR instruction tooltips to Listing Pane" />
     <MESSAGE value="Bug and regression fix (breakpoints offset)" />
     <MESSAGE value="Revise Logo file" />
@@ -540,7 +537,8 @@
     <MESSAGE value="Center line number when stepping in debugger" />
     <MESSAGE value="Tooltip now shows IN/OUT state of PORTs" />
     <MESSAGE value="Misc code cleanup" />
-    <option name="LAST_COMMIT_MESSAGE" value="Misc code cleanup" />
+    <MESSAGE value="Rework debugger interface" />
+    <option name="LAST_COMMIT_MESSAGE" value="Rework debugger interface" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

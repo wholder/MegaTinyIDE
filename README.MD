@@ -21,7 +21,7 @@ While more testing is needed, I am declaring the code as operational (Beta statu
   - A Console Monitor feature called OCD Messaging that can send text message to the debugger over UPDI
   - **Native Versions with an embedded JVM are now available (see "[Releases](https://github.com/wholder/MegaTinyIDE/releases)")**
 
-### Debugging Support
+### Debugging Interface
 
 <p align="center"><img src="/images/MegaTinyIDE%20Debugging.png"></p>
 
