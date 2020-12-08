@@ -1,4 +1,3 @@
-
 <p align="center"><img src="/images/MegaTinyIDE%20Screenshot.png"></p>
 
 ## MegaTinyIDE (for 64 bit macOS, Windows & Linux)
@@ -19,6 +18,7 @@ While more testing is needed, I am declaring the code as operational (Beta statu
   - Built-in Pinout Reference Diagrams (with pin-level tooltips)
   - Pop up AVR Instruction Guide tooltips in Listing Pane (hover over instruction name)
   - A Console Monitor feature called OCD Messaging that can send text message to the debugger over UPDI
+  - Arduino-style coding using the [megaTinyCore](https://github.com/SpenceKonde/megaTinyCore) library by Spence Konde (aka Dr. Azzy) See: `arduino412.c` in `examples` folder
   - **Native Versions with an embedded JVM are now available (see "[Releases](https://github.com/wholder/MegaTinyIDE/releases)")**
 
 ### Debugging Interface
@@ -53,7 +53,6 @@ MegaTinyIDE's built-in Fuse Editor lets you read the current fuse setting from a
 
   - Improving the built-in documentation
   - More example code
-  - Arduino-style coding using the [ATTinyCore](https://github.com/SpenceKonde/ATTinyCore) library by Spence Konde (aka Dr. Azzy)
   - Support for other UPDI-based programmers (and possibly debugging)
 
 ### Universal JAR File supports 64-bit Mac, Windows and Linux

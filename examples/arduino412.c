@@ -1,16 +1,18 @@
 #pragma chip attiny412
 
-#include "Arduino.h"
+#include "Arduino.h"    // Use SpenceKonde's megaTinyCore Arduino-like libraries
+
+#define LED   PIN_PA3
 
 void setup() {
   // put your setup code here, to run once:
-  pinMode(0, OUTPUT);
+  pinMode(LED, OUTPUT);
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  digitalWrite(0, HIGH);
+  digitalWrite(LED, HIGH);
   delay(500);
-  digitalWrite(0, LOW);
+  digitalWrite(LED, LOW);
   delay(500);
 }
