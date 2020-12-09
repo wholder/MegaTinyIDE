@@ -18,7 +18,7 @@ While more testing is needed, I am declaring the code as operational (Beta statu
   - Built-in Pinout Reference Diagrams (with pin-level tooltips)
   - Pop up AVR Instruction Guide tooltips in Listing Pane (hover over instruction name)
   - A Console Monitor feature called OCD Messaging that can send text message to the debugger over UPDI
-  - Arduino-style coding using the [megaTinyCore](https://github.com/SpenceKonde/megaTinyCore) library by Spence Konde (aka Dr. Azzy) See: `arduino412.c` in `examples` folder
+  - Preliminary support for Arduino-style coding using the [megaTinyCore](https://github.com/SpenceKonde/megaTinyCore) library by Spence Konde (aka Dr. Azzy) See: `arduino412.c` in `examples` folder
   - **Native Versions with an embedded JVM are now available (see "[Releases](https://github.com/wholder/MegaTinyIDE/releases)")**
 
 ### Debugging Interface
