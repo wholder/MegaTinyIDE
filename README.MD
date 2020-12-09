@@ -6,7 +6,7 @@ MegaTinyIDE is a simple, GNU-based IDE that's derived from another project of mi
 
 ### Project status
 
-While more testing is needed, I am declaring the code as operational (Beta status) on Mac, Windows 10 and Linux.  However, MegaTinyIDE is still in development and likely has more than a few bugs, or rough edges.
+While more testing is needed, I am declaring the code as operational (Beta status) on Mac, Windows 10 and Linux.  However, MegaTinyIDE is still in development and likely has more than a few bugs, or rough edges.  As this is a one man project, I sometimes struggle to do adequate testing (especially on Windows and Linux) when I release a new version. If you a spot a problem, [please post in Issue](https://github.com/wholder/MegaTinyIDE/issues) so I can investigate.  If you have questions, or suggestions, [please post in Discussions](https://github.com/wholder/MegaTinyIDE/discussions)
 
 ### New Features
 
@@ -54,15 +54,13 @@ MegaTinyIDE's built-in Fuse Editor lets you read the current fuse setting from a
   - Improving the built-in documentation
   - More example code
   - Support for other UPDI-based programmers (and possibly debugging)
+  - Support for additional tabs to allow opening additional source or header files
 
 ### Universal JAR File supports 64-bit Mac, Windows and Linux
 
 The Native code releases of MegaTinyIDE, which include an OpenJDM JVM are recommended (see "Releases" near the top right of this page.) However, I also maintain a pre-built, executable universal JAR file in the [out/artifacts/MegaTinyIDE_jar](https://github.com/wholder/MegaTinyIDE/blob/master/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar) folder.  This version is designed to run on 64 bit versions of macOs, Windows 10 and Linux as long as you have Java 8, or later installed on your system.
 
 To use the universal version on a Mac, simply double click the MegaTinyIDE.jar file to run it once you've downloaded it, although you'll probably have to right click and select "Open" the  first time you run MegaTinyIDE due to the Mac OS X security check and the fact that I'm currently unable to digitally sign the JAR file.  You should also be able to double click and run using Windows, but some versions of Windows may require you to [enable this ability](https://www.addictivetips.com/windows-tips/run-a-jar-file-on-windows/) first.  You'll need to give the .jar file RUN permission to execute on Linux and using a USB-based device programmer, such as the AVRISP MkII, may also require you to [create an install a rules file](https://stackoverflow.com/questions/5412727/avrisp-mkii-doesnt-work-with-avrdude-on-linux).  The needed GNU-based AVR toolchains are built into MegaTinyIDE and the appropriate toolchain will be automatically installed when you run the MegaTinyIDE JAR file.
-
-### Help Requested
-So far this is just a one man project and I struggle at times to do adequate testing, especially on Windows and Linux, when I release a new version. So, if anyone spots a problem, or has a question or a suggestion, [please post an issue](https://github.com/wholder/MegaTinyIDE/issues) so I can investigate.  You can also email me at questions4wayne at gmail dot com.
 
 ### Requirements
 I suggest using [Java 8 JRE](https://www.java.com) or JDK, or later for MegaTinyIDE, but the code also seems to run under the OpenJDK Java on Linux.  Note: I wrote MegaTinyIDE on a Mac Pro using the _Community_ version of [IntelliJ IDEA from JetBrains](https://www.jetbrains.com/idea/) and OS X is the only environment where I have extensively tested and used MegaTinyIDE .  I've included GNU/AVR toolchains for Mac and 64 bit Windows and 64 bit Linux, but have not extensively tested the code under Windows or Linux.  Feel free to report any issues you discover.  I'll do my best, when time permits, to investigate them, but I cannot guarantee fixes, timely or otherwise.
