@@ -26,6 +26,7 @@ GEN_PROTOS:<b>Enable Automatic Prototype Generation</b><br/>When this experiment
 automatically generate function prototypes for all functions in the main source file before running the compiler.
 DEV_ONLY:<b>Enable Developer-Only Features</b><br/>When enabled, some otherwise hidden features used to test code are made available.
 UPDI_DECODE:<b>Enable UPDI Decoding</b><br/>When enabled, UPDI messages are decoded to Info Pane.  You must restart MegaTinyIDE before it will take effect.
+SHOW_DEPENDENCIES:<b>Shoes Dependencies</b><br/>When enabled, Shows what files preprocessor identifies as included files.
 INTERLEAVE:<b>Interleave Code</b><br/>When enabled, display source code intermixed with disassembly
 SYMTABLE:<b>Symbol Table</b><br/>When enabled, include symbol table in listing
 VECNAMES:<b>Vector Names</b><br/>When enabled, add Vector Names in listing

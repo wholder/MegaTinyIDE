@@ -29,7 +29,20 @@ import java.util.stream.Stream;
 class MegaTinyCompiler {
   private static final String fileSep = System.getProperty("file.separator");
 
-  private static final String prePro =  "avr-g++ " +                  // https://linux.die.net/man/1/avr-g++
+  private static final String preProC = "avr-gcc " +                  // https://linux.die.net/man/1/avr-g++
+                                        "-w " +                       // Inhibit all warning messages
+                                        "-E " +                       // Preprocess only
+                                        "-MMD " +                     // Generate dependencies to Sketch.inc
+                                        "-MF *[TDIR]**[BASE]*.inc " + //   " "
+                                        "-DF_CPU=*[CLOCK]* " +        // Create #define for F_CPU
+                                        "-mmcu=*[CHIP]* " +           // Select CHIP microcontroller type
+                                        "-DARDUINO_ARCH_MEGAAVR " +   // #define ARDUINO_ARCH_AVR
+                                        "-DMILLIS_USE_TIMERD0 " +     // #define MILLIS_USE_TIMERD0
+                                        "-I *[TDIR]* " +              // Also search in temp directory for header files
+                                        "-I *[IDIR]* " +              // Also search in user's src directory for header files
+                                        "*[SDIR]**[FILE]* ";          // Source file is temp/FILE.x
+
+  private static final String preProCp = "avr-g++ " +                 // https://linux.die.net/man/1/avr-g++
                                         "-w " +                       // Inhibit all warning messages
                                         "-x c++ " +                   // Assume c++ file
                                         "-E " +                       // Preprocess only
@@ -151,7 +164,7 @@ class MegaTinyCompiler {
     }
   }
 
-  static Map<String, String> compile (String src, Map<String, String> tags, Preferences prefs, JFrame tinyIde) throws Exception {
+  static Map<String, String> compile (String src, Map<String, String> tags, Preferences prefs, JFrame ide) throws Exception {
     String srcFile = tags.get("EFILE");
     String srcDir = srcFile != null ? (new File(srcFile)).getParent() + "/" : null;
     String srcName = tags.get("FNAME");
@@ -226,7 +239,7 @@ class MegaTinyCompiler {
     if (parms.size() > 0) {
       ParmDialog.Item[] parmSet = parms.toArray(new ParmDialog.Item[0]);
       ParmDialog dialog = (new ParmDialog("Edit Parameters", parmSet, new String[] {"OK", "Cancel"}));
-      dialog.setLocationRelativeTo(tinyIde);
+      dialog.setLocationRelativeTo(ide);
       dialog.setVisible(true);              // Note: this call invokes dialog
       if (dialog.wasPressed()) {
         for (ParmDialog.Item parm : parmSet) {
@@ -260,13 +273,14 @@ class MegaTinyCompiler {
       }
       List<CompFile> compFiles = new ArrayList<>();
       try {
-        // Preprocess .cpp source code using GNU c++ compiler
+        // Preprocess source code using GNU c or c++ compiler
         tags.put("IDIR", srcDir);     // User #include directory
         tags.put("TDIR", tmpDir);     // Temp directory
         tags.put("SDIR", tmpDir);     // User file directory
         tags.put("FILE", srcName);    // Source file name
         tags.put("BASE", srcBase);    // Source file name
-        String cmd = Utility.replaceTags(tmpExe + "bin" + fileSep + prePro, tags);
+        boolean preCpp = srcName.toLowerCase(Locale.ROOT).endsWith(".cpp");
+        String cmd = Utility.replaceTags(tmpExe + "bin" + fileSep + (preCpp ? preProCp : preProC), tags);
         System.out.println("Preprocess: " + cmd);
         Process proc = Runtime.getRuntime().exec(cmd);
         String ret = Utility.runCmd(proc);
@@ -287,6 +301,16 @@ class MegaTinyCompiler {
                 compFiles.add(new CompFile(srcDir, tmpDir, fName));
               }
             }
+          }
+        }
+        if (prefs.getBoolean("show_dependencies", false)) {
+          System.out.println("Dependencies:");
+          for (String inc : includes) {
+            int idx = inc.lastIndexOf("/");
+            if (idx >= 0) {
+              inc = inc.substring(idx + 1);
+            }
+            System.out.println("  " + inc);
           }
         }
         if (preOnly || genProto) {
@@ -359,7 +383,7 @@ class MegaTinyCompiler {
         return tags;
       }
       // Compile source code and add in included code files as they are discovered
-      progress = new MegaTinyIDE.ProgressBar(tinyIde, "Compiling and Building");
+      progress = new MegaTinyIDE.ProgressBar(ide, "Compiling and Building");
       StringBuilder linkList = new StringBuilder();
       progress.setMaximum(compFiles.size());
       int progCount = 0;

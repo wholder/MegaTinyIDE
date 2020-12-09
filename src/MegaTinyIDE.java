@@ -262,6 +262,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     prefs.putBoolean("enable_preprocessing", prefs.getBoolean("enable_preprocessing", false));
     prefs.putBoolean("developer_features", prefs.getBoolean("developer_features", false));
     prefs.putBoolean("decode_updi", prefs.getBoolean("decode_updi", false));
+    prefs.putBoolean("show_dependencies", prefs.getBoolean("show_dependencies", false));
   }
 
   private JFileChooser getFileChooser () {
@@ -342,6 +343,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
       items.add(new ParmDialog.Item("Enable Preprocessing (Developer)", "*[PREPROCESS]*", "enable_preprocessing", false));
       items.add(new ParmDialog.Item("Enable Developer Features", "*[DEV_ONLY]*", "developer_features", false));
       items.add(new ParmDialog.Item("Decode UPDI Commands", "*[UPDI_DECODE]*", "decode_updi", false));
+      items.add(new ParmDialog.Item("Show Dependencies", "*[SHOW_DEPENDENCIES]*", "show_dependencies", false));
     }
     ParmDialog.Item[] parmSet = items.toArray(new ParmDialog.Item[0]);
     ParmDialog dialog = (new ParmDialog("Edit Preferences", parmSet, new String[] {"Save", "Cancel"}));

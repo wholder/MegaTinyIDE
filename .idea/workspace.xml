@@ -13,7 +13,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/README.MD" beforeDir="false" afterPath="$PROJECT_DIR$/README.MD" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/dialoginfo.props" beforeDir="false" afterPath="$PROJECT_DIR$/resources/dialoginfo.props" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MegaTinyCompiler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MegaTinyCompiler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MegaTinyIDE.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MegaTinyIDE.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -139,13 +142,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1596315993204</updated>
-    </task>
-    <task id="LOCAL-00032" summary="Fix regression of toolchain that broke compilation">
-      <created>1603509564666</created>
-      <option name="number" value="00032" />
-      <option name="presentableId" value="LOCAL-00032" />
-      <option name="project" value="LOCAL" />
-      <updated>1603509564666</updated>
     </task>
     <task id="LOCAL-00033" summary="Revise README">
       <created>1603509822556</created>
@@ -483,7 +479,14 @@
       <option name="project" value="LOCAL" />
       <updated>1607472159442</updated>
     </task>
-    <option name="localTasksCounter" value="81" />
+    <task id="LOCAL-00081" summary="Revise README">
+      <created>1607472264904</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1607472264904</updated>
+    </task>
+    <option name="localTasksCounter" value="82" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
