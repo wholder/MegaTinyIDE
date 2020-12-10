@@ -712,7 +712,11 @@ public class ListingPane extends JPanel {   // https://regex101.com
       for (DebugListener debugListener : debugListeners) {
         debugListener.debugState(active);
       }
-      ide.appendToInfoPane("Debugger " + (active ? "Attached" : "Detached") + "\n");
+      if (active) {
+        ide.appendToInfoPane("Debugger Attached (" + (EDBG.UPDIClock * 1000) + " bps)\n");
+      } else {
+        ide.appendToInfoPane("Debugger Detached\n");
+      }
     }
 
     class HexPanel extends JPanel {

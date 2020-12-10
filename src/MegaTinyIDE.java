@@ -874,15 +874,6 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     // Add "Font Size" Menu with submenu
     settings.add(codePane.getFontSizeMenu());
     settings.addSeparator();
-    // Add Serial Port Menu, if enabled
-    if (prefs.getBoolean("decode_updi", false)) {
-      jPort.setParameters (EDBG.UPDIClock * 1000, 8, 2, SerialPort.PARITY_EVEN);
-      JMenu serialPort = new JMenu("Serial Port");
-      serialPort.add(jPort.getPortMenu());
-      //serialPort.add(jPort.getBaudMenu());
-      settings.add(serialPort);
-      settings.addSeparator();
-    }
     // Add "Programmer" Menu
     progMenu = new JMenu("Programmer");
     progVidPid = prefs.get("progVidPid", "");
@@ -913,6 +904,16 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
       }
     });
     settings.add(progMenu);
+    // Add Serial Port Menu, if "decode_updi" preference enabled
+    jPort.setParameters (EDBG.UPDIClock * 1000, 8, 2, SerialPort.PARITY_EVEN);
+    JMenu serialPort = new JMenu("Serial Port");
+    serialPort.add(jPort.getPortMenu());
+    serialPort.setVisible(prefs.getBoolean("decode_updi", false));
+    prefs.addPreferenceChangeListener(evt -> {
+      serialPort.setVisible(prefs.getBoolean("decode_updi", false));
+      jPort.setPort(prefs.get("serial.port", ""));
+    });
+    settings.add(serialPort);
     settings.addSeparator();
     // Add Debugger Menu Item
     JMenuItem debugger = new JCheckBoxMenuItem("Show Debugger");
