@@ -32,12 +32,11 @@ class MegaTinyCompiler {
   private static final String preProC = "avr-gcc " +                  // https://linux.die.net/man/1/avr-g++
                                         "-w " +                       // Inhibit all warning messages
                                         "-E " +                       // Preprocess only
-                                        "-MMD " +                     // Generate dependencies to Sketch.inc
+                                        "-MMD " +                     // Generate dependencies for main source file
                                         "-MF *[TDIR]**[BASE]*.inc " + //   " "
                                         "-DF_CPU=*[CLOCK]* " +        // Create #define for F_CPU
                                         "-mmcu=*[CHIP]* " +           // Select CHIP microcontroller type
-                                        "-DARDUINO_ARCH_MEGAAVR " +   // #define ARDUINO_ARCH_AVR
-                                        "-DMILLIS_USE_TIMERD0 " +     // #define MILLIS_USE_TIMERD0
+                                        "*[ARDUINO]* " +              // #defines for Arduino code
                                         "-I *[TDIR]* " +              // Also search in temp directory for header files
                                         "-I *[IDIR]* " +              // Also search in user's src directory for header files
                                         "*[SDIR]**[FILE]* ";          // Source file is temp/FILE.x
@@ -46,12 +45,11 @@ class MegaTinyCompiler {
                                         "-w " +                       // Inhibit all warning messages
                                         "-x c++ " +                   // Assume c++ file
                                         "-E " +                       // Preprocess only
-                                        "-MMD " +                     // Generate dependencies to Sketch.inc
+                                        "-MMD " +                     // Generate dependencies for main source file
                                         "-MF *[TDIR]**[BASE]*.inc " + //   " "
                                         "-DF_CPU=*[CLOCK]* " +        // Create #define for F_CPU
                                         "-mmcu=*[CHIP]* " +           // Select CHIP microcontroller type
-                                        "-DARDUINO_ARCH_MEGAAVR " +   // #define ARDUINO_ARCH_AVR
-                                        "-DMILLIS_USE_TIMERD0 " +     // #define MILLIS_USE_TIMERD0
+                                        "*[ARDUINO]* " +              // #defines for Arduino code
                                         "-I *[TDIR]* " +              // Also search in temp directory for header files
                                         "-I *[IDIR]* " +              // Also search in user's src directory for header files
                                         "*[SDIR]**[FILE]* ";          // Source file is temp/FILE.x
@@ -71,13 +69,12 @@ class MegaTinyCompiler {
                                         "-DLTO_ENABLED " +            // ??
                                         "-mmcu=*[CHIP]* " +           // Select CHIP microcontroller type
                                         "-DF_CPU=*[CLOCK]* " +        // Create #define for F_CPU
-                                        "-DARDUINO_ARCH_MEGAAVR " +   // #define ARDUINO_ARCH_AVR
-                                        "-DMILLIS_USE_TIMERD0 " +     // #define MILLIS_USE_TIMERD0
+                                        "*[ARDUINO]* " +              // #defines for Arduino code
                                         "*[DEFINES]* " +              // Add in conditional #defines, if any
                                         "-I *[TDIR]* " +              // Also search in temp directory for header files
                                         "-I *[IDIR]* " +              // Also search in user directory for header files
-                                        "*[SDIR]**[FILE]* " +        // Source file is temp/FILE.x
-                                        "-o *[TDIR]**[FILE]*.o ";    // Output to file temp/FILE.x.o
+                                        "*[SDIR]**[FILE]* " +         // Source file is temp/FILE.x
+                                        "-o *[TDIR]**[FILE]*.o ";     // Output to file temp/FILE.x.o
 
   private static final String compC = "avr-gcc " +                    // https://linux.die.net/man/1/avr-gcc
                                         "-c " +                       // Compile but do not link
@@ -91,8 +88,7 @@ class MegaTinyCompiler {
                                         "-DLTO_ENABLED " +            // ??
                                         "-DF_CPU=*[CLOCK]* " +        // Create #define for F_CPU
                                         "-mmcu=*[CHIP]* " +           // Select CHIP microcontroller type
-                                        "-DARDUINO_ARCH_MEGAAVR " +   // #define ARDUINO_ARCH_AVR
-                                        "-DMILLIS_USE_TIMERD0 " +     // #define MILLIS_USE_TIMERD0
+                                        "*[ARDUINO]* " +              // #defines for Arduino code
                                         "*[DEFINES]* " +              // Add in conditional #defines, if any
                                         "-fno-fat-lto-objects " +     //
                                         "-I *[TDIR]* " +              // Also search in temp directory for header files
@@ -108,8 +104,7 @@ class MegaTinyCompiler {
                                         "-DLTO_ENABLED " +            // ??
                                         "-DF_CPU=*[CLOCK]* " +        // Create #define for F_CPU
                                         "-mmcu=*[CHIP]* " +           // Select CHIP microcontroller type
-                                        "-DARDUINO_ARCH_MEGAAVR " +   // #define ARDUINO_ARCH_AVR
-                                        "-DMILLIS_USE_TIMERD0 " +     // #define MILLIS_USE_TIMERD0
+                                        "*[ARDUINO]* " +              // #defines for Arduino code
                                         "*[DEFINES]* " +              // Add in conditional #defines, if any
                                         "-I *[TDIR]* " +              // Also search in temp directory for header files
                                         "-I *[IDIR]* " +              // Also search in user directory for header files
@@ -249,6 +244,10 @@ class MegaTinyCompiler {
         return null;
       }
     }
+    boolean ardiuno = isArduino(src);
+    if (ardiuno) {
+      tags.put("ARDUINO", "-DARDUINO_ARCH_MEGAAVR -DMILLIS_USE_TIMERNONE -DNO_EXTERNAL_I2C_PULLUP -DNEOPIXELPORT=VPORTA.OUT -DUARTBAUD5V ");
+    }
     tags.put("CHIP", chip);
     tags.put("INTLV", prefs.getBoolean("interleave", true) ? "-S" : "");
     tags.put("CLOCK", clock != null ? clock : "20000000");
@@ -266,7 +265,6 @@ class MegaTinyCompiler {
       // Copy "variant" files into tmpDir so compiler can reference them
       Utility.copyResourcesToDir(chipInfo.variant, tmpDir);
       // If Arduino project, copy needed files
-      boolean ardiuno = isArduino(src);
       if (ardiuno) {
         System.out.println("Compile Arduino project");
         Utility.copyResourcesToDir("arduino", tmpDir);

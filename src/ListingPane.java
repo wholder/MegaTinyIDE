@@ -881,10 +881,11 @@ public class ListingPane extends JPanel {   // https://regex101.com
               int index = row * 16 + col;
               field.addValueHandler(newVal -> {
                 try {
-                  System.out.printf("%s: %d , %d = 0x%02X\n", title, index, fieldWidth, newVal);
+                  //System.out.printf("%s: %d , %d = 0x%02X\n", title, index, fieldWidth, newVal);
                   int oldVal = field.value;
                   if ("Registers".equals(title)) {
                     debugger.writeSRam(index, new byte[] {(byte) newVal});
+                    printUpdi(String.format("writeSRam(0x%04X, 0x%02X)", index, newVal));
                     regs.setValue(index, newVal, true);
                     switch (index) {
                     case 26:
@@ -913,28 +914,35 @@ public class ListingPane extends JPanel {   // https://regex101.com
                       break;
                     case 1:   // Stack Pointer
                       debugger.writeSRam(0x003D, new byte[] {Utility.lsb(newVal), Utility.msb(newVal)});
+                      printUpdi(String.format("writeSRam(0x003D, 0x%04X)", newVal));
                       break;
                     case 2:   // X Register (regs 27:26)
                       debugger.writeSRam(26, new byte[] {Utility.lsb(newVal), Utility.msb(newVal)});
+                      printUpdi(String.format("writeSRam(0x%04X, 0x%02X)", 26, newVal));
                       regs.setValue(26, Utility.lsb(newVal), true);
                       regs.setValue(27, Utility.msb(newVal), true);
                       break;
                     case 3:   // Y Register (regs 29:28)
                       debugger.writeSRam(28, new byte[] {Utility.lsb(newVal), Utility.msb(newVal)});
+                      printUpdi(String.format("writeSRam(0x%04X, 0x%02X)", 28, newVal));
                       regs.setValue(28, Utility.lsb(newVal), true);
                       regs.setValue(29, Utility.msb(newVal), true);
                       break;
                     case 4:   // Z Register (regs 31:30)
                       debugger.writeSRam(30, new byte[] {Utility.lsb(newVal), Utility.msb(newVal)});
+                      printUpdi(String.format("writeSRam(0x%04X, 0x%02X)", 30, newVal));
                       regs.setValue(30, Utility.lsb(newVal), true);
                       regs.setValue(31, Utility.msb(newVal), true);
                       break;
                     }
                     sRegs.setValue(index, newVal, true);
                   } else if ("Flags".equals(title)) {
+                    oldVal = debugger.getStatusRegister();
+                    printUpdi("getStatusRegister()");
                     int bit = 1 << (7 - index);
                     int tmp = (oldVal & ~bit) | (newVal << (7 - index));
                     debugger.writeStatusRegister((byte) tmp);
+                    printUpdi(String.format("writeStatusRegister(0x%02X)", tmp));
                     setValue(index, newVal, true);
                   }
                 } catch (Exception ex) {

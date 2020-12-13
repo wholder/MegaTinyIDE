@@ -8,11 +8,81 @@ import java.io.PrintStream;
 
 public class UPDIDecoder {
   private static final String[]   ptrs = {"*(ptr)", "*(ptr++)", "ptr", "err"};
-  private static final String[]   regs = {"STATUSA", "STATUSB", "CTRLA", "CTRLB", "Reserved_4", "Reserved_5", "Reserved_6",
+  private static final String[]   updi = {"STATUSA", "STATUSB", "CTRLA", "CTRLB", "Reserved_4", "Reserved_5", "Reserved_6",
                                           "ASI_KEY_STATUS", "ASI_RESET_REQ", "ASI_CTRLA", "ASI_SYS_CTRLA", "ASI_SYS_STATUS",
                                           "ASI_CRC_STATUS", "Reserved_D", "Reserved_E", "Reserved_F"};
-
   /*
+   *  UPDI Registers
+   *
+   *  Off   Register name                 Description
+   *  0x00  UPDI.STATUSA
+   *          Bits 7-4    UPDIREV         Revision of the current UPDI implementation.
+   *          Bits 3-0    Undefined
+   *
+   *  0x01  UPDI.STATUSB
+   *          Bits 7-3    Undefined
+   *          Bits 2-0    PESIG           UPDI Error Signature (0 = No error, 1 = Parity error, 2 = Frame error, 3 = Access Layer Time-Out Error
+   *                                                            4 = Clock Recovery error, 5 = reserved, 6 = Bus error, 7 = Contention error)
+   *
+   *  0x02  UPDI.CTRLA
+   *          Bit 7       IBDLY           Inter-Byte Delay Enable
+   *          Bit 6       Undefined
+   *          Bit 5       PARD            Parity Disable
+   *          Bit 4       DTD             Disable Time-Out Detection
+   *          Bit 3       RSD             Response Signature Disable
+   *          Bits 2-0    GTVAL           Guard Time Value (0 = 128 cycles (default), 1 = 54, 2 = 32, 3 = 16, 4 = 8, 5 = 4, 6 = 2, 7 = reserved)
+   *
+   *  0x03  UPDI.CTRLB
+   *          Bits 7-5    Undefined
+   *          Bit 4       NACKDIS         Disable NACK Response
+   *          Bit 3       CCDETDIS        Collision and Contention Detection Disable
+   *          Bit 2       UPDIDIS         UPDI Disable
+   *
+   *  0x07  UPDI.ASI_KEY_STATUS
+   *          Bits 7-6    Undefined
+   *          Bit 5       UROWWRITE       User Row Write Key (UROWWRITE) Status (1 = key decoded, else 0)
+   *          Bit 4       NVMPROG         NVM Programming Key (NVMPROG) Status (1 = key decoded, else 0)
+   *          Bit 3       CHIPERASE       Chip Erase Key (CHIPERASE) Status (1 = key decoded, else 0)
+   *          Bits 2-0    Undefined
+   *
+   *  0x05  Reserved_4                    Used by Attach Debugger and stepTarget()
+   *
+   *  0x06  Reserved_5                    Used by Attach Debugger, resetTarget and stepTarget()
+   *
+   *  0x07  Reserved_6
+   *
+   *  0x08  UPDI.ASI_RESET_REQ
+   *          Bits 7-0    RSTREQ          Reset Request (0x00 = RUN, 0x59 = Normal Reset, else Reset condition is cleared)
+   *
+   *  0x09  UPDI.ASI_CTRLA
+   *          Bits 7-2    Undefined
+   *          Bits 1-0    UPDICLKDIV      UPDI Clock Divider Select (0 = reseved, 1 = 16 MHz, 2 = 8 MHz, 3 = 4 MHz)
+   *
+   *  0x0A  UPDI.ASI_SYS_CTRLA
+   *          Bits 7-2    Undefined
+   *          Bit 1       UROWWRITE_FINAL User Row Programming Done, Writing ‘1’ starts programming the User Row Data to the Flash.
+   *          Bit 0       CLKREQ          Request System Clock (write 1 to resuest system clock, write 0 to lower clock request)
+   *
+   *  0x0B  UPDI.ASI_SYS_STATUS
+   *          Bits 7-6    Undefined
+   *          Bit 5       RSTSYS          System Reset Active (read only)
+   *          Bit 4       INSLEEP         System Domain in Sleep (read only)
+   *          Bit 3       NVMPROG         Start NVM Programming (read only)
+   *          Bit 2       UROWPROG        Start User Row Programming (read only)
+   *          Bit 1       Undefined
+   *          Bit 0       LOCKSTATUS      NVM Lock Status (0 = chip erase is done, 1 = device is locked)
+   *
+   *  0x0C  UPDI.ASI_CRC_STATUS
+   *          Bits 7-3    Undefined
+   *          Bits 2-0    CRC_STATUS      CRC Execution Status (0 = not enabled, 1 = busy, 2 = done with OK, 4 = done with FAIL, others reserved)
+   *
+   *  0x0D  Reserved_D
+   *
+   *  0x0E  Reserved_E
+   *
+   *  0x0F  Reserved_F
+   *
+   *
    *   Timing (based on default, 4 MHz UPDI clock)
    *      BREAK for RESET       - 10 - 200 uS
    *      BREAK end to SYNC     - SYNC must follow in less than 13.5ms
@@ -33,17 +103,7 @@ public class UPDIDecoder {
    *    Undocumented regs
    *      rsv4 - undocumented
    *      rsv5 - undocumented
-   *
-   *    ASI_SYS_STATUS
-   *      bit 0 - LOCKSTATUS      NVM Lock Status (1 = locked)
-   *      bit 1 - undocumented
-   *      bit 2 - UROWPROG        Start User Row Programming
-   *      bit 3 - NVMPROG         Start NVM Programming
-   *      bit 4 - INSLEEP         System Domain in Sleep
-   *      bit 5 - RSTSYS          System Reset Active
-   *      bit 6 - undocumented
-   *      bit 7 - undocumented
-   *
+   *   *
    *    KEY Activation Signatures (LSB to MSB)
    *      Chiperase       0x4E564D4572617365
    *      OCD             0x4F43442020202020
@@ -73,6 +133,16 @@ public class UPDIDecoder {
    *      SYSCFG_OCDMS  = 0x0F19  OCD Message Status
    *        bit 0 - OCD Message Read bit mask (1 = waiting for debugger to collect message)
    *
+   *  System Informtion Block
+   *    SIB = 0x74 0x69 0x6E 0x79 0x41 0x56 0x52 0x20 0x50 0x3A 0x30 0x44 0x3A 0x30 0x2D 0x33  -
+   *         't'  'i'  'n'  'y'  'A'  'V'  'R'  ' '  'P'  ':'  '0'  'D'  ':'  '0'  '-'  '3'
+   *          0    1    2    3    4    5    6    7    8    9   10   11   12   13   14   15
+   *    0-6 = Family ID     "tinyAVR"
+   *      7 = Reserved
+   *   8-10 = NVM Version   "P:0"
+   *  11-13 = OCD Version   "D:0"
+   *     14 = Reserved
+   *     15 = DBG_OSC_FREQ  "3"
    */
 
   public static ByteArrayOutputStream bbin = new ByteArrayOutputStream();
@@ -193,7 +263,7 @@ public class UPDIDecoder {
         case 0x80: {                          // LDCS (load)
           int reg = code & 0x0F;
           int data = read(bin);
-          out.printf("LDCS load from %s returns: 0x%02X\n", regs[reg], data);
+          out.printf("LDCS load from %s returns: 0x%02X\n", updi[reg], data);
         } break;
         case 0xA0: {                          // REPEAT
           repeat = read(bin);
@@ -202,7 +272,7 @@ public class UPDIDecoder {
         case 0xC0: {                          // STCS (store)
           int reg = code & 0x0F;
           int data = read(bin);
-          out.printf("  STCS store data 0x%02X into %s\n", data, regs[reg]);
+          out.printf("STCS store data 0x%02X into %s\n", data, updi[reg]);
         } break;
         case 0xE0: {                          // KEY
           boolean sib = (code & 0x04) != 0;
@@ -235,9 +305,6 @@ public class UPDIDecoder {
     }
     return bout.toString();
   }
-
-  //  SIB = 0x74 0x69 0x6E 0x79 0x41 0x56 0x52 0x20 0x50 0x3A 0x30 0x44 0x3A 0x30 0x2D 0x33  -
-  //         't'  'i'  'n'  'y'  'A'  'V'  'R'  ' '  'P'  ':'  '0'  'D'  ':'  '0'  '-'  '3'
 
 
   private static int getData (ByteArrayInputStream bin, int size) {
