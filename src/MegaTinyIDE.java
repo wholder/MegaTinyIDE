@@ -133,8 +133,8 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     return chipTypes.get(name);
   }
 
-  public String getProgVidPid () {
-    return progVidPid;
+  public EDBG.Programmer getSelectedProgrammer () {
+    return EDBG.getProgrammer(progVidPid);
   }
 
   static class MyTextPane extends JEditorPane {
@@ -729,7 +729,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     progFlash.addActionListener(e -> {
       if (avrChip != null && canProgram()) {
         ChipInfo info = chipTypes.get(avrChip);
-        EDBG.Programmer prog = EDBG.getProgrammer(progVidPid);
+        EDBG.Programmer prog = getSelectedProgrammer();
         if (prog != null) {
           try {
             Utility.CodeImage codeImg = Utility.parseIntelHex(hexPane.getText());
@@ -757,7 +757,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     readFuses.addActionListener(e -> {
       // Use chip type, if selected, else use attiny212 as proxy
       ChipInfo info = chipTypes.get(avrChip != null ? avrChip : "attiny212");
-      EDBG.Programmer prog = EDBG.getProgrammer(progVidPid);
+      EDBG.Programmer prog = getSelectedProgrammer();
       if (prog != null) {
         EDBG edbg = null;
         try {
@@ -812,7 +812,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     idTarget.addActionListener(e -> {
       // Use chip type, if selected, else use attiny212 as proxy
       ChipInfo info = chipTypes.get(avrChip != null ? avrChip : "attiny212");
-      EDBG.Programmer prog = EDBG.getProgrammer(progVidPid);
+      EDBG.Programmer prog = getSelectedProgrammer();
       if (prog != null) {
         EDBG edbg = null;
         try {

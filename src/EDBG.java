@@ -1,3 +1,4 @@
+import jssc.SerialPortException;
 import org.hid4java.HidDevice;
 import org.hid4java.HidManager;
 import org.hid4java.HidServices;
@@ -34,9 +35,9 @@ import java.util.*;
       0x0180  EVSYS       Event System
       0x01C0  CCL         Configurable Custom Logic
       0x0200  PORTMUX     Port Multiplexer
-      0x0400  PORTA       Port A Configuration Base
-      0x0420  PORTB       Port B Configuration Base
-      0x0440  PORTC       Port C Configuration Base
+      0x0400  PORTA       Port A Base
+      0x0420  PORTB       Port B Base
+      0x0440  PORTC       Port C Base
       0x0600  ADC0        Analog to Digital Converter/Peripheral Touch Controller
       0x0670  AC0         Analog Comparator
       0x0680  DAC0        Digital to Analog Converter
@@ -47,7 +48,8 @@ import java.util.*;
       0x0A40  TCA1        Timer/Counter Type B instance 0
       0x0A80  TCA2        Timer/Counter Type D instance 0
       0x0F00  SYSCFG      System Configuration
-      0x1000  NVMCTRL     Non Volatile Memory Controller
+      0x0F01  REVID       Device Revision ID Register ( 0x00 = A, 0x01 = B, etc.)
+      0x1000  NVMCTRL     Non Volatile Memory Controller Base
       0x1100  SIGROW      Signature Row
       0x1280  FUSES       Device specific fuses
       0x1300  USERROW     User Row
@@ -103,32 +105,36 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
   private boolean                             debugActive;
   private boolean                             programActive;
   private OcdListener                         ocdListener;
-  //                                                                ( prog/debug)
-  private static final int MEMTYPE_SRAM                   = 0x20;   // (--/RW) - Absolute SRAM address
-  private static final int MEMTYPE_EEPROM                 = 0x22;   // (RW/RW) - Absolute EEPROM address
-  private static final int MEMTYPE_APPL_FLASH             = 0xC0;   // (RW/RO) - Address from base 0x000000 if PROG_BASE set
-  private static final int MEMTYPE_BOOT_FLASH             = 0xC1;   // (RW/RO) - Address from base 0x000000 if PROG_BASE set
-  private static final int MEMTYPE_APPL_FLASH_ATOMIC      = 0xC2;   // (WR/--) - Address from base 0x000000 if PROG_BASE set
-  private static final int MEMTYPE_BOOT_FLASH_ATOMIC      = 0xC3;   // (WR/--) - Address from base 0x000000 if PROG_BASE set
-  private static final int MEMTYPE_EEPROM_ATOMIC          = 0xC4;   // (RW/RW) - Absolute EEPROM address
-  private static final int MEMTYPE_USER_SIGNATURE         = 0xC5;   // (RW/RW) - Absolute user signature address
-  private static final int MEMTYPE_CALIBRATION_SIGNATURE  = 0xC6;   // (RO/RO) - Absolute calibration signature address
-  private static final int MEMTYPE_FLASH_PAGE             = 0xB0;   // (RW/RO) - Address from base 0x000000 if PROG_BASE set
-  private static final int MEMTYPE_EEPROM_PAGE            = 0xB1;   // (RW/RW) - Absolute EEPROM address
-  private static final int MEMTYPE_FUSES                  = 0xB2;   // (RW/--) - Absolute fuse address (1 byte at a time)
-  private static final int MEMTYPE_LOCK_BITS              = 0xB3;   // (RW/RO) - Absolute lockbit address (1 byte at a time
-  private static final int MEMTYPE_SIGNATURE              = 0xB4;   // (RO/RO) - Absolute signature address
-  private static final int MEMTYPE_REGFILE                = 0xB8;   // (--/RW) - Address is from base 0x00
-  // System base addresses
-  private static final int SIGNATURES_BASE                = 0x1100; // SIGROW
-  private static final int PROD_SIGNATURES_BASE           = 0x1103;
-  private static final int EEPROM_BASE                    = 0x1400; // EEPROM
-  private static final int FUSES_BASE                     = 0x1280; // FUSES
-  private static final int LOCKBITS_BASE                  = 0x128A; // LOCKBITS
-  private static final int USER_SIGNATURES_BASE           = 0x1300; // USERROW
+  private final MegaTinyIDE                   ide;
+  private JSSCPort                            jPort;
+  private final ByteArrayOutputStream         rxOut = new ByteArrayOutputStream();
 
-  private static final int STACK_POINTER                  = 0x003D; // Stack Pointer offset
-  private static final int STATUS_REGISTER                = 0x003F; // Status Register (flags) offset
+  //                                                                ( prog/debug)
+  public static final int MEMTYPE_SRAM                   = 0x20;   // (--/RW) - Absolute SRAM address
+  public static final int MEMTYPE_EEPROM                 = 0x22;   // (RW/RW) - Absolute EEPROM address
+  public static final int MEMTYPE_APPL_FLASH             = 0xC0;   // (RW/RO) - Address from base 0x000000 if PROG_BASE set
+  public static final int MEMTYPE_BOOT_FLASH             = 0xC1;   // (RW/RO) - Address from base 0x000000 if PROG_BASE set
+  public static final int MEMTYPE_APPL_FLASH_ATOMIC      = 0xC2;   // (WR/--) - Address from base 0x000000 if PROG_BASE set
+  public static final int MEMTYPE_BOOT_FLASH_ATOMIC      = 0xC3;   // (WR/--) - Address from base 0x000000 if PROG_BASE set
+  public static final int MEMTYPE_EEPROM_ATOMIC          = 0xC4;   // (RW/RW) - Absolute EEPROM address
+  public static final int MEMTYPE_USER_SIGNATURE         = 0xC5;   // (RW/RW) - Absolute user signature address
+  public static final int MEMTYPE_CALIBRATION_SIGNATURE  = 0xC6;   // (RO/RO) - Absolute calibration signature address
+  public static final int MEMTYPE_FLASH_PAGE             = 0xB0;   // (RW/RO) - Address from base 0x000000 if PROG_BASE set
+  public static final int MEMTYPE_EEPROM_PAGE            = 0xB1;   // (RW/RW) - Absolute EEPROM address
+  public static final int MEMTYPE_FUSES                  = 0xB2;   // (RW/--) - Absolute fuse address (1 byte at a time)
+  public static final int MEMTYPE_LOCK_BITS              = 0xB3;   // (RW/RO) - Absolute lockbit address (1 byte at a time
+  public static final int MEMTYPE_SIGNATURE              = 0xB4;   // (RO/RO) - Absolute signature address
+  public static final int MEMTYPE_REGFILE                = 0xB8;   // (--/RW) - Address is from base 0x00
+  // System base addresses
+  public static final int SIGNATURES_BASE                = 0x1100; // SIGROW
+  public static final int PROD_SIGNATURES_BASE           = 0x1103;
+  public static final int EEPROM_BASE                    = 0x1400; // EEPROM
+  public static final int FUSES_BASE                     = 0x1280; // FUSES
+  public static final int LOCKBITS_BASE                  = 0x128A; // LOCKBITS
+  public static final int USER_SIGNATURES_BASE           = 0x1300; // USERROW
+
+  public static final int STACK_POINTER                  = 0x003D; // Stack Pointer offset
+  public static final int STATUS_REGISTER                = 0x003F; // Status Register (flags) offset
 
   private void debugPrint(String msg) {
     if (DEBUG_PRINT) {
@@ -176,7 +182,6 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
       this.serial = serial;
       this.release = release;
     }
-
   }
 
   static {
@@ -198,8 +203,46 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
     }
   }
 
+  public void printUpdi (String type) {
+    if (ide.decodeUpdi()) {
+      ide.infoPrintln(type);
+      // Allow time for final bytes to trickle into rxOut buffer
+      try {
+        Thread.sleep(100);
+      } catch (InterruptedException ex) {
+        // do nothing
+      }
+      byte[] temp = rxOut.toByteArray();
+      //Utility.printHex(temp);
+      String updi = UPDIDecoder.decode(temp);
+      ide.infoPrintln(updi);
+      rxOut.reset();
+    }
+  }
+
+
   EDBG (MegaTinyIDE ide, boolean program) {
-    Programmer prog = EDBG.getProgrammer(ide.getProgVidPid());
+    this.ide = ide;
+    if (ide.decodeUpdi()) {
+      jPort = ide.getSerialPort();
+      if (jPort != null) {
+        try {
+          jPort.open(new JSSCPort.RXEvent() {
+            @Override
+            public void rxChar (byte cc) {
+              rxOut.write(cc);
+            }
+            @Override
+            public void breakEvent () {
+              ide.infoPrintln("BREAK");
+            }
+          });
+        } catch (SerialPortException ex) {
+          ex.printStackTrace();
+        }
+      }
+    }
+    Programmer prog = ide.getSelectedProgrammer();
     this.chip = MegaTinyIDE.chipTypes.get(ide.getAvrChip());
     hidServices = HidManager.getHidServices();
     this.program = program;
@@ -233,8 +276,8 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
     }
   }
 
-  public static Programmer getProgrammer (String vidPid) {
-    return programmers.get(vidPid);
+  public static Programmer getProgrammer (String progVidPid) {
+    return programmers.get(progVidPid);
   }
 
   public static List<Programmer> getProgrammers () {
@@ -270,6 +313,9 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
     device.close();
     hidServices.shutdown();
     HidApi.exit();
+    if (jPort != null) {
+      jPort.close();
+    }
   }
 
   static class ProgrammerInfo {
@@ -434,13 +480,14 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    * @return tool name String
    */
   public String getToolName () {
-    byte[] response = sendAvrCmd(new byte[] {
+    byte[] rsp = sendAvrCmd(new byte[] {
         0x00,                 // DISCOVERY
         0x00,                 // Command ID (QUERY)Using
         0x00,                 // Command version (always (0x00)
         (byte) 0x80           // Query context (Tool Name)
     });
-    return new String(response, StandardCharsets.UTF_8);
+    printUpdi("getToolName()");
+    return new String(rsp, StandardCharsets.UTF_8);
   }
 
   /**
@@ -449,13 +496,14 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    * @return tool serial number String
    */
   public String getToolSerial () {
-    byte[] response = sendAvrCmd(new byte[] {
+    byte[] rsp = sendAvrCmd(new byte[] {
         0x00,                 // DISCOVERY
         0x00,                 // Command ID (QUERY)
         0x00,                 // Command version (always (0x00)
         (byte) 0x81           // Query context (Serial Number)
     });
-    return new String(response, StandardCharsets.UTF_8);
+    printUpdi("getToolSerial()");
+    return new String(rsp, StandardCharsets.UTF_8);
   }
 
   /*
@@ -472,6 +520,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
         0x01,                 // HOUSEKEEPING
         0x10,                 // Command ID (CMD_HOUSEKEEPING_START_SESSION)
     });
+    printUpdi("startSession()");
     sessionActive = true;
   }
 
@@ -483,6 +532,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
         0x01,                 // HOUSEKEEPING
         0x11,                 // Command ID (CMD_HOUSEKEEPING_END_SESSION)
     });
+    printUpdi("endSession()");
     sessionActive = false;
   }
 
@@ -516,7 +566,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    * @return ProgInfo object
    */
   public ProgInfo getToolInfo () {
-    byte[] response = sendAvrCmd(new byte[] {
+    byte[] rsp = sendAvrCmd(new byte[] {
         0x01,                 // HOUSEKEEPING
         0x02,                 // Command ID (GET)
         0x00,                 // Command version (always 0x00)
@@ -524,7 +574,8 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
         0x00,                 // address = HOUSEKEEPING_CONFIG_HWREV (Hardware revision)
         0x05                  // read 5 bytes
     });
-    return new ProgInfo(response);
+    printUpdi("getToolInfo()");
+    return new ProgInfo(rsp);
   }
 
   /**
@@ -533,7 +584,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    * @return voltage in Volts
    */
   public double getAnalogVoltageRef () {
-    byte[] response = sendAvrCmd(new byte[] {
+    byte[] rsp = sendAvrCmd(new byte[] {
         0x01,                 // HOUSEKEEPING
         0x02,                 // Command ID (GET)
         0x00,                 // Command version (always (0x00)
@@ -541,7 +592,8 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
         0x00,                 // address = HOUSEKEEPING_ANALOG_VTREF = (Target reference voltage)
         0x02                  // bytes to read
     });
-    return (double) getUnsigned16(response, 0) / 1000.0;
+    printUpdi("getAnalogVoltageRef()");
+    return (double) getUnsigned16(rsp, 0) / 1000.0;
   }
 
   /**
@@ -553,12 +605,14 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    * @return byte[] array of supported commands
    */
   public byte[] queryEdbgCommands () {
-    return sendAvrCmd(new byte[] {
+    byte[] rsp = sendAvrCmd(new byte[] {
         0x20,                 // EDBG_CTRL
         0x00,                 // Command ID (CMD_EDBG_QUERY)
         0x00,                 // Command version (always 0x00)
         0x00,                 // Command context (EDBG_QUERY_COMMANDS)
     });
+    printUpdi("queryEdbgCommands()");
+    return rsp;
   }
 
   /*
@@ -594,6 +648,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
           Utility.lsb(ocdMod),  // OCD_MODULE (LSB)
           Utility.msb(ocdMod),  // OCD_MODULE (MSB)
       });
+      printUpdi(String.format("setUPDIDeviceInfo(0x%04X, %d, %d, 0x%04X, 0x%04X)", pBase, fBytes, eeBytes, nvmMod, ocdMod));
     } else {
       throw new EDBGException("Call to setUPDIDeviceInfo() when session is not active");
     }
@@ -644,12 +699,14 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    */
   public byte[] queryAvr8Commands () {
     if (physicalActive) {
-      return sendAvrCmd(new byte[] {
+      byte[] rsp = sendAvrCmd(new byte[] {
           0x12,                 // AVR8GENERIC
           0x00,                 // Command ID (QUERY)
           0x00,                 // Command version (always 0x00)
           0x00,                 // Command context (AVR8_QUERY_COMMANDS)
       });
+      printUpdi("queryAvr8Commands()");
+      return rsp;
     } else {
       throw new EDBGException("Call to queryAvr8Commands() when physicalActive is not active");
     }
@@ -670,6 +727,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
           res                   // 0 = No Reset, 1 = apply external reset during activation
       });
       physicalActive = true;
+      printUpdi(String.format("activatePhysical(%b)", reset));
     } else {
       throw new EDBGException("Call to activatePhysical() when session is not active");
     }
@@ -686,6 +744,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
           0x00                  // Command version (always 0x00)
       });
       physicalActive = false;
+      printUpdi("deactivatePhysical()");
     } else {
       throw new EDBGException("Call to deactivatePhysical() when session of physical is not active");
     }
@@ -700,11 +759,13 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    */
   public byte[] getId () {
     if (physicalActive) {
-      return sendAvrCmd(new byte[] {
+      byte[] rsp = sendAvrCmd(new byte[] {
           0x12,                 // AVR8GENERIC
           0x12,                 // Command ID (CMD_AVR8_GET_ID)
           0x00                  // Command version (always (0x00)
       });
+      printUpdi("getId()");
+      return rsp;
     } else {
       throw new EDBGException("Call to getId() when physical interface is not active");
     }
@@ -732,6 +793,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
         }
       }
       debugActive = true;
+      printUpdi(String.format("attachDebugger(%b)", stop));
     } else {
       throw new EDBGException("Call to attachDebugger() when physical interface is not active");
     }
@@ -748,6 +810,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
           0x00                  // Command version (always 0x00)
       });
       debugActive = false;
+      printUpdi("detachDebugger()");
     } else {
       throw new EDBGException("Call to detachDebugger() when physical interface is not active, or not attached");
     }
@@ -764,6 +827,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
           0x00,                 // Command version (always 0x00)
       });
       programActive = true;
+      printUpdi("enterProgramMode()");
     } else {
       throw new EDBGException("Call to attachDebugger() when physical interface is not active");
     }
@@ -786,6 +850,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
           0x00,                 // Command version (always 0x00)
       });
       programActive = false;
+      printUpdi("exitProgramMode()");
     } else {
       throw new EDBGException("Call to exitProgramMode() when program mode is not active");
     }
@@ -808,6 +873,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
       } catch (InterruptedException ex) {
         ex.printStackTrace();
       }
+      printUpdi("resetTarget()");
       return new byte[0];
     } else {
       throw new EDBGException("Call to resetTarget() when debug mode is not active");
@@ -826,6 +892,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
           0x01,                 // Level (0x01 = stop immediately)
       });
       breakWait(true);
+      printUpdi("stopTarget()");
     } else {
       throw new EDBGException("Call to stopTarget() when debug mode is not active");
     }
@@ -842,6 +909,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
           0x00,                 // Command version (always 0x00)
       });
       breakWait(false);
+      printUpdi("runTarget()");
     } else {
       throw new EDBGException("Call to runTarget() when debug mode is not active");
     }
@@ -866,6 +934,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
           0x00,                 // Address (4 byte MSB)
       });
       breakWait(false);
+      printUpdi(String.format("runToAddress(0x%04X)", address));
     } else {
       throw new EDBGException("Call to runToAddress() when debug mode is not active");
     }
@@ -889,6 +958,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
       } catch (InterruptedException ex) {
         ex.printStackTrace();
       }
+      printUpdi("stepTarget()");
     } else {
       throw new EDBGException("Call to stepTarget() when debug mode is not active");
     }
@@ -901,12 +971,13 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    */
   public int getProgramCounter () {
     if (debugActive) {
-      byte[] response = sendAvrCmd(new byte[] {
+      byte[] rsp = sendAvrCmd(new byte[] {
           0x12,                 // AVR8GENERIC
           0x35,                 // Command ID (CMD_AVR8_PC_READ)
           0x00,                 // Command version (always 0x00)
       });
-      return getUnsigned16(response, 0) * 2;
+      printUpdi("getProgramCounter()");
+      return getUnsigned16(rsp, 0) * 2;
     } else {
       throw new EDBGException("Call to getProgCounter() when debug mode is not active");
     }
@@ -918,10 +989,10 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    * @param address new Program Counter value (word address)
    * @return true
    */
-  public boolean setProgramCounter (int address) {
+  public void setProgramCounter (int address) {
     if (debugActive) {
       address >>= 1;            // Need word address
-      byte[] response = sendAvrCmd(new byte[] {
+      sendAvrCmd(new byte[] {
           0x12,                 // AVR8GENERIC
           0x36,                 // Command ID (CMD_AVR8_PC_WRITE)
           0x00,                 // Command version (always 0x00)
@@ -930,7 +1001,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
           0x00,                 //
           0x00,                 // PC (4 byte MSB)
       });
-      return response != null && response.length == 0;
+      printUpdi(String.format("setProgramCounter(0x%04X)", address));
     } else {
       throw new EDBGException("Call to setProgramCounter() when debug mode is not active");
     }
@@ -950,6 +1021,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
           0x01,                 // write 1 byte
           0x05,                 // AVR8_VARIANT_UPDI
       });
+      printUpdi("setVariantUPDI()");
     } else {
       throw new EDBGException("Call to setVariantUPDI() when session is not active");
     }
@@ -969,6 +1041,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
           0x01,                 // write 1 byte
           0x01,                 // AVR8_FUNC_PROGRAMMING
       });
+      printUpdi("setFunctionProgram()");
     } else {
       throw new EDBGException("Call to setFunctionProgram() when physical interface is not active");
     }
@@ -988,6 +1061,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
           0x01,                 // write 1 byte
           0x02,                 // AVR8_FUNC_DEBUGGING
       });
+      printUpdi("setFunctionDebug()");
     } else {
       throw new EDBGException("Call to setFunctionDebug() when physical interface is not active");
     }
@@ -1007,6 +1081,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
           0x01,                 // write 1 byte
           0x08,                 // UPDI Interface
       });
+      printUpdi("setPhysicalInterfaceUPDI()");
     } else {
       throw new EDBGException("Call to setPhysicalInterfaceUPDI() when session is not active");
     }
@@ -1029,6 +1104,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
           Utility.lsb(kHz),     // UPDI Clock (kHz) (lsb)
           Utility.msb(kHz),     // UPDI Clock (kHz) (msb)
       });
+      printUpdi(String.format("setClockUPDI(%d kHz)", kHz));
     } else {
       throw new EDBGException("Call to setClockUPDI() when session is not active");
     }
@@ -1099,6 +1175,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
           0x00,
           0x00,                 // Address (4 byte MSB)
       });
+      printUpdi(String.format("eraseTarget(0x%04X, 0x%02X)", address, mode));
     } else {
       throw new EDBGException("Call to eraseTarget() when program mode is not active");
     }
@@ -1114,7 +1191,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    * @param length  number of bytes to read
    */
   private byte[] memoryRead (int address, int memType, int length) {
-    return sendAvrCmd(new byte[] {
+    byte[] ret =  sendAvrCmd(new byte[] {
         0x12,                 // AVR8GENERIC
         0x21,                 // Command ID (CMD_AVR8_MEMORY_READ)
         0x00,                 // Command version (always (0x00)
@@ -1128,6 +1205,8 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
         0x00,
         0x00,                 // Bytes to read (4 byte MSB)
     });
+    printUpdi(String.format("memoryRead(0x%04X, 0x%04X, 0x%04X)", address, memType & 0xFF, length));
+    return ret;
   }
 
   // Note: memoryWriteMasked() not implemented
@@ -1160,6 +1239,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
     System.arraycopy(cmd, 0, tmp, 0, cmd.length);
     System.arraycopy(data, 0, tmp, cmd.length, data.length);
     sendAvrCmd(tmp);
+    printUpdi(String.format("memoryWrite(0x%04X, 0x%04X, length = 0x%04X)", address, memType & 0xFF, data.length));
   }
 
   private byte[] readMemLoop (int address, int memType, int len) {
@@ -1203,9 +1283,8 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    *
    * @param address starting write address (multiple of page size?)
    * @param data    data to write
-   * @return data
    */
-  public byte[] writeFlash (int address, byte[] data) {
+  public void writeFlash (int address, byte[] data) {
     if (programActive) {
       int fPage = chip.getInt("fpage");
       // round up to multiple of target's flash page size
@@ -1216,7 +1295,6 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
     } else {
       throw new EDBGException("Call to readFlash() when program mode is not active");
     }
-    return data;
   }
 
   /**
@@ -1250,15 +1328,13 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    *
    * @param address starting write address
    * @param data    data to write
-   * @return data
    */
-  public byte[] writeSRam (int address, byte[] data) {
+  public void writeSRam (int address, byte[] data) {
     if (debugActive) {
       writeMemLoop(address, MEMTYPE_SRAM, data);
     } else {
       throw new EDBGException("Call to writeSRam() when debug mode is not active");
     }
-    return data;
   }
 
   /**
@@ -1282,15 +1358,13 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    *
    * @param address starting write address (offset from EEPROM_BASE)
    * @param data    data to write
-   * @return data
    */
-  public byte[] writeEeprom (int address, byte[] data) {
+  public void writeEeprom (int address, byte[] data) {
     if (debugActive || programActive) {
       writeMemLoop(address, MEMTYPE_EEPROM, data);
     } else {
       throw new EDBGException("Call to writeEeprom() when debug or program mode is not active");
     }
-    return data;
   }
 
   /**
@@ -1315,15 +1389,13 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    *
    * @param address starting register address to write
    * @param regs    byte[] array of register data to write
-   * @return regs
    */
-  public byte[] writeRegisters (int address, byte[] regs) {
+  public void writeRegisters (int address, byte[] regs) {
     if (debugActive) {
       memoryWrite(address, MEMTYPE_REGFILE, regs);
     } else {
       throw new EDBGException("Call to writeRegisters() when debug mode is not active");
     }
-    return regs;
   }
 
   /**
@@ -1370,7 +1442,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    * @param offsets array of offsets to FUSE_BASE from which to write fuses
    * @param fuses   fuse data byte  to write
    */
-  public byte[] writeFuses (int[] offsets, byte[] fuses) {
+  public void writeFuses (int[] offsets, byte[] fuses) {
     if (programActive) {
       if (offsets.length != fuses.length) {
         throw new EDBGException("Call to writeFuses() length of offsets[] does not match length of fuses[]");
@@ -1378,7 +1450,6 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
       for (int ii = 0; ii < offsets.length; ii++) {
         memoryWrite(FUSES_BASE + offsets[ii], MEMTYPE_FUSES, new byte[] {fuses[ii]});
       }
-      return fuses;
     } else {
       throw new EDBGException("Call to writeFuses() when program mode is not active");
     }
@@ -1398,6 +1469,18 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
   }
 
   /**
+   * Write target's stack pointer
+   * @param sp new stack pointer
+   */
+  public void writeStackPointer (int sp) {
+    if (debugActive) {
+      writeSRam(STACK_POINTER, new byte[] {Utility.lsb(sp), Utility.msb(sp)});
+    } else {
+      throw new EDBGException("Call to writeStackPointer() when debug mode is not active");
+    }
+  }
+
+  /**
    * Read target's status register (flags)
    * @return status register
    */
@@ -1413,14 +1496,12 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
   /**
    * Write target's status register (flags)
    */
-  public byte[] writeStatusRegister (byte data) {
-    byte[] tmp = new byte[] {data};
+  public void writeStatusRegister (byte data) {
     if (debugActive) {
-      writeMemLoop(STATUS_REGISTER, MEMTYPE_SRAM, tmp);
+      writeSRam(STATUS_REGISTER, new byte[] {data});
     } else {
       throw new EDBGException("Call to writeStatusRegister() when debug mode is not active");
     }
-    return tmp;
   }
 
   /**
@@ -1431,7 +1512,9 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    */
   public byte[] getDeviceSignature () {
     if (debugActive || programActive) {
-      return memoryRead(0x1100, (byte) MEMTYPE_SIGNATURE, 3);
+      byte[] rsp = memoryRead(0x1100, (byte) MEMTYPE_SIGNATURE, 3);
+      printUpdi("getDeviceSignature()");
+      return rsp;
     } else {
       throw new EDBGException("Call to getDeviceSignature() when debug or program mode is not active");
     }
@@ -1473,6 +1556,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
           0x00,                 // Address (4 byte MSB)
           0x03,                 // Mode (0x03 = program break)
       });
+      printUpdi(String.format("setHardwareBreakpoint(0x%04X, %d)", address, num));
     } else {
       throw new EDBGException("Call to setHardwareBreakpoint() when debug mode is not active");
     }
@@ -1492,6 +1576,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
           0x00,                 // Command version (always (0x00)
           Utility.lsb(num),      // Number (Breakpoint number to set (1, 2, or 3))
       });
+      printUpdi(String.format("clearHardwareBreakpoint(%d)", num));
     } else {
       throw new EDBGException("Call to clearHardwareBreakpoint() when debug mode is not active");
     }
@@ -1517,6 +1602,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
         bout.write(0x00);               // Address (4 byte MSB)
       }
       sendAvrCmd(bout.toByteArray());
+      printUpdi(String.format("setSoftwareBreakpointSet(%d)", addresses.length));
     } else {
       throw new EDBGException("Call to setSoftwareBreakpointSet() when debug mode is not active");
     }
@@ -1542,6 +1628,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
         bout.write(0x00);               // Address (4 byte MSB)
       }
       sendAvrCmd(bout.toByteArray());
+      printUpdi(String.format("clearSoftwareBreakpointSet(%d)", addresses.length));
     } else {
       throw new EDBGException("Call to clearSoftwareBreakpointSet() when debug mode is not active");
     }
@@ -1557,6 +1644,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
           0x45,                 // Command ID (CMD_AVR8_SW_BREAK_CLEAR_ALL)
           0x00,                 // Command version (always 0x00)
       });
+      printUpdi("clearAllSoftwareBreakpoints()");
     } else {
       throw new EDBGException("Call to clearAllSoftwareBreakpoints() when debug mode is not active");
     }

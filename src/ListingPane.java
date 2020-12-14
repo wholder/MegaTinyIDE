@@ -1,5 +1,3 @@
-import jssc.SerialPortException;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
@@ -13,7 +11,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
@@ -60,7 +57,6 @@ public class ListingPane extends JPanel {   // https://regex101.com
   private boolean                     attached, running;
   private EDBG                        debugger;
   private String                      rawSrc = "";
-  private final ByteArrayOutputStream rxOut = new ByteArrayOutputStream();
 
   interface DebugListener {
     void debugState (boolean active);
@@ -69,24 +65,6 @@ public class ListingPane extends JPanel {   // https://regex101.com
   interface NewVal {
     void newVal (int newVal);
   }
-
-  private void printUpdi (String type) {
-    if (ide.decodeUpdi()) {
-      ide.infoPrintln(type);
-      // Allow time for final bytes to trickle into rxOut buffer
-      try {
-        Thread.sleep(100);
-      } catch (InterruptedException ex) {
-        // do nothing
-      }
-      byte[] temp = rxOut.toByteArray();
-      //Utility.printHex(temp);
-      String updi = UPDIDecoder.decode(temp);
-      ide.infoPrintln(updi);
-      rxOut.reset();
-    }
-  }
-
   public void addDebugListener (DebugListener debugListener) {
     debugListeners.add(debugListener);
   }
@@ -338,7 +316,6 @@ public class ListingPane extends JPanel {   // https://regex101.com
             int add = Integer.parseInt(parts[2]);
             int len = Integer.parseInt(parts[3]);
             byte[] data = debugger.readSRam(add, len);
-            printUpdi(String.format("readSRam(0x%04X, 0x%04X)", add, len));
             showVariable (parts[0], add, data);
           } else {
             ide.showErrorDialog("Debugger must be attached and in stop mode to view variables!");
@@ -611,29 +588,6 @@ public class ListingPane extends JPanel {   // https://regex101.com
     }
 
     public void setActive (boolean active) {
-      if (ide.decodeUpdi()) {
-        JSSCPort jPort = ide.getSerialPort();
-        if (jPort != null) {
-          try {
-            if (active) {
-              jPort.open(new JSSCPort.RXEvent() {
-                @Override
-                public void rxChar (byte cc) {
-                  rxOut.write(cc);
-                }
-                @Override
-                public void breakEvent () {
-                  ide.infoPrintln("BREAK");
-                }
-              });
-            } else {
-              jPort.close();
-            }
-          } catch (SerialPortException ex) {
-            ex.printStackTrace();
-          }
-        }
-      }
       if (active) {
         String avrChip = ide.getAvrChip();
         if (avrChip != null) {
@@ -643,13 +597,11 @@ public class ListingPane extends JPanel {   // https://regex101.com
           portC.setActiveMask((portMask >> 16) & 0xFF);
           portB.setActiveMask((portMask >> 8) & 0xFF);
           portA.setActiveMask(portMask & 0xFF);
-          EDBG.Programmer programmer = EDBG.getProgrammer(ide.getProgVidPid());
+          EDBG.Programmer programmer = ide.getSelectedProgrammer();
           if (programmer != null) {
             try {
               debugger = new EDBG(ide, false);
-              printUpdi("new EDBG()");
               debugger.resetTarget();
-              printUpdi("resetTarget()");
               debugger.setOcdListener(text -> {
                 if (running) {
                   Document doc = messagePane.getDocument();
@@ -690,7 +642,6 @@ public class ListingPane extends JPanel {   // https://regex101.com
         }
         if (debugger != null){
           debugger.close();
-          printUpdi("close()");
           debugger = null;
         }
         clearSelection();
@@ -882,10 +833,8 @@ public class ListingPane extends JPanel {   // https://regex101.com
               field.addValueHandler(newVal -> {
                 try {
                   //System.out.printf("%s: %d , %d = 0x%02X\n", title, index, fieldWidth, newVal);
-                  int oldVal = field.value;
                   if ("Registers".equals(title)) {
                     debugger.writeSRam(index, new byte[] {(byte) newVal});
-                    printUpdi(String.format("writeSRam(0x%04X, 0x%02X)", index, newVal));
                     regs.setValue(index, newVal, true);
                     switch (index) {
                     case 26:
@@ -913,36 +862,30 @@ public class ListingPane extends JPanel {   // https://regex101.com
                       debugger.setProgramCounter(newVal);
                       break;
                     case 1:   // Stack Pointer
-                      debugger.writeSRam(0x003D, new byte[] {Utility.lsb(newVal), Utility.msb(newVal)});
-                      printUpdi(String.format("writeSRam(0x003D, 0x%04X)", newVal));
+                      debugger.writeStackPointer(newVal);
                       break;
                     case 2:   // X Register (regs 27:26)
                       debugger.writeSRam(26, new byte[] {Utility.lsb(newVal), Utility.msb(newVal)});
-                      printUpdi(String.format("writeSRam(0x%04X, 0x%02X)", 26, newVal));
                       regs.setValue(26, Utility.lsb(newVal), true);
                       regs.setValue(27, Utility.msb(newVal), true);
                       break;
                     case 3:   // Y Register (regs 29:28)
                       debugger.writeSRam(28, new byte[] {Utility.lsb(newVal), Utility.msb(newVal)});
-                      printUpdi(String.format("writeSRam(0x%04X, 0x%02X)", 28, newVal));
                       regs.setValue(28, Utility.lsb(newVal), true);
                       regs.setValue(29, Utility.msb(newVal), true);
                       break;
                     case 4:   // Z Register (regs 31:30)
                       debugger.writeSRam(30, new byte[] {Utility.lsb(newVal), Utility.msb(newVal)});
-                      printUpdi(String.format("writeSRam(0x%04X, 0x%02X)", 30, newVal));
                       regs.setValue(30, Utility.lsb(newVal), true);
                       regs.setValue(31, Utility.msb(newVal), true);
                       break;
                     }
                     sRegs.setValue(index, newVal, true);
                   } else if ("Flags".equals(title)) {
-                    oldVal = debugger.getStatusRegister();
-                    printUpdi("getStatusRegister()");
+                    int oldVal = debugger.getStatusRegister();
                     int bit = 1 << (7 - index);
                     int tmp = (oldVal & ~bit) | (newVal << (7 - index));
                     debugger.writeStatusRegister((byte) tmp);
-                    printUpdi(String.format("writeStatusRegister(0x%02X)", tmp));
                     setValue(index, newVal, true);
                   }
                 } catch (Exception ex) {
@@ -1045,14 +988,12 @@ public class ListingPane extends JPanel {   // https://regex101.com
                   if (breakpoints.length == 1) {
                     int address = breakpoints[0];
                     debugger.runToAddress(address);
-                    printUpdi(String.format("runToAddress(0x%04X)", address));
                   } else {
                     debugger.runTarget();
                   }
                 } catch (InterruptedException ex) {
                   try {
                     debugger.stopTarget();
-                    printUpdi("stopTarget()");
                   } catch (InterruptedException ex2) {
                     ex2.printStackTrace();
                   }
@@ -1077,7 +1018,6 @@ public class ListingPane extends JPanel {   // https://regex101.com
       step.addActionListener(ev -> {
         if (debugger != null) {
           debugger.stepTarget();
-          printUpdi("stepTarget()");
           updateState(true);
         }
       });
@@ -1093,7 +1033,6 @@ public class ListingPane extends JPanel {   // https://regex101.com
             }
           }
           debugger.resetTarget();
-          printUpdi("resetTarget()");
           updateState(false);
         }
       });
@@ -1106,12 +1045,9 @@ public class ListingPane extends JPanel {   // https://regex101.com
         if (debugger != null) {
           byte[] regs = debugger.readRegisters(0, 32);
           int pc = debugger.getProgramCounter();
-          printUpdi("getProgramCounter()");
           highlightAddress(pc);
           byte flags = debugger.getStatusRegister();
-          printUpdi("getStatusRegister()");
           int sp = debugger.getStackPointer();
-          printUpdi("getStackPointer()");
           //                             Offset = 8          Offset = 0
           // PORTA Base = 0x0400, PORTA.IN = 0x0408, PORTA.DIR = 0x0400
           // PORTB Base = 0x0420, PORTB.IN = 0x0428, PORTB.DIR = 0x0420
@@ -1124,23 +1060,17 @@ public class ListingPane extends JPanel {   // https://regex101.com
           boolean portAUsed = (portMask & 0xFF) != 0;
           if (portAUsed) {
             vPrtA = debugger.readSRam(0x0408, 1)[0];         // PORTA.IN
-            printUpdi("readSRam(0x0408, 1) - PORTA.IN");
             vDirA = debugger.readSRam(0x0400, 1)[0];         // PORTA.DIR
-            printUpdi("readSRam(0x0400, 1) - PORTA.DIR");
           }
           boolean portBUsed = (portMask & 0xFF00) != 0;
           if (portBUsed) {
             vPrtB = debugger.readSRam(0x0428, 1)[0];         // PORTB.IN
-            printUpdi("readSRam(0x0428, 1) - PORTB.IN ");
             vDirB = debugger.readSRam(0x0420, 1)[0];         // PORTB.DIR
-            printUpdi("readSRam(0x0420, 1) - PORTB.DIR");
           }
           boolean portCUsed = (portMask & 0xFF0000) != 0;
           if (portCUsed) {
             vPrtC = debugger.readSRam(0x0448, 1)[0];         // PORTC.IN
-            printUpdi("readSRam(0x0448, 1) - PORTC.IN");
             vDirC = debugger.readSRam(0x0440, 1)[0];         // PORTC.DIR
-            printUpdi("readSRam(0x0440, 1) - PORTC.DIR");
           }
           SwingUtilities.invokeLater(() -> {
             setRegs(regs, showChange);
@@ -1165,7 +1095,6 @@ public class ListingPane extends JPanel {   // https://regex101.com
         ex.printStackTrace();
         ide.showErrorDialog(ex.getMessage());
         debugger.close();
-        printUpdi("close()");
         debugger = null;
       }
     }
