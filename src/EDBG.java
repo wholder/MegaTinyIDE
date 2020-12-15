@@ -95,6 +95,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
   private static final boolean                DEBUG_DECODE = false; // If true, show decoded messages
   private static final boolean                DEBUG_IO = false;     // If true, show sendCmd() cmd and response data
   private static final Map<String,Programmer> programmers = new TreeMap<>();
+  private static final Map<Integer,String>    memTypes = new HashMap<>();
   private final HidServices                   hidServices;
   public HidDevice                            device;
   private final boolean                       program;
@@ -135,6 +136,22 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
 
   public static final int STACK_POINTER                  = 0x003D; // Stack Pointer offset
   public static final int STATUS_REGISTER                = 0x003F; // Status Register (flags) offset
+
+  static {
+    memTypes.put(0x20, "SRAM");
+    memTypes.put(0x22, "EEPROM");
+    memTypes.put(0xB0, "FLASH_PAGE");
+    memTypes.put(0xB2, "FUSES");
+    memTypes.put(0xB4, "SIGNATURE");
+    memTypes.put(0xB8, "REGFILE");
+  }
+
+  private static String getTypeDesc (int memType) {
+    if (memTypes.containsKey(memType)) {
+      return memTypes.get(memType);
+    }
+    return String.format("0x%02X", (int) memType & 0xFF);
+  }
 
   private void debugPrint(String msg) {
     if (DEBUG_PRINT) {
@@ -1205,7 +1222,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
         0x00,
         0x00,                 // Bytes to read (4 byte MSB)
     });
-    printUpdi(String.format("memoryRead(0x%04X, 0x%04X, 0x%04X)", address, memType & 0xFF, length));
+    printUpdi(String.format("memoryRead(0x%04X, %s, 0x%04X)", address, getTypeDesc(memType), length));
     return ret;
   }
 
@@ -1239,7 +1256,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
     System.arraycopy(cmd, 0, tmp, 0, cmd.length);
     System.arraycopy(data, 0, tmp, cmd.length, data.length);
     sendAvrCmd(tmp);
-    printUpdi(String.format("memoryWrite(0x%04X, 0x%04X, length = 0x%04X)", address, memType & 0xFF, data.length));
+    printUpdi(String.format("memoryWrite(0x%04X, %s, length = 0x%04X)", address, getTypeDesc(memType), data.length));
   }
 
   private byte[] readMemLoop (int address, int memType, int len) {
@@ -1512,7 +1529,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    */
   public byte[] getDeviceSignature () {
     if (debugActive || programActive) {
-      byte[] rsp = memoryRead(0x1100, (byte) MEMTYPE_SIGNATURE, 3);
+      byte[] rsp = memoryRead(0x1100, MEMTYPE_SIGNATURE, 3);
       printUpdi("getDeviceSignature()");
       return rsp;
     } else {
@@ -1527,7 +1544,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    */
   public byte[] getDeviceSerialNumber () {
     if (debugActive || programActive) {
-      return memoryRead(0x1100 + 3, (byte) MEMTYPE_SIGNATURE, 16 - 3);
+      return memoryRead(0x1100 + 3, MEMTYPE_SIGNATURE, 16 - 3);
     } else {
       throw new EDBGException("Call to getDeviceSerialNumber() when debug or program mode is not active");
     }
