@@ -13,11 +13,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.MD" beforeDir="false" afterPath="$PROJECT_DIR$/README.MD" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/EDBG.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/EDBG.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ListingPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ListingPane.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MegaTinyCompiler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MegaTinyCompiler.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -143,13 +139,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1596315993204</updated>
-    </task>
-    <task id="LOCAL-00046" summary="Misc fixes and improvements">
-      <created>1604613972275</created>
-      <option name="number" value="00046" />
-      <option name="presentableId" value="LOCAL-00046" />
-      <option name="project" value="LOCAL" />
-      <updated>1604613972276</updated>
     </task>
     <task id="LOCAL-00047" summary="Add AVR instruction tooltips to Listing Pane">
       <created>1605139014988</created>
@@ -487,7 +476,14 @@
       <option name="project" value="LOCAL" />
       <updated>1608156606345</updated>
     </task>
-    <option name="localTasksCounter" value="95" />
+    <task id="LOCAL-00095" summary="debugger-related changes">
+      <created>1608157903194</created>
+      <option name="number" value="00095" />
+      <option name="presentableId" value="LOCAL-00095" />
+      <option name="project" value="LOCAL" />
+      <updated>1608157903194</updated>
+    </task>
+    <option name="localTasksCounter" value="96" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -536,11 +532,11 @@
     <MESSAGE value="Revise preprocessor step in compile" />
     <MESSAGE value="Revise Settings Menu" />
     <MESSAGE value="debugger-related fixes" />
-    <MESSAGE value="debugger-related changes" />
     <MESSAGE value="Revert to jssc-2-8.0" />
     <MESSAGE value="Revise README" />
     <MESSAGE value="Convert jpg images to png" />
-    <option name="LAST_COMMIT_MESSAGE" value="Convert jpg images to png" />
+    <MESSAGE value="debugger-related changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="debugger-related changes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

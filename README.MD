@@ -65,7 +65,7 @@ To use the universal version on a Mac, simply double click the MegaTinyIDE.jar f
 ### Requirements
 I suggest using [Java 8 JRE](https://www.java.com) or JDK, or later for MegaTinyIDE, but the code also seems to run fine under the OpenJDK Java.  Note: I wrote MegaTinyIDE on a Mac Pro using the _Community_ version of [IntelliJ IDEA from JetBrains](https://www.jetbrains.com/idea/) and OS X is the only environment where I have extensively tested and used MegaTinyIDE .  I've included GNU/AVR toolchains for Mac and 64 bit Windows and 64 bit Linux, but have not extensively tested the code under Windows or Linux.  Feel free to report any issues you discover.  I'll do my best, when time permits, to investigate them, but I cannot guarantee fixes, timely or otherwise.
 
-Note: MegaTinyIDE for macOs seems to run fine on the new Mac Mini with Apple Silicon, but more testing is needed.
+Note: MegaTinyIDE for macOs seems to run fine on the new Mac Mini with Apple Silicon and Rosetta 2, but more testing is needed.
 
 ### Using MegaTinyIDE
 MegaTinyIDE supports coding for the AvrXMega3 Series of Microcontrollers in C and C++ using the GNU AVR-C++ compiler to generate code.  The file extension you choose for your code file tells MegaTinyIDE how to process the code:
