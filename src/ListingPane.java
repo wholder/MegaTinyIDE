@@ -664,7 +664,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
         debugListener.debugState(active);
       }
       if (active) {
-        ide.appendToInfoPane("Debugger Attached (" + (EDBG.UPDIClock * 1000) + " bps)\n");
+        ide.appendToInfoPane(String.format("Debugger Attached (%d bps, Vcc = %1.2f volts)\n", EDBG.UPDIClock * 1000, debugger.targetVoltage()));
       } else {
         ide.appendToInfoPane("Debugger Detached\n");
       }

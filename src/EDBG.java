@@ -100,6 +100,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
   public HidDevice                            device;
   private final boolean                       program;
   private final MegaTinyIDE.ChipInfo          chip;
+  private double                              targetVcc;
   private int                                 sequence;
   private boolean                             sessionActive;
   private boolean                             physicalActive;
@@ -273,6 +274,10 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
       } else {
         throw new EDBGException("Unable to open programmer: " + prog.name);
       }
+      // Verify target has voltage
+      if ((targetVcc = getAnalogVoltageRef()) < 1.0) {
+        throw new EDBGException(prog.name + " indicates Target Vcc < 1 volt");
+      }
       // Connect to target
       startSession();
       // Configure programmer for UPDI in Debug Mode with 500 kHz clock
@@ -291,6 +296,10 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
     } else {
       throw new EDBGException("Unable to connect to programmer: " + prog.name);
     }
+  }
+
+  public double targetVoltage () {
+    return targetVcc;
   }
 
   public static Programmer getProgrammer (String progVidPid) {

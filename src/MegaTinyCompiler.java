@@ -247,6 +247,8 @@ class MegaTinyCompiler {
     boolean ardiuno = isArduino(src);
     if (ardiuno) {
       tags.put("ARDUINO", "-DARDUINO_ARCH_MEGAAVR -DMILLIS_USE_TIMERNONE -DNO_EXTERNAL_I2C_PULLUP -DNEOPIXELPORT=VPORTA.OUT -DUARTBAUD5V ");
+    } else {
+      tags.put("ARDUINO", "");
     }
     tags.put("CHIP", chip);
     tags.put("INTLV", prefs.getBoolean("interleave", true) ? "-S" : "");
