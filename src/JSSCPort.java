@@ -51,7 +51,7 @@ public class JSSCPort implements SerialPortEventListener {
     baudRates.put("300",    SerialPort.BAUDRATE_300);
     baudRates.put("600",    SerialPort.BAUDRATE_600);
     baudRates.put("1200",   SerialPort.BAUDRATE_1200);
-    baudRates.put("2400",   SerialPort.BAUDRATE_2400);
+    //baudRates.put("2400",   SerialPort.BAUDRATE_2400);
     baudRates.put("4800",   SerialPort.BAUDRATE_4800);
     baudRates.put("9600",   SerialPort.BAUDRATE_9600);
     baudRates.put("14400",  SerialPort.BAUDRATE_14400);

@@ -13,10 +13,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/lib1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/jssc-2.8.0.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/lib.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/lib.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.MD" beforeDir="false" afterPath="$PROJECT_DIR$/README.MD" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MegaTinyIDE.iml" beforeDir="false" afterPath="$PROJECT_DIR$/MegaTinyIDE.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/jssc-2.9.2.jar" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/EDBG.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/EDBG.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/JSSCPort.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/JSSCPort.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,7 +78,7 @@
       <recent name="" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.MegaTinyIDE">
+  <component name="RunManager" selected="Application.NativeBuilder">
     <configuration name="FusePane" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="FusePane" />
       <module name="MegaTinyIDE" />
@@ -126,8 +130,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.MegaTinyIDE" />
         <item itemvalue="Application.NativeBuilder" />
+        <item itemvalue="Application.MegaTinyIDE" />
         <item itemvalue="Application.ToolchainCombiner (1)" />
         <item itemvalue="Application.ParmDialog" />
         <item itemvalue="Application.FusePane" />
@@ -142,13 +146,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1596315993204</updated>
-    </task>
-    <task id="LOCAL-00037" summary="Font fix for Linux">
-      <created>1603511958195</created>
-      <option name="number" value="00037" />
-      <option name="presentableId" value="LOCAL-00037" />
-      <option name="project" value="LOCAL" />
-      <updated>1603511958195</updated>
     </task>
     <task id="LOCAL-00038" summary="Prelim new features check in (Monitor code)">
       <created>1603694810653</created>
@@ -486,7 +483,14 @@
       <option name="project" value="LOCAL" />
       <updated>1607917521520</updated>
     </task>
-    <option name="localTasksCounter" value="86" />
+    <task id="LOCAL-00086" summary="Revise README">
+      <created>1607998190864</created>
+      <option name="number" value="00086" />
+      <option name="presentableId" value="LOCAL-00086" />
+      <option name="project" value="LOCAL" />
+      <updated>1607998190865</updated>
+    </task>
+    <option name="localTasksCounter" value="87" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -534,12 +538,12 @@
     <MESSAGE value="Misc code cleanup" />
     <MESSAGE value="Rework debugger interface" />
     <MESSAGE value="Misc updates" />
-    <MESSAGE value="Revise README" />
     <MESSAGE value="Revise preprocessor step in compile" />
     <MESSAGE value="Revise Settings Menu" />
     <MESSAGE value="debugger-related fixes" />
     <MESSAGE value="debugger-related changes" />
-    <option name="LAST_COMMIT_MESSAGE" value="debugger-related changes" />
+    <MESSAGE value="Revise README" />
+    <option name="LAST_COMMIT_MESSAGE" value="Revise README" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
