@@ -13,7 +13,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.MD" beforeDir="false" afterPath="$PROJECT_DIR$/README.MD" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -139,20 +139,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1596315993204</updated>
-    </task>
-    <task id="LOCAL-00039" summary="Add right click pop up &quot;Clear Screen&quot; for Monitor tab">
-      <created>1603746241710</created>
-      <option name="number" value="00039" />
-      <option name="presentableId" value="LOCAL-00039" />
-      <option name="project" value="LOCAL" />
-      <updated>1603746241710</updated>
-    </task>
-    <task id="LOCAL-00040" summary="Add PID values">
-      <created>1603766260368</created>
-      <option name="number" value="00040" />
-      <option name="presentableId" value="LOCAL-00040" />
-      <option name="project" value="LOCAL" />
-      <updated>1603766260368</updated>
     </task>
     <task id="LOCAL-00041" summary="Added PopUp OCD Message subpane in Listing pane">
       <created>1604018468879</created>
@@ -483,7 +469,21 @@
       <option name="project" value="LOCAL" />
       <updated>1608086432774</updated>
     </task>
-    <option name="localTasksCounter" value="88" />
+    <task id="LOCAL-00088" summary="Revise README">
+      <created>1608154754142</created>
+      <option name="number" value="00088" />
+      <option name="presentableId" value="LOCAL-00088" />
+      <option name="project" value="LOCAL" />
+      <updated>1608154754142</updated>
+    </task>
+    <task id="LOCAL-00089" summary="Revise README">
+      <created>1608154781486</created>
+      <option name="number" value="00089" />
+      <option name="presentableId" value="LOCAL-00089" />
+      <option name="project" value="LOCAL" />
+      <updated>1608154781486</updated>
+    </task>
+    <option name="localTasksCounter" value="90" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -534,9 +534,9 @@
     <MESSAGE value="Revise Settings Menu" />
     <MESSAGE value="debugger-related fixes" />
     <MESSAGE value="debugger-related changes" />
-    <MESSAGE value="Revise README" />
     <MESSAGE value="Revert to jssc-2-8.0" />
-    <option name="LAST_COMMIT_MESSAGE" value="Revert to jssc-2-8.0" />
+    <MESSAGE value="Revise README" />
+    <option name="LAST_COMMIT_MESSAGE" value="Revise README" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

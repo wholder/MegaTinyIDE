@@ -6,7 +6,7 @@ MegaTinyIDE is a simple, GNU-based IDE that's derived from another project of mi
 
 ### Project Goals
 
-These new tinyAVR® 1-series and 0-series introduce a new, single-pin Unified Program and Debug Interface (UPDI), which makes it possible to do away with the need for a boot loader and still make use of all the I/O pins except RESET, which is the pin used by UPDI.  While UPDI is supported by Microchip's development tools, such a MPLAB, I wanted to develop a lightweight, alternative IDE similar to the Arduino IDE, but streamlined even further to just support this new tinyAVR architecture.  In addition, I wanted to add other, special features such as those listed below:
+These new tinyAVR® 1-series and 0-series introduce a new, single-pin Unified Program and Debug Interface (UPDI), which makes it possible to do away with the need for a boot loader and still make use of all the I/O pins except RESET, which is the pin used by UPDI.  While UPDI is supported by Microchip's development tools, such a MPLAB, I wanted to develop a lightweight, alternative IDE similar to the Arduino IDE, but streamlined to support just this new tinyAVR architecture.  In addition, I wanted to add other, special features such as those listed below:
 
   - Now supports include of user files using `#include "file.h"` notation
   - Automatically annotate interrupt vectors in listing file (optional)
@@ -22,6 +22,7 @@ These new tinyAVR® 1-series and 0-series introduce a new, single-pin Unified Pr
   - Pop up AVR Instruction Guide tooltips in Listing Pane (hover over instruction name)
   - A Console Monitor feature called OCD Messaging that can send text message to the debugger over UPDI
   - Preliminary support for Arduino-style coding using the [megaTinyCore](https://github.com/SpenceKonde/megaTinyCore) library by Spence Konde (aka Dr. Azzy) See: `arduino412.c` in `examples` folder
+  - Use a [`#pragma`](https://github.com/wholder/MegaTinyIDE/blob/master/resources/documentation/pragmas.md) in code to engage special compile time features, such as pop up dialogs that prompt for `#define` values or select the target chip part number.
   - **Native Versions with an embedded JVM are now available (see "[Releases](https://github.com/wholder/MegaTinyIDE/releases)")**
 
 As this project advances, I hope to add many more features designed to make uisng the tinyAVR 1-series and 0-series as easy as possible, such as:
