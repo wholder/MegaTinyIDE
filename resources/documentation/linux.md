@@ -11,6 +11,7 @@ Note: this command gives access permission to all products made by Microchip (ve
   - `2177` for PICkit4
   - `2145` for ATTiny416-Xplained-Nano or Mini
   - `2175` for ATTiny3217-Curiosity-Nano
+  - `2180` for MPLAB Snap
 
 If the above fix does not work, you should be able to run MegaTinyIDE as root from the command line, like this:
 

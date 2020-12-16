@@ -12,7 +12,7 @@ These new tinyAVR® 1-series and 0-series introduce a new, single-pin Unified Pr
   - Automatically annotate interrupt vectors in listing file (optional)
   - Interleave code and generated asm in listing file (optional)
   - Graphical interface for editing FUSE values
-  - Hardware Debugging (via the UPDI interface using compatible programmer/debugger):
+  - Hardware Debugging (via the UPDI interface using [compatible programmer/debugger](https://github.com/wholder/MegaTinyIDE/blob/master/resources/documentation/programmers.md)):
       - Set a Hardware Breakpoint by selecting the checkbox on an executable line of code in the Listing View
       - Single Step while the highlighted line in the Listing View shows the next line to execute
       - Right click on Registers and Status Flags in debugger pane to change value (I/O ports not currently supported)
@@ -20,7 +20,7 @@ These new tinyAVR® 1-series and 0-series introduce a new, single-pin Unified Pr
       - Click on Links in Symbol table to view current state of variables
   - Built-in Pinout Reference Diagrams (with pin-level tooltips)
   - Pop up AVR Instruction Guide tooltips in Listing Pane (hover over instruction name)
-  - A Console Monitor feature called OCD Messaging that can send text message to the debugger over UPDI
+  - A [Console Monitor feature called OCD Messaging](https://github.com/wholder/MegaTinyIDE/blob/master/resources/documentation/ocdmsg.md) that can send text message to the debugger over UPDI
   - Preliminary support for Arduino-style coding using the [megaTinyCore](https://github.com/SpenceKonde/megaTinyCore) library by Spence Konde (aka Dr. Azzy) See: `arduino412.c` in `examples` folder
   - Use a [`#pragma`](https://github.com/wholder/MegaTinyIDE/blob/master/resources/documentation/pragmas.md) in code to engage special compile time features, such as pop up dialogs that prompt for `#define` values or select the target chip part number.
   - **Native Versions with an embedded JVM are now available (see "[Releases](https://github.com/wholder/MegaTinyIDE/releases)")**
