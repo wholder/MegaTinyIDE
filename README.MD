@@ -12,7 +12,7 @@ These new tinyAVR® 1-series and 0-series introduce a new, single-pin Unified Pr
   - Automatically annotate interrupt vectors in listing file (optional)
   - Interleave code and generated asm in listing file (optional)
   - Graphical interface for editing FUSE values (see below)
-  - Hardware Debugging (via the UPDI interface using [compatible programmer/debugger](https://github.com/wholder/MegaTinyIDE/blob/master/resources/documentation/programmers.md)):
+  - [Hardware Debugging](https://github.com/wholder/MegaTinyIDE/blob/master/resources/documentation/debugging.md) (via the UPDI interface using [compatible programmer/debugger](https://github.com/wholder/MegaTinyIDE/blob/master/resources/documentation/programmers.md)):
       - Set a Hardware Breakpoint by selecting the checkbox on an executable line of code in the Listing View
       - Single Step while the highlighted line in the Listing View shows the next line to execute
       - Right click on Registers and Status Flags in debugger pane to change value (I/O ports not currently supported)

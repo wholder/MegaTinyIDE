@@ -13,7 +13,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/resources/documentation/debugging.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/documentation/images/editpc.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/documentation/images/sramvalues.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/documentation/images/sramview.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.MD" beforeDir="false" afterPath="$PROJECT_DIR$/README.MD" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/documentation/index.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/index.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,8 +61,8 @@
       <recent name="Utility" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/images" />
       <recent name="$PROJECT_DIR$/resources/documentation/images" />
+      <recent name="$PROJECT_DIR$/images" />
       <recent name="$PROJECT_DIR$/docs" />
       <recent name="$PROJECT_DIR$/resources/images" />
       <recent name="$PROJECT_DIR$/resources/toolchains" />
@@ -71,7 +77,7 @@
       <recent name="" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.NativeBuilder">
+  <component name="RunManager" selected="Application.MegaTinyIDE">
     <configuration name="FusePane" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="FusePane" />
       <module name="MegaTinyIDE" />
@@ -123,8 +129,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.NativeBuilder" />
         <item itemvalue="Application.MegaTinyIDE" />
+        <item itemvalue="Application.NativeBuilder" />
         <item itemvalue="Application.ToolchainCombiner (1)" />
         <item itemvalue="Application.ParmDialog" />
         <item itemvalue="Application.FusePane" />
@@ -139,13 +145,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1596315993204</updated>
-    </task>
-    <task id="LOCAL-00047" summary="Add AVR instruction tooltips to Listing Pane">
-      <created>1605139014988</created>
-      <option name="number" value="00047" />
-      <option name="presentableId" value="LOCAL-00047" />
-      <option name="project" value="LOCAL" />
-      <updated>1605139014988</updated>
     </task>
     <task id="LOCAL-00048" summary="Revise README">
       <created>1605139232145</created>
@@ -483,16 +482,23 @@
       <option name="project" value="LOCAL" />
       <updated>1608157903194</updated>
     </task>
-    <option name="localTasksCounter" value="96" />
+    <task id="LOCAL-00096" summary="Revise README">
+      <created>1608158057163</created>
+      <option name="number" value="00096" />
+      <option name="presentableId" value="LOCAL-00096" />
+      <option name="project" value="LOCAL" />
+      <updated>1608158057163</updated>
+    </task>
+    <option name="localTasksCounter" value="97" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
-    <option name="COLUMN_ORDER">
+    <option name="COLUMN_ID_ORDER">
       <list>
-        <option value="0" />
-        <option value="2" />
-        <option value="3" />
-        <option value="1" />
+        <option value="Default.Root" />
+        <option value="Default.Author" />
+        <option value="Default.Date" />
+        <option value="Default.Subject" />
       </list>
     </option>
   </component>
@@ -533,10 +539,10 @@
     <MESSAGE value="Revise Settings Menu" />
     <MESSAGE value="debugger-related fixes" />
     <MESSAGE value="Revert to jssc-2-8.0" />
-    <MESSAGE value="Revise README" />
     <MESSAGE value="Convert jpg images to png" />
     <MESSAGE value="debugger-related changes" />
-    <option name="LAST_COMMIT_MESSAGE" value="debugger-related changes" />
+    <MESSAGE value="Revise README" />
+    <option name="LAST_COMMIT_MESSAGE" value="Revise README" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

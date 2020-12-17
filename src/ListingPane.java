@@ -316,7 +316,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
             int add = Integer.parseInt(parts[2]);
             int len = Integer.parseInt(parts[3]);
             byte[] data = debugger.readSRam(add, len);
-            showVariable (parts[0], add, data);
+            showVariable(parts[1], add, data);
           } else {
             ide.showErrorDialog("Debugger must be attached and in stop mode to view variables!");
           }

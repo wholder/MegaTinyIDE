@@ -6,6 +6,7 @@
    
 #### Special Features
    + [Pragmas](pragmas.md)
+   + [Using the Debugger](debugging.md)
    + [OCD Messaging](ocdmsg.md)
 
 #### [Compatible Programmers/Debuggers & Development Boards](programmers.md)
