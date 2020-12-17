@@ -30,7 +30,7 @@ Then, type in a new value and press [OK] to change it, or press [X] to cancel.  
 
 Currently, MegaTinyIDE does not support editing of the I/O port values, as there are side effects, such as triggering port change interrupts that MegaTinyIDE cannot handle properly.  In addition, to simplify the debugger display, only the value of the IN Port is displayed, this make it possble to see the state of both input and output pins at the same time.  However, if you hover over an active I/O pin (inactive/unavailable I/O bits are greyed out) a pop up tool tip will show whether this pin is set as an INPUT or an OUTPUT.
 
-Note: a future revision of MegaTinyIDE may add the ability to directly view and/or edit additional I/P ports, but this is yet to be designed and implemented.  If you have any suggections,[please post in Discussions](https://github.com/wholder/MegaTinyIDE/discussions).
+Note: a future revision of MegaTinyIDE may add the ability to directly view and/or edit additional I/P ports, but this is yet to be designed and implemented.  If you have any suggections, [please post in Discussions](https://github.com/wholder/MegaTinyIDE/discussions).
 
 ### Examine SRAM Values
 

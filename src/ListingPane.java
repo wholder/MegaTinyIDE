@@ -387,8 +387,12 @@ public class ListingPane extends JPanel {   // https://regex101.com
       }
     }
     pane.setText(buf.toString());
-    String title =  "Variable: " + name + " (" + data.length + " bytes)";
-    JOptionPane.showConfirmDialog(this, scroll, title, JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
+    JPanel panel = new JPanel(new BorderLayout());
+    JLabel label = new JLabel(name + " (" + data.length + " bytes)");
+    label.setHorizontalAlignment(SwingConstants.LEFT);
+    panel.add(label, BorderLayout.NORTH);
+    panel.add(scroll, BorderLayout.CENTER);
+    JOptionPane.showConfirmDialog(this, panel, "SRAM", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
   }
 
   private void build  () {

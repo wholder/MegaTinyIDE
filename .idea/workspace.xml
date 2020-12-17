@@ -13,13 +13,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/resources/documentation/debugging.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/documentation/images/editpc.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/documentation/images/sramvalues.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/documentation/images/sramview.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.MD" beforeDir="false" afterPath="$PROJECT_DIR$/README.MD" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/documentation/index.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/index.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/documentation/debugging.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/debugging.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ListingPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ListingPane.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -145,13 +142,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1596315993204</updated>
-    </task>
-    <task id="LOCAL-00048" summary="Revise README">
-      <created>1605139232145</created>
-      <option name="number" value="00048" />
-      <option name="presentableId" value="LOCAL-00048" />
-      <option name="project" value="LOCAL" />
-      <updated>1605139232145</updated>
     </task>
     <task id="LOCAL-00049" summary="Code cleanup">
       <created>1605151094127</created>
@@ -489,7 +479,14 @@
       <option name="project" value="LOCAL" />
       <updated>1608158057163</updated>
     </task>
-    <option name="localTasksCounter" value="97" />
+    <task id="LOCAL-00097" summary="debugger-related fixes">
+      <created>1608164108800</created>
+      <option name="number" value="00097" />
+      <option name="presentableId" value="LOCAL-00097" />
+      <option name="project" value="LOCAL" />
+      <updated>1608164108800</updated>
+    </task>
+    <option name="localTasksCounter" value="98" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -537,12 +534,12 @@
     <MESSAGE value="Misc updates" />
     <MESSAGE value="Revise preprocessor step in compile" />
     <MESSAGE value="Revise Settings Menu" />
-    <MESSAGE value="debugger-related fixes" />
     <MESSAGE value="Revert to jssc-2-8.0" />
     <MESSAGE value="Convert jpg images to png" />
     <MESSAGE value="debugger-related changes" />
     <MESSAGE value="Revise README" />
-    <option name="LAST_COMMIT_MESSAGE" value="Revise README" />
+    <MESSAGE value="debugger-related fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="debugger-related fixes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
