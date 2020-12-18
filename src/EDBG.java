@@ -100,7 +100,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
   public HidDevice                            device;
   private final boolean                       program;
   private final MegaTinyIDE.ChipInfo          chip;
-  private double                              targetVcc;
+  private final double                        targetVcc;
   private int                                 sequence;
   private boolean                             sessionActive;
   private boolean                             physicalActive;
