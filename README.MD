@@ -31,7 +31,7 @@ These new tinyAVR® 1-series and 0-series introduce a new, single-pin Unified Pr
 As this project advances, I hope to add many more features designed to make uisng the tinyAVR 1-series and 0-series as easy as possible, such as:
 
   - Improving the built-in documentation
-  - More example code
+  - More example code for the tinyAVR® 1-series and 0-series chips
   - Support for other UPDI-based programmers (and possibly debugging)
   - Support for additional tabs to allow opening additional source or header files
 
