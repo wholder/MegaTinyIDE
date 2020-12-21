@@ -114,19 +114,19 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
   //                                                                ( prog/debug)
   public static final int MEMTYPE_SRAM                   = 0x20;   // (--/RW) - Absolute SRAM address
   public static final int MEMTYPE_EEPROM                 = 0x22;   // (RW/RW) - Absolute EEPROM address
-  public static final int MEMTYPE_APPL_FLASH             = 0xC0;   // (RW/RO) - Address from base 0x000000 if PROG_BASE set
-  public static final int MEMTYPE_BOOT_FLASH             = 0xC1;   // (RW/RO) - Address from base 0x000000 if PROG_BASE set
-  public static final int MEMTYPE_APPL_FLASH_ATOMIC      = 0xC2;   // (WR/--) - Address from base 0x000000 if PROG_BASE set
-  public static final int MEMTYPE_BOOT_FLASH_ATOMIC      = 0xC3;   // (WR/--) - Address from base 0x000000 if PROG_BASE set
-  public static final int MEMTYPE_EEPROM_ATOMIC          = 0xC4;   // (RW/RW) - Absolute EEPROM address
-  public static final int MEMTYPE_USER_SIGNATURE         = 0xC5;   // (RW/RW) - Absolute user signature address
-  public static final int MEMTYPE_CALIBRATION_SIGNATURE  = 0xC6;   // (RO/RO) - Absolute calibration signature address
   public static final int MEMTYPE_FLASH_PAGE             = 0xB0;   // (RW/RO) - Address from base 0x000000 if PROG_BASE set
   public static final int MEMTYPE_EEPROM_PAGE            = 0xB1;   // (RW/RW) - Absolute EEPROM address
   public static final int MEMTYPE_FUSES                  = 0xB2;   // (RW/--) - Absolute fuse address (1 byte at a time)
   public static final int MEMTYPE_LOCK_BITS              = 0xB3;   // (RW/RO) - Absolute lockbit address (1 byte at a time
   public static final int MEMTYPE_SIGNATURE              = 0xB4;   // (RO/RO) - Absolute signature address
   public static final int MEMTYPE_REGFILE                = 0xB8;   // (--/RW) - Address is from base 0x00
+  public static final int MEMTYPE_APPL_FLASH             = 0xC0;   // (RW/RO) - Address from base 0x000000 if PROG_BASE set
+  public static final int MEMTYPE_BOOT_FLASH             = 0xC1;   // (RW/RO) - Address from base 0x000000 if PROG_BASE set
+  public static final int MEMTYPE_APPL_FLASH_ATOMIC      = 0xC2;   // (WR/--) - Address from base 0x000000 if PROG_BASE set
+  public static final int MEMTYPE_BOOT_FLASH_ATOMIC      = 0xC3;   // (WR/--) - Address from base 0x000000 if PROG_BASE set
+  public static final int MEMTYPE_EEPROM_ATOMIC          = 0xC4;   // (RW/RW) - Absolute EEPROM address
+  public static final int MEMTYPE_USER_SIGNATURE         = 0xC5;   // (RW/RW) - Absolute user signature address USERROW
+  public static final int MEMTYPE_CALIBRATION_SIGNATURE  = 0xC6;   // (RO/RO) - Absolute calibration signature address
   // System base addresses
   public static final int SIGNATURES_BASE                = 0x1100; // SIGROW
   public static final int PROD_SIGNATURES_BASE           = 0x1103;
@@ -1395,6 +1395,36 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
       writeMemLoop(EEPROM_BASE + address, MEMTYPE_EEPROM, data);
     } else {
       throw new EDBGException("Call to writeEeprom() when debug or program mode is not active");
+    }
+  }
+
+  /**
+   * Read "len" bytes from EEPROM starting at "address"
+   * Note: base address for EEPROM starts at 0x1400 and must be in debug or program mode to call
+   *
+   * @param address starting read address (offset from USER_SIGNATURES_BASE)
+   * @param len     number of bytes to read (max 1 page, or 32 bytes)
+   */
+  public byte[] readUserRow (int address, int len) throws EDBGException {
+    if (debugActive || programActive) {
+      return readMemLoop(USER_SIGNATURES_BASE + address, MEMTYPE_USER_SIGNATURE, len);
+    } else {
+      throw new EDBGException("Call to readUserRow() when debug or program mode is not active");
+    }
+  }
+
+  /**
+   * Write data[] array to USERROW starting at "address"
+   * Note: base address for USERROW starts at 0x1300 and must be in debug or program mode to call
+   *
+   * @param address starting write address (offset from USER_SIGNATURES_BASE)
+   * @param data    data to write (max 1 page, or 32 bytes)
+   */
+  public void writeUserRow (int address, byte[] data) throws EDBGException {
+    if (debugActive || programActive) {
+      writeMemLoop(USER_SIGNATURES_BASE + address, MEMTYPE_USER_SIGNATURE, data);
+    } else {
+      throw new EDBGException("Call to writeUserRow() when debug or program mode is not active");
     }
   }
 

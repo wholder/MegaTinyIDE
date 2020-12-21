@@ -68,8 +68,6 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
   private final JMenuItem         build;
   private final JMenuItem         progFlash;
   private final JMenuItem         readFuses;
-  private final JMenuItem         readEeprom;
-  private final JMenuItem         idTarget;
   private final JMenu             progMenu;
   private final Preferences       prefs = Preferences.userRoot().node(this.getClass().getName());
   private final JSSCPort          jPort = new JSSCPort(prefs);
@@ -802,16 +800,17 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
       }
     });
     /*
-     *    View EEPROM Contents
+     *    View/Modify EEPROM Contents
      */
+    JMenuItem readEeprom;
     actions.add(readEeprom = new JMenuItem("Read/Modify EEPROM"));
-    readEeprom.setToolTipText("Used to Read Device's EEPROM Bytes");
+    readEeprom.setToolTipText("Used to Read & Modify Device's EEPROM Bytes");
     readEeprom.addActionListener(e -> {
       EDBG edbg = null;
       boolean attached = false;
       try {
         attached = debugger != null;
-        edbg = getDebugger(true);
+        edbg = getDebugger(false);
         byte[] sig = edbg.getDeviceSignature();         // 3 bytes
         String code = String.format("%02X%02X%02X", sig[0], sig[1], sig[2]);
         ChipInfo chip = chipSignatures.get(code);
@@ -835,8 +834,39 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
       }
     });
     /*
+     *    View/Modify USERROW Contents
+     */
+    JMenuItem readUserRow;
+    actions.add(readUserRow = new JMenuItem("Read/Modify USERROW"));
+    readUserRow.setToolTipText("Used to Read & Modify Device's USERROW Bytes");
+    readUserRow.addActionListener(e -> {
+      EDBG edbg = null;
+      boolean attached = false;
+      try {
+        attached = debugger != null;
+        edbg = getDebugger(false);
+        byte[] data = edbg.readUserRow(0, 32);
+        HexEditPane hexPane = new HexEditPane(this, 8, 8);
+        EDBG debugger = edbg;
+        hexPane.showVariable("USERROW", null, 0, data, new HexEditPane.Update() {
+          @Override
+          public void setValue (int offset, int value) throws EDBG.EDBGException {
+            debugger.writeUserRow(offset, new byte[] {(byte) value});
+          }
+        });
+      } catch (EDBG.EDBGException ex) {
+        showErrorDialog(ex.getMessage());
+      } finally {
+        // Don't close connection if it was open before
+        if (!attached && edbg != null) {
+          edbg.close();
+        }
+      }
+    });
+    /*
      *    Read Signature and Serial Number
      */
+    JMenuItem idTarget;
     actions.add(idTarget = new JMenuItem("Identify Device"));
     idTarget.setToolTipText("Used to Read and Send Back Device's Signature & Serial Number");
     idTarget.addActionListener(e -> {
