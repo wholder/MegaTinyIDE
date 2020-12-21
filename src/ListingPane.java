@@ -316,7 +316,13 @@ public class ListingPane extends JPanel {   // https://regex101.com
             int add = Integer.parseInt(parts[2]);
             int len = Integer.parseInt(parts[3]);
             byte[] data = debugger.readSRam(add, len);
-            showVariable(parts[1], add, data);
+            HexEditPane hexPane = new HexEditPane(4, 8);
+            hexPane.showVariable("SRAM", parts[1], add, data, new HexEditPane.Update() {
+              @Override
+              public void setValue (int offset, int value) throws Exception {
+                debugger.writeSRam(add + offset, new byte[] {(byte) value});
+              }
+            });
           } else {
             ide.showErrorDialog("Debugger must be attached and in stop mode to view variables!");
           }
@@ -329,7 +335,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
   }
 
   static class MyJTextPane2 extends MyJTextPane {
-    int rowHeight;
+    int rowHeight, colWidth;
     int rows;
 
     MyJTextPane2 (Font font, int maxRows, Border border) {
@@ -338,6 +344,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
       setBorder(border);
       FontMetrics fontMetrics = getFontMetrics(font);
       rowHeight = fontMetrics.getHeight();
+      colWidth = fontMetrics.charWidth('0');
     }
 
     int getScrollHeight () {
@@ -353,46 +360,6 @@ public class ListingPane extends JPanel {   // https://regex101.com
       int height = estimatedRows * rowHeight + insets.top + insets.bottom;
       return new Dimension(width, height);
     }
-  }
-
-  private void showVariable (String name, int add, byte[] data) {
-    int cols = 8;
-    MyJTextPane2 pane = new MyJTextPane2(codeFont, 8, BorderFactory.createEmptyBorder(2, 3, 2, 4));
-    pane.setEditable(false);
-    JScrollPane scroll = new JScrollPane(pane);
-    scroll.getVerticalScrollBar().setUnitIncrement(pane.getScrollHeight());
-    StringBuilder buf = new StringBuilder();
-    int count = cols;
-    int base = 0;
-    for (int ii = 0; ii < data.length; ii++) {
-      if ((ii % cols) == 0) {
-        if (ii != 0) {
-          buf.append("\n");
-          count = cols;
-          base = ii;
-        }
-        buf.append(String.format("0x%04X: ", add + ii));
-      }
-      buf.append(String.format("0x%02X ", data[ii]));
-      count--;
-      if (count == 0 || ii == data.length - 1) {
-        while (count-- > 0 && ii >= cols) {
-          buf.append("     ");
-        }
-        buf.append("| ");
-        for (int jj = 0; jj < cols && (base + jj) < data.length; jj++) {
-          int val =  (int) data[base + jj] & 0xFF;
-          buf.append(String.format("%c", (val <= 0x7F && val >= 0x20 ? val : '.')));
-        }
-      }
-    }
-    pane.setText(buf.toString());
-    JPanel panel = new JPanel(new BorderLayout());
-    JLabel label = new JLabel(name + " (" + data.length + " bytes)");
-    label.setHorizontalAlignment(SwingConstants.LEFT);
-    panel.add(label, BorderLayout.NORTH);
-    panel.add(scroll, BorderLayout.CENTER);
-    JOptionPane.showConfirmDialog(this, panel, "SRAM", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
   }
 
   private void build  () {
@@ -732,7 +699,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
                           popup.dispose();
                         } catch (Exception ex) {
                           ImageIcon icon = new ImageIcon(Utility.class.getResource("images/warning-32x32.png"));
-                          showMessageDialog(popup, "Must be hexidecimal", "Invalid value", JOptionPane.PLAIN_MESSAGE, icon);
+                          showMessageDialog(popup, "Must be hexadecimal", "Invalid value", JOptionPane.PLAIN_MESSAGE, icon);
                         }
                       }
                     });

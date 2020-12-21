@@ -6,7 +6,7 @@ MegaTinyIDE is a simple, GNU-based IDE that's derived from another project of mi
 
 ### Project Goals
 
-These new tinyAVR® 1-series and 0-series introduce a new, single-pin Unified Program and Debug Interface (UPDI), which makes it possible to do away with the need for a boot loader and still make use of all the I/O pins except RESET, which is the pin used by UPDI.  While UPDI is supported by Microchip's development tools, such a MPLAB, I wanted to develop a lightweight, alternative IDE similar to the Arduino IDE, but streamlined to support just this new tinyAVR architecture.  In addition, I wanted to add other, special features such as those listed below:
+The tinyAVR® 1-series and 0-series chips introduce a single-pin Unified Program and Debug Interface (UPDI), which makes it possible to do away with the need for a boot loader and still make use of all the I/O pins except RESET, which is the pin used by UPDI.  While UPDI is supported by Microchip's development tools, such a MPLAB, I wanted to develop a lightweight, alternative IDE similar to the Arduino IDE, but streamlined to support just this new tinyAVR architecture.  In addition, I wanted to add other, special features such as those listed below:
 
   - Now supports include of user files using `#include "file.h"` notation
   - Automatically annotate interrupt vectors in listing file (optional)
@@ -41,7 +41,7 @@ While more testing is needed, I am declaring the code as operational (Beta statu
 
 ### Debugging Interface
 
-<p align="center"><img src="/images/MegaTinyIDE%20Debugging.png"></p>
+<p align="center"><img src="/resources/documentation/images/debugging.png"></p>
 
 MegaTinyIDE supports on-chip debugging of using the one pin UPDI interface.  Currently, this requires using a UPDI programmer/debugger, such as the [Atmel-ICE](https://www.microchip.com/DevelopmentTools/ProductDetails/ATATMEL-ICE) or [PICKit-4](https://www.microchip.com/Developmenttools/ProductDetails/PG164140), but MegaTinyIDE can also talk to the built-in debugger chips on the [ATTiny3217-Curiosity-Nano](https://www.microchip.com/DevelopmentTools/ProductDetails/PartNO/EV50J96A), [ATTiny416-Xplained-Nano](https://www.microchip.com/DevelopmentTools/ProductDetails/PartNO/ATTINY416-XNANO) and [ATTiny817-XPlained-Mini](https://www.microchip.com/developmenttools/ProductDetails/attiny817-xmini) and the ATTiny3217-Curiosity-Nano board can also be adapted to function as inexpensive programmer/debugger.
 

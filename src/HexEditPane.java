@@ -1,0 +1,209 @@
+import javax.swing.*;
+import javax.swing.text.*;
+import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import static javax.swing.JOptionPane.showMessageDialog;
+
+public class HexEditPane extends JTextPane {
+  DefaultHighlightPainter     hp = new DefaultHighlightPainter(Color.lightGray);
+  private static final Font   codeFont =new Font("Menlo", Font.PLAIN, 12);
+  private final int           rowHeight;
+  int                         rowWidth;
+  private final int           rows, cols;
+
+  interface Update {
+    void setValue (int offset, int value) throws Exception;
+  }
+
+  HexEditPane (int rows, int cols) {
+    this.rows = rows;
+    this.cols = cols;
+    rowWidth = 8 + cols * 6 + 2 + 1;
+    setFont(codeFont);
+    setBorder(BorderFactory.createEmptyBorder(2, 3, 2, 4));
+    FontMetrics fontMetrics = getFontMetrics(codeFont);
+    rowHeight = fontMetrics.getHeight();
+    setEditable(false);
+    setCaret(new DefaultCaret() {
+      @Override
+      public void mousePressed (MouseEvent e) {
+      }
+
+      @Override
+      public void mouseDragged (MouseEvent e) {
+      }
+    });
+  }
+
+  private boolean isPrintable (int val) {
+    return val <= 0x7F && val >= 0x20;
+  }
+
+  public void showVariable (String type, String varName, int add, byte[] data, Update updater) {
+    int[] posHex = new int[data.length];
+    int[] posChr = new int[data.length];
+    JScrollPane scroll = new JScrollPane(this);
+    scroll.getVerticalScrollBar().setUnitIncrement(rowHeight);
+    StringBuilder buf = new StringBuilder();
+    int count = cols;
+    int base = 0;
+    for (int ii = 0; ii < data.length; ii++) {
+      if ((ii % cols) == 0) {
+        if (ii != 0) {
+          buf.append("\n");
+          count = cols;
+          base = ii;
+        }
+        buf.append(String.format("0x%04X: ", add + ii));
+      }
+      posHex[ii] = buf.length();
+      buf.append(String.format("0x%02X ", data[ii]));
+      count--;
+      if (count == 0 || ii == data.length - 1) {
+        while (count-- > 0 && ii >= cols) {
+          buf.append("     ");
+        }
+        buf.append("| ");
+        for (int jj = 0; jj < cols && (base + jj) < data.length; jj++) {
+          int val =  (int) data[base + jj] & 0xFF;
+          posChr[base + jj] = buf.length();
+          buf.append(String.format("%c", (isPrintable(val) ? val : '.')));
+        }
+      }
+    }
+    addMouseListener(new MouseAdapter() {
+      @Override
+      public void mousePressed (MouseEvent ev) {
+        int pos = getUI().viewToModel(HexEditPane.this, ev.getPoint());
+        int row = pos / rowWidth;
+        int col = pos % rowWidth;
+        getHighlighter().removeAllHighlights();
+        int off;
+        if (col >= 8 && col < cols * 5 + 8) {
+          off = row * cols + (col - 8) / 5;
+          if (off < data.length) {
+            try {
+              Highlighter highlighter = getHighlighter();
+              highlighter.addHighlight(posHex[off], posHex[off] + 4, hp);
+              highlighter.addHighlight(posChr[off], posChr[off] + 1, hp);
+              if (SwingUtilities.isRightMouseButton(ev)) {
+                setToolTipText(null);
+                JPanel panel = new JPanel();
+                panel.setLayout(new FlowLayout());
+                JLabel lbl = new JLabel("New Value:");
+                panel.add(lbl);
+                JTextField field = new JTextField(2);
+                field.setText(String.format("%02X", 0));
+                field.setEnabled(true);
+                field.setEditable(true);
+                field.setHorizontalAlignment(SwingConstants.CENTER);
+                panel.add(field);
+                JButton okBtn = new JButton("OK");
+                okBtn.setPreferredSize(new Dimension(30, 20));
+                panel.add(okBtn);
+                JButton exitBtn = new JButton("X");
+                exitBtn.setForeground(Color.red);
+                exitBtn.setPreferredSize(new Dimension(20, 20));
+                panel.add(exitBtn);
+                JDialog popup = new JDialog();
+                okBtn.addMouseListener(new MouseAdapter() {
+                  @Override
+                  public void mousePressed (MouseEvent ev) {
+                    String val = field.getText();
+                    try {
+                      int nVal = Integer.parseInt(val, 16);
+                      try {
+                        updater.setValue(off, nVal);
+                      } catch (Exception ex) {
+                        ex.printStackTrace();
+                        ImageIcon icon = new ImageIcon(HexEditPane.class.getResource("images/warning-32x32.png"));
+                        showMessageDialog(popup, "Unkown Error", ex.getMessage(), JOptionPane.PLAIN_MESSAGE, icon);
+                        return;
+                      }
+                      setSelectionStart(posHex[off]);
+                      setSelectionEnd(posHex[off] + 4);
+                      setEditable(true);
+                      replaceSelection(String.format("0x%02X", nVal));
+                      if (isPrintable(nVal)) {
+                        setSelectionStart(posChr[off]);
+                        setSelectionEnd(posChr[off] + 1);
+                        replaceSelection(Character.toString((char) nVal));
+                      }
+                      setEditable(false);
+                      repaint();
+                      popup.dispose();
+                    } catch (Exception ex) {
+                      ImageIcon icon = new ImageIcon(HexEditPane.class.getResource("images/warning-32x32.png"));
+                      showMessageDialog(popup, "Must be hexadecimal", "Invalid value", JOptionPane.PLAIN_MESSAGE, icon);
+                      field.requestFocusInWindow();
+                      field.setText("00");
+                      field.selectAll();
+                    }
+                  }
+                });
+                exitBtn.addMouseListener(new MouseAdapter() {
+                  @Override
+                  public void mousePressed (MouseEvent ev) {
+                    popup.dispose();
+                  }
+                });
+                popup.setUndecorated(true);
+                popup.setModal(true);
+                popup.setLayout(new BorderLayout());
+                popup.getContentPane().add(panel, BorderLayout.CENTER);
+                Point temp = ev.getLocationOnScreen();//popup.getLocation();
+                popup.setLocation(temp.x + 20, temp.y);
+                field.requestFocusInWindow();
+                field.selectAll();
+                popup.pack();
+                popup.setAlwaysOnTop(true);
+                popup.setVisible(true);
+              }
+            } catch (Exception ex) {
+              ex.printStackTrace();
+            }
+          }
+        }
+      }
+    });
+    setText(buf.toString());
+    JPanel panel = new JPanel(new BorderLayout());
+    if (varName != null) {
+      JLabel label = new JLabel(varName + " (" + data.length + " bytes)");
+      label.setHorizontalAlignment(SwingConstants.LEFT);
+      panel.add(label, BorderLayout.NORTH);
+    }
+    panel.add(scroll, BorderLayout.CENTER);
+    JOptionPane.showConfirmDialog(null, panel, type, JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
+  }
+
+  @Override
+  public Dimension getPreferredScrollableViewportSize() {
+    Dimension base = super.getPreferredSize();
+    Insets insets = getInsets();
+    int width = base.width + insets.left + insets.right;
+    int estimatedRows = Math.min(rows, (int) (base.getHeight() / rowHeight));
+    int height = estimatedRows * rowHeight + insets.top + insets.bottom;
+    return new Dimension(width, height);
+  }
+
+  // Allow horizontal scrollbar to appear
+  @Override
+  public boolean getScrollableTracksViewportWidth() {
+    return false;
+  }
+
+  // Test code
+  public static void main (String[] args) {
+    HexEditPane varPane = new HexEditPane(8, 8);
+    byte[] data = new byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17};
+    varPane.showVariable ("Test", "var1", 0, data, new Update() {
+      public void setValue (int offset, int value) {
+        System.out.printf("setValue(0x%02X, 0x%02X)\n", offset, value);
+      }
+    });
+  }
+}

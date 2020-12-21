@@ -808,7 +808,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
      *    View EEPROM Contents
      */
     JMenuItem readEeprom;
-    actions.add(readEeprom = new JMenuItem("Read EEPROM"));
+    actions.add(readEeprom = new JMenuItem("Read/Modify EEPROM"));
     readEeprom.setToolTipText("Used to Read Device's EEPROM Bytes");
     readEeprom.addActionListener(e -> {
       EDBG.Programmer prog = getSelectedProgrammer();
@@ -821,38 +821,14 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
           ChipInfo chip = chipSignatures.get(code);
           int eBytes = chip.getInt("eeprom");
           byte[] data = edbg.readEeprom(0, eBytes);
-          int cols = 8;
-          ListingPane.MyJTextPane2 pane = new ListingPane.MyJTextPane2(tFont, 8, BorderFactory.createEmptyBorder(2, 3, 2, 4));
-          pane.setEditable(false);
-          JScrollPane scroll = new JScrollPane(pane);
-          scroll.getVerticalScrollBar().setUnitIncrement(pane.getScrollHeight());
-          StringBuilder buf = new StringBuilder();
-          int count = cols;
-          int base = 0;
-          for (int ii = 0; ii < data.length; ii++) {
-            if ((ii % cols) == 0) {
-              if (ii != 0) {
-                buf.append("\n");
-                count = cols;
-                base = ii;
-              }
-              buf.append(String.format("0x%04X: ", ii));
+          HexEditPane hexPane = new HexEditPane(8, 8);
+          EDBG debugger = edbg;
+          hexPane.showVariable("EEPROM", null, 0, data, new HexEditPane.Update() {
+            @Override
+            public void setValue (int offset, int value) throws Exception {
+              debugger.writeEeprom(offset, new byte[] {(byte) value});
             }
-            buf.append(String.format("0x%02X ", data[ii]));
-            count--;
-            if (count == 0 || ii == data.length - 1) {
-              while (count-- > 0 && ii >= cols) {
-                buf.append("     ");
-              }
-              buf.append("| ");
-              for (int jj = 0; jj < cols && (base + jj) < data.length; jj++) {
-                int val =  (int) data[base + jj] & 0xFF;
-                buf.append(String.format("%c", (val <= 0x7F && val >= 0x20 ? val : '.')));
-              }
-            }
-          }
-          pane.setText(buf.toString());
-          JOptionPane.showConfirmDialog(this, scroll, "EEPROM: " + chip.name, JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
+          });
         } catch (EDBG.EDBGException ex) {
           showErrorDialog(ex.getMessage());
         } finally {

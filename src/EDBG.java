@@ -1372,7 +1372,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    */
   public byte[] readEeprom (int address, int len) {
     if (debugActive || programActive) {
-      return readMemLoop(address, MEMTYPE_EEPROM, len);
+      return readMemLoop(EEPROM_BASE + address, MEMTYPE_EEPROM, len);
     } else {
       throw new EDBGException("Call to readEeprom() when debug or program mode is not active");
     }
@@ -1387,7 +1387,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    */
   public void writeEeprom (int address, byte[] data) {
     if (debugActive || programActive) {
-      writeMemLoop(address, MEMTYPE_EEPROM, data);
+      writeMemLoop(EEPROM_BASE + address, MEMTYPE_EEPROM, data);
     } else {
       throw new EDBGException("Call to writeEeprom() when debug or program mode is not active");
     }

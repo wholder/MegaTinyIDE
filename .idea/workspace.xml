@@ -13,7 +13,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/resources/documentation/images/debugging.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/HexEditPane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.MD" beforeDir="false" afterPath="$PROJECT_DIR$/README.MD" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/MegaTinyIDE Debugging.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/MegaTinyIDE Debugging.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/documentation/debugging.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/debugging.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/EDBG.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/EDBG.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ListingPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ListingPane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MegaTinyIDE.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MegaTinyIDE.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,7 +47,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/resources/test" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/images" />
     <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -49,6 +58,7 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/images" />
       <recent name="$PROJECT_DIR$/resources/test" />
     </key>
     <key name="MoveMembersDialog.RECENTS_KEY">
@@ -72,8 +82,8 @@
     </key>
   </component>
   <component name="RunManager" selected="Application.MegaTinyIDE">
-    <configuration name="FusePane" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="FusePane" />
+    <configuration name="HexEditPane" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="HexEditPane" />
       <module name="MegaTinyIDE" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -115,19 +125,19 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="Application.FusePane" />
       <item itemvalue="Application.MegaTinyIDE" />
       <item itemvalue="Application.ParmDialog" />
       <item itemvalue="Application.ToolchainCombiner (1)" />
       <item itemvalue="Application.NativeBuilder" />
+      <item itemvalue="Application.HexEditPane" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.MegaTinyIDE" />
+        <item itemvalue="Application.HexEditPane" />
         <item itemvalue="Application.NativeBuilder" />
         <item itemvalue="Application.ToolchainCombiner (1)" />
         <item itemvalue="Application.ParmDialog" />
-        <item itemvalue="Application.FusePane" />
       </list>
     </recent_temporary>
   </component>
@@ -139,13 +149,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1596315993204</updated>
-    </task>
-    <task id="LOCAL-00052" summary="Revise Logo file">
-      <created>1605740800537</created>
-      <option name="number" value="00052" />
-      <option name="presentableId" value="LOCAL-00052" />
-      <option name="project" value="LOCAL" />
-      <updated>1605740800538</updated>
     </task>
     <task id="LOCAL-00053" summary="Misc fixes">
       <created>1605742383370</created>
@@ -483,7 +486,14 @@
       <option name="project" value="LOCAL" />
       <updated>1608253440829</updated>
     </task>
-    <option name="localTasksCounter" value="101" />
+    <task id="LOCAL-00101" summary="Revise README">
+      <created>1608253832706</created>
+      <option name="number" value="00101" />
+      <option name="presentableId" value="LOCAL-00101" />
+      <option name="project" value="LOCAL" />
+      <updated>1608253832706</updated>
+    </task>
+    <option name="localTasksCounter" value="102" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
