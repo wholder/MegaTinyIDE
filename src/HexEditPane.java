@@ -9,10 +9,9 @@ import static javax.swing.JOptionPane.showMessageDialog;
 
 public class HexEditPane extends JTextPane {
   DefaultHighlightPainter     hp = new DefaultHighlightPainter(Color.lightGray);
-  private static final Font   codeFont =new Font("Menlo", Font.PLAIN, 12);
-  private Component           parent;
+  private static final Font   codeFont = Utility.getCodeFont(12);
+  private final Component     parent;
   private final int           rowHeight;
-  int                         rowWidth;
   private final int           rows, cols;
 
   interface Update {
@@ -23,7 +22,6 @@ public class HexEditPane extends JTextPane {
     this.parent = parent;
     this.rows = rows;
     this.cols = cols;
-    rowWidth = 8 + cols * 6 + 2 + 1;
     setFont(codeFont);
     setBorder(BorderFactory.createEmptyBorder(2, 3, 2, 4));
     FontMetrics fontMetrics = getFontMetrics(codeFont);
@@ -47,6 +45,7 @@ public class HexEditPane extends JTextPane {
   public void showVariable (String type, String varName, int add, byte[] data, Update updater) {
     int[] posHex = new int[data.length];
     int[] posChr = new int[data.length];
+    int rowWidth = 8 + cols * 6 + 2 + 1;
     JScrollPane scroll = new JScrollPane(this);
     scroll.getVerticalScrollBar().setUnitIncrement(rowHeight);
     StringBuilder buf = new StringBuilder();
@@ -70,107 +69,109 @@ public class HexEditPane extends JTextPane {
         }
         buf.append("| ");
         for (int jj = 0; jj < cols && (base + jj) < data.length; jj++) {
-          int val =  (int) data[base + jj] & 0xFF;
+          int val = (int) data[base + jj] & 0xFF;
           posChr[base + jj] = buf.length();
           buf.append(String.format("%c", (isPrintable(val) ? val : '.')));
         }
       }
     }
-    addMouseListener(new MouseAdapter() {
-      @Override
-      public void mousePressed (MouseEvent ev) {
-        int pos = getUI().viewToModel(HexEditPane.this, ev.getPoint());
-        int row = pos / rowWidth;
-        int col = pos % rowWidth;
-        getHighlighter().removeAllHighlights();
-        int off;
-        if (col >= 8 && col < cols * 5 + 8) {
-          off = row * cols + (col - 8) / 5;
-          if (off < data.length) {
-            try {
-              Highlighter highlighter = getHighlighter();
-              highlighter.addHighlight(posHex[off], posHex[off] + 4, hp);
-              highlighter.addHighlight(posChr[off], posChr[off] + 1, hp);
-              if (SwingUtilities.isRightMouseButton(ev)) {
-                setToolTipText(null);
-                JPanel panel = new JPanel();
-                panel.setLayout(new FlowLayout());
-                JLabel lbl = new JLabel("New Value:");
-                panel.add(lbl);
-                JTextField field = new JTextField(2);
-                field.setText(String.format("%02X", 0));
-                field.setEnabled(true);
-                field.setEditable(true);
-                field.setHorizontalAlignment(SwingConstants.CENTER);
-                panel.add(field);
-                JButton okBtn = new JButton("OK");
-                okBtn.setPreferredSize(new Dimension(30, 20));
-                panel.add(okBtn);
-                JButton exitBtn = new JButton("X");
-                exitBtn.setForeground(Color.red);
-                exitBtn.setPreferredSize(new Dimension(20, 20));
-                panel.add(exitBtn);
-                JDialog popup = new JDialog();
-                okBtn.addMouseListener(new MouseAdapter() {
-                  @Override
-                  public void mousePressed (MouseEvent ev) {
-                    String val = field.getText();
-                    try {
-                      int nVal = Integer.parseInt(val, 16);
+    if (updater != null) {
+      addMouseListener(new MouseAdapter() {
+        @Override
+        public void mousePressed (MouseEvent ev) {
+          int pos = getUI().viewToModel(HexEditPane.this, ev.getPoint());
+          int row = pos / rowWidth;
+          int col = pos % rowWidth;
+          getHighlighter().removeAllHighlights();
+          int off;
+          if (col >= 8 && col < cols * 5 + 8) {
+            off = row * cols + (col - 8) / 5;
+            if (off < data.length) {
+              try {
+                Highlighter highlighter = getHighlighter();
+                highlighter.addHighlight(posHex[off], posHex[off] + 4, hp);
+                highlighter.addHighlight(posChr[off], posChr[off] + 1, hp);
+                if (SwingUtilities.isRightMouseButton(ev)) {
+                  setToolTipText(null);
+                  JPanel panel = new JPanel();
+                  panel.setLayout(new FlowLayout());
+                  JLabel lbl = new JLabel("New Value:");
+                  panel.add(lbl);
+                  JTextField field = new JTextField(2);
+                  field.setText(String.format("%02X", 0));
+                  field.setEnabled(true);
+                  field.setEditable(true);
+                  field.setHorizontalAlignment(SwingConstants.CENTER);
+                  panel.add(field);
+                  JButton okBtn = new JButton("OK");
+                  okBtn.setPreferredSize(new Dimension(30, 20));
+                  panel.add(okBtn);
+                  JButton exitBtn = new JButton("X");
+                  exitBtn.setForeground(Color.red);
+                  exitBtn.setPreferredSize(new Dimension(20, 20));
+                  panel.add(exitBtn);
+                  JDialog popup = new JDialog();
+                  okBtn.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mousePressed (MouseEvent ev) {
+                      String val = field.getText();
                       try {
-                        updater.setValue(off, nVal);
+                        int nVal = Integer.parseInt(val, 16);
+                        try {
+                          updater.setValue(off, nVal);
+                        } catch (Exception ex) {
+                          ex.printStackTrace();
+                          ImageIcon icon = new ImageIcon(HexEditPane.class.getResource("images/warning-32x32.png"));
+                          showMessageDialog(popup, "Unknown Error", ex.getMessage(), JOptionPane.PLAIN_MESSAGE, icon);
+                          return;
+                        }
+                        setSelectionStart(posHex[off]);
+                        setSelectionEnd(posHex[off] + 4);
+                        setEditable(true);
+                        replaceSelection(String.format("0x%02X", nVal));
+                        if (isPrintable(nVal)) {
+                          setSelectionStart(posChr[off]);
+                          setSelectionEnd(posChr[off] + 1);
+                          replaceSelection(Character.toString((char) nVal));
+                        }
+                        setEditable(false);
+                        repaint();
+                        popup.dispose();
                       } catch (Exception ex) {
-                        ex.printStackTrace();
                         ImageIcon icon = new ImageIcon(HexEditPane.class.getResource("images/warning-32x32.png"));
-                        showMessageDialog(popup, "Unkown Error", ex.getMessage(), JOptionPane.PLAIN_MESSAGE, icon);
-                        return;
+                        showMessageDialog(popup, "Must be hexadecimal", "Invalid value", JOptionPane.PLAIN_MESSAGE, icon);
+                        field.requestFocusInWindow();
+                        field.setText("00");
+                        field.selectAll();
                       }
-                      setSelectionStart(posHex[off]);
-                      setSelectionEnd(posHex[off] + 4);
-                      setEditable(true);
-                      replaceSelection(String.format("0x%02X", nVal));
-                      if (isPrintable(nVal)) {
-                        setSelectionStart(posChr[off]);
-                        setSelectionEnd(posChr[off] + 1);
-                        replaceSelection(Character.toString((char) nVal));
-                      }
-                      setEditable(false);
-                      repaint();
-                      popup.dispose();
-                    } catch (Exception ex) {
-                      ImageIcon icon = new ImageIcon(HexEditPane.class.getResource("images/warning-32x32.png"));
-                      showMessageDialog(popup, "Must be hexadecimal", "Invalid value", JOptionPane.PLAIN_MESSAGE, icon);
-                      field.requestFocusInWindow();
-                      field.setText("00");
-                      field.selectAll();
                     }
-                  }
-                });
-                exitBtn.addMouseListener(new MouseAdapter() {
-                  @Override
-                  public void mousePressed (MouseEvent ev) {
-                    popup.dispose();
-                  }
-                });
-                popup.setUndecorated(true);
-                popup.setModal(true);
-                popup.setLayout(new BorderLayout());
-                popup.getContentPane().add(panel, BorderLayout.CENTER);
-                Point temp = ev.getLocationOnScreen();//popup.getLocation();
-                popup.setLocation(temp.x + 20, temp.y);
-                field.requestFocusInWindow();
-                field.selectAll();
-                popup.pack();
-                popup.setAlwaysOnTop(true);
-                popup.setVisible(true);
+                  });
+                  exitBtn.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mousePressed (MouseEvent ev) {
+                      popup.dispose();
+                    }
+                  });
+                  popup.setUndecorated(true);
+                  popup.setModal(true);
+                  popup.setLayout(new BorderLayout());
+                  popup.getContentPane().add(panel, BorderLayout.CENTER);
+                  Point temp = ev.getLocationOnScreen();
+                  popup.setLocation(temp.x + 20, temp.y);
+                  field.requestFocusInWindow();
+                  field.selectAll();
+                  popup.pack();
+                  popup.setAlwaysOnTop(true);
+                  popup.setVisible(true);
+                }
+              } catch (Exception ex) {
+                ex.printStackTrace();
               }
-            } catch (Exception ex) {
-              ex.printStackTrace();
             }
           }
         }
-      }
-    });
+      });
+    }
     setText(buf.toString());
     JPanel panel = new JPanel(new BorderLayout());
     if (varName != null) {

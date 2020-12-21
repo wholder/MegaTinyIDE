@@ -328,7 +328,7 @@ class ParmDialog extends JDialog {
       jj++;
       parm.hookActionListener();
     }
-    // Define a custion action button so we can catch and save the screen coordinates where the "Place" button was clicked...
+    // Define a custom action button so we can catch and save the screen coordinates where the "Place" button was clicked...
     // Yeah, it's a lot of weird code but it avoids having the placed object not show up until the mouse is moved.
     JButton button = new JButton(buttons[0]);
     button.addActionListener(actionEvent -> {

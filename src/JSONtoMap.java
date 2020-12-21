@@ -27,7 +27,7 @@ public class JSONtoMap {
   }
 
   /**
-   * Parse a simplfied version of JSON and convert into a nested Map and List objects
+   * Parse a simplified version of JSON and convert into a nested Map and List objects
    * @param src JSON file source in a String
    * @return output Map
    */

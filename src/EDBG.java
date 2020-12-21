@@ -10,7 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
   /*
-    Peripherial Memory Map (Note: 32 General Purpose Working Registers in separate I/O space)
+    Peripheral Memory Map (Note: 32 General Purpose Working Registers in separate I/O space)
       0x0000  VPORTA      Virtual Port A Base
       0x0004  VPORTB      Virtual Port B Base
       0x0008  VPORTC      Virtual Port C Base

@@ -143,9 +143,13 @@ class Utility {
       for (File file : files) {
         if (file.isDirectory()) {
           removeFiles(file);
-        }
-        if (!file.delete()) {
-          throw new IOException("removeFiles() unable to delete file: " + file.getName());
+          if (!file.delete()) {
+            throw new IOException("removeFiles() unable to delete directory: " + file.getName());
+          }
+        } else {
+          if (!file.delete()) {
+            throw new IOException("removeFiles() unable to delete file: " + file.getName());
+          }
         }
       }
     }

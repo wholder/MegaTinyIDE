@@ -28,20 +28,9 @@ import java.util.prefs.Preferences;
 class MarkupView extends JPanel {
   private final JEditorPane           jEditorPane;
   private final ArrayList<StackItem>  stack = new ArrayList<>();
-  private final String                codeFont;
+  private static final Font           codeFont = Utility.getCodeFont(12);
   private String                      basePath, currentPage;
   Map<String,String>                  parmMap;
-
-  {
-    String os = System.getProperty("os.name").toLowerCase();
-    if (os.contains("win")) {
-      codeFont = "Consolas";
-    } else if (os.contains("mac")) {
-      codeFont ="Menlo";
-    } else {
-      codeFont ="Courier";
-    }
-  }
 
   private static class StackItem {
     private final String  location, parms;
@@ -90,7 +79,7 @@ class MarkupView extends JPanel {
     /**
      * This is needed to draw the BufferedImage to the screen, otherwise only images loaded by the superclass
      * will be displayed...
-     * @param g Grpahics context
+     * @param g Graphics context
      * @param allocation bounds for drawing the image on the JEditorPane
      */
     @Override

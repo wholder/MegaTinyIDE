@@ -150,7 +150,7 @@ public class FusePane extends JPanel {
     if (comps.containsKey(name)) {
       comps.get(name).setValue(value);
     } else {
-      throw new IllegalStateException("setFieldValue() unkn ow field name: " + name);
+      throw new IllegalStateException("setFieldValue() unknown field name: " + name);
     }
   }
 

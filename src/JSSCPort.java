@@ -125,7 +125,7 @@ public class JSSCPort implements SerialPortEventListener {
 
   /**
    * Get available baud rates
-   * @return array of available vaud rates
+   * @return array of available baud rates
    */
   public static String[] getBaudRates () {
     List<String> rates = new ArrayList<>(baudRates.keySet());

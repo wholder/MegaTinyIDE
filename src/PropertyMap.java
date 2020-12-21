@@ -7,8 +7,7 @@ import java.util.*;
    *    valset1: val1 = 1, val2 = 4, val3 = 5
    *    valset2: val1 = 1, val2 = 4, val3 = 1
 
-   * In addition, the "parent" keyword can be used to import a shared set of values from the top level
-   * Mapsuch as:
+   * In addition, the "parent" keyword can be used to import a shared set of values from the top level Map such as:
    *    baseVals: val1 = 1, val2 = 4
    *    valset1: parent = baseVals, val3 = 5
    *    valset2: parent = baseVals, val3 = 1

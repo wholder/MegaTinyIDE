@@ -56,12 +56,12 @@ public class UPDIDecoder {
    *
    *  0x09  UPDI.ASI_CTRLA
    *          Bits 7-2    Undefined
-   *          Bits 1-0    UPDICLKDIV      UPDI Clock Divider Select (0 = reseved, 1 = 16 MHz, 2 = 8 MHz, 3 = 4 MHz)
+   *          Bits 1-0    UPDICLKDIV      UPDI Clock Divider Select (0 = reserved, 1 = 16 MHz, 2 = 8 MHz, 3 = 4 MHz)
    *
    *  0x0A  UPDI.ASI_SYS_CTRLA
    *          Bits 7-2    Undefined
    *          Bit 1       UROWWRITE_FINAL User Row Programming Done, Writing ‘1’ starts programming the User Row Data to the Flash.
-   *          Bit 0       CLKREQ          Request System Clock (write 1 to resuest system clock, write 0 to lower clock request)
+   *          Bit 0       CLKREQ          Request System Clock (write 1 to request system clock, write 0 to lower clock request)
    *
    *  0x0B  UPDI.ASI_SYS_STATUS
    *          Bits 7-6    Undefined

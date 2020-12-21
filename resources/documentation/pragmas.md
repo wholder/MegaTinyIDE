@@ -24,7 +24,7 @@ The `target` or `chip` pragma uses the `-mmcu` switch to tell the compiler which
 
      #pragma chip attiny212
 
-Note: the target attiny chip can also be set in MegaTinyIDE using the `Target` menu, but this pragma is a way to set the target in the code do that is setup automaticlaly each time the source file is loaded.
+Note: the target attiny chip can also be set in MegaTinyIDE using the `Target` menu, but this pragma is a way to set the target in the code do that is setup automatically each time the source file is loaded.
 
 ### `#pragma define`
 
@@ -42,7 +42,7 @@ The `parm` pragma is used to dynamically create a pop up GUI that appears when t
 
     #pragma parm (BIT:1:2:3:4:5, 2)
 
-The selected value will then be passed to the compiler as a -D switch for a parameter named "BIT", such as `-DBIT=3`.  The `parm` paragma is intended as a way to create and published parameterized programs for non progerammers.  For example, the following `parm` pragma could be used to configure a program designed to flash LEDs in various patterns by prompting the user to .
+The selected value will then be passed to the compiler as a -D switch for a parameter named "BIT", such as `-DBIT=3`.  The `parm` paragma is intended as a way to create and published parameterized programs for non programmers.  For example, the following `parm` pragma could be used to configure a program designed to flash LEDs in various patterns by prompting the user to .
 
     #pragma parm (PATTERN:Random=0:Chaser=1:Disco=2:Cylon=3:Stripes=4, 1)
 

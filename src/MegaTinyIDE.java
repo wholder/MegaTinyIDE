@@ -583,7 +583,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     // Add "Actions" Menu
     JMenu actions = new JMenu("Actions");
     actions.add(build = new JMenuItem("Build"));
-    build.setToolTipText("Complile Code in Source Code Pane and Display Result in Listing and Hex Output Panes");
+    build.setToolTipText("Compile Code in Source Code Pane and Display Result in Listing and Hex Output Panes");
     build.setAccelerator(BUILD_KEY);
     build.addActionListener(e -> {
       if (cFile != null) {
@@ -669,7 +669,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
       }
     });
     JMenuItem preprocess = new JMenuItem("Run Preprocessor");
-    preprocess.setToolTipText("Run GCC Propressor and Display Result in Listing Pane");
+    preprocess.setToolTipText("Run GCC Preprocessor and Display Result in Listing Pane");
     actions.add(preprocess);
     prefs.addPreferenceChangeListener(evt -> preprocess.setVisible(prefs.getBoolean("enable_preprocessing", false)));
     preprocess.addActionListener(e -> {
@@ -1135,7 +1135,6 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     try {
       new ToolchainLoader(this, "toolchains/combined.zip", tmpExe);
       prefs.remove("reload_toolchain");
-      prefs.putLong("toolchain-crc", Utility.crcTree(tmpExe));
     } catch (Exception ex) {
       ex.printStackTrace();
       selectTab(Tab.LIST);
@@ -1158,7 +1157,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     public void run () {
       try {
         File dst = new File(tmpExe);
-        //Utility.removeFiles(dst);           // causes comppile to fail? (need to investigate)
+        Utility.removeFiles(dst);           // causes compile to fail? (need to investigate)
         if (!dst.exists() && !dst.mkdirs()) {
           throw new IllegalStateException("Unable to create directory: " + dst);
         }
@@ -1219,6 +1218,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
         showErrorDialog("ToolchainLoader.run() exception " + ex.getMessage());
       }
       progress.close();
+      prefs.putLong("toolchain-crc", Utility.crcTree(tmpExe));
     }
   }
 
