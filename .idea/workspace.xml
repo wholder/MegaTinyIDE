@@ -15,20 +15,9 @@
     <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/documentation/ocdmsg.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/ocdmsg.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/documentation/pragmas.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/pragmas.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/documentation/programmers.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/programmers.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/EDBG.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/EDBG.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/FusePane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/FusePane.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/HexEditPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/HexEditPane.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/JSONtoMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/JSONtoMap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/JSSCPort.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/JSSCPort.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MarkupView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MarkupView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ListingPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ListingPane.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/MegaTinyIDE.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MegaTinyIDE.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ParmDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ParmDialog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/PropertyMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/PropertyMap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UPDIDecoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UPDIDecoder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Utility.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Utility.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -155,13 +144,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1596315993204</updated>
-    </task>
-    <task id="LOCAL-00056" summary="Revise version check code">
-      <created>1605910769279</created>
-      <option name="number" value="00056" />
-      <option name="presentableId" value="LOCAL-00056" />
-      <option name="project" value="LOCAL" />
-      <updated>1605910769279</updated>
     </task>
     <task id="LOCAL-00057" summary="Fix regression in load toolchain">
       <created>1605927942419</created>
@@ -499,7 +481,14 @@
       <option name="project" value="LOCAL" />
       <updated>1608531636843</updated>
     </task>
-    <option name="localTasksCounter" value="105" />
+    <task id="LOCAL-00105" summary="Code cleanup and toolchain loader fix">
+      <created>1608535081343</created>
+      <option name="number" value="00105" />
+      <option name="presentableId" value="LOCAL-00105" />
+      <option name="project" value="LOCAL" />
+      <updated>1608535081343</updated>
+    </task>
+    <option name="localTasksCounter" value="106" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -527,7 +516,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Update docs on #pragma commands" />
     <MESSAGE value="Update to JSCC 2.9.2 and add Prelim support for UPDI decoding" />
     <MESSAGE value="Bug fix" />
     <MESSAGE value="Interim check in for EDIT_STATUS code" />
@@ -552,7 +540,8 @@
     <MESSAGE value="Add Actions-&gt;Read EEPROM feature" />
     <MESSAGE value="Revise README" />
     <MESSAGE value="View &amp; Edit SRAM variables and EEPROM" />
-    <option name="LAST_COMMIT_MESSAGE" value="View &amp; Edit SRAM variables and EEPROM" />
+    <MESSAGE value="Code cleanup and toolchain loader fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="Code cleanup and toolchain loader fix" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -571,16 +560,6 @@
           <url>file://$PROJECT_DIR$/src/Utility.java</url>
           <line>238</line>
           <option name="timeStamp" value="16" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/MegaTinyIDE.java</url>
-          <line>1161</line>
-          <option name="timeStamp" value="24" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/MegaTinyIDE.java</url>
-          <line>1154</line>
-          <option name="timeStamp" value="25" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

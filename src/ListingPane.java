@@ -319,7 +319,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
             HexEditPane hexPane = new HexEditPane(ide, 4, 8);
             hexPane.showVariable("SRAM", parts[1], add, data, new HexEditPane.Update() {
               @Override
-              public void setValue (int offset, int value) throws Exception {
+              public void setValue (int offset, int value) throws EDBG.EDBGException {
                 debugger.writeSRam(add + offset, new byte[] {(byte) value});
               }
             });
@@ -332,34 +332,6 @@ public class ListingPane extends JPanel {   // https://regex101.com
     // Build complete layout
     build();
     tabs.addTab(tabName, null, this, hoverText);
-  }
-
-  static class MyJTextPane2 extends MyJTextPane {
-    int rowHeight, colWidth;
-    int rows;
-
-    MyJTextPane2 (Font font, int maxRows, Border border) {
-      this.rows = maxRows;
-      setFont(font);
-      setBorder(border);
-      FontMetrics fontMetrics = getFontMetrics(font);
-      rowHeight = fontMetrics.getHeight();
-      colWidth = fontMetrics.charWidth('0');
-    }
-
-    int getScrollHeight () {
-      return rowHeight;
-    }
-
-    @Override
-    public Dimension getPreferredScrollableViewportSize() {
-      Dimension base = super.getPreferredSize();
-      Insets insets = getInsets();
-      int width = base.width + insets.left + insets.right;
-      int estimatedRows = Math.min(rows, (int) (base.getHeight() / rowHeight));
-      int height = estimatedRows * rowHeight + insets.top + insets.bottom;
-      return new Dimension(width, height);
-    }
   }
 
   private void build  () {
@@ -568,32 +540,26 @@ public class ListingPane extends JPanel {   // https://regex101.com
           portC.setActiveMask((portMask >> 16) & 0xFF);
           portB.setActiveMask((portMask >> 8) & 0xFF);
           portA.setActiveMask(portMask & 0xFF);
-          EDBG.Programmer programmer = ide.getSelectedProgrammer();
-          if (programmer != null) {
-            try {
-              debugger = new EDBG(ide, false);
-              debugger.resetTarget();
-              debugger.setOcdListener(text -> {
-                if (running) {
-                  Document doc = messagePane.getDocument();
-                  try {
-                    doc.insertString(doc.getLength(), text, null);
-                    messagePane.setCaretPosition(messagePane.getCaretPosition() + text.length());
-                    repaint();
-                  } catch (Exception ex) {
-                    ex.printStackTrace();
-                  }
+          try {
+            debugger = ide.getDebugger(false);
+            debugger.resetTarget();
+            debugger.setOcdListener(text -> {
+              if (running) {
+                Document doc = messagePane.getDocument();
+                try {
+                  doc.insertString(doc.getLength(), text, null);
+                  messagePane.setCaretPosition(messagePane.getCaretPosition() + text.length());
+                  repaint();
+                } catch (Exception ex) {
+                  ex.printStackTrace();
                 }
-              });
-            } catch (Exception ex) {
-              ide.showErrorDialog("Unable to open Programmer: " + programmer.name);
-              debugger = null;
-              active = false;
-              running = false;
-            }
-          } else {
-            ide.showErrorDialog("Programmer not available");
+              }
+            });
+          } catch (Exception ex) {
+            ide.showErrorDialog("Unable to open Programmer");
+            debugger = null;
             active = false;
+            running = false;
           }
         } else {
           ide.showErrorDialog("Target device type not selected");

@@ -239,7 +239,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
   }
 
 
-  EDBG (MegaTinyIDE ide, boolean program) {
+  EDBG (MegaTinyIDE ide, boolean program) throws EDBGException {
     this.ide = ide;
     if (ide.decodeUpdi()) {
       jPort = ide.getSerialPort();
@@ -260,41 +260,45 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
         }
       }
     }
-    Programmer prog = ide.getSelectedProgrammer();
-    this.chip = MegaTinyIDE.chipTypes.get(ide.getAvrChip());
-    hidServices = HidManager.getHidServices();
-    this.program = program;
-    device = hidServices.getHidDevice(prog.vid, prog.pid, prog.serial);
-    if (device != null) {
-      if (device.isOpen()) {
-        device.close();
-      }
-      if (device.open() && device.isOpen()) {
-        device.setNonBlocking(true);
+    Programmer prog = getProgrammer(ide.getProgPidVid());;
+    if (prog != null) {
+      this.chip = MegaTinyIDE.chipTypes.get(ide.getAvrChip());
+      hidServices = HidManager.getHidServices();
+      this.program = program;
+      device = hidServices.getHidDevice(prog.vid, prog.pid, prog.serial);
+      if (device != null) {
+        if (device.isOpen()) {
+          device.close();
+        }
+        if (device.open() && device.isOpen()) {
+          device.setNonBlocking(true);
+        } else {
+          throw new EDBGException("Unable to open programmer: " + prog.name);
+        }
+        // Verify target has voltage
+        if ((targetVcc = getAnalogVoltageRef()) < 1.0) {
+          throw new EDBGException(prog.name + " indicates Target Vcc < 1 volt");
+        }
+        // Connect to target
+        startSession();
+        // Configure programmer for UPDI in Debug Mode with 500 kHz clock
+        setVariantUPDI();
+        setPhysicalInterfaceUPDI();
+        setClockUPDI(UPDIClock);
+        setUPDIDeviceInfo(chip);
+        activatePhysical(true);
+        if (program) {
+          setFunctionProgram();
+          enterProgramMode();
+        } else {
+          setFunctionDebug();
+          attachDebugger(true);
+        }
       } else {
-        throw new EDBGException("Unable to open programmer: " + prog.name);
-      }
-      // Verify target has voltage
-      if ((targetVcc = getAnalogVoltageRef()) < 1.0) {
-        throw new EDBGException(prog.name + " indicates Target Vcc < 1 volt");
-      }
-      // Connect to target
-      startSession();
-      // Configure programmer for UPDI in Debug Mode with 500 kHz clock
-      setVariantUPDI();
-      setPhysicalInterfaceUPDI();
-      setClockUPDI(UPDIClock);
-      setUPDIDeviceInfo(chip);
-      activatePhysical(true);
-      if (program) {
-        setFunctionProgram();
-        enterProgramMode();
-      } else {
-        setFunctionDebug();
-        attachDebugger(true);
+        throw new EDBGException("Unable to connect to programmer: " + prog.name);
       }
     } else {
-      throw new EDBGException("Unable to connect to programmer: " + prog.name);
+      throw new EDBGException("Programmer not selected in Settings Menu");
     }
   }
 
@@ -336,6 +340,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
     }
     deactivatePhysical();
     endSession();
+    ide.debugger = null;
     device.close();
     hidServices.shutdown();
     HidApi.exit();
@@ -385,7 +390,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
   //  6  0x00  sequence MSB
   //  7  0x00  Source sub-protocol handler ID
 
-  byte[] sendAvrCmd (byte[] cmd) {
+  byte[] sendAvrCmd (byte[] cmd) throws EDBGException {
     try {
       if (DEBUG_DECODE) {
         debugPrint("\nsendAvrCmd(): " + AvrPacketDecoder.decode(cmd));
@@ -656,7 +661,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    * @param nvmMod  Base address of NVMCTRL_MODULE (typically 0x1000 for ATTiny UPDI devices)
    * @param ocdMod  Base address of OCD_MODULE (typically 0x0F80)
    */
-  public void setUPDIDeviceInfo (int pBase, int fBytes, int eeBytes, int nvmMod, int ocdMod) {
+  public void setUPDIDeviceInfo (int pBase, int fBytes, int eeBytes, int nvmMod, int ocdMod) throws EDBGException {
     if (sessionActive) {
       sendAvrCmd(new byte[] {
           0x12,                 // AVR8GENERIC
@@ -723,7 +728,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    *
    * @return byte[] array of supported commands
    */
-  public byte[] queryAvr8Commands () {
+  public byte[] queryAvr8Commands () throws EDBGException {
     if (physicalActive) {
       byte[] rsp = sendAvrCmd(new byte[] {
           0x12,                 // AVR8GENERIC
@@ -743,7 +748,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    *
    * @param reset 0 = No Reset, 1 = apply external reset during activation
    */
-  public void activatePhysical (boolean reset) {
+  public void activatePhysical (boolean reset) throws EDBGException {
     if (sessionActive) {
       byte res = (byte) (reset ? 1 : 0);
       sendAvrCmd(new byte[] {
@@ -762,7 +767,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
   /**
    * Deactivate the Physical Interface
    */
-  public void deactivatePhysical () {
+  public void deactivatePhysical () throws EDBGException {
     if (sessionActive && physicalActive) {
       sendAvrCmd(new byte[] {
           0x12,                 // AVR8GENERIC
@@ -783,7 +788,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    *
    * @return true
    */
-  public byte[] getId () {
+  public byte[] getId () throws EDBGException {
     if (physicalActive) {
       byte[] rsp = sendAvrCmd(new byte[] {
           0x12,                 // AVR8GENERIC
@@ -802,7 +807,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    *
    * @param stop 0 = Continue running, 1 = Break after attach
    */
-  public void attachDebugger (boolean stop) {
+  public void attachDebugger (boolean stop) throws EDBGException {
     if (physicalActive) {
       byte brk = (byte) (stop ? 1 : 0);
       sendAvrCmd(new byte[] {
@@ -828,7 +833,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
   /**
    * Terminates a debug session on the target.
    */
-  public void detachDebugger () {
+  public void detachDebugger () throws EDBGException {
     if (physicalActive && debugActive) {
       sendAvrCmd(new byte[] {
           0x12,                 // AVR8GENERIC
@@ -845,7 +850,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
   /**
    * Enters programming mode on the target.
    */
-  public void enterProgramMode () {
+  public void enterProgramMode () throws EDBGException {
     if (physicalActive) {
       sendAvrCmd(new byte[] {
           0x12,                 // AVR8GENERIC
@@ -868,7 +873,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    * sent when 'debugging' flag is set. If the 'debugging' flag is set and the Attach command has not yet been run
    * it will be run automatically during Prog Mode Leave.
    */
-  public void exitProgramMode () {
+  public void exitProgramMode () throws EDBGException {
     if (programActive) {
       sendAvrCmd(new byte[] {
           0x12,                 // AVR8GENERIC
@@ -886,7 +891,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    * Resets the target and holds it stopped, in reset. A break event will be sent when the reset is done
    * and the target is stopped.
    */
-  public byte[] resetTarget () {
+  public byte[] resetTarget () throws EDBGException {
     if (debugActive) {
       sendAvrCmd(new byte[] {
           0x12,                 // AVR8GENERIC
@@ -909,7 +914,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
   /**
    * Stops execution on the target. A break event will be sent when the target is stopped.
    */
-  public void stopTarget () throws InterruptedException {
+  public void stopTarget () throws InterruptedException, EDBGException {
     if (debugActive) {
       sendAvrCmd(new byte[] {
           0x12,                 // AVR8GENERIC
@@ -927,7 +932,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
   /**
    * Resumes execution on the target.
    */
-  public void runTarget () throws InterruptedException {
+  public void runTarget () throws InterruptedException, EDBGException {
     if (debugActive) {
       sendAvrCmd(new byte[] {
           0x12,                 // AVR8GENERIC
@@ -947,7 +952,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    *
    * @param address word address for breakpoint
    */
-  public void runToAddress (int address) throws InterruptedException {
+  public void runToAddress (int address) throws InterruptedException, EDBGException {
     if (debugActive) {
       address >>= 1;            // Need word address
       sendAvrCmd(new byte[] {
@@ -970,7 +975,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    * Performs a single step on the target. Returns OK once the step has successfully been initiated.
    * Once the step has completed a BREAK event is generated asynchronously.
    */
-  public void stepTarget () {
+  public void stepTarget () throws EDBGException {
     if (debugActive) {
       sendAvrCmd(new byte[] {
           0x12,                 // AVR8GENERIC
@@ -995,7 +1000,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    *
    * @return program counter as byte address
    */
-  public int getProgramCounter () {
+  public int getProgramCounter () throws EDBGException {
     if (debugActive) {
       byte[] rsp = sendAvrCmd(new byte[] {
           0x12,                 // AVR8GENERIC
@@ -1015,7 +1020,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    * @param address new Program Counter value (word address)
    * @return true
    */
-  public void setProgramCounter (int address) {
+  public void setProgramCounter (int address) throws EDBGException {
     if (debugActive) {
       address >>= 1;            // Need word address
       sendAvrCmd(new byte[] {
@@ -1036,7 +1041,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
   /**
    * Select UPDI Mode
    */
-  public void setVariantUPDI () {
+  public void setVariantUPDI () throws EDBGException {
     if (sessionActive) {
       sendAvrCmd(new byte[] {
           0x12,                 // AVR8GENERIC
@@ -1056,7 +1061,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
   /**
    * Configure Programmer for programming Flash memory
    */
-  public void setFunctionProgram () {
+  public void setFunctionProgram () throws EDBGException {
     if (physicalActive) {
       sendAvrCmd(new byte[] {
           0x12,                 // AVR8GENERIC
@@ -1076,7 +1081,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
   /**
    * Configure Programmer for debugging
    */
-  public void setFunctionDebug () {
+  public void setFunctionDebug () throws EDBGException {
     if (physicalActive) {
       sendAvrCmd(new byte[] {
           0x12,                 // AVR8GENERIC
@@ -1096,7 +1101,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
   /**
    * Set Physical Interface to UPDI
    */
-  public void setPhysicalInterfaceUPDI () {
+  public void setPhysicalInterfaceUPDI () throws EDBGException {
     if (sessionActive) {
       sendAvrCmd(new byte[] {
           0x12,                 // AVR8GENERIC
@@ -1118,7 +1123,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    *
    * @param kHz clock rate in kHz
    */
-  public void setClockUPDI (int kHz) {
+  public void setClockUPDI (int kHz) throws EDBGException {
     if (sessionActive) {
       sendAvrCmd(new byte[] {
           0x12,                 // AVR8GENERIC
@@ -1189,7 +1194,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    *                0x07 = User signature erase
    * @return null
    */
-  public byte[] eraseTarget (int address, int mode) {
+  public byte[] eraseTarget (int address, int mode) throws EDBGException {
     if (programActive) {
       sendAvrCmd(new byte[] {
           0x12,                 // AVR8GENERIC
@@ -1216,7 +1221,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    * @param memType Memory type to access, such as MEMTYPE_FLASH_PAGE
    * @param length  number of bytes to read
    */
-  private byte[] memoryRead (int address, int memType, int length) {
+  private byte[] memoryRead (int address, int memType, int length) throws EDBGException {
     byte[] ret =  sendAvrCmd(new byte[] {
         0x12,                 // AVR8GENERIC
         0x21,                 // Command ID (CMD_AVR8_MEMORY_READ)
@@ -1245,7 +1250,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    * @param memType Memory type to access, such as MEMTYPE_FLASH_PAGE
    * @param data    byte[] array of data to write
    */
-  private void memoryWrite (int address, int memType, byte[] data) {
+  private void memoryWrite (int address, int memType, byte[] data) throws EDBGException {
     byte[] cmd = new byte[] {
         0x12,                     // AVR8GENERIC
         0x23,                     // Command ID (CMD_AVR8_MEMORY_WRITE)
@@ -1268,7 +1273,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
     printUpdi(String.format("memoryWrite(0x%04X, %s, length = 0x%04X)", address, getTypeDesc(memType), data.length));
   }
 
-  private byte[] readMemLoop (int address, int memType, int len) {
+  private byte[] readMemLoop (int address, int memType, int len) throws EDBGException {
     ByteArrayOutputStream bout = new ByteArrayOutputStream();
     for (int ii = 0; ii < len; ii += 64) {
       int remain = Math.min(len - ii, 64);
@@ -1278,7 +1283,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
     return bout.toByteArray();
   }
 
-  private void writeMemLoop (int address, int memType, byte[] data) {
+  private void writeMemLoop (int address, int memType, byte[] data) throws EDBGException {
     for (int ii = 0; ii < data.length; ii += 64) {
       int remain = Math.min(data.length - ii, 64);
       byte[] buf = new byte[remain];
@@ -1295,7 +1300,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    * @param len     number of bytes to read
    * @return true
    */
-  public byte[] readFlash (int address, int len) {
+  public byte[] readFlash (int address, int len) throws EDBGException {
     if (debugActive || programActive) {
       return readMemLoop(address, MEMTYPE_FLASH_PAGE, len);
     } else {
@@ -1310,7 +1315,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    * @param address starting write address (multiple of page size?)
    * @param data    data to write
    */
-  public void writeFlash (int address, byte[] data) {
+  public void writeFlash (int address, byte[] data) throws EDBGException {
     if (programActive) {
       int fPage = chip.getInt("fpage");
       // round up to multiple of target's flash page size
@@ -1335,7 +1340,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    * @param address starting read address
    * @param len     number of bytes to read
    */
-  public byte[] readSRam (int address, int len) {
+  public byte[] readSRam (int address, int len) throws EDBGException {
     if (debugActive) {
       return readMemLoop(address, MEMTYPE_SRAM, len);
     } else {
@@ -1355,7 +1360,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    * @param address starting write address
    * @param data    data to write
    */
-  public void writeSRam (int address, byte[] data) {
+  public void writeSRam (int address, byte[] data) throws EDBGException {
     if (debugActive) {
       writeMemLoop(address, MEMTYPE_SRAM, data);
     } else {
@@ -1370,7 +1375,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    * @param address starting read address (offset from EEPROM_BASE)
    * @param len     number of bytes to read
    */
-  public byte[] readEeprom (int address, int len) {
+  public byte[] readEeprom (int address, int len) throws EDBGException {
     if (debugActive || programActive) {
       return readMemLoop(EEPROM_BASE + address, MEMTYPE_EEPROM, len);
     } else {
@@ -1385,7 +1390,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    * @param address starting write address (offset from EEPROM_BASE)
    * @param data    data to write
    */
-  public void writeEeprom (int address, byte[] data) {
+  public void writeEeprom (int address, byte[] data) throws EDBGException {
     if (debugActive || programActive) {
       writeMemLoop(EEPROM_BASE + address, MEMTYPE_EEPROM, data);
     } else {
@@ -1401,7 +1406,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    * @param len number of registers to read
    * @return byte[len] array of register data
    */
-  public byte[] readRegisters (int address, int len) {
+  public byte[] readRegisters (int address, int len) throws EDBGException {
     if (debugActive) {
       return memoryRead(address, MEMTYPE_REGFILE, len);
     } else {
@@ -1416,7 +1421,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    * @param address starting register address to write
    * @param regs    byte[] array of register data to write
    */
-  public void writeRegisters (int address, byte[] regs) {
+  public void writeRegisters (int address, byte[] regs) throws EDBGException {
     if (debugActive) {
       memoryWrite(address, MEMTYPE_REGFILE, regs);
     } else {
@@ -1448,7 +1453,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    * @param offsets array of offsets to FUSE_BASE from which to read fuses
    * @return byte[offsets.length] array containing fuse data
    */
-  public byte[] readFuses (int[] offsets) {
+  public byte[] readFuses (int[] offsets) throws EDBGException {
     if (programActive) {
       byte[] rsp = new byte[offsets.length];
       for (int ii = 0; ii < rsp.length; ii++) {
@@ -1468,7 +1473,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    * @param offsets array of offsets to FUSE_BASE from which to write fuses
    * @param fuses   fuse data byte  to write
    */
-  public void writeFuses (int[] offsets, byte[] fuses) {
+  public void writeFuses (int[] offsets, byte[] fuses) throws EDBGException {
     if (programActive) {
       if (offsets.length != fuses.length) {
         throw new EDBGException("Call to writeFuses() length of offsets[] does not match length of fuses[]");
@@ -1485,7 +1490,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    * Read target's stack pointer
    * @return stack pointer
    */
-  public int getStackPointer () {
+  public int getStackPointer () throws EDBGException {
     if (debugActive) {
       byte[] rsp = readSRam(STACK_POINTER, 2);
       return getUnsigned16(rsp, 0);
@@ -1498,7 +1503,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    * Write target's stack pointer
    * @param sp new stack pointer
    */
-  public void writeStackPointer (int sp) {
+  public void writeStackPointer (int sp) throws EDBGException {
     if (debugActive) {
       writeSRam(STACK_POINTER, new byte[] {Utility.lsb(sp), Utility.msb(sp)});
     } else {
@@ -1510,7 +1515,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    * Read target's status register (flags)
    * @return status register
    */
-  public byte getStatusRegister () {
+  public byte getStatusRegister () throws EDBGException {
     if (debugActive) {
       byte[] rsp = readSRam(STATUS_REGISTER, 1);
       return rsp[0];
@@ -1522,7 +1527,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
   /**
    * Write target's status register (flags)
    */
-  public void writeStatusRegister (byte data) {
+  public void writeStatusRegister (byte data) throws EDBGException {
     if (debugActive) {
       writeSRam(STATUS_REGISTER, new byte[] {data});
     } else {
@@ -1536,7 +1541,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    *
    * @return 3 byte[] array with signature, such as 0x1E, 0x91, 0x21 (attiny212)
    */
-  public byte[] getDeviceSignature () {
+  public byte[] getDeviceSignature () throws EDBGException {
     if (debugActive || programActive) {
       byte[] rsp = memoryRead(0x1100, MEMTYPE_SIGNATURE, 3);
       printUpdi("getDeviceSignature()");
@@ -1551,7 +1556,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    *
    * @return 13 byte[] array with serial number
    */
-  public byte[] getDeviceSerialNumber () {
+  public byte[] getDeviceSerialNumber () throws EDBGException {
     if (debugActive || programActive) {
       return memoryRead(0x1100 + 3, MEMTYPE_SIGNATURE, 16 - 3);
     } else {
@@ -1568,7 +1573,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    * @param address Byte address for breakpoint
    * @param num     Breakpoint number to set (1, 2, or 3)
    */
-  public void setHardwareBreakpoint (int address, int num) {
+  public void setHardwareBreakpoint (int address, int num) throws EDBGException {
     if (debugActive) {
       sendAvrCmd(new byte[] {
           0x12,                 // AVR8GENERIC
@@ -1594,7 +1599,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    *
    * @param num Breakpoint number to clear (1, 2, or 3)
    */
-  public void clearHardwareBreakpoint (int num) {
+  public void clearHardwareBreakpoint (int num) throws EDBGException {
     if (debugActive) {
       sendAvrCmd(new byte[] {
           0x12,                 // AVR8GENERIC
@@ -1614,7 +1619,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    *
    * @param addresses array of breakpoints
    */
-  public void setSoftwareBreakpointSet (int[] addresses) {
+  public void setSoftwareBreakpointSet (int[] addresses) throws EDBGException {
     if (debugActive) {
       ByteArrayOutputStream bout = new ByteArrayOutputStream();
       bout.write(0x12);                 // AVR8GENERIC
@@ -1640,7 +1645,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    *
    * @param addresses array of breakpoints
    */
-  public void clearSoftwareBreakpointSet (int[] addresses) {
+  public void clearSoftwareBreakpointSet (int[] addresses) throws EDBGException {
     if (debugActive) {
       ByteArrayOutputStream bout = new ByteArrayOutputStream();
       bout.write(0x12);                 // AVR8GENERIC
@@ -1663,7 +1668,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
   /**
    * Removes all software breakpoints immediately. Useful if you have forgotten where you put them.
    */
-  public void clearAllSoftwareBreakpoints () {
+  public void clearAllSoftwareBreakpoints () throws EDBGException {
     if (debugActive) {
       sendAvrCmd(new byte[] {
           0x12,                 // AVR8GENERIC

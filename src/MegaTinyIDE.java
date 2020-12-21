@@ -56,6 +56,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
   private String                  osCode;
   private final JTabbedPane       tabPane;
   public final CodeEditPane       codePane;
+  public EDBG                     debugger = null;
   private ListingPane             listPane;
   private MyTextPane              hexPane;
   private final MyTextPane        infoPane;
@@ -67,6 +68,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
   private final JMenuItem         build;
   private final JMenuItem         progFlash;
   private final JMenuItem         readFuses;
+  private final JMenuItem         readEeprom;
   private final JMenuItem         idTarget;
   private final JMenu             progMenu;
   private final Preferences       prefs = Preferences.userRoot().node(this.getClass().getName());
@@ -109,7 +111,6 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     build.setEnabled(!active);
     progFlash.setEnabled(!active);
     readFuses.setEnabled(!active);
-    idTarget.setEnabled(!active);
     progMenu.setEnabled(!active);
   }
 
@@ -133,8 +134,15 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     return chipTypes.get(name);
   }
 
-  public EDBG.Programmer getSelectedProgrammer () {
-    return EDBG.getProgrammer(progVidPid);
+  public String getProgPidVid () {
+    return progVidPid;
+  }
+
+  public EDBG getDebugger (boolean program) {
+    if (debugger != null) {
+      return debugger;
+    }
+    return debugger = new EDBG(this, program);
   }
 
   static class MyTextPane extends JEditorPane {
@@ -728,24 +736,18 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     progFlash.setToolTipText("Used to Upload Compiled Program Code to Device");
     progFlash.addActionListener(e -> {
       if (avrChip != null && canProgram()) {
-        ChipInfo info = chipTypes.get(avrChip);
-        EDBG.Programmer prog = getSelectedProgrammer();
-        if (prog != null) {
+        try {
+          Utility.CodeImage codeImg = Utility.parseIntelHex(hexPane.getText());
+          EDBG edbg = getDebugger(true);
           try {
-            Utility.CodeImage codeImg = Utility.parseIntelHex(hexPane.getText());
-            EDBG edbg = new EDBG(this, true);
-            try {
-              edbg.eraseTarget(0, 0);
-              edbg.writeFlash(0, codeImg.data);
-            } finally {
-              edbg.close();
-            }
-            showMessageDialog(this, "Done");
-          } catch (EDBG.EDBGException ex) {
-            showErrorDialog(ex.getMessage());
+            edbg.eraseTarget(0, 0);
+            edbg.writeFlash(0, codeImg.data);
+          } finally {
+            edbg.close();
           }
-        } else {
-          showErrorDialog("Programmer not available");
+          showMessageDialog(this, "Done");
+        } catch (EDBG.EDBGException ex) {
+          showErrorDialog(ex.getMessage());
         }
       }
     });
@@ -757,87 +759,79 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     readFuses.addActionListener(e -> {
       // Use chip type, if selected, else use attiny212 as proxy
       ChipInfo info = chipTypes.get(avrChip != null ? avrChip : "attiny212");
-      EDBG.Programmer prog = getSelectedProgrammer();
-      if (prog != null) {
-        EDBG edbg = null;
-        try {
-          edbg = new EDBG(this, true);
-          FusePane fusePane = new FusePane(info);
-          int[] offsets = new int[] {0, 1, 2, 4, 5, 6, 7, 8 /*, 10*/};
-          byte[] fuses = edbg.readFuses(offsets);
-          for (int ii = 0; ii < offsets.length; ii++) {
-            fusePane.setFuse(offsets[ii], fuses[ii]);
-          }
-          if (JOptionPane.showConfirmDialog(this, fusePane, "FUSES for " + info.name, OK_CANCEL_OPTION, PLAIN_MESSAGE) == 0) {
-            List<Integer> changedOffsets = new ArrayList<>();
-            for (int offset : offsets) {
-              if (fusePane.hasChanged(offset)) {
-                changedOffsets.add(offset);
-              }
-            }
-            if (changedOffsets.size() > 0) {
-              int[] cOffs = changedOffsets.stream().mapToInt(Integer::intValue).toArray();
-              byte[] cFuses = new byte[cOffs.length];
-              for (int ii = 0; ii < cOffs.length; ii++) {
-                cFuses[ii] = fusePane.getFuse(changedOffsets.get(ii));
-              }
-              StringBuilder msg = new StringBuilder("<html>Confirm update to changed fuses?<br><br>");
-              msg.append("<p style=\"font-family:Courier;font-size:12\">");
-              for (int ii = 0; ii < cOffs.length; ii++) {
-                msg.append(String.format("Fuse 0x%02X: 0x%02X -> 0x%02X<br>", cOffs[ii], fuses[cOffs[ii]], cFuses[ii]));
-              }
-              msg.append("</p>");
-              msg.append("<br>Note: Changes will not take effect until<br>processor is RESET</html>");
-              if (doWarningDialog(msg.toString())) {
-                edbg.writeFuses(cOffs, cFuses);
-              }
+      EDBG edbg = null;
+      try {
+        edbg = getDebugger(true);
+        FusePane fusePane = new FusePane(info);
+        int[] offsets = new int[] {0, 1, 2, 4, 5, 6, 7, 8 /*, 10*/};
+        byte[] fuses = edbg.readFuses(offsets);
+        for (int ii = 0; ii < offsets.length; ii++) {
+          fusePane.setFuse(offsets[ii], fuses[ii]);
+        }
+        if (JOptionPane.showConfirmDialog(this, fusePane, "FUSES for " + info.name, OK_CANCEL_OPTION, PLAIN_MESSAGE) == 0) {
+          List<Integer> changedOffsets = new ArrayList<>();
+          for (int offset : offsets) {
+            if (fusePane.hasChanged(offset)) {
+              changedOffsets.add(offset);
             }
           }
-        } catch (EDBG.EDBGException ex) {
-          showErrorDialog(ex.getMessage());
-        } finally {
-          if (edbg != null) {
-            edbg.close();
+          if (changedOffsets.size() > 0) {
+            int[] cOffs = changedOffsets.stream().mapToInt(Integer::intValue).toArray();
+            byte[] cFuses = new byte[cOffs.length];
+            for (int ii = 0; ii < cOffs.length; ii++) {
+              cFuses[ii] = fusePane.getFuse(changedOffsets.get(ii));
+            }
+            StringBuilder msg = new StringBuilder("<html>Confirm update to changed fuses?<br><br>");
+            msg.append("<p style=\"font-family:Courier;font-size:12\">");
+            for (int ii = 0; ii < cOffs.length; ii++) {
+              msg.append(String.format("Fuse 0x%02X: 0x%02X -> 0x%02X<br>", cOffs[ii], fuses[cOffs[ii]], cFuses[ii]));
+            }
+            msg.append("</p>");
+            msg.append("<br>Note: Changes will not take effect until<br>processor is RESET</html>");
+            if (doWarningDialog(msg.toString())) {
+              edbg.writeFuses(cOffs, cFuses);
+            }
           }
         }
-      } else {
-        showErrorDialog("Programmer not available");
+      } catch (EDBG.EDBGException ex) {
+        showErrorDialog(ex.getMessage());
+      } finally {
+        if (edbg != null) {
+          edbg.close();
+        }
       }
     });
     /*
      *    View EEPROM Contents
      */
-    JMenuItem readEeprom;
     actions.add(readEeprom = new JMenuItem("Read/Modify EEPROM"));
     readEeprom.setToolTipText("Used to Read Device's EEPROM Bytes");
     readEeprom.addActionListener(e -> {
-      EDBG.Programmer prog = getSelectedProgrammer();
-      if (prog != null) {
-        EDBG edbg = null;
-        try {
-          edbg = new EDBG(this, true);
-          byte[] sig = edbg.getDeviceSignature();         // 3 bytes
-          String code = String.format("%02X%02X%02X", sig[0], sig[1], sig[2]);
-          ChipInfo chip = chipSignatures.get(code);
-          int eBytes = chip.getInt("eeprom");
-          byte[] data = edbg.readEeprom(0, eBytes);
-          HexEditPane hexPane = new HexEditPane(this, 8, 8);
-          EDBG debugger = edbg;
-          hexPane.showVariable("EEPROM", null, 0, data, new HexEditPane.Update() {
-            @Override
-            public void setValue (int offset, int value) throws Exception {
-              debugger.writeEeprom(offset, new byte[] {(byte) value});
-            }
-          });
-        } catch (EDBG.EDBGException ex) {
-          showErrorDialog(ex.getMessage());
-        } finally {
-          if (edbg != null) {
-            edbg.close();
+      EDBG edbg = null;
+      boolean attached = false;
+      try {
+        attached = debugger != null;
+        edbg = getDebugger(true);
+        byte[] sig = edbg.getDeviceSignature();         // 3 bytes
+        String code = String.format("%02X%02X%02X", sig[0], sig[1], sig[2]);
+        ChipInfo chip = chipSignatures.get(code);
+        int eBytes = chip.getInt("eeprom");
+        byte[] data = edbg.readEeprom(0, eBytes);
+        HexEditPane hexPane = new HexEditPane(this, 8, 8);
+        EDBG debugger = edbg;
+        hexPane.showVariable("EEPROM", null, 0, data, new HexEditPane.Update() {
+          @Override
+          public void setValue (int offset, int value) throws EDBG.EDBGException {
+            debugger.writeEeprom(offset, new byte[] {(byte) value});
           }
+        });
+      } catch (EDBG.EDBGException ex) {
+        showErrorDialog(ex.getMessage());
+      } finally {
+        // Don't close connection if it was open before
+        if (!attached && edbg != null) {
+          edbg.close();
         }
-      } else {
-        showErrorDialog("Programmer not available");
       }
     });
     /*
@@ -846,49 +840,45 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     actions.add(idTarget = new JMenuItem("Identify Device"));
     idTarget.setToolTipText("Used to Read and Send Back Device's Signature & Serial Number");
     idTarget.addActionListener(e -> {
-      // Use chip type, if selected, else use attiny212 as proxy
-      ChipInfo info = chipTypes.get(avrChip != null ? avrChip : "attiny212");
-      EDBG.Programmer prog = getSelectedProgrammer();
-      if (prog != null) {
-        EDBG edbg = null;
-        try {
-          edbg = new EDBG(this, true);
-          byte[] sig = edbg.getDeviceSignature();         // 3 bytes
-          String code = String.format("%02X%02X%02X", sig[0], sig[1], sig[2]);
-          ChipInfo chip = chipSignatures.get(code);
-          byte[] ser = edbg.getDeviceSerialNumber();      // 13 bytes
-          Object[][] data = {
-              {"Type:", chip != null ? chip.name : "unknown"},
-              {"Pins:", chip != null ? chip.pins + " pins" : "unknown"},
-              {"Signature:", String.format("%02X, %02X, %02X", sig[0] & 0xFF, sig[1] & 0xFF, sig[2] & 0xFF)},
-              {"Serial Num:", String.format("%02X, %02X, %02X, %02X, %02X, %02X, %02X, %02X, %02X, %02X, %02X, %02X, %02X",
-                                            ser[0] & 0xFF, ser[1] & 0xFF, ser[2] & 0xFF, ser[3] & 0xFF, ser[4] & 0xFF,
-                                            ser[5] & 0xFF, ser[6] & 0xFF, ser[7] & 0xFF, ser[8] & 0xFF, ser[9] & 0xFF,
-                                            ser[10] & 0xFF, ser[11] & 0xFF, ser[12])},
-              {"Flash:",  chip != null ? chip.get("flash") + "k bytes" : "unknown"},
-              {"EEProm:", chip != null ? chip.get("eeprom") + " bytes" : "unknown"},
-              {"SRam:",   chip != null ? chip.get("sram") + " bytes" : "unknown"},
-          };
-          JPanel panel = new JPanel(new BorderLayout());
-          //                                                                            ot ol ob or it il ib ir
-          panel.setBorder(Utility.getBorder(BorderFactory.createLineBorder(Color.black), 1, 1, 1, 1, 1, 4, 1, 1));
-          JTable table = new JTable(data, new String[] {"", ""});
-          table.setFont(Utility.getCodeFont(12));
-          table.getColumnModel().getColumn(0).setPreferredWidth(100);
-          table.getColumnModel().getColumn(1).setPreferredWidth(400);
-          table.setRowHeight(20);
-          panel.add(table, BorderLayout.CENTER);
-          ImageIcon icon = new ImageIcon(Utility.class.getResource("images/info-32x32.png"));
-          showMessageDialog(this, panel, "Device Info", JOptionPane.PLAIN_MESSAGE, icon);
-        } catch (Exception ex) {
-          showErrorDialog(ex.getMessage());
-        } finally {
-          if (edbg != null) {
-            edbg.close();
-          }
+      EDBG edbg = null;
+      boolean attached = false;
+      try {
+        attached = debugger != null;
+        edbg = getDebugger(true);
+        byte[] sig = edbg.getDeviceSignature();         // 3 bytes
+        String code = String.format("%02X%02X%02X", sig[0], sig[1], sig[2]);
+        ChipInfo chip = chipSignatures.get(code);
+        byte[] ser = edbg.getDeviceSerialNumber();      // 13 bytes
+        Object[][] data = {
+            {"Type:", chip != null ? chip.name : "unknown"},
+            {"Pins:", chip != null ? chip.pins + " pins" : "unknown"},
+            {"Signature:", String.format("%02X, %02X, %02X", sig[0] & 0xFF, sig[1] & 0xFF, sig[2] & 0xFF)},
+            {"Serial Num:", String.format("%02X, %02X, %02X, %02X, %02X, %02X, %02X, %02X, %02X, %02X, %02X, %02X, %02X",
+                                          ser[0] & 0xFF, ser[1] & 0xFF, ser[2] & 0xFF, ser[3] & 0xFF, ser[4] & 0xFF,
+                                          ser[5] & 0xFF, ser[6] & 0xFF, ser[7] & 0xFF, ser[8] & 0xFF, ser[9] & 0xFF,
+                                          ser[10] & 0xFF, ser[11] & 0xFF, ser[12])},
+            {"Flash:",  chip != null ? chip.get("flash") + "k bytes" : "unknown"},
+            {"EEProm:", chip != null ? chip.get("eeprom") + " bytes" : "unknown"},
+            {"SRam:",   chip != null ? chip.get("sram") + " bytes" : "unknown"},
+        };
+        JPanel panel = new JPanel(new BorderLayout());
+        //                                                                            ot ol ob or it il ib ir
+        panel.setBorder(Utility.getBorder(BorderFactory.createLineBorder(Color.black), 1, 1, 1, 1, 1, 4, 1, 1));
+        JTable table = new JTable(data, new String[] {"", ""});
+        table.setFont(Utility.getCodeFont(12));
+        table.getColumnModel().getColumn(0).setPreferredWidth(100);
+        table.getColumnModel().getColumn(1).setPreferredWidth(400);
+        table.setRowHeight(20);
+        panel.add(table, BorderLayout.CENTER);
+        ImageIcon icon = new ImageIcon(Utility.class.getResource("images/info-32x32.png"));
+        showMessageDialog(this, panel, "Device Info", JOptionPane.PLAIN_MESSAGE, icon);
+      } catch (Exception ex) {
+        showErrorDialog(ex.getMessage());
+      } finally {
+        // Don't close connection if it was open before
+        if (!attached && edbg != null) {
+          edbg.close();
         }
-      } else {
-        showErrorDialog("Programmer not available");
       }
     });
     /*
