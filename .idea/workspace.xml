@@ -12,18 +12,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/resources/documentation/images/debugging.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/HexEditPane.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.MD" beforeDir="false" afterPath="$PROJECT_DIR$/README.MD" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/MegaTinyIDE Debugging.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/MegaTinyIDE Debugging.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/documentation/debugging.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/debugging.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/EDBG.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/EDBG.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ListingPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ListingPane.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MegaTinyIDE.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MegaTinyIDE.java" afterDir="false" />
-    </list>
+    <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -149,13 +138,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1596315993204</updated>
-    </task>
-    <task id="LOCAL-00053" summary="Misc fixes">
-      <created>1605742383370</created>
-      <option name="number" value="00053" />
-      <option name="presentableId" value="LOCAL-00053" />
-      <option name="project" value="LOCAL" />
-      <updated>1605742383370</updated>
     </task>
     <task id="LOCAL-00054" summary="Misc fixes and enhancements">
       <created>1605826999909</created>
@@ -493,7 +475,14 @@
       <option name="project" value="LOCAL" />
       <updated>1608253832706</updated>
     </task>
-    <option name="localTasksCounter" value="102" />
+    <task id="LOCAL-00102" summary="View &amp; Edit SRAM variables and EEPROM">
+      <created>1608530867279</created>
+      <option name="number" value="00102" />
+      <option name="presentableId" value="LOCAL-00102" />
+      <option name="project" value="LOCAL" />
+      <updated>1608530867279</updated>
+    </task>
+    <option name="localTasksCounter" value="103" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -521,7 +510,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Update built-in docs" />
     <MESSAGE value="Update docs on #pragma commands" />
     <MESSAGE value="Update to JSCC 2.9.2 and add Prelim support for UPDI decoding" />
     <MESSAGE value="Bug fix" />
@@ -546,7 +534,8 @@
     <MESSAGE value="debugger-related fixes" />
     <MESSAGE value="Add Actions-&gt;Read EEPROM feature" />
     <MESSAGE value="Revise README" />
-    <option name="LAST_COMMIT_MESSAGE" value="Revise README" />
+    <MESSAGE value="View &amp; Edit SRAM variables and EEPROM" />
+    <option name="LAST_COMMIT_MESSAGE" value="View &amp; Edit SRAM variables and EEPROM" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

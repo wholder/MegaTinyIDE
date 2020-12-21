@@ -10,6 +10,7 @@ import static javax.swing.JOptionPane.showMessageDialog;
 public class HexEditPane extends JTextPane {
   DefaultHighlightPainter     hp = new DefaultHighlightPainter(Color.lightGray);
   private static final Font   codeFont =new Font("Menlo", Font.PLAIN, 12);
+  private Component           parent;
   private final int           rowHeight;
   int                         rowWidth;
   private final int           rows, cols;
@@ -18,7 +19,8 @@ public class HexEditPane extends JTextPane {
     void setValue (int offset, int value) throws Exception;
   }
 
-  HexEditPane (int rows, int cols) {
+  HexEditPane (Component parent, int rows, int cols) {
+    this.parent = parent;
     this.rows = rows;
     this.cols = cols;
     rowWidth = 8 + cols * 6 + 2 + 1;
@@ -177,7 +179,7 @@ public class HexEditPane extends JTextPane {
       panel.add(label, BorderLayout.NORTH);
     }
     panel.add(scroll, BorderLayout.CENTER);
-    JOptionPane.showConfirmDialog(null, panel, type, JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
+    JOptionPane.showConfirmDialog(parent, panel, type, JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
   }
 
   @Override
@@ -198,7 +200,7 @@ public class HexEditPane extends JTextPane {
 
   // Test code
   public static void main (String[] args) {
-    HexEditPane varPane = new HexEditPane(8, 8);
+    HexEditPane varPane = new HexEditPane(null, 8, 8);
     byte[] data = new byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17};
     varPane.showVariable ("Test", "var1", 0, data, new Update() {
       public void setValue (int offset, int value) {

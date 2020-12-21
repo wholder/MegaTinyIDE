@@ -821,7 +821,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
           ChipInfo chip = chipSignatures.get(code);
           int eBytes = chip.getInt("eeprom");
           byte[] data = edbg.readEeprom(0, eBytes);
-          HexEditPane hexPane = new HexEditPane(8, 8);
+          HexEditPane hexPane = new HexEditPane(this, 8, 8);
           EDBG debugger = edbg;
           hexPane.showVariable("EEPROM", null, 0, data, new HexEditPane.Update() {
             @Override
