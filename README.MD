@@ -13,7 +13,9 @@ The tinyAVR® 1-series and 0-series chips introduce a single-pin Unified Program
   - Interleave code and generated asm in listing file (optional)
   - Pop Up Interfaces for:
       - Viewing and Editing FUSE values (see below)
-      - Viewing EEPROM bytes (working on edit)
+      - Viewing and Editing EEPROM bytes
+      - Viewing and Editing USERROW bytes
+      - Viewing and Editing Variables in SRAM
       - Identifying Target Chip
   - [Hardware Debugging](https://github.com/wholder/MegaTinyIDE/blob/master/resources/documentation/debugging.md) (via the UPDI interface using [compatible programmer/debugger](https://github.com/wholder/MegaTinyIDE/blob/master/resources/documentation/programmers.md)):
       - Set a Hardware Breakpoint by selecting the checkbox on an executable line of code in the Listing View
