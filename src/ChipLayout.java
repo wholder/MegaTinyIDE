@@ -14,36 +14,112 @@ import java.util.Map;
    */
 
 public class ChipLayout {
-  private static final Color    BACK = new Color(240, 240, 240);
-  private static final Color    CHIP = new Color(51, 51, 51);
-  private static final Color    PINS = new Color(204, 204, 204);
-  private static final Color    PORT = new Color(90, 127, 169);
-  private static final Color    BDR = new Color(0, 3, 12);
-  private static final Color    DBG = new Color(250, 207, 114);
-  private static final Color    VCC = new Color(168, 47, 17);
+  private static final Color    BACK = new Color(240, 240, 240);  // Background
+  private static final Color    CHIP = new Color(51, 51, 51);     // Chip body
+  private static final Color    PINS = new Color(204, 204, 204);  // Pin
+  private static final Color    PORT = new Color(90, 127, 169);   // Port
+  private static final Color    BDR = new Color(0, 3, 12);        //
+  private static final Color    DBG = new Color(250, 207, 114);   // UPDI
+  private static final Color    VCC = new Color(168, 47, 17);     // Vcc pin
   private static final Color    SER = new Color(159, 146, 254);
-  private static final Color    ISP = new Color(252, 255, 81);
-  private static final Color    ANA = new Color(99, 123, 80);
-  private static final Color    BLU = new Color(151, 169, 193);
-  private static final Color    GRN = new Color(73, 140, 28);
-  private static final Color    RST = new Color(247, 153, 66);
+  private static final Color    AIN = new Color(252, 255, 81);    // Analog In (not yet implemented)
+  private static final Color    ANA = new Color(99, 123, 80);     // Analog DSAC
+  private static final Color    BLU = new Color(151, 169, 193);   // Rx, Tx, SCL, SDA, MISO, MOSI, SCK
+  private static final Color    VRF = new Color(73, 140, 28);     // VRef
+  private static final Color    RST = new Color(247, 153, 66);    // Reset
   private static final Color    WHT = Color.white;
-  private static final Color    BLK = Color.black;
+  private static final Color    BLK = Color.black;                // Gnd pin
   private static final Font     BFNT = new Font("Helvetica", Font.PLAIN, 32);
   private static final Font     PFNT = new Font("Helvetica", Font.PLAIN, 22);
-  private static final String[] SO8 = {"VCC", "PA6/TXD/DAC", "PA7/RXD", "PA1/SDA/MOSI", "PA2/SCL/MISO", "PA0/RST/UPDI",
-                                       "PA3//SCK/CLKI", "GND"};
-  private static final String[] SO14 = {"VCC", "PA4/SS", "PA5/VREF", "PA6/DAC", "PA7", "PB3/RXD", "PB2/TXD",
-                                        "PB1/SDA", "PB0/SCL", "PA0/RST/UPDI", "PA1//MOSI", "PA2//MISO", "PA3//SCK/CLKI", "GND"};
-  private static final String[] SO20 = {"VCC", "PA4/SS", "PA5/VREF", "PA6/DAC", "PA7", "PB5", "PB4", "PB3/RXD", "PB2/TXD", "PB1/SDA",
-                                        "PB0/SCL", "PC0", "PC1", "PC2", "PC3", "PA0/RST/UPDI", "PA1/MOSI", "PA2/MISO", "PA3/SCK/CLKI", "GND"};
-  private static final String[] QF20 = {"PA2/MISO", "PA3/SCK/CLKI", "GND", "VCC", "PA4/SS", "PA5", "PA6/DAC", "PA7", "PB5", "PB4",
-                                        "PB3", "PB2", "PB1/SDA", "PB0/SCL", "PC0", "PC1", "PC2", "PC3", "PA0/RST/UPDI", "PA1/MOSI"};
-  private static final String[] QF24 = {"PA2/MISO", "PA3/SCK/CLKI", "GND", "VCC", "PA4/SS", "PA5/VREF", "PA6/DAC", "PA7", "PB7", "PB6", "PB5", "PB4",
-                                        "PB3/RXD", "PB2/TXD", "PB1/SDA", "PB0/SCL", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "PA0/RST/UPDI", "PA1/MOSI",};
+  private static final String[] SO8 = {"VCC",                     // Pin 1
+                                       "PA6/A6/TXD/DAC",          // Pin 2 - A6
+                                       "PA7/A7/RXD",              // Pin 3 - A7
+                                       "PA1/A1/SDA/MOSI",         // Pin 4 - A1
+                                       "PA2/A2/SCL/MISO",         // Pin 5 - A2
+                                       "PA0/A0/RST/UPDI",         // Pin 6 - A0
+                                       "PA3/A3/SCK/CLKI",         // Pin 7 - A3
+                                       "GND"};                    // Pin 8
+  private static final String[] SO14 = {"VCC",                    // Pin 1
+                                        "PA4/A4/SS",              // Pin 2 - A4
+                                        "PA5/A5/VREF",            // Pin 3 - A5
+                                        "PA6/A6/DAC",             // Pin 4 - A6
+                                        "PA7/A7",                 // Pin 5 - A7
+                                        "PB3//RXD",               // Pin 6
+                                        "PB2//TXD",               // Pin 7
+                                        "PB1/A10/SDA",            // Pin 8 - A10
+                                        "PB0/A11/SCL",            // Pin 9 - A11
+                                        "PA0/A0/RST/UPDI",        // Pin 10 - A0
+                                        "PA1/A1/MOSI",            // Pin 11 - A1
+                                        "PA2/A2/MISO",            // Pin 12 - A2
+                                        "PA3/A3/SCK/CLKI",        // Pin 13 - A3
+                                        "GND"};                   // Pin 14
+  private static final String[] SO20 = {"VCC",                    // Pin 1
+                                        "PA4/A4/SS",              // Pin 2 - A4
+                                        "PA5/A5/VREF",            // Pin 3 - A5
+                                        "PA6/A6/DAC",             // Pin 4 - A6
+                                        "PA7/A7",                 // Pin 5 - A7
+                                        "PB5/A8",                 // Pin 6 - A8
+                                        "PB4/A9",                 // Pin 7 - A9
+                                        "PB3//RXD",               // Pin 8
+                                        "PB2//TXD",               // Pin 9
+                                        "PB1/A10/SDA",            // Pin 10 - A10
+                                        "PB0/A11/SCL",            // Pin 11 - A11
+                                        "PC0",                    // Pin 12
+                                        "PC1",                    // Pin 13
+                                        "PC2",                    // Pin 14
+                                        "PC3",                    // Pin 15
+                                        "PA0/A0/RST/UPDI",        // Pin 16 - A0
+                                        "PA1/A1/MOSI",            // Pin 17 - A1
+                                        "PA2/A2/MISO",            // Pin 18 - A2
+                                        "PA3/A3/SCK/CLKI",        // Pin 19 - A3
+                                        "GND"};                   // Pin 20
+  private static final String[] QF20 = {"PA2/A2/MISO",            // Pin 1 - A2
+                                        "PA3/A3/SCK/CLKI",        // Pin 2 - A3
+                                        "GND",                    // Pin 3
+                                        "VCC",                    // Pin 4
+                                        "PA4/A4/SS",              // Pin 5 - A4
+                                        "PA5/A5",                 // Pin 6 - A5
+                                        "PA6/A6/DAC",             // Pin 7 - A6
+                                        "PA7/A7",                 // Pin 8 - A7
+                                        "PB5/A8",                 // Pin 9 - A8
+                                        "PB4/A9",                 // Pin 10 - A9
+                                        "PB3",                    // Pin 11
+                                        "PB2",                    // Pin 12
+                                        "PB1/A10/SDA",            // Pin 13 - A10
+                                        "PB0/A11/SCL",            // Pin 14 - A11
+                                        "PC0",                    // Pin 15
+                                        "PC1",                    // Pin 16
+                                        "PC2",                    // Pin 17
+                                        "PC3",                    // Pin 18
+                                        "PA0/A0/RST/UPDI",        // Pin 19 - A0
+                                        "PA1/A1/MOSI"};           // Pin 20 - A1
+  private static final String[] QF24 = {"PA2/A2/MISO",            // Pin 1 - A2
+                                        "PA3/A3/SCK/CLKI",        // Pin 2 - A3
+                                        "GND",                    // Pin 3
+                                        "VCC",                    // Pin 4
+                                        "PA4/A4/SS",              // Pin 5 - A4
+                                        "PA5/A5/VREF",            // Pin 6 - A5
+                                        "PA6/A6/DAC",             // Pin 7 - A6
+                                        "PA7/A7",                 // Pin 8 - A7
+                                        "PB7",                    // Pin 9 - A4 (ADC1)
+                                        "PB6",                    // Pin 10 - A5 (ADC1)
+                                        "PB5/A8",                 // Pin 11 - A8
+                                        "PB4/A9",                 // Pin 12 - A9
+                                        "PB3/RXD",                // Pin 13
+                                        "PB2/TXD",                // Pin 14
+                                        "PB1/A10/SDA",            // Pin 15 - A10
+                                        "PB0/A11/SCL",            // Pin 16 - A11
+                                        "PC0",                    // Pin 17
+                                        "PC1",                    // Pin 18
+                                        "PC2",                    // Pin 19
+                                        "PC3",                    // Pin 20
+                                        "PC4",                    // Pin 21
+                                        "PC5",                    // Pin 22
+                                        "PA0/A0/RST/UPDI",        // Pin 23 - A0
+                                        "PA1/A1/MOSI",};          // Pin 24 - A1
   private static final Map<String,ColorSet> colors = new HashMap<>();
-  private static final int[]    COLS = new int[] {35, 60, 60, 60, 60};                    // Width of lbl by column
-  private static final String[] DCLR = new String[] {"PIN", "PORT", "BLU", "BLU", "BLU"}; // Default lbl color by column
+  private static final int[]    COLS = new int[] {     35,    55,     45,    60,    60,   60};    // Width of lbl by column
+  private static final String[] DCLR = new String[] {"PIN", "PORT", "AIN", "BLU", "BLU", "BLU"};  // Default lbl color by column
 
   static class ColorSet {
     Color  txtClr, lblClr;
@@ -65,14 +141,15 @@ public class ChipLayout {
     colors.put("SER",  new ColorSet(BLK, SER));
     colors.put("RXD",  new ColorSet(BLK, BLU));
     colors.put("TXD",  new ColorSet(BLK, BLU));
-    colors.put("DAC",  new ColorSet(BLK, SER));
+    colors.put("DAC",  new ColorSet(BLK, ANA));
     colors.put("SDA",  new ColorSet(BLK, BLU));
     colors.put("SCL",  new ColorSet(BLK, BLU));
     colors.put("SCK",  new ColorSet(BLK, BLU));
     colors.put("MISO", new ColorSet(BLK, BLU));
     colors.put("MOSI", new ColorSet(BLK, BLU));
-    colors.put("VREF", new ColorSet(BLK, BLU));
+    colors.put("VREF", new ColorSet(BLK, VRF));
     colors.put("SS",   new ColorSet(BLK, BLU));
+    colors.put("AIN",  new ColorSet(BLK, AIN));
   }
 
   static class DrawShape {
@@ -92,21 +169,25 @@ public class ChipLayout {
     Rectangle2D     bounds = new Rectangle2D.Double();
 
     MyLabel (String text, Font font, Color fontColor, Color background, double forceWid, double forceHyt) {
-      this.text = text;
-      BufferedImage img = new BufferedImage(10, 10, BufferedImage.TYPE_INT_RGB);
-      Graphics2D g2 = img.createGraphics();
-      GlyphVector gv = font.createGlyphVector(g2.getFontRenderContext(), text);
-      Shape glyph = gv.getOutline();
-      Rectangle2D bounds = glyph.getBounds2D();
-      double padWid = bounds.getWidth() * .4;
-      double padHyt = bounds.getHeight() * .4;
-      double rounding = Math.min(bounds.getHeight() * .2, 20);
-      double wid = forceWid > 0 ? forceWid : bounds.getWidth() + padWid;
-      double hyt = forceHyt > 0 ? forceHyt : bounds.getHeight() + padHyt;
-      Shape rRect = new RoundRectangle2D.Double(0, 0, wid, hyt, rounding, rounding);
-      add(rRect, background, true);
-      add(rRect, BDR, false);
-      add(glyph, fontColor, true);
+      try {
+        this.text = text;
+        BufferedImage img = new BufferedImage(10, 10, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2 = img.createGraphics();
+        GlyphVector gv = font.createGlyphVector(g2.getFontRenderContext(), text);
+        Shape glyph = gv.getOutline();
+        Rectangle2D bounds = glyph.getBounds2D();
+        double padWid = bounds.getWidth() * .4;
+        double padHyt = bounds.getHeight() * .4;
+        double rounding = Math.min(bounds.getHeight() * .2, 20);
+        double wid = forceWid > 0 ? forceWid : bounds.getWidth() + padWid;
+        double hyt = forceHyt > 0 ? forceHyt : bounds.getHeight() + padHyt;
+        Shape rRect = new RoundRectangle2D.Double(0, 0, wid, hyt, rounding, rounding);
+        add(rRect, background, true);
+        add(rRect, BDR, false);
+        add(glyph, fontColor, true);
+      } catch (Exception ex) {
+        ex.printStackTrace();
+      }
     }
 
     public void add (Shape shape, Color color, boolean fill) {
@@ -150,6 +231,8 @@ public class ChipLayout {
     void addHoverText (Rectangle rect, String text) {
        if (text.matches("P[ABC][0-7]")) {
          text = text + ": Port " + text.charAt(1) + ", Pin " + text.charAt(2);
+       } else if (text.matches("A[0-9]")) {
+           text = text + ": Analog Input, Channel " + text.substring(1);
        } else if (text.matches("^\\d+$")) {
            text = "Pin " + text;
        } else {
@@ -311,7 +394,6 @@ public class ChipLayout {
         String[] pairs = parts[ii].split(":");
         String pLbl = pairs[0];
         if (pLbl.length() > 0) {
-          ColorSet cSet = getColorSet(pairs, DCLR[ii]);
           if (left) {
             xOff = -col;
             yOff = (pin - 1) * spacing - sOff;
@@ -325,6 +407,7 @@ public class ChipLayout {
             xOff = sOff - (pin - pins / 2 - pins / 4 - 1) * spacing;
             yOff = -col;
           }
+          ColorSet cSet = getColorSet(pairs, DCLR[ii]);
           drawLabel(ds, new MyLabel(pLbl, PFNT, cSet.txtClr, cSet.lblClr, wid, bHyt), rotate, cx + xOff, cy + yOff);
         }
       }
@@ -345,10 +428,10 @@ public class ChipLayout {
       if ("SOIC-20".equals(pkg)) {
         return getSoic(chipLabel, 800, 20, SO20, hasDacs);
       } else {
-        return getVqfn(chipLabel, 700, 20, QF20, hasDacs);
+        return getVqfn(chipLabel, 800, 20, QF20, hasDacs);
       }
     case 24:
-      return getVqfn(chipLabel, 700, 24, QF24, hasDacs);
+      return getVqfn(chipLabel, 800, 24, QF24, hasDacs);
     }
     return null;
   }

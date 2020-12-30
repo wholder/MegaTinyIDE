@@ -1,6 +1,14 @@
   /*
    *  Test code to support future development - used to decode various AVR command packets and
    *  error code and convert them into human-readable messages.
+   *
+   * Saleae Clone Pinout (front view into pins with component side on top)
+   *
+   *    +---------------+
+   *    | C  7  5  3  1 |   1-8 channels (C is not used)
+   *    | G  8  6  4  2 |    G  ground
+   *    +---------------+
+   *
    */
 public class AvrPacketDecoder {
   public static String decode (byte[] cmd) {

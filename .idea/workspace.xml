@@ -14,7 +14,8 @@
   <component name="ChangeListManager">
     <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/documentation/images/debugging.png" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/images/debugging.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/AvrPacketDecoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/AvrPacketDecoder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ChipLayout.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ChipLayout.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,7 +74,7 @@
       <recent name="" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.NativeBuilder">
+  <component name="RunManager" selected="Application.MegaTinyIDE">
     <configuration name="HexEditPane" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="HexEditPane" />
       <module name="MegaTinyIDE" />
@@ -125,8 +126,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.NativeBuilder" />
         <item itemvalue="Application.MegaTinyIDE" />
+        <item itemvalue="Application.NativeBuilder" />
         <item itemvalue="Application.HexEditPane" />
         <item itemvalue="Application.ToolchainCombiner (1)" />
         <item itemvalue="Application.ParmDialog" />
@@ -141,13 +142,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1596315993204</updated>
-    </task>
-    <task id="LOCAL-00060" summary="Update built-in docs">
-      <created>1605995004359</created>
-      <option name="number" value="00060" />
-      <option name="presentableId" value="LOCAL-00060" />
-      <option name="project" value="LOCAL" />
-      <updated>1605995004359</updated>
     </task>
     <task id="LOCAL-00061" summary="Update docs on #pragma commands">
       <created>1606339211484</created>
@@ -485,7 +479,14 @@
       <option name="project" value="LOCAL" />
       <updated>1608590798061</updated>
     </task>
-    <option name="localTasksCounter" value="109" />
+    <task id="LOCAL-00109" summary="Revise README">
+      <created>1608595892813</created>
+      <option name="number" value="00109" />
+      <option name="presentableId" value="LOCAL-00109" />
+      <option name="project" value="LOCAL" />
+      <updated>1608595892813</updated>
+    </task>
+    <option name="localTasksCounter" value="110" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
