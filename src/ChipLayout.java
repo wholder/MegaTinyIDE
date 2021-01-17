@@ -10,25 +10,27 @@ import java.util.List;
 import java.util.Map;
 
   /*
-   *  This class is used to generate pinout images for the various members of the 0-series and 1-series ATtiny chips
+   *  This class is called by MarkupView to dynamically generate pinout images for the various members of the
+   *  0-series and 1-series ATtiny chips
    */
 
 public class ChipLayout {
   private static final Color    BACK = new Color(240, 240, 240);  // Background
-  private static final Color    CHIP = new Color(51, 51, 51);     // Chip body
+  private static final Color    CHIP = new Color( 51,  51,  51);  // Chip body
   private static final Color    PINS = new Color(204, 204, 204);  // Pin
-  private static final Color    PORT = new Color(90, 127, 169);   // Port
-  private static final Color    BDR = new Color(0, 3, 12);        //
-  private static final Color    DBG = new Color(250, 207, 114);   // UPDI
-  private static final Color    VCC = new Color(168, 47, 17);     // Vcc pin
-  private static final Color    SER = new Color(159, 146, 254);
-  private static final Color    AIN = new Color(252, 255, 81);    // Analog In (not yet implemented)
-  private static final Color    ANA = new Color(99, 123, 80);     // Analog DSAC
-  private static final Color    BLU = new Color(151, 169, 193);   // Rx, Tx, SCL, SDA, MISO, MOSI, SCK
-  private static final Color    VRF = new Color(73, 140, 28);     // VRef
-  private static final Color    RST = new Color(247, 153, 66);    // Reset
-  private static final Color    WHT = Color.white;
-  private static final Color    BLK = Color.black;                // Gnd pin
+  private static final Color    PORT = new Color( 90, 127, 169);  // Port
+  private static final Color    BDR  = new Color(  0,   3,  12);  // Border color
+  private static final Color    DBG  = new Color(250, 207, 114);  // UPDI
+  private static final Color    VCC  = new Color(168,  47,  17);  // Vcc pin
+  private static final Color    SER  = new Color(159, 146, 254);  // RX, TX
+  private static final Color    I2C  = new Color(128, 238, 238);  // SCL, SDA
+  private static final Color    AIN  = new Color(252, 255,  81);  // Analog In (not yet implemented)
+  private static final Color    DAC  = new Color( 99, 123,  80);  // Analog DAC
+  private static final Color    SPI  = new Color(151, 169, 193);  // MISO, MOSI, SCK
+  private static final Color    VRF  = new Color(202, 121, 217);  // VRef
+  private static final Color    RST  = new Color(247, 153,  66);  // Reset
+  private static final Color    WHT  = Color.white;
+  private static final Color    BLK  = Color.black;                // Gnd pin
   private static final Font     BFNT = new Font("Helvetica", Font.PLAIN, 32);
   private static final Font     PFNT = new Font("Helvetica", Font.PLAIN, 22);
   private static final String[] SO8 = {"VCC",                     // Pin 1
@@ -37,7 +39,7 @@ public class ChipLayout {
                                        "PA1/A1/SDA/MOSI",         // Pin 4 - A1
                                        "PA2/A2/SCL/MISO",         // Pin 5 - A2
                                        "PA0/A0/RST/UPDI",         // Pin 6 - A0
-                                       "PA3/A3/SCK/CLKI",         // Pin 7 - A3
+                                       "PA3/A3/CLKI/SCK",         // Pin 7 - A3
                                        "GND"};                    // Pin 8
   private static final String[] SO14 = {"VCC",                    // Pin 1
                                         "PA4/A4/SS",              // Pin 2 - A4
@@ -119,7 +121,7 @@ public class ChipLayout {
                                         "PA1/A1/MOSI",};          // Pin 24 - A1
   private static final Map<String,ColorSet> colors = new HashMap<>();
   private static final int[]    COLS = new int[] {     35,    55,     45,    60,    60,   60};    // Width of lbl by column
-  private static final String[] DCLR = new String[] {"PIN", "PORT", "AIN", "BLU", "BLU", "BLU"};  // Default lbl color by column
+  private static final String[] DCLR = new String[] {"PIN", "PORT", "AIN", "PIN", "PIN", "PIN"};  // Default lbl color by column
 
   static class ColorSet {
     Color  txtClr, lblClr;
@@ -138,17 +140,16 @@ public class ChipLayout {
     colors.put("VCC",  new ColorSet(WHT, VCC));
     colors.put("GND",  new ColorSet(WHT, BLK));
     colors.put("CLKI", new ColorSet(BLK, WHT));
-    colors.put("SER",  new ColorSet(BLK, SER));
-    colors.put("RXD",  new ColorSet(BLK, BLU));
-    colors.put("TXD",  new ColorSet(BLK, BLU));
-    colors.put("DAC",  new ColorSet(BLK, ANA));
-    colors.put("SDA",  new ColorSet(BLK, BLU));
-    colors.put("SCL",  new ColorSet(BLK, BLU));
-    colors.put("SCK",  new ColorSet(BLK, BLU));
-    colors.put("MISO", new ColorSet(BLK, BLU));
-    colors.put("MOSI", new ColorSet(BLK, BLU));
+    colors.put("RXD",  new ColorSet(BLK, SER));
+    colors.put("TXD",  new ColorSet(BLK, SER));
+    colors.put("DAC",  new ColorSet(WHT, DAC));
+    colors.put("SDA",  new ColorSet(BLK, I2C));
+    colors.put("SCL",  new ColorSet(BLK, I2C));
+    colors.put("SCK",  new ColorSet(BLK, SPI));
+    colors.put("MISO", new ColorSet(BLK, SPI));
+    colors.put("MOSI", new ColorSet(BLK, SPI));
     colors.put("VREF", new ColorSet(BLK, VRF));
-    colors.put("SS",   new ColorSet(BLK, BLU));
+    colors.put("SS",   new ColorSet(BLK, SPI));
     colors.put("AIN",  new ColorSet(BLK, AIN));
   }
 
@@ -163,12 +164,12 @@ public class ChipLayout {
     }
   }
 
-  static class MyLabel {
+  static class PadBox {
     String          text;
     List<DrawShape> drawShapes = new ArrayList<>();
     Rectangle2D     bounds = new Rectangle2D.Double();
 
-    MyLabel (String text, Font font, Color fontColor, Color background, double forceWid, double forceHyt) {
+    PadBox (String text, Font font, Color fontColor, Color background, double wid, double hyt) {
       try {
         this.text = text;
         BufferedImage img = new BufferedImage(10, 10, BufferedImage.TYPE_INT_RGB);
@@ -176,21 +177,17 @@ public class ChipLayout {
         GlyphVector gv = font.createGlyphVector(g2.getFontRenderContext(), text);
         Shape glyph = gv.getOutline();
         Rectangle2D bounds = glyph.getBounds2D();
-        double padWid = bounds.getWidth() * .4;
-        double padHyt = bounds.getHeight() * .4;
         double rounding = Math.min(bounds.getHeight() * .2, 20);
-        double wid = forceWid > 0 ? forceWid : bounds.getWidth() + padWid;
-        double hyt = forceHyt > 0 ? forceHyt : bounds.getHeight() + padHyt;
         Shape rRect = new RoundRectangle2D.Double(0, 0, wid, hyt, rounding, rounding);
-        add(rRect, background, true);
-        add(rRect, BDR, false);
-        add(glyph, fontColor, true);
+        addShape(rRect, background, true);
+        addShape(rRect, BDR, false);
+        addShape(glyph, fontColor, true);
       } catch (Exception ex) {
         ex.printStackTrace();
       }
     }
 
-    public void add (Shape shape, Color color, boolean fill) {
+    public void addShape (Shape shape, Color color, boolean fill) {
       Rectangle2D bounds = shape.getBounds2D();
       double xShift = (-bounds.getWidth() / 2) - bounds.getX();
       double yShift = (-bounds.getHeight() / 2) - bounds.getY();
@@ -202,6 +199,24 @@ public class ChipLayout {
 
     public Rectangle2D getBounds () {
       return bounds;
+    }
+
+    private void drawPad (DrawSpace ds, double angle, double xLoc, double yLoc) {
+      Graphics2D g2 = ds.g2;
+      for (DrawShape drawShape : drawShapes) {
+        AffineTransform rotate = AffineTransform.getRotateInstance(Math.toRadians(angle));
+        Shape rotated = rotate.createTransformedShape(drawShape.shape);
+        AffineTransform position = AffineTransform.getTranslateInstance(xLoc, yLoc);
+        Shape positioned = position.createTransformedShape(rotated);
+        g2.setColor(drawShape.color);
+        if (drawShape.fill) {
+          g2.fill(positioned);
+        } else{
+          g2.draw(positioned);
+          Rectangle rect = positioned.getBounds();
+          ds.addHoverText(rect, text);
+        }
+      }
     }
   }
 
@@ -289,24 +304,6 @@ public class ChipLayout {
     }
   }
 
-  private static void drawLabel (DrawSpace ds, MyLabel label, double angle, double xLoc, double yLoc) {
-    Graphics2D g2 = ds.g2;
-    for (DrawShape drawShape : label.drawShapes) {
-      AffineTransform rotate = AffineTransform.getRotateInstance(Math.toRadians(angle));
-      Shape rotated = rotate.createTransformedShape(drawShape.shape);
-      AffineTransform position = AffineTransform.getTranslateInstance(xLoc, yLoc);
-      Shape positioned = position.createTransformedShape(rotated);
-      g2.setColor(drawShape.color);
-      if (drawShape.fill) {
-        g2.fill(positioned);
-      } else{
-        g2.draw(positioned);
-        Rectangle rect = positioned.getBounds();
-        ds.addHoverText(rect, label.text);
-      }
-    }
-  }
-
   private static ColorSet getColorSet (String[] pairs, String def) {
     if (pairs.length > 1) {
       return colors.get(pairs[1]);
@@ -316,18 +313,18 @@ public class ChipLayout {
     return colors.get(def);
   }
 
-  private static DrawSpace getSoic (String label, int imgWid, int pins, String[] pn, boolean hasDacs) {
+  private static DrawSpace getSoic (String label, int padWid, int pins, String[] pn, boolean hasDacs) {
     int spacing = 35;
     int bodyHyt = pins * spacing / 2 + spacing / 2;
     int bodyWid = 180;
-    int imgHyt = bodyHyt + spacing;
-    int cx = imgWid / 2;
-    int cy = imgHyt / 2;
-    DrawSpace ds = new DrawSpace(imgWid, imgHyt);
+    int padHyt = bodyHyt + spacing;
+    int cx = padWid / 2;
+    int cy = padHyt / 2;
+    DrawSpace ds = new DrawSpace(padWid, padHyt);
     int gap = 4;
     int bHyt = 30;
     int sOff = (pins * spacing) / 4 - spacing / 2;
-    drawLabel(ds, new MyLabel(label, BFNT, WHT, CHIP, bodyHyt, bodyWid), -90, cx, cy);
+    new PadBox(label, BFNT, WHT, CHIP, bodyHyt, bodyWid).drawPad(ds, -90, cx, cy);
     int[] cols = new int[COLS.length];
     int base = bodyWid / 2;
     for (int ii = 0; ii < COLS.length; ii++) {
@@ -350,27 +347,27 @@ public class ChipLayout {
         String pLbl = pairs[0];
         if (pLbl.length() > 0 && (!"DAC".equals(pLbl) || hasDacs)) {
           ColorSet cSet = getColorSet(pairs, DCLR[ii]);
-          drawLabel(ds, new MyLabel(pLbl, PFNT, cSet.txtClr, cSet.lblClr, wid, bHyt), 0, xOff, yOff);
+          new PadBox(pLbl, PFNT, cSet.txtClr, cSet.lblClr, wid, bHyt).drawPad(ds, 0, xOff, yOff);
         }
       }
     }
     return ds;
   }
 
-  private static DrawSpace getVqfn (String label, int imgWid, int pins, String[] pn, boolean hasDacs) {
+  private static DrawSpace getVqfn (String label, int padWid, int pins, String[] pn) {
     int spacing = 35;
     int bodyHyt = pins * spacing / 4 + spacing / 2;
     int bodyWid = bodyHyt;
-    int imgHyt = imgWid;
-    int cx = imgWid / 2;
-    int cy = imgHyt / 2;
-    DrawSpace ds = new DrawSpace(imgWid, imgHyt);
+    int padHyt = padWid;
+    int cx = padWid / 2;
+    int cy = padHyt / 2;
+    DrawSpace ds = new DrawSpace(padWid, padHyt);
     int gap = 4;
     int bHyt = 30;
     int sOff = (pins * spacing) / 8 - spacing / 2;
     int xOff, yOff, rotate;
     // Draw VQFN-20 package body
-    drawLabel(ds, new MyLabel(label, BFNT, WHT, CHIP, bodyHyt, bodyWid), 0, cx, cy);
+    new PadBox(label, BFNT, WHT, CHIP, bodyHyt, bodyWid).drawPad(ds, 0, cx, cy);
     int[] cols = new int[COLS.length];
     int base = bodyWid / 2;
     for (int ii = 0; ii < COLS.length; ii++) {
@@ -408,7 +405,7 @@ public class ChipLayout {
             yOff = -col;
           }
           ColorSet cSet = getColorSet(pairs, DCLR[ii]);
-          drawLabel(ds, new MyLabel(pLbl, PFNT, cSet.txtClr, cSet.lblClr, wid, bHyt), rotate, cx + xOff, cy + yOff);
+          new PadBox(pLbl, PFNT, cSet.txtClr, cSet.lblClr, wid, bHyt).drawPad(ds, rotate, cx + xOff, cy + yOff);
         }
       }
     }
@@ -428,10 +425,10 @@ public class ChipLayout {
       if ("SOIC-20".equals(pkg)) {
         return getSoic(chipLabel, 800, 20, SO20, hasDacs);
       } else {
-        return getVqfn(chipLabel, 800, 20, QF20, hasDacs);
+        return getVqfn(chipLabel, 800, 20, QF20);
       }
     case 24:
-      return getVqfn(chipLabel, 800, 24, QF24, hasDacs);
+      return getVqfn(chipLabel, 800, 24, QF24);
     }
     return null;
   }

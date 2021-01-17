@@ -1,13 +1,11 @@
 import com.github.rjeschke.txtmark.Processor;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.text.*;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLEditorKit;
-import javax.swing.text.html.ImageView;
 import javax.swing.text.html.StyleSheet;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
@@ -15,13 +13,11 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Map;
 import java.util.prefs.Preferences;
 
@@ -43,7 +39,7 @@ class MarkupView extends JPanel {
     }
   }
 
-  class MyImageView extends ImageView {
+  class MyImageView extends View {
     private String                loc;
     private Image                 img;
     private ChipLayout.DrawSpace  ds;
@@ -59,40 +55,17 @@ class MarkupView extends JPanel {
     }
 
     /**
-     * This is needed to get the JEditorPane to allocate space for BufferedImages...
-     *  Note: img tag must must set with and height or this code will throw null pointer exception
-     * @param axis either View.X_AXIS or View.Y_AXIS
-     * @return the preferred X or Y span
-     */
-    @Override
-    public float getPreferredSpan (int axis) {
-      if (img instanceof BufferedImage) {
-        if (axis == View.X_AXIS) {
-          return ((BufferedImage) img).getWidth();
-        } else if (axis == View.Y_AXIS) {
-          return ((BufferedImage) img).getHeight();
-        }
-      }
-      return super.getPreferredSpan(axis);
-    }
-
-    /**
-     * This is needed to draw the BufferedImage to the screen, otherwise only images loaded by the superclass
-     * will be displayed...
+     * This is needed to draw the BufferedImage to the screen, otherwise only images loaded by the
+     * superclass will be displayed...
      * @param g Graphics context
      * @param allocation bounds for drawing the image on the JEditorPane
      */
     @Override
     public void paint (Graphics g, Shape allocation) {
-      if (img instanceof BufferedImage) {
-        Rectangle2D bnds = allocation.getBounds2D();
-        g.drawImage(img, (int) bnds.getX(), (int) bnds.getY(), null);
-      } else {
-        super.paint(g, allocation);
-      }
+      Rectangle2D bnds = allocation.getBounds2D();
+      g.drawImage(img, (int) bnds.getX(), (int) bnds.getY(), null);
     }
 
-    @Override
     public URL getImageURL () {
       if (loc.startsWith("/")) {
         return getClass().getResource(loc);
@@ -100,30 +73,24 @@ class MarkupView extends JPanel {
       return getClass().getResource(basePath + loc);
     }
 
-    @Override
-    public Image getImage () {
+    public Image getImage (URL url) {
       // Check if image was already loaded
       if (img != null) {
         return img;
+      } else if (loc.startsWith("chiplayout:")) {                                   // chiplayout
+        this.ds = ChipLayout.getLayout(parmMap.get("CHIP"), parmMap.get("PKG"));
+        return img = ds != null ? ds.img : null;
+      } else if (loc.startsWith("bitfield:")) {                                     // bitfield
+        return img = Diagrams.drawBitfield(loc.substring(9), parmMap);
       } else {
-        if (loc.startsWith("data:")) {
-          // Note sure if this will ever be used, but keeping it for now
-          int idx = loc.indexOf(",");
-          String b64 = loc.substring(idx + 1);
-          //b64 = b64.replace(' ', '+');          // Note: not needed if we URL Encode Base64
-          try {
-            ByteArrayInputStream buf = new ByteArrayInputStream(Base64.getDecoder().decode(b64));
-            BufferedImage baseImg = ImageIO.read(buf);
-            return img = baseImg;
-          } catch (Throwable ex) {
-            ex.printStackTrace();
-          }
-        } else if (loc.startsWith("chiplayout:")) {
-          this.ds = ChipLayout.getLayout(parmMap.get("CHIP"), parmMap.get("PKG"));
-          return img = ds != null ? ds.img : null;
+        Image image = Toolkit.getDefaultToolkit().createImage(url);
+        if (image != null) {
+          // Force the image to be loaded by using an ImageIcon.
+          ImageIcon ii = new ImageIcon();
+          ii.setImage(image);
         }
+        return img = image;
       }
-      return img = super.getImage();
     }
 
     @Override
@@ -139,6 +106,71 @@ class MarkupView extends JPanel {
         }
       }
       return super.getToolTipText(x, y, shape);
+    }
+
+    /**
+     * Determines the preferred span for this view along anc axis.
+     *
+     * @param axis may be either X_AXIS or Y_AXIS
+     * @return the span the view would like to be rendered into;
+     * typically the view is told to render into the span
+     * that is returned, although there is no guarantee;
+     * the parent may choose to resize or break the view
+     */
+    public float getPreferredSpan (int axis) {
+      Image newImage = getImage(getImageURL());
+      switch (axis) {
+      case View.X_AXIS:
+        return newImage.getWidth(null);
+      case View.Y_AXIS:
+        return newImage.getHeight(null);
+      default:
+        throw new IllegalArgumentException("Invalid axis: " + axis);
+      }
+    }
+
+    /**
+     * Provides a mapping from the document model coordinate space
+     * to the coordinate space of the view mapped to it.
+     *
+     * @param pos the position to convert
+     * @param a   the allocated region to render into
+     * @return the bounding box of the given position
+     * @see View#modelToView
+     */
+    public Shape modelToView (int pos, Shape a, Position.Bias b) {
+      int p0 = getStartOffset();
+      int p1 = getEndOffset();
+      if ((pos >= p0) && (pos <= p1)) {
+        Rectangle r = a.getBounds();
+        if (pos == p1) {
+          r.x += r.width;
+        }
+        r.width = 0;
+        return r;
+      }
+      return null;
+    }
+
+    /**
+     * Provides a mapping from the view coordinate space to the logical
+     * coordinate space of the model.
+     *
+     * @param x the X coordinate
+     * @param y the Y coordinate
+     * @param a the allocated region to render into
+     * @return the location within the model that best represents the
+     * given point of view
+     * @see View#viewToModel
+     */
+    public int viewToModel (float x, float y, Shape a, Position.Bias[] bias) {
+      Rectangle alloc = (Rectangle) a;
+      if (x < alloc.x + alloc.width) {
+        bias[0] = Position.Bias.Forward;
+        return getStartOffset();
+      }
+      bias[0] = Position.Bias.Backward;
+      return getEndOffset();
     }
   }
 

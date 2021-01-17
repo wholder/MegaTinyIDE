@@ -304,7 +304,10 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
         fPath = fPath.substring(0, idx + 1) + "lst";
       }
     }
-    fc.setSelectedFile(new File(fPath));
+    if (!fPath.endsWith("/")) {
+      fPath += "/";
+    }
+    fc.setCurrentDirectory(new File(fPath));
     fc.setAcceptAllFileFilterUsed(true);
     fc.setMultiSelectionEnabled(false);
     fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -519,12 +522,12 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
             if (tmp.length > 1) {
               codePane.setMarkup(tmp[1]);
             }
-            prefs.put("default.dir", editFile = oFile.getAbsolutePath());
+            editFile = oFile.getAbsolutePath();
+            prefs.put("default.dir", oFile.getParent());
             setDirtyIndicator(codeDirty = false);
             directHex = false;
             selectTab(Tab.SRC);
             saveMenu.setEnabled(true);
-            prefs.put("default.dir", oFile.getAbsolutePath());
           } catch (IOException ex) {
             ex.printStackTrace();
           }
@@ -560,7 +563,8 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
           Utility.saveFile(sFile, listPane.getText());
         }
         cFile = sFile;
-        prefs.put("default.dir", editFile = sFile.getAbsolutePath());
+        editFile = sFile.getAbsolutePath();
+        prefs.put("default.dir", sFile.getParent());
         setDirtyIndicator(codeDirty = false);
         saveMenu.setEnabled(true);
       }
@@ -621,8 +625,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
               String errText = compileMap.get("ERR").replace(tmpDir + compName, trueName);
               errText = errText.replaceAll("<", "&lt;");
               errText = errText.replaceAll(">", "&gt;");
-              errText = errText.replace("\n", "<br>");
-              Pattern lineRef = Pattern.compile("(" + trueName + ":([0-9]+?:[0-9]+?):) (fatal error|error|note):");
+              Pattern lineRef = Pattern.compile("(" + trueName.toLowerCase() + ":([0-9]+?:[0-9]+?):) (fatal error|error|note):");
               Matcher mat = lineRef.matcher(errText);
               Font font = Utility.getCodeFont(12);
               StringBuffer buf = new StringBuffer("<html><pre " + Utility.getFontStyle(font) + ">");

@@ -394,7 +394,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
    */
   public void gotoLine (int lineNum) {
     Container container = SwingUtilities.getAncestorOfClass(JViewport.class, listingPane);
-    if (container != null && lineNum > 0) {
+    if (container != null) {
       SwingUtilities.invokeLater(() -> {
         JViewport viewport = (JViewport) container;
         int lineHeight = listingPane.getFontMetrics(listingPane.getFont()).getHeight();
@@ -515,7 +515,8 @@ public class ListingPane extends JPanel {   // https://regex101.com
     private final HexPanel          regs;
     private final HexPanel          sRegs;
     private final JButton           attach, run;
-    private final JButton           step = new JButton("STEP"), reset = new JButton("RESET");
+    private final JButton           step = new JButton("STEP");
+    private final JButton           reset = new JButton("RESET");
     private Thread                  runThread;
     private int                     portMask;
     private byte                    vPrtA = 0, vPrtB = 0, vPrtC = 0;

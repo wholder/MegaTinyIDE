@@ -228,6 +228,7 @@ class MegaTinyCompiler {
           warnings.add("Error parsing: \"" + line + "\" (ignored)");
         }
       } else if (line.startsWith("#include")) {
+        //System.out.println(line);
         LastIncludeLine = Math.max(LastIncludeLine, lineNum);
       }
     }
@@ -304,7 +305,7 @@ class MegaTinyCompiler {
           }
         }
         if (prefs.getBoolean("show_dependencies", false)) {
-          System.out.println("Dependencies:");
+          System.out.println("Dependencies:" + (includes.size() == 0 ? " none" : ""));
           for (String inc : includes) {
             int idx = inc.lastIndexOf("/");
             if (idx >= 0) {

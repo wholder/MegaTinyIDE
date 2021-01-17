@@ -25,7 +25,6 @@ class CodeEditPane extends JPanel {
   private MarkupView              docPane;
   private CodeChangeListener      codeChangeListener;
 
-
   CodeEditPane (Preferences prefs) {
     this.prefs = prefs;
     setLayout(new BorderLayout());
