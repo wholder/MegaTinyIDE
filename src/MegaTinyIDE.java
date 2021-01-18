@@ -625,7 +625,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
               String errText = compileMap.get("ERR").replace(tmpDir + compName, trueName);
               errText = errText.replaceAll("<", "&lt;");
               errText = errText.replaceAll(">", "&gt;");
-              Pattern lineRef = Pattern.compile("(" + trueName.toLowerCase() + ":([0-9]+?:[0-9]+?):) (fatal error|error|note):");
+              Pattern lineRef = Pattern.compile("(" + trueName + ":([0-9]+?:[0-9]+?):) (fatal error|error|note):", Pattern.CASE_INSENSITIVE);
               Matcher mat = lineRef.matcher(errText);
               Font font = Utility.getCodeFont(12);
               StringBuffer buf = new StringBuffer("<html><pre " + Utility.getFontStyle(font) + ">");

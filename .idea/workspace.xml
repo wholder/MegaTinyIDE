@@ -12,16 +12,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="Add AIN pins">
-      <change afterPath="$PROJECT_DIR$/src/Diagrams.java" afterDir="false" />
+    <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/documentation/pinouts.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/pinouts.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ChipLayout.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ChipLayout.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/CodeEditPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/CodeEditPane.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ListingPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ListingPane.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MarkupView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MarkupView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MegaTinyCompiler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MegaTinyCompiler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/MegaTinyIDE.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MegaTinyIDE.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -89,13 +81,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="GraphPaperLayout" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="GraphPaperLayout" />
-      <module name="MegaTinyIDE" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="MarkupView" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="MarkupView" />
       <module name="MegaTinyIDE" />
@@ -110,9 +95,9 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ParmDialog" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="ParmDialog" />
-      <module name="MegaTinyIDE" />
+    <configuration name="NativeBuilder" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="NativeBuilder" />
+      <module name="NativeBuilder" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -125,20 +110,19 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="Application.ParmDialog" />
       <item itemvalue="Application.MegaTinyIDE" />
       <item itemvalue="Application.Diagrams" />
       <item itemvalue="Application.MarkupView" />
-      <item itemvalue="Application.GraphPaperLayout" />
       <item itemvalue="Application.Test" />
+      <item itemvalue="Application.NativeBuilder" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.MegaTinyIDE" />
+        <item itemvalue="Application.NativeBuilder" />
         <item itemvalue="Application.Diagrams" />
         <item itemvalue="Application.MarkupView" />
         <item itemvalue="Application.Test" />
-        <item itemvalue="Application.GraphPaperLayout" />
       </list>
     </recent_temporary>
   </component>
@@ -150,13 +134,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1596315993204</updated>
-    </task>
-    <task id="LOCAL-00062" summary="Update to JSCC 2.9.2 and add Prelim support for UPDI decoding">
-      <created>1606514095033</created>
-      <option name="number" value="00062" />
-      <option name="presentableId" value="LOCAL-00062" />
-      <option name="project" value="LOCAL" />
-      <updated>1606514095034</updated>
     </task>
     <task id="LOCAL-00063" summary="Bug fix">
       <created>1606514421379</created>
@@ -494,7 +471,14 @@
       <option name="project" value="LOCAL" />
       <updated>1609365142959</updated>
     </task>
-    <option name="localTasksCounter" value="111" />
+    <task id="LOCAL-00111" summary="Misc updates and fixes">
+      <created>1610915484144</created>
+      <option name="number" value="00111" />
+      <option name="presentableId" value="LOCAL-00111" />
+      <option name="project" value="LOCAL" />
+      <updated>1610915484144</updated>
+    </task>
+    <option name="localTasksCounter" value="112" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -522,7 +506,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Code cleanup" />
     <MESSAGE value="Add FUSE pane image to README" />
     <MESSAGE value="Warn against disabling UPDI fuse" />
     <MESSAGE value="Revise README to add &quot;brick&quot; warning" />
@@ -547,7 +530,8 @@
     <MESSAGE value="Add USERROW view/edit Menu in Actions" />
     <MESSAGE value="Revise README" />
     <MESSAGE value="Add AIN pins" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add AIN pins" />
+    <MESSAGE value="Misc updates and fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Misc updates and fixes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
