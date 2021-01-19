@@ -305,7 +305,8 @@ public class ListingPane extends JPanel {   // https://regex101.com
     });
     listingPane.addHyperlinkListener(ev -> {
       if (ev.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-        String [] parts = ev.getDescription().split(":");
+        String link = ev.getDescription();
+        String [] parts = link.split(":");
         if (parts.length == 3 && "err".equals(parts[0])) {
           ide.selectTab(MegaTinyIDE.Tab.SRC);
           int line = Integer.parseInt(parts[1]);

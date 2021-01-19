@@ -14,6 +14,8 @@
   <component name="ChangeListManager">
     <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ListingPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ListingPane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MegaTinyCompiler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MegaTinyCompiler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/MegaTinyIDE.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MegaTinyIDE.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -134,13 +136,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1596315993204</updated>
-    </task>
-    <task id="LOCAL-00063" summary="Bug fix">
-      <created>1606514421379</created>
-      <option name="number" value="00063" />
-      <option name="presentableId" value="LOCAL-00063" />
-      <option name="project" value="LOCAL" />
-      <updated>1606514421379</updated>
     </task>
     <task id="LOCAL-00064" summary="Interim check in for EDIT_STATUS code">
       <created>1606599845706</created>
@@ -478,7 +473,14 @@
       <option name="project" value="LOCAL" />
       <updated>1610915484144</updated>
     </task>
-    <option name="localTasksCounter" value="112" />
+    <task id="LOCAL-00112" summary="Fix compile error line match regex">
+      <created>1610960763596</created>
+      <option name="number" value="00112" />
+      <option name="presentableId" value="LOCAL-00112" />
+      <option name="project" value="LOCAL" />
+      <updated>1610960763596</updated>
+    </task>
+    <option name="localTasksCounter" value="113" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -506,7 +508,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Add FUSE pane image to README" />
     <MESSAGE value="Warn against disabling UPDI fuse" />
     <MESSAGE value="Revise README to add &quot;brick&quot; warning" />
     <MESSAGE value="Document OCD Messaging feature" />
@@ -531,7 +532,8 @@
     <MESSAGE value="Revise README" />
     <MESSAGE value="Add AIN pins" />
     <MESSAGE value="Misc updates and fixes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Misc updates and fixes" />
+    <MESSAGE value="Fix compile error line match regex" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix compile error line match regex" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -550,6 +552,11 @@
           <url>file://$PROJECT_DIR$/src/Utility.java</url>
           <line>238</line>
           <option name="timeStamp" value="16" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/ListingPane.java</url>
+          <line>309</line>
+          <option name="timeStamp" value="51" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

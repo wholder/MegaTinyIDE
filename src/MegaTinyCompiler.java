@@ -291,14 +291,14 @@ class MegaTinyCompiler {
           return tags;
         }
         List<String> includes = Utility.processIncludes(srcDir, tmpDir, srcBase + ".inc");
-        // Build list if user files to be compiled
+        // Build list of user files to be compiled
         for (String include : includes) {
           String[] parts = include.split("\\.");
           if (parts.length > 1 && "h".equalsIgnoreCase(parts[1])) {
             // Does a matching .c of .cpp file exist in same directory
             for (String ext : new String[] {".c", ".cpp", ".s"}) {
               String fName = parts[0] + ext;
-              if ((new File(srcDir + fName)).exists()) {
+              if ((new File(srcDir + fName)).exists() && !fName.equalsIgnoreCase(srcName)) {
                 compFiles.add(new CompFile(srcDir, tmpDir, fName));
               }
             }
