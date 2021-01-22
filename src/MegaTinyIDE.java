@@ -275,19 +275,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     JFileChooser fc = new JFileChooser();
     String fPath = prefs.get("default.dir", "/");
     int selIndex = tabPane.getSelectedIndex();
-    if (selIndex == Tab.SRC.num) {
-      FileNameExtensionFilter[] filters = {
-          new FileNameExtensionFilter("AVR .c , .cpp or .ino files", "c", "cpp", "ino"),
-          new FileNameExtensionFilter("AVR .asm or .s files", "asm", "s"),
-          };
-      String ext = prefs.get("default.extension", "c");
-      for (FileNameExtensionFilter filter : filters) {
-        fc.addChoosableFileFilter(filter);
-        if (filter.getExtensions()[0].equals(ext)) {
-          fc.setFileFilter(filter);
-        }
-      }
-    } else if (selIndex == Tab.HEX.num) {
+    if (selIndex == Tab.HEX.num) {
       FileNameExtensionFilter filter = new FileNameExtensionFilter(".hex files", "hex");
       fc.addChoosableFileFilter(filter);
       fc.setFileFilter(filter);
@@ -302,6 +290,18 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
       int idx = fPath.lastIndexOf('.');
       if (idx > 0) {
         fPath = fPath.substring(0, idx + 1) + "lst";
+      }
+    } else {
+      FileNameExtensionFilter[] filters = {
+          new FileNameExtensionFilter("AVR .c , .cpp or .ino files", "c", "cpp", "ino"),
+          new FileNameExtensionFilter("AVR .asm or .s files", "asm", "s"),
+          };
+      String ext = prefs.get("default.extension", "c");
+      for (FileNameExtensionFilter filter : filters) {
+        fc.addChoosableFileFilter(filter);
+        if (filter.getExtensions()[0].equals(ext)) {
+          fc.setFileFilter(filter);
+        }
       }
     }
     if (!fPath.endsWith("/")) {
@@ -617,14 +617,14 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
             if (compileMap == null) {
               return;
             }
-            String compName = "Sketch.cpp";
             String trueName = cFile.getName();
             if (compileMap.containsKey("ERR")) {
               listPane.setForeground(Color.red);
-              // Remove path to tmpDir from error messages
-              String errText = compileMap.get("ERR").replace(tmpDir + compName, trueName);
+              String errText = compileMap.get("ERR");
+              // Escape HTML <> symbols
               errText = errText.replaceAll("<", "&lt;");
               errText = errText.replaceAll(">", "&gt;");
+              // Remove path to tmpDir from error messages
               errText = errText.replaceAll(tmpDir, "");
               Pattern lineRef = Pattern.compile("(" + trueName + ":([0-9]+?):(([0-9]+?):)*)", Pattern.CASE_INSENSITIVE);
               Matcher mat = lineRef.matcher(errText);
