@@ -245,7 +245,7 @@ public class ChipLayout {
 
     void addHoverText (Rectangle rect, String text) {
        if (text.matches("P[ABC][0-7]")) {
-         text = text + ": Port " + text.charAt(1) + ", Pin " + text.charAt(2);
+         text = text + ": Port " + text.charAt(1) + ", Bit " + text.charAt(2);
        } else if (text.matches("A[0-9]")) {
            text = text + ": Analog Input, Channel " + text.substring(1);
        } else if (text.matches("^\\d+$")) {

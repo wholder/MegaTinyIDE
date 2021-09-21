@@ -13,9 +13,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/resources/documentation/elfdebug.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/vecset7.props" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.MD" beforeDir="false" afterPath="$PROJECT_DIR$/README.MD" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/attinys.props" beforeDir="false" afterPath="$PROJECT_DIR$/resources/attinys.props" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/dialoginfo.props" beforeDir="false" afterPath="$PROJECT_DIR$/resources/dialoginfo.props" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/documentation/debugging.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/debugging.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/documentation/index.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/index.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/documentation/programmers.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/programmers.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/toolchains/combined.zip" beforeDir="false" afterPath="$PROJECT_DIR$/resources/toolchains/combined.zip" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/version.props" beforeDir="false" afterPath="$PROJECT_DIR$/resources/version.props" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ChipLayout.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ChipLayout.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ListingPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ListingPane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MarkupView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MarkupView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MegaTinyCompiler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MegaTinyCompiler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/MegaTinyIDE.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MegaTinyIDE.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Utility.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Utility.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,11 +72,14 @@
       <recent name="Utility" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/app notes" />
+      <recent name="$PROJECT_DIR$/examples" />
       <recent name="$PROJECT_DIR$/docs" />
+      <recent name="$PROJECT_DIR$/app notes" />
       <recent name="$PROJECT_DIR$/RTOS Ideas" />
       <recent name="$PROJECT_DIR$/resources/documentation/images" />
-      <recent name="$PROJECT_DIR$/images" />
+    </key>
+    <key name="ExtractSuperBase.RECENT_KEYS">
+      <recent name="" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="" />
@@ -74,17 +91,10 @@
       <recent name="tools" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.MegaTinyIDE">
-    <configuration name="Diagrams" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="Diagrams" />
-      <module name="MegaTinyIDE" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="MarkupView" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="MarkupView" />
-      <module name="MegaTinyIDE" />
+  <component name="RunManager" selected="Application.NativeBuilder">
+    <configuration name="ElfDump" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="ElfDump" />
+      <module name="ToolBuilder" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -92,6 +102,7 @@
     <configuration name="MegaTinyIDE" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="MegaTinyIDE" />
       <module name="MegaTinyIDE" />
+      <option name="PROGRAM_PARAMETERS" value="examples/attiny3217.elf" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -103,8 +114,15 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Test" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="Test" />
+    <configuration name="ToolchainCombiner" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="ToolchainCombiner" />
+      <module name="ToolBuilder" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Utility" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Utility" />
       <module name="MegaTinyIDE" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -112,18 +130,18 @@
     </configuration>
     <list>
       <item itemvalue="Application.MegaTinyIDE" />
-      <item itemvalue="Application.Diagrams" />
-      <item itemvalue="Application.MarkupView" />
-      <item itemvalue="Application.Test" />
       <item itemvalue="Application.NativeBuilder" />
+      <item itemvalue="Application.ElfDump" />
+      <item itemvalue="Application.Utility" />
+      <item itemvalue="Application.ToolchainCombiner" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.MegaTinyIDE" />
         <item itemvalue="Application.NativeBuilder" />
-        <item itemvalue="Application.Diagrams" />
-        <item itemvalue="Application.MarkupView" />
-        <item itemvalue="Application.Test" />
+        <item itemvalue="Application.MegaTinyIDE" />
+        <item itemvalue="Application.ToolchainCombiner" />
+        <item itemvalue="Application.ElfDump" />
+        <item itemvalue="Application.Utility" />
       </list>
     </recent_temporary>
   </component>
@@ -135,13 +153,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1596315993204</updated>
-    </task>
-    <task id="LOCAL-00066" summary="Add FUSE pane image to README">
-      <created>1606699027488</created>
-      <option name="number" value="00066" />
-      <option name="presentableId" value="LOCAL-00066" />
-      <option name="project" value="LOCAL" />
-      <updated>1606699027488</updated>
     </task>
     <task id="LOCAL-00067" summary="Warn against disabling UPDI fuse">
       <created>1606700507472</created>
@@ -479,7 +490,14 @@
       <option name="project" value="LOCAL" />
       <updated>1611093055881</updated>
     </task>
-    <option name="localTasksCounter" value="115" />
+    <task id="LOCAL-00115" summary="Misc fixes and improvements">
+      <created>1611281924256</created>
+      <option name="number" value="00115" />
+      <option name="presentableId" value="LOCAL-00115" />
+      <option name="project" value="LOCAL" />
+      <updated>1611281924256</updated>
+    </task>
+    <option name="localTasksCounter" value="116" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -507,7 +525,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Warn against disabling UPDI fuse" />
     <MESSAGE value="Revise README to add &quot;brick&quot; warning" />
     <MESSAGE value="Document OCD Messaging feature" />
     <MESSAGE value="Added ability to change reqister values while debugging" />
@@ -532,31 +549,28 @@
     <MESSAGE value="Add AIN pins" />
     <MESSAGE value="Misc updates and fixes" />
     <MESSAGE value="Fix compile error line match regex" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix compile error line match regex" />
+    <MESSAGE value="Misc fixes and improvements" />
+    <option name="LAST_COMMIT_MESSAGE" value="Misc fixes and improvements" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/ToolBuilder/src/ToolchainCombiner.java</url>
-          <line>130</line>
-          <option name="timeStamp" value="10" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/ToolBuilder/src/ToolchainCombiner.java</url>
-          <line>120</line>
-          <option name="timeStamp" value="15" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/Utility.java</url>
-          <line>238</line>
+          <line>250</line>
           <option name="timeStamp" value="16" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/ToolBuilder/src/ElfDump.java</url>
+          <line>235</line>
+          <option name="timeStamp" value="72" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/MegaTinyIDE$BinFileCompare.ic" NAME="BinFileCompare Coverage Results" MODIFIED="1601853378592" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/MegaTinyIDE$MegaTinyIDE.ic" NAME="MegaTinyIDE Coverage Results" MODIFIED="1602453257039" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/MegaTinyIDE$ElfDump.ic" NAME="ElfDump Coverage Results" MODIFIED="1631841301760" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/MegaTinyIDE$BinFileCompare.ic" NAME="BinFileCompare Coverage Results" MODIFIED="1601853378592" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>

@@ -288,7 +288,7 @@ class MarkupView extends JPanel {
     styleSheet.addRule("ol {margin-left: 1cm;}");
     styleSheet.addRule("ol, li {font-size: 12px; padding-bottom: 6px;}");
     styleSheet.addRule("ul, li {font-size: 12px; padding-bottom: 6px;}");
-    styleSheet.addRule("code {font-family: " + codeFont + "; font-size: 12px; margin-bottom: 3px;}");
+    //styleSheet.addRule("code {font-family: " + codeFont + "; font-size: 12px; margin-bottom: 3px;}"); // doesn't work?
     styleSheet.addRule("p {font-size: 12px; margin-top: 5px; margin-bottom: 5px;}");
   }
 
@@ -320,13 +320,17 @@ class MarkupView extends JPanel {
           case "INFO":
             String[] parts = parm.split("-");
             if (parts.length > 1) {
+              String type = parts[1];
               MegaTinyIDE.ChipInfo info = MegaTinyIDE.getChipInfo(parts[0]);
               if (info != null) {
-                String tmp = info.get(parts[1]);
-                if (tmp != null) {
-                  return tmp;
+                String val = info.get(type);
+                if (val != null) {
+                  if ("sig".equals(type) && val.length() == 6) {
+                    val = "0x" + val.substring(0, 2) + ", 0x"+ val.substring(2, 4) + ", 0x"+ val.substring(4);
+                  }
+                  return val;
                 }
-                return "INFO tag parameter \"" + parts[1] + "\" undefined";
+                return "INFO tag parameter \"" + type + "\" undefined";
               }
             }
             return "malformed INFO tag parameter \"" + parm + "\"";

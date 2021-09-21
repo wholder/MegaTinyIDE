@@ -8,6 +8,7 @@
    + [Pragmas](pragmas.md)
    + [Using the Debugger](debugging.md)
    + [OCD Messaging](ocdmsg.md)
+   + [Debugging ELF files](elfdebug.md)
 
 #### [Compatible Programmers/Debuggers & Development Boards](programmers.md)
    + [Atmel-ICE](programmers.md#Atmel-ICE)
@@ -118,8 +119,20 @@
 		<table style="background-color:#EEEEEE;">
 			<tr>
 				<td style="width:10px;"></td>
-				<td style="width: 80px;">ATtiny204</td>
-				<td style="width: 80px;"><a href="pinouts.md?CHIP=attiny204,NAME=ATtiny204,PKG=SOIC-14">SOIC-14</a></td>
+				<td style="width: 80px;">ATtiny202</td>
+				<td style="width: 80px;"><a href="pinouts.md?CHIP=attiny202,NAME=ATtiny202,PKG=SOIC-8">SOIC-8</a></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>ATtiny402</td>
+				<td><a href="pinouts.md?CHIP=attiny402,NAME=ATtiny402,PKG=SOIC-8">SOIC-8</a></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>ATtiny204</td>
+				<td><a href="pinouts.md?CHIP=attiny204,NAME=ATtiny204,PKG=SOIC-14">SOIC-14</a></td>
 				<td></td>
 			</tr>
 			<tr>

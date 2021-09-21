@@ -140,10 +140,10 @@ class MegaTinyCompiler {
                                         "*[TDIR]**[BASE]*.hex";       // Output file
 
   private static final String size = "avr-size " +                    // https://linux.die.net/man/1/avr-size
-                                        "-A " +                       //
+                                        "-B " +                       // Display Berkeley format (else -A for System V format)
                                         "*[TDIR]**[BASE]*.elf";       // Input file
 
-  private static final String[][] build = {
+  static final String[][] build = {
       {"TOHEX", tohex},
       {"LST", list},   // Note add "-l' for source path and line numbers (Warning: large lines!)
       {"SIZE", size},
@@ -159,7 +159,37 @@ class MegaTinyCompiler {
     }
   }
 
-  static Map<String, String> compile (String src, Map<String, String> tags, Preferences prefs, JFrame ide) throws Exception {
+  static Map<String, String> debugBuild (Map<String, String> tags, Preferences prefs) throws Exception {
+    // Generate Arduino-like sketch hex output, listing and code/data size info
+    try {
+      Map<String, String> out = new HashMap<>();
+      String tmpExe = tags.get("TEXE");
+      String tmpDir = tags.get("TDIR");
+      String srcBase = tags.get("BASE");
+      tags.put("INTLV", prefs.getBoolean("interleave", true) ? "-S" : "");
+      for (String[] seq : build) {
+        String cmd = Utility.replaceTags(tmpExe + "bin" + fileSep + seq[1], tags);
+        System.out.println("Run: " + cmd);
+        Process proc = Runtime.getRuntime().exec(cmd);
+        String ret = Utility.runCmd(proc);
+        int retVal = proc.waitFor();
+        if (retVal != 0) {
+          String msg = "While Building\n" + ret;
+          System.out.println(msg);
+          tags.put("ERR", msg);
+          return tags;
+        }
+        out.put(seq[0], ret);
+      }
+      String buf = Utility.getFile(tmpDir + srcBase + ".hex");
+      out.put("HEX", buf);
+      return out;
+    } catch (Exception ex) {
+      return null;
+    }
+  }
+
+  static Map<String, String> compileBuild (String src, Map<String, String> tags, Preferences prefs, JFrame ide) throws Exception {
     String srcFile = tags.get("EFILE");
     String srcDir = srcFile != null ? (new File(srcFile)).getParent() + "/" : null;
     String srcName = tags.get("FNAME");
@@ -261,7 +291,7 @@ class MegaTinyCompiler {
       throw new IllegalStateException("Unknown chip type: " + chip);
     }
     out.put("INFO", "chip: " + chip + ", clock: " + String.format("%,d", Integer.parseInt(tags.get("CLOCK"))));
-    MegaTinyIDE.ProgressBar progress = null;
+    Utility.ProgressBar progress = null;
     try {
       // Copy contents of "source" pane to source file with appropriate extension for code type
       Utility.saveFile(tmpDir + srcName, src);
@@ -384,7 +414,7 @@ class MegaTinyCompiler {
         return tags;
       }
       // Compile source code and add in included code files as they are discovered
-      progress = new MegaTinyIDE.ProgressBar(ide, "Compiling and Building");
+      progress = new Utility.ProgressBar(ide, "Compiling and Building");
       StringBuilder linkList = new StringBuilder();
       progress.setMaximum(compFiles.size());
       int progCount = 0;

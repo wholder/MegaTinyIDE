@@ -559,7 +559,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
               }
             });
           } catch (Exception ex) {
-            ide.showErrorDialog("Unable to open Programmer");
+            ide.showErrorDialog("Unable to open Programmer:\n  " + ex.getMessage());
             debugger = null;
             active = false;
             running = false;

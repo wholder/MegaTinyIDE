@@ -21,6 +21,7 @@ import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileView;
 import javax.swing.text.Document;
 
 import jssc.SerialNativeInterface;
@@ -54,6 +55,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
   private enum                    OpSys {MAC, WIN, LINUX}
   private OpSys                   os;
   private String                  osCode;
+  private File                    elfFile;
   private final JTabbedPane       tabPane;
   public final CodeEditPane       codePane;
   public EDBG                     debugger = null;
@@ -63,7 +65,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
   private final JMenuItem         openMenu;
   private JMenuItem               saveMenu;
   private final JMenuItem         saveAsMenu;
-  private final JMenuItem         newMenu;
+  private final JComponent        newMenu;
   private final RadioMenu         targetMenu;
   private final JMenuItem         build;
   private final JMenuItem         progFlash;
@@ -106,7 +108,9 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
   // Implement DebugListener
   public void debugState (boolean active) {
     // Disable these actions when debugger is attached to target
-    build.setEnabled(!active);
+    if (build != null) {
+      build.setEnabled(!active);
+    }
     progFlash.setEnabled(!active);
     readFuses.setEnabled(!active);
     progMenu.setEnabled(!active);
@@ -269,6 +273,38 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     prefs.putBoolean("developer_features", prefs.getBoolean("developer_features", false));
     prefs.putBoolean("decode_updi", prefs.getBoolean("decode_updi", false));
     prefs.putBoolean("show_dependencies", prefs.getBoolean("show_dependencies", false));
+    prefs.putBoolean("enable_projects", prefs.getBoolean("enable_projects", false));
+  }
+
+  public static class ProjectFolderFilter extends FileFilter {
+    /**
+     * Whether the given file is accepted by this filter.
+     */
+    public boolean accept (File file) {
+      if (file.isDirectory()) {
+        String[] fParts = file.getName().split("\\.");
+        File[] files =  file.listFiles();
+        if (files != null) {
+          for (File tmp : files) {
+            if (tmp.isFile()) {
+              String[] tParts = tmp.getName().split("\\.");
+              if (fParts[0].equals(tParts[0])) {
+                return true;
+              }
+            }
+          }
+        }
+      }
+      return false;
+    }
+
+    /**
+     * The description of this filter. For example: "JPG and GIF Images"
+     * @see FileView#getName
+     */
+    public String getDescription() {
+      return "Project Folder";
+    }
   }
 
   private JFileChooser getFileChooser () {
@@ -276,7 +312,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     String fPath = prefs.get("default.dir", "/");
     int selIndex = tabPane.getSelectedIndex();
     if (selIndex == Tab.HEX.num) {
-      FileNameExtensionFilter filter = new FileNameExtensionFilter(".hex files", "hex");
+      FileFilter filter = new FileNameExtensionFilter(".hex files", "hex");
       fc.addChoosableFileFilter(filter);
       fc.setFileFilter(filter);
       int idx = fPath.lastIndexOf('.');
@@ -284,7 +320,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
         fPath = fPath.substring(0, idx + 1) + "hex";
       }
     } else if (selIndex == Tab.LIST.num) {
-      FileNameExtensionFilter filter = new FileNameExtensionFilter(".lst files", "lst");
+      FileFilter filter = new FileNameExtensionFilter(".lst files", "lst");
       fc.addChoosableFileFilter(filter);
       fc.setFileFilter(filter);
       int idx = fPath.lastIndexOf('.');
@@ -292,14 +328,17 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
         fPath = fPath.substring(0, idx + 1) + "lst";
       }
     } else {
-      FileNameExtensionFilter[] filters = {
-          new FileNameExtensionFilter("AVR .c , .cpp or .ino files", "c", "cpp", "ino"),
-          new FileNameExtensionFilter("AVR .asm or .s files", "asm", "s"),
-          };
+      List<FileFilter> filterList = new ArrayList<>();
+      filterList.add(new FileNameExtensionFilter("AVR .c , .cpp or .ino files", "c", "cpp", "ino"));
+      filterList.add(new FileNameExtensionFilter("AVR .asm or .s files", "asm", "s"));
+      if (prefs.getBoolean("enable_projects", false)) {
+        filterList.add(new ProjectFolderFilter());
+      }
+      FileFilter[] filters = filterList.toArray(new FileFilter[0]);
       String ext = prefs.get("default.extension", "c");
-      for (FileNameExtensionFilter filter : filters) {
+      for (FileFilter filter : filters) {
         fc.addChoosableFileFilter(filter);
-        if (filter.getExtensions()[0].equals(ext)) {
+        if (filter instanceof FileNameExtensionFilter && ((FileNameExtensionFilter) filter).getExtensions()[0].equals(ext)) {
           fc.setFileFilter(filter);
         }
       }
@@ -310,7 +349,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     fc.setCurrentDirectory(new File(fPath));
     fc.setAcceptAllFileFilterUsed(true);
     fc.setMultiSelectionEnabled(false);
-    fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+    fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
     return fc;
   }
 
@@ -325,7 +364,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
   private void showAboutBox () {
     ImageIcon icon = null;
     try {
-      icon = new ImageIcon(getClass().getResource("images/MegaTinyIDE.png"));
+      icon = getImageIcon("images/MegaTinyIDE.png");
     } catch (Exception ex) {
       ex.printStackTrace();
     }
@@ -353,6 +392,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
       items.add(new ParmDialog.Item("Enable Developer Features", "*[DEV_ONLY]*", "developer_features", false));
       items.add(new ParmDialog.Item("Decode UPDI Commands", "*[UPDI_DECODE]*", "decode_updi", false));
       items.add(new ParmDialog.Item("Show Dependencies", "*[SHOW_DEPENDENCIES]*", "show_dependencies", false));
+      items.add(new ParmDialog.Item("Enable Project Folders", "*[ENABLE_PROJECTS]*", "enable_projects", false));
     }
     ParmDialog.Item[] parmSet = items.toArray(new ParmDialog.Item[0]);
     ParmDialog dialog = (new ParmDialog("Edit Preferences", parmSet, new String[] {"Save", "Cancel"}));
@@ -360,8 +400,9 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     dialog.setVisible(true);              // Note: this call invokes dialog
   }
 
-  private MegaTinyIDE () {
+  private MegaTinyIDE (String[] args) {
     super("MegaTinyIDE");
+    boolean debugMode = false;
     // Setup temp directory for code compilation and toolchain
     try {
       tmpDir = Utility.createDir(tempBase + "avr-temp-code");
@@ -369,6 +410,41 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     } catch (IOException ex) {
       showErrorDialog("Unable to create temporary working directories");
       System.exit(1);
+    }
+    // Check for debugger-only startup
+    if (args.length > 0) {
+      if (args.length == 1) {
+        elfFile = new File(args[0]);
+        avrChip = Utility.getTargetFromElf(elfFile);
+        if (avrChip != null) {
+          if (chipTypes.containsKey(avrChip)) {
+            debugMode = true;
+          } else {
+            System.out.println("ELF file specifies unsupported target device '" + avrChip + "'");
+            System.exit(1);
+          }
+        } else {
+          System.out.println("Unable to determine target device from ELF file");
+          System.exit(1);
+        }
+      } else if (args.length == 2) {
+        elfFile = new File(args[1]);
+        if (elfFile.exists()) {
+          avrChip = args[0];
+          if (chipTypes.containsKey(avrChip)) {
+            debugMode = true;
+          } else {
+            System.out.println("Unknown target device " + avrChip);
+            System.exit(1);
+          }
+        } else {
+          System.out.println("File " + elfFile.getAbsolutePath() + " not found");
+          System.exit(1);
+        }
+      } else {
+        System.out.println("Usage MegaTinyIDE<target device> <elf file> ");
+        System.exit(1);
+      }
     }
     // Load version info
     try {
@@ -405,7 +481,6 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     infoPane.append("os:           " + os.toString() + "\n");
     infoPane.append("java.home:    " + System.getProperty("java.home") + "\n");
     infoPane.append("java.version: " + System.getProperty("java.version") + "\n");
-
     if (prefs.getBoolean("developer_features", false)) {
       String[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
       infoPane.append("Installed fonts:\n");
@@ -429,9 +504,9 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     infoPane.setToolTipText("<html>Click Right Mouse Button<br>for Command Menu</html>");
     // Add menu bar and menus
     JMenuBar menuBar = new JMenuBar();
+    JMenuItem mItem;
     // Add "File" Menu
     JMenu fileMenu = new JMenu("File");
-    JMenuItem mItem;
     fileMenu.add(mItem = new JMenuItem("About"));
     mItem.addActionListener(e -> showAboutBox());
     fileMenu.add(mItem = new JMenuItem("Preferences"));
@@ -442,7 +517,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
       // Check for new version available
       // https://github.com/wholder/MegaTinyIDE/blob/master/resources/version.props
       try {
-        Map<String,String> latest = Utility.getResourceMap(new URL(VERSION_URL));
+        Map<String, String> latest = Utility.getResourceMap(new URL(VERSION_URL));
         String oldVersion = versionInfo.get("version");
         String newVersion = latest.get("version");
         if (oldVersion != null && newVersion != null) {
@@ -456,10 +531,10 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
                 if (newVal > oldVal) {
                   String status = latest.get("status");
                   String version = newVersion + (status != null && status.length() > 0 ? " " + status : "");
-                  ImageIcon icon = new ImageIcon(Utility.class.getResource("images/info-32x32.png"));
+                  ImageIcon icon = getImageIcon("images/info-32x32.png");
                   if (JOptionPane.showConfirmDialog(this, "<html>A new version (" + version + ") is available!<br>" +
-                                                        "Do you want to go to the download page?</html>", "Warning", JOptionPane.YES_NO_OPTION,
-                                                    JOptionPane.WARNING_MESSAGE, icon) == JOptionPane.OK_OPTION) {
+                      "Do you want to go to the download page?</html>", "Warning", JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE, icon) == JOptionPane.OK_OPTION) {
                     if (Desktop.isDesktopSupported()) {
                       try {
                         Desktop.getDesktop().browse(new URI(DOWNLOAD));
@@ -474,7 +549,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
                   return;
                 }
               }
-              ImageIcon icon = new ImageIcon(Utility.class.getResource("images/info-32x32.png"));
+              ImageIcon icon = getImageIcon("images/info-32x32.png");
               JOptionPane.showMessageDialog(this, "You have the latest version.", "Attention", INFORMATION_MESSAGE, icon);
             } catch (NumberFormatException ex) {
               ex.printStackTrace();
@@ -488,19 +563,51 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
       }
     });
     fileMenu.addSeparator();
-    fileMenu.add(newMenu = new JMenuItem("New"));
-    newMenu.addActionListener(e -> {
-      if (codePane.getText().length() == 0 || discardChanges()) {
-        codePane.setForeground(Color.black);
-        codePane.setCode("");
-        directHex = false;
-        compiled = false;
-        editFile = null;
-        setDirtyIndicator(codeDirty = false);
-        selectTab(Tab.SRC);
-        cFile = null;
-      }
-    });
+    if (prefs.getBoolean("enable_projects", false)) {
+      fileMenu.add(newMenu = new JMenu("New"));
+      JMenuItem newProject = new JMenuItem("Project Folder");             // New->Project Folder
+      newProject.addActionListener(e -> {
+        if (codePane.getText().length() == 0 || discardChanges()) {
+          codePane.setForeground(Color.black);
+          codePane.setCode("");
+          directHex = false;
+          compiled = false;
+          editFile = null;
+          setDirtyIndicator(codeDirty = false);
+          selectTab(Tab.SRC);
+          cFile = null;
+        }
+      });
+      newMenu.add(newProject);
+      JMenuItem newFile = new JMenuItem("Project File");                  // New->Project File
+      newMenu.add(newFile);
+      newFile.addActionListener(e -> {
+        if (codePane.getText().length() == 0 || discardChanges()) {
+          codePane.setForeground(Color.black);
+          codePane.setCode("");
+          directHex = false;
+          compiled = false;
+          editFile = null;
+          setDirtyIndicator(codeDirty = false);
+          selectTab(Tab.SRC);
+          cFile = null;
+        }
+      });
+    } else {
+      fileMenu.add(newMenu = new JMenuItem("New"));                       // New (file)
+      ((JMenuItem) newMenu).addActionListener(e -> {
+        if (codePane.getText().length() == 0 || discardChanges()) {
+          codePane.setForeground(Color.black);
+          codePane.setCode("");
+          directHex = false;
+          compiled = false;
+          editFile = null;
+          setDirtyIndicator(codeDirty = false);
+          selectTab(Tab.SRC);
+          cFile = null;
+        }
+      });
+    }
     fileMenu.add(openMenu = new JMenuItem("Open"));
     openMenu.setAccelerator(OPEN_KEY);
     openMenu.addActionListener(e -> {
@@ -512,7 +619,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
             FileFilter filter = fc.getFileFilter();
             if (filter instanceof FileNameExtensionFilter) {
               String[] exts = ((FileNameExtensionFilter) filter).getExtensions();
-              prefs.put("default.extension",  exts[0]);
+              prefs.put("default.extension", exts[0]);
             }
             String src = Utility.getFile(oFile);
             cFile = oFile;
@@ -549,7 +656,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
         FileFilter filter = fc.getFileFilter();
         if (filter instanceof FileNameExtensionFilter) {
           String[] exts = ((FileNameExtensionFilter) filter).getExtensions();
-          prefs.put("default.extension",  exts[0]);
+          prefs.put("default.extension", exts[0]);
         }
         if (sFile.exists() && !doWarningDialog("Overwrite Existing file?")) {
           return;
@@ -573,7 +680,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     fileMenu.add(mItem = new JMenuItem("Quit MegaTinyIDE"));
     mItem.setAccelerator(QUIT_KEY);
     mItem.addActionListener(e -> {
-      if (!codeDirty  ||  discardChanges()) {
+      if (!codeDirty || discardChanges()) {
         System.exit(0);
       }
     });
@@ -595,94 +702,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     actions.add(build = new JMenuItem("Build"));
     build.setToolTipText("Compile Code in Source Code Pane and Display Result in Listing and Hex Output Panes");
     build.setAccelerator(BUILD_KEY);
-    build.addActionListener(e -> {
-      if (cFile != null) {
-        String fName = cFile.getName().toLowerCase();
-        // Reinstall toolchain if there was an error last time we tried to build
-        verifyToolchain();
-        Thread cThread = new Thread(() -> {
-          try {
-            listPane.setForeground(Color.black);
-            listPane.setText("");
-            Map<String,String> tags = new HashMap<>();
-            tags.put("TDIR", tmpDir);
-            tags.put("TEXE", tmpExe);
-            tags.put("IDIR", tmpExe + "avr" + fileSep + "include" + fileSep);
-            tags.put("FNAME", fName);
-            tags.put("EFILE", editFile);
-            if (prefs.getBoolean("gen_prototypes", false)) {
-              tags.put("PREPROCESS", "GENPROTOS");
-            }
-            compileMap = MegaTinyCompiler.compile(codePane.getText(), tags, prefs, this);
-            if (compileMap == null) {
-              return;
-            }
-            String trueName = cFile.getName();
-            if (compileMap.containsKey("ERR")) {
-              listPane.setForeground(Color.red);
-              String errText = compileMap.get("ERR");
-              // Escape HTML <> symbols
-              errText = errText.replaceAll("<", "&lt;");
-              errText = errText.replaceAll(">", "&gt;");
-              // Remove path to tmpDir from error messages
-              errText = errText.replaceAll(tmpDir, "");
-              Pattern lineRef = Pattern.compile("(" + trueName + ":([0-9]+?):(([0-9]+?):)*)", Pattern.CASE_INSENSITIVE);
-              Matcher mat = lineRef.matcher(errText);
-              Font font = Utility.getCodeFont(12);
-              StringBuffer buf = new StringBuffer("<html><pre " + Utility.getFontStyle(font) + ">");
-              while (mat.find()) {
-                String seq = mat.group(1);
-                String line = mat.group(2);
-                String col = mat.group(4);
-                if (col == null) {
-                  col = "0";
-                }
-                if (seq != null) {
-                  mat.appendReplacement(buf, "<a href=\"err:" + line + ":" + col +  "\">" + seq + "</a>");
-                }
-              }
-              mat.appendTail(buf);
-              buf.append("</pre></html>");
-              listPane.setErrorText(buf.toString());
-              compiled = false;
-            } else {
-              listPane.setForeground(Color.black);
-              StringBuilder tmp = new StringBuilder();
-              tmp.append(compileMap.get("INFO"));
-              tmp.append("\n\n");
-              if (compileMap.containsKey("WARN")) {
-                tmp.append(compileMap.get("WARN"));
-                tmp.append("\n\n");
-              }
-              tmp.append( compileMap.get("SIZE"));
-              tmp.append(compileMap.get("LST"));
-              String listing = tmp.toString();
-              listPane.setText(listing.replace(tmpDir, ""));
-              hexPane.setForeground(Color.black);
-              hexPane.setText(compileMap.get("HEX"));
-              avrChip = compileMap.get("CHIP");
-              compiled = true;
-              listPane.statusPane.setActive(false);
-            }
-            selectTab(Tab.LIST);
-          } catch (Exception ex) {
-            prefs.putBoolean("reload_toolchain", true);
-            ex.printStackTrace();
-            listPane.setText("Compile error (see Error Info pane for details)\n" + ex.toString());
-            infoPane.append("Stack Trace:\n");
-            ByteArrayOutputStream bOut = new ByteArrayOutputStream();
-            PrintStream pOut = new PrintStream(bOut);
-            ex.printStackTrace(pOut);
-            pOut.close();
-            infoPane.append(bOut.toString() + "\n");
-            selectTab(Tab.INFO);
-          }
-        });
-        cThread.start();
-      } else {
-        showErrorDialog("Please save file first!");
-      }
-    });
+    build.addActionListener(e -> compileCode());
     JMenuItem preprocess = new JMenuItem("Run Preprocessor");
     preprocess.setToolTipText("Run GCC Preprocessor and Display Result in Listing Pane");
     actions.add(preprocess);
@@ -692,8 +712,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
         String fName = cFile.getName().toLowerCase();
         if (fName.endsWith(".cpp") || fName.endsWith(".c")) {
           // Reinstall toolchain if there was an error last time we tried to build
-          verifyToolchain();
-          Thread cThread = new Thread(() -> {
+          verifyToolchain(new Thread(() -> {
             try {
               listPane.setForeground(Color.black);
               listPane.setText("");
@@ -703,7 +722,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
               tags.put("IDIR", tmpExe + "avr" + fileSep + "include" + fileSep);
               tags.put("FNAME", fName);
               tags.put("PREPROCESS", "PREONLY");
-              compileMap = MegaTinyCompiler.compile(codePane.getText(), tags, prefs, this);
+              compileMap = MegaTinyCompiler.compileBuild(codePane.getText(), tags, prefs, this);
               if (compileMap == null) {
                 return;
               }
@@ -723,11 +742,10 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
               PrintStream pOut = new PrintStream(bOut);
               ex.printStackTrace(pOut);
               pOut.close();
-              infoPane.append(bOut.toString() + "\n");
+              infoPane.append(bOut + "\n");
               selectTab(Tab.INFO);
             }
-          });
-          cThread.start();
+          }));
         } else {
           listPane.setText("Must be .c or .cpp file");
         }
@@ -827,12 +845,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
         byte[] data = edbg.readEeprom(0, eBytes);
         HexEditPane hexPane = new HexEditPane(this, 8, 8);
         EDBG debugger = edbg;
-        hexPane.showVariable("EEPROM", null, 0, data, new HexEditPane.Update() {
-          @Override
-          public void setValue (int offset, int value) throws EDBG.EDBGException {
-            debugger.writeEeprom(offset, new byte[] {(byte) value});
-          }
-        });
+        hexPane.showVariable("EEPROM", null, 0, data, (offset, value) -> debugger.writeEeprom(offset, new byte[] {(byte) value}));
       } catch (EDBG.EDBGException ex) {
         showErrorDialog(ex.getMessage());
       } finally {
@@ -857,12 +870,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
         byte[] data = edbg.readUserRow(0, 32);
         HexEditPane hexPane = new HexEditPane(this, 8, 8);
         EDBG debugger = edbg;
-        hexPane.showVariable("USERROW", null, 0, data, new HexEditPane.Update() {
-          @Override
-          public void setValue (int offset, int value) throws EDBG.EDBGException {
-            debugger.writeUserRow(offset, new byte[] {(byte) value});
-          }
-        });
+        hexPane.showVariable("USERROW", null, 0, data, (offset, value) -> debugger.writeUserRow(offset, new byte[] {(byte) value}));
       } catch (EDBG.EDBGException ex) {
         showErrorDialog(ex.getMessage());
       } finally {
@@ -909,7 +917,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
         table.getColumnModel().getColumn(1).setPreferredWidth(400);
         table.setRowHeight(20);
         panel.add(table, BorderLayout.CENTER);
-        ImageIcon icon = new ImageIcon(Utility.class.getResource("images/info-32x32.png"));
+        ImageIcon icon = getImageIcon("images/info-32x32.png");
         showMessageDialog(this, panel, "Device Info", JOptionPane.PLAIN_MESSAGE, icon);
       } catch (Exception ex) {
         showErrorDialog(ex.getMessage());
@@ -926,7 +934,9 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     actions.addSeparator();
     actions.add(mItem = new JMenuItem("Reinstall Toolchain"));
     mItem.setToolTipText("Copies AVR Toolchain into Java Temporary Disk Space where it can be Executed");
-    mItem.addActionListener(e -> reloadToolchain());
+    mItem.addActionListener(e -> {
+      new Thread(() -> loadToolchain(null)).start();
+    });
     menuBar.add(actions);
     /*
      *    Settings menu
@@ -956,9 +966,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
           item.setToolTipText(tTip);
           progMenu.add(item);
           progGroup.add(item);
-          item.addActionListener((ev) -> {
-            prefs.put("progVidPid", progVidPid = prog.key);
-          });
+          item.addActionListener((ev) -> prefs.put("progVidPid", progVidPid = prog.key));
         }
       }
       @Override
@@ -996,7 +1004,9 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
      *    Target Menu
      */
     targetMenu = new RadioMenu("Target");
-    avrChip = prefs.get("programmer.target", "attiny212");
+    if (!debugMode) {
+      avrChip = prefs.get("programmer.target", "attiny212");
+    }
     ButtonGroup targetGroup = new ButtonGroup();
     menuBar.add(targetMenu);
     String libType = null;
@@ -1055,7 +1065,137 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
       }
     });
     setVisible(true);
-    verifyToolchain();
+    if (debugMode) {
+      if (true) {
+        verifyToolchain(new Thread(() -> {
+          try {
+            String fName = elfFile.getName();
+            Utility.copyFile(elfFile, tmpDir + fName);
+            Map<String, String> tags = new HashMap<>();
+            tags.put("TDIR", tmpDir);
+            tags.put("TEXE", tmpExe);
+            tags.put("INTLV", prefs.getBoolean("interleave", true) ? "-S" : "");
+            String[] srcParts = fName.split("\\.");
+            String srcBase = srcParts[0];
+            tags.put("BASE", srcBase);
+            compileMap = MegaTinyCompiler.debugBuild(tags, prefs);
+          } catch (Exception ex) {
+            showErrorDialog("Error loading: " + elfFile.getName());
+          }
+          listPane.setForeground(Color.black);
+          StringBuilder tmp = new StringBuilder();
+          if (compileMap.containsKey("INFO")) {
+            tmp.append(compileMap.get("INFO"));
+            tmp.append("\n\n");
+          }
+          if (compileMap.containsKey("WARN")) {
+            tmp.append(compileMap.get("WARN"));
+            tmp.append("\n\n");
+          }
+          tmp.append(compileMap.get("SIZE"));
+          tmp.append(compileMap.get("LST"));
+          String listing = tmp.toString();
+          listPane.setText(listing.replace(tmpDir, ""));
+          hexPane.setForeground(Color.black);
+          hexPane.setText(compileMap.get("HEX"));
+          compiled = true;
+          listPane.statusPane.setActive(false);
+          showDebugger = true;
+          debugger.setText(showDebugger ? "Hide Debugger" : "Show Debugger");
+          listPane.showStatusPane(showDebugger);
+          selectTab(Tab.LIST);
+        }));
+      }
+    } else {
+      verifyToolchain(null);
+    }
+  }
+
+  private void compileCode () {
+    if (cFile != null) {
+      String fName = cFile.getName().toLowerCase();
+      // Reinstall toolchain if there was an error last time we tried to build
+      verifyToolchain(new Thread(() -> {
+        try {
+          listPane.setForeground(Color.black);
+          listPane.setText("");
+          Map<String, String> tags = new HashMap<>();
+          tags.put("TDIR", tmpDir);
+          tags.put("TEXE", tmpExe);
+          tags.put("IDIR", tmpExe + "avr" + fileSep + "include" + fileSep);
+          tags.put("FNAME", fName);
+          tags.put("EFILE", editFile);
+          if (prefs.getBoolean("gen_prototypes", false)) {
+            tags.put("PREPROCESS", "GENPROTOS");
+          }
+          compileMap = MegaTinyCompiler.compileBuild(codePane.getText(), tags, prefs, this);
+          if (compileMap == null) {
+            return;
+          }
+          String trueName = cFile.getName();
+          if (compileMap.containsKey("ERR")) {
+            listPane.setForeground(Color.red);
+            String errText = compileMap.get("ERR");
+            // Escape HTML <> symbols
+            errText = errText.replaceAll("<", "&lt;");
+            errText = errText.replaceAll(">", "&gt;");
+            // Remove path to tmpDir from error messages
+            errText = errText.replaceAll(tmpDir, "");
+            Pattern lineRef = Pattern.compile("(" + trueName + ":([0-9]+?):(([0-9]+?):)*)", Pattern.CASE_INSENSITIVE);
+            Matcher mat = lineRef.matcher(errText);
+            Font font = Utility.getCodeFont(12);
+            StringBuffer buf = new StringBuffer("<html><pre " + Utility.getFontStyle(font) + ">");
+            while (mat.find()) {
+              String seq = mat.group(1);
+              String line = mat.group(2);
+              String col = mat.group(4);
+              if (col == null) {
+                col = "0";
+              }
+              if (seq != null) {
+                mat.appendReplacement(buf, "<a href=\"err:" + line + ":" + col + "\">" + seq + "</a>");
+              }
+            }
+            mat.appendTail(buf);
+            buf.append("</pre></html>");
+            listPane.setErrorText(buf.toString());
+            compiled = false;
+          } else {
+            listPane.setForeground(Color.black);
+            StringBuilder tmp = new StringBuilder();
+            tmp.append(compileMap.get("INFO"));
+            tmp.append("\n\n");
+            if (compileMap.containsKey("WARN")) {
+              tmp.append(compileMap.get("WARN"));
+              tmp.append("\n\n");
+            }
+            tmp.append(compileMap.get("SIZE"));
+            tmp.append(compileMap.get("LST"));
+            String listing = tmp.toString();
+            listPane.setText(listing.replace(tmpDir, ""));
+            hexPane.setForeground(Color.black);
+            hexPane.setText(compileMap.get("HEX"));
+            avrChip = compileMap.get("CHIP");
+            compiled = true;
+            listPane.statusPane.setActive(false);
+          }
+          selectTab(Tab.LIST);
+        } catch (Exception ex) {
+          prefs.putBoolean("reload_toolchain", true);
+          ex.printStackTrace();
+          listPane.setText("Compile error (see Error Info pane for details)\n" + ex);
+          infoPane.append("Stack Trace:\n");
+          ByteArrayOutputStream bOut = new ByteArrayOutputStream();
+          PrintStream pOut = new PrintStream(bOut);
+          ex.printStackTrace(pOut);
+          pOut.close();
+          infoPane.append(bOut + "\n");
+          selectTab(Tab.INFO);
+        }
+      }));
+    } else {
+      showErrorDialog("Please save file first!");
+    }
   }
 
   private void updateChip (String src) {
@@ -1102,45 +1242,11 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     }
   }
 
-  static class ProgressBar extends JFrame {
-    private final JDialog       frame;
-    private final JProgressBar  progress;
-
-    ProgressBar (JFrame comp, String msg) {
-      frame = new JDialog(comp);
-      frame.setUndecorated(true);
-      JPanel pnl = new JPanel(new BorderLayout());
-      pnl.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-      frame.add(pnl, BorderLayout.CENTER);
-      pnl.add(progress = new JProgressBar(), BorderLayout.NORTH);
-      JTextArea txt = new JTextArea(msg);
-      txt.setEditable(false);
-      pnl.add(txt, BorderLayout.SOUTH);
-      Rectangle loc = comp.getBounds();
-      frame.pack();
-      frame.setLocation(loc.x + loc.width / 2 - 150, loc.y + loc.height / 2 - 150);
-      frame.setVisible(true);
-    }
-
-    void setValue (int value) {
-      SwingUtilities.invokeLater(() -> progress.setValue(value));
-    }
-
-    void setMaximum (int value) {
-      progress.setMaximum(value);
-    }
-
-    void close () {
-      frame.setVisible(false);
-      frame.dispose();
-    }
-  }
-
   /**
    * Very all the files in the toolchain are intact by computing a CRC2 value from the tree
    * of directory and file names.  Note: the CRC is not based on the content of the files.
    */
-  private void verifyToolchain () {
+  private void verifyToolchain (Thread thread) {
     boolean reloadTools = prefs.getBoolean("reload_toolchain", false);
     if (!reloadTools) {
       long oldCrc = prefs.getLong("toolchain-crc", 0);
@@ -1156,98 +1262,88 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
       prefs.putLong("toolzip-crc", newCrc);
     }
     if (reloadTools) {
-      reloadToolchain();
+      new Thread(() -> loadToolchain(thread)).start();
+    } else {
+      if (thread != null) {
+        thread.start();
+      }
     }
   }
 
-  private void reloadToolchain () {
+  public void loadToolchain (Thread thread) {
+    Utility.ProgressBar progress = new Utility.ProgressBar(MegaTinyIDE.this, "Installing AVR Toolchain");
+    String srcZip = "toolchains/combined.zip";
     try {
-      new ToolchainLoader(this, "toolchains/combined.zip", tmpExe);
-      prefs.remove("reload_toolchain");
-    } catch (Exception ex) {
-      ex.printStackTrace();
-      selectTab(Tab.LIST);
-      listPane.setText("Unable to Install Toolchain:\n" + ex.toString());
-    }
-  }
-
-  class ToolchainLoader implements Runnable  {
-    private final String        srcZip;
-    private final String        tmpExe;
-    private final ProgressBar   progress;
-
-    ToolchainLoader (JFrame comp, String srcZip, String tmpExe) {
-      progress = new ProgressBar(comp, "Installing AVR Toolchain");
-      this.srcZip = srcZip;
-      this.tmpExe = tmpExe;
-      new Thread(this).start();
-    }
-
-    public void run () {
+      File dst = new File(tmpExe);
+      Utility.removeFiles(dst);           // causes compile to fail? (need to investigate)
+      if (!dst.exists() && !dst.mkdirs()) {
+        throw new IllegalStateException("Unable to create directory: " + dst);
+      }
+      ZipInputStream zipStream = null;
       try {
-        File dst = new File(tmpExe);
-        Utility.removeFiles(dst);           // causes compile to fail? (need to investigate)
-        if (!dst.exists() && !dst.mkdirs()) {
-          throw new IllegalStateException("Unable to create directory: " + dst);
-        }
-        ZipInputStream zipStream = null;
-        try {
-          InputStream in = MegaTinyIDE.class.getResourceAsStream(srcZip);
-          int fileSize = in.available();
-          zipStream = new ZipInputStream(in);
-          byte[] buffer = new byte[2048];
-          Path outDir = Paths.get(dst.getPath());
-          int bytesRead = 0;
-          progress.setMaximum(100);
-          ZipEntry entry;
-          while ((entry = zipStream.getNextEntry()) != null) {
-            String src = entry.getName();
-            int idx = src.indexOf(":");
-            if (idx >= 0) {
-              int pIdx = src.lastIndexOf("/");
-              // Only copy files prefixed
-              String code = src.substring(pIdx + 1, idx);
-              src = src.substring(0, pIdx + 1) + src.substring(idx + 1);
-              if (!code.contains(osCode)) {
-                continue;
-              }
+        InputStream in = MegaTinyIDE.class.getResourceAsStream(srcZip);
+        int fileSize = in.available();
+        zipStream = new ZipInputStream(in);
+        byte[] buffer = new byte[2048];
+        Path outDir = Paths.get(dst.getPath());
+        int bytesRead = 0;
+        progress.setMaximum(100);
+        ZipEntry entry;
+        while ((entry = zipStream.getNextEntry()) != null) {
+          String src = entry.getName();
+          int idx = src.indexOf(":");
+          if (idx >= 0) {
+            int pIdx = src.lastIndexOf("/");
+            // Only copy files prefixed
+            String code = src.substring(pIdx + 1, idx);
+            src = src.substring(0, pIdx + 1) + src.substring(idx + 1);
+            if (!code.contains(osCode)) {
+              continue;
             }
-            Path filePath = outDir.resolve(src);
-            File dstDir = filePath.toFile().getParentFile();
-            if (!dstDir.exists() && !dstDir.mkdirs()) {
-              throw new IllegalStateException("Unable to create directory: " + dstDir);
-            }
-            File dstFile = filePath.toFile();
-            FileOutputStream fos = new FileOutputStream(dstFile);
-            BufferedOutputStream bos = new BufferedOutputStream(fos, buffer.length);
-            int len;
-            while ((len = zipStream.read(buffer)) > 0) {
-              bos.write(buffer, 0, len);
-              bytesRead += len;
-            }
-            bos.close();
-            fos.close();
-            // Must set permissions after file is written or it doesn't take...
-            String file = dstFile.getName();
+          }
+          Path filePath = outDir.resolve(src);
+          File dstDir = filePath.toFile().getParentFile();
+          if (!dstDir.exists() && !dstDir.mkdirs()) {
+            throw new IllegalStateException("Unable to create directory: " + dstDir);
+          }
+          File dstFile = filePath.toFile();
+          FileOutputStream fos = new FileOutputStream(dstFile);
+          BufferedOutputStream bos = new BufferedOutputStream(fos, buffer.length);
+          int len;
+          while ((len = zipStream.read(buffer)) > 0) {
+            bos.write(buffer, 0, len);
+            bytesRead += len;
+          }
+          bos.close();
+          fos.close();
+          // Must set permissions after file is written or it doesn't take...
+          String file = dstFile.getName();
+          try {
             if (!file.contains(".") || file.toLowerCase().endsWith(".exe")) {
               if (!dstFile.setExecutable(true)) {
                 showErrorDialog("Unable to set permissions for " + dstFile);
               }
             }
-            float percent = ((float) bytesRead / fileSize) * 100;
-            progress.setValue((int) percent);
+          } catch (Exception ex) {
+            showErrorDialog("Error calling setExecutable(true) for file: " + file);
+            prefs.putBoolean("reload_toolchain", true);
           }
-        } finally {
-          if (zipStream != null) {
-            zipStream.close();
-          }
+          float percent = ((float) bytesRead / fileSize) * 100;
+          progress.setValue((int) percent);
         }
-      } catch (Exception ex) {
-        ex.printStackTrace();
-        showErrorDialog("ToolchainLoader.run() exception " + ex.getMessage());
+      } finally {
+        if (zipStream != null) {
+          zipStream.close();
+        }
       }
-      progress.close();
-      prefs.putLong("toolchain-crc", Utility.crcTree(tmpExe));
+    } catch (Exception ex) {
+      ex.printStackTrace();
+      showErrorDialog("ToolchainLoader.run() exception " + ex.getMessage());
+    }
+    progress.close();
+    prefs.putLong("toolchain-crc", Utility.crcTree(tmpExe));
+    if (thread != null) {
+      thread.start();
     }
   }
 
@@ -1256,17 +1352,25 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
   }
 
   public void showErrorDialog (String msg) {
-    ImageIcon icon = new ImageIcon(Utility.class.getResource("images/warning-32x32.png"));
+    ImageIcon icon = getImageIcon("images/warning-32x32.png");
     showMessageDialog(this, msg, "Error", JOptionPane.PLAIN_MESSAGE, icon);
   }
 
   public boolean doWarningDialog (String question) {
-    ImageIcon icon = new ImageIcon(Utility.class.getResource("images/warning-32x32.png"));
+    ImageIcon icon = getImageIcon("images/warning-32x32.png");
     return JOptionPane.showConfirmDialog(this, question, "Warning", JOptionPane.YES_NO_OPTION,
       JOptionPane.WARNING_MESSAGE, icon) == JOptionPane.OK_OPTION;
   }
 
+  private ImageIcon getImageIcon (String name) {
+    URL loc = getClass().getResource(name);
+    if (loc != null) {
+      return new ImageIcon(loc);
+    }
+    return null;
+  }
+
   public static void main (String[] args) {
-    java.awt.EventQueue.invokeLater(MegaTinyIDE::new);
+    java.awt.EventQueue.invokeLater(() -> new MegaTinyIDE(args));
   }
 }

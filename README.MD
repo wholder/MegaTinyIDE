@@ -23,6 +23,7 @@ The tinyAVR® 1-series and 0-series chips introduce a single-pin Unified Program
       - Right click on Registers and Status Flags in debugger pane to change value (I/O ports not currently supported)
       - Watch the I/O ports, Registers and Status Flags change while stepping through code (changed fields are highlighted)
       - Click on Links in Symbol table to view current state of variables
+      - Also able to debug externally compiled ELF files (version 1.0.1)
   - Built-in Pinout Reference Diagrams (with pin-level tooltips)
   - Pop up AVR Instruction Guide tooltips in Listing Pane (hover over instruction name)
   - A [Console Monitor feature called OCD Messaging](https://github.com/wholder/MegaTinyIDE/blob/master/resources/documentation/ocdmsg.md) that can send text message to the debugger over UPDI
@@ -40,6 +41,10 @@ As this project advances, I hope to add many more features designed to make uisn
 ### Project status
 
 While more testing is needed, I am declaring the code as operational (Beta status) on Mac, Windows 10 and Linux.  However, MegaTinyIDE is still in development and likely has more than a few bugs, or rough edges.  As this is a one man project, I sometimes struggle to do adequate testing (especially on Windows and Linux) when I release a new version. If you a spot a problem, [please post in Issue](https://github.com/wholder/MegaTinyIDE/issues) so I can investigate.  If you have questions, or suggestions, [please post in Discussions](https://github.com/wholder/MegaTinyIDE/discussions)
+
+### Releases
+    - 1.0.0 - initial release.
+    - 1.0.1 - Refactor toolchain loading and add ELF file debugging
 
 ### Debugging Interface
 
@@ -85,6 +90,7 @@ So, this means you'll have to save your source file with the appropriate extensi
 
 This project would have been much harder and much less cool without help from the following open source projects, or freely available software.
 
+ - [Arduino 1.8.16](https://www.arduino.cc) Note: MegaTinyIDE uses the 64 bit toolchains compiled for Arduino 1.8.16
  - [Hid4Java](https://github.com/gary-rowe/hid4java) by Gary Rowe (used to talk to USB-based programmers)
  - [ATTinyCore](https://github.com/SpenceKonde/ATTinyCore) library by Spence Konde (aka Dr. Azzy)
  - [JSyntaxPane](https://github.com/nordfalk/jsyntaxpane) - Now uses [CppSyntaxPane](https://github.com/wholder/CppSyntaxPane), which is based on JSyntaxPane.

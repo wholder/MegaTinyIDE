@@ -89,6 +89,18 @@ class Utility {
     return tmp.toString();
   }
 
+  static void copyFile (File src, String dest) throws IOException {
+    FileInputStream fis = new FileInputStream(src);
+    byte[] data = new byte[fis.available()];
+    if (fis.read(data) != data.length) {
+      throw new IOException("copyFile() not all bytes read from file: " + src.getName());
+    }
+    fis.close();
+    FileOutputStream fOut = new FileOutputStream(dest);
+    fOut.write(data);
+    fOut.close();
+  }
+
   static void saveFile (File file, String text) {
     try {
       FileOutputStream out = new FileOutputStream(file);
@@ -590,11 +602,110 @@ class Utility {
     }
   }
 
+  private static int getInt16 (byte[] data, int offset) {
+    return (data[offset] & 0xFF) + ((data[offset + 1] & 0xFF) << 8);
+  }
+
+  private static int getInt32 (byte[] data, int offset) {
+    return (data[offset] & 0xFF) + ((data[offset + 1] & 0xFF) << 8) + ((data[offset + 2] & 0xFF) << 16) + ((data[offset + 3] & 0xFF) << 24);
+  }
+
+  /**
+   * Attempt to parse a SHT_NOTE section to obtain the name of the target processor.
+   * Note: this code is based on information at https://refspecs.linuxbase.org/elf/elf.pdf but, as this spec does not detail exactly
+   * how this record is used by the gnu toolchain, the way this code extracts the name of the target processor is based on my analysis
+   * of the data in the record.
+   * @param file ELF File
+   * @return name of target, or null
+   */
+  static String getTargetFromElf (File file) {
+    try {
+      FileInputStream fis = new FileInputStream(file);
+      byte[] data = new byte[fis.available()];
+      if (fis.read(data) == data.length) {
+        fis.close();
+        if (data[0] == 0x7F && data[1] == 'E' && data[2] == 'L' && data[3] == 'F') {
+          if (data[5] == 1) {
+            if (data[6] == 1) {
+              int e_shoff = getInt32(data, 0x20);             // Points to the start of the section header table
+              int e_shentsize = getInt16(data, 0x2E);         // Contains the size of a section header table entry
+              int e_shnum = getInt16(data, 0x30);             // Contains the number of entries in the section header table
+              for (int ii = 0; ii < e_shnum; ii++) {
+                int offset = e_shoff + (ii * e_shentsize);
+                byte[] temp = new byte[e_shentsize];
+                System.arraycopy(data, offset, temp, 0, temp.length);
+                int secType = getInt32(temp, 0x04);
+                int secSize = getInt32(temp, 0x14);
+                int secOff = getInt32(temp, 0x10);
+                byte[] secData = new byte[secSize];
+                System.arraycopy(data, secOff, secData, 0, secData.length);
+                if (secType == 0x07) {                        // Is this a SHT_NOTE section?
+                  StringBuilder buf = new StringBuilder();
+                  for (int jj = 49; jj < secData.length; jj++) {
+                    if (secData[jj] == 0) {
+                      break;
+                    }
+                    buf.append((char) secData[jj]);
+                  }
+                  return buf.toString();
+                }
+              }
+            }
+          }
+        }
+      }
+      return null;
+    } catch (IOException ex) {
+      return null;
+    }
+  }
+
+  // Test code for getTargetFromElf()
+  public static void main (String[] args) throws IOException {
+    File file = new File("examples/attiny212.elf");
+    String target = getTargetFromElf(file);
+    System.out.println(target);
+  }
+
   public static byte lsb (int val) {
     return (byte) (val & 0xFF);
   }
 
   public static byte msb (int val) {
     return (byte) ((val >> 8) & 0xFF);
+  }
+
+  static class ProgressBar extends JFrame {
+    private final JDialog       frame;
+    private final JProgressBar  progress;
+
+    ProgressBar (JFrame comp, String msg) {
+      frame = new JDialog(comp);
+      frame.setUndecorated(true);
+      JPanel pnl = new JPanel(new BorderLayout());
+      pnl.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+      frame.add(pnl, BorderLayout.CENTER);
+      pnl.add(progress = new JProgressBar(), BorderLayout.NORTH);
+      JTextArea txt = new JTextArea(msg);
+      txt.setEditable(false);
+      pnl.add(txt, BorderLayout.SOUTH);
+      Rectangle loc = comp.getBounds();
+      frame.pack();
+      frame.setLocation(loc.x + loc.width / 2 - 150, loc.y + loc.height / 2 - 150);
+      frame.setVisible(true);
+    }
+
+    void setValue (int value) {
+      SwingUtilities.invokeLater(() -> progress.setValue(value));
+    }
+
+    void setMaximum (int value) {
+      progress.setMaximum(value);
+    }
+
+    void close () {
+      frame.setVisible(false);
+      frame.dispose();
+    }
   }
 }
