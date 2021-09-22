@@ -14,10 +14,9 @@
   <component name="ChangeListManager">
     <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.MD" beforeDir="false" afterPath="$PROJECT_DIR$/README.MD" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/version.props" beforeDir="false" afterPath="$PROJECT_DIR$/resources/version.props" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ListingPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ListingPane.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MegaTinyCompiler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MegaTinyCompiler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MegaTinyIDE.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MegaTinyIDE.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -79,7 +78,7 @@
       <recent name="tools" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.MegaTinyIDE">
+  <component name="RunManager" selected="Application.NativeBuilder">
     <configuration name="ElfDump" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="ElfDump" />
       <module name="ToolBuilder" />
@@ -140,13 +139,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1596315993204</updated>
-    </task>
-    <task id="LOCAL-00069" summary="Document OCD Messaging feature">
-      <created>1606712040636</created>
-      <option name="number" value="00069" />
-      <option name="presentableId" value="LOCAL-00069" />
-      <option name="project" value="LOCAL" />
-      <updated>1606712040636</updated>
     </task>
     <task id="LOCAL-00070" summary="Added ability to change reqister values while debugging">
       <created>1606957800443</created>
@@ -484,7 +476,14 @@
       <option name="project" value="LOCAL" />
       <updated>1632272195950</updated>
     </task>
-    <option name="localTasksCounter" value="118" />
+    <task id="LOCAL-00118" summary="Fixed cosmetic regression">
+      <created>1632275890370</created>
+      <option name="number" value="00118" />
+      <option name="presentableId" value="LOCAL-00118" />
+      <option name="project" value="LOCAL" />
+      <updated>1632275890370</updated>
+    </task>
+    <option name="localTasksCounter" value="119" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -512,7 +511,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Added ability to change reqister values while debugging" />
     <MESSAGE value="Misc enhancements/fixes" />
     <MESSAGE value="Center line number when stepping in debugger" />
     <MESSAGE value="Tooltip now shows IN/OUT state of PORTs" />
@@ -537,7 +535,8 @@
     <MESSAGE value="Misc fixes and improvements" />
     <MESSAGE value="Refactor toolchain loading and add ELF file debugging" />
     <MESSAGE value="Rework ELF file debugging to load from menu rather than from the command line" />
-    <option name="LAST_COMMIT_MESSAGE" value="Rework ELF file debugging to load from menu rather than from the command line" />
+    <MESSAGE value="Fixed cosmetic regression" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed cosmetic regression" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

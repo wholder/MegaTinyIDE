@@ -371,25 +371,6 @@ public class ListingPane extends JPanel {   // https://regex101.com
   }
 
   /**
-   * Highlights line to follow single step
-   * @param lineNum line number (1-n)
-   */
-  public void selectLine (int lineNum) {
-    clearSelection();
-    // Position the scrolling listing view so that lineNum is in the center of the view
-    gotoLine(lineNum - visibleLines() / 2);
-    SwingUtilities.invokeLater(() -> {
-      hasSelection = true;
-      sPos = getDocumentPosition(lineNum - 1);
-      ePos = getDocumentPosition(lineNum);
-      SimpleAttributeSet sas = new SimpleAttributeSet();
-      StyleConstants.setBackground(sas, OVAL_COLOR);
-      StyledDocument doc = listingPane.getStyledDocument();
-      doc.setCharacterAttributes(sPos, ePos - sPos, sas, false);
-    });
-  }
-
-  /**
    * Position the scrolling listing view so that lineNum is the top line in the view
    * @param lineNum line number (1-n)
    */
@@ -399,7 +380,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
       SwingUtilities.invokeLater(() -> {
         JViewport viewport = (JViewport) container;
         int lineHeight = listingPane.getFontMetrics(listingPane.getFont()).getHeight();
-        viewport.setViewPosition(new Point(0, lineHeight * (lineNum - 1)));
+        viewport.setViewPosition(new Point(0, lineHeight * Math.max(lineNum - 1, 0)));
       });
     }
   }
@@ -506,7 +487,19 @@ public class ListingPane extends JPanel {   // https://regex101.com
 
   public void highlightAddress (int address) {
     if (addressToLineNum.containsKey(address)) {
-      selectLine(addressToLineNum.get(address) + 1);
+      int lineNum = addressToLineNum.get(address) + 1;
+      clearSelection();
+      // Position the scrolling listing view so that lineNum is in the center of the view
+      gotoLine(lineNum - visibleLines() / 2);
+      SwingUtilities.invokeLater(() -> {
+        hasSelection = true;
+        sPos = getDocumentPosition(lineNum - 1);
+        ePos = getDocumentPosition(lineNum);
+        SimpleAttributeSet sas = new SimpleAttributeSet();
+        StyleConstants.setBackground(sas, OVAL_COLOR);
+        StyledDocument doc = listingPane.getStyledDocument();
+        doc.setCharacterAttributes(sPos, ePos - sPos, sas, false);
+      });
     }
   }
 
@@ -605,7 +598,6 @@ public class ListingPane extends JPanel {   // https://regex101.com
       }
       if (active) {
         ide.appendToInfoPane(String.format("Debugger Attached (%d bps, Vcc = %1.2f volts)\n", EDBG.UPDIClock * 1000, debugger.targetVoltage()));
-        listingPane.validate();
       } else {
         ide.appendToInfoPane("Debugger Detached\n");
       }

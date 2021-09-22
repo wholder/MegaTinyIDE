@@ -69,6 +69,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
   private final JComponent        newMenu;
   private final RadioMenu         targetMenu;
   private final JMenuItem         build = new JMenuItem("Build");
+  private final JMenuItem         loadElf = new JMenuItem("Load ELF");
   private final JMenuItem         progFlash = new JMenuItem("Program Flash");
   private final JMenuItem         readFuses = new JMenuItem("Read/Modify Fuses");
   private final JMenu             progMenu;
@@ -111,6 +112,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     // Disable these actions when debugger is attached to target
     if (build != null) {
       build.setEnabled(!active);
+      loadElf.setEnabled(!active);
     }
     progFlash.setEnabled(!active);
     readFuses.setEnabled(!active);
@@ -689,8 +691,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     build.setAccelerator(BUILD_KEY);
     build.addActionListener(e -> compileCode());
     // Add "Load ELF" Menu Item
-    JMenuItem loadElf;
-    actions.add(loadElf = new JMenuItem("Load ELF"));
+    actions.add(loadElf);
     loadElf.setAccelerator(LOAD_KEY);
     loadElf.addActionListener(e -> {
       JFileChooser fc = getElfChooser();
