@@ -140,7 +140,7 @@ class MegaTinyCompiler {
                                         "*[TDIR]**[BASE]*.hex";       // Output file
 
   private static final String size = "avr-size " +                    // https://linux.die.net/man/1/avr-size
-                                        "-B " +                       // Display Berkeley format (else -A for System V format)
+                                        "-A " +                       // -B for Berkeley format or -A for System V format
                                         "*[TDIR]**[BASE]*.elf";       // Input file
 
   static final String[][] build = {
