@@ -13,23 +13,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/resources/documentation/elfdebug.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/vecset7.props" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.MD" beforeDir="false" afterPath="$PROJECT_DIR$/README.MD" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/attinys.props" beforeDir="false" afterPath="$PROJECT_DIR$/resources/attinys.props" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/dialoginfo.props" beforeDir="false" afterPath="$PROJECT_DIR$/resources/dialoginfo.props" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/documentation/debugging.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/debugging.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/documentation/index.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/index.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/documentation/programmers.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/programmers.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/toolchains/combined.zip" beforeDir="false" afterPath="$PROJECT_DIR$/resources/toolchains/combined.zip" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/documentation/elfdebug.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/elfdebug.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/version.props" beforeDir="false" afterPath="$PROJECT_DIR$/resources/version.props" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ChipLayout.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ChipLayout.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ListingPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ListingPane.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MarkupView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MarkupView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MegaTinyCompiler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MegaTinyCompiler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/MegaTinyIDE.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MegaTinyIDE.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Utility.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Utility.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -102,7 +90,6 @@
     <configuration name="MegaTinyIDE" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="MegaTinyIDE" />
       <module name="MegaTinyIDE" />
-      <option name="PROGRAM_PARAMETERS" value="examples/attiny3217.elf" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -153,13 +140,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1596315993204</updated>
-    </task>
-    <task id="LOCAL-00067" summary="Warn against disabling UPDI fuse">
-      <created>1606700507472</created>
-      <option name="number" value="00067" />
-      <option name="presentableId" value="LOCAL-00067" />
-      <option name="project" value="LOCAL" />
-      <updated>1606700507472</updated>
     </task>
     <task id="LOCAL-00068" summary="Revise README to add &quot;brick&quot; warning">
       <created>1606701030717</created>
@@ -497,7 +477,14 @@
       <option name="project" value="LOCAL" />
       <updated>1611281924256</updated>
     </task>
-    <option name="localTasksCounter" value="116" />
+    <task id="LOCAL-00116" summary="Refactor toolchain loading and add ELF file debugging">
+      <created>1632190731524</created>
+      <option name="number" value="00116" />
+      <option name="presentableId" value="LOCAL-00116" />
+      <option name="project" value="LOCAL" />
+      <updated>1632190731529</updated>
+    </task>
+    <option name="localTasksCounter" value="117" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -525,7 +512,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Revise README to add &quot;brick&quot; warning" />
     <MESSAGE value="Document OCD Messaging feature" />
     <MESSAGE value="Added ability to change reqister values while debugging" />
     <MESSAGE value="Misc enhancements/fixes" />
@@ -550,7 +536,8 @@
     <MESSAGE value="Misc updates and fixes" />
     <MESSAGE value="Fix compile error line match regex" />
     <MESSAGE value="Misc fixes and improvements" />
-    <option name="LAST_COMMIT_MESSAGE" value="Misc fixes and improvements" />
+    <MESSAGE value="Refactor toolchain loading and add ELF file debugging" />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactor toolchain loading and add ELF file debugging" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

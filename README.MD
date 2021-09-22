@@ -45,6 +45,7 @@ While more testing is needed, I am declaring the code as operational (Beta statu
 ### Releases
     - 1.0.0 - initial release.
     - 1.0.1 - Refactor toolchain loading and add ELF file debugging
+    - 1.0.2 - Rework ELF file debugging to load from menu rather than from the command line
 
 ### Debugging Interface
 

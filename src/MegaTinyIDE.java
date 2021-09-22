@@ -43,6 +43,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
   private static final Font       tFont = Utility.getCodeFont(12);
   private static final int        cmdMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
   private static final KeyStroke  OPEN_KEY = KeyStroke.getKeyStroke(KeyEvent.VK_O, cmdMask) ;
+  private static final KeyStroke  LOAD_KEY = KeyStroke.getKeyStroke(KeyEvent.VK_L, cmdMask) ;
   private static final KeyStroke  SAVE_KEY = KeyStroke.getKeyStroke(KeyEvent.VK_S, cmdMask) ;
   private static final KeyStroke  QUIT_KEY = KeyStroke.getKeyStroke(KeyEvent.VK_Q, cmdMask) ;
   private static final KeyStroke  BUILD_KEY = KeyStroke.getKeyStroke(KeyEvent.VK_B, cmdMask) ;
@@ -55,21 +56,21 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
   private enum                    OpSys {MAC, WIN, LINUX}
   private OpSys                   os;
   private String                  osCode;
-  private File                    elfFile;
   private final JTabbedPane       tabPane;
   public final CodeEditPane       codePane;
   public EDBG                     debugger = null;
   private ListingPane             listPane;
   private MyTextPane              hexPane;
   private final MyTextPane        infoPane;
-  private final JMenuItem         openMenu;
-  private JMenuItem               saveMenu;
-  private final JMenuItem         saveAsMenu;
+  private final JMenuItem         openMenu = new JMenuItem("Open");
+  private final JMenuItem         debugMenu = new JCheckBoxMenuItem("Show Debugger");
+  private final JMenuItem         saveMenu = new JMenuItem("Save");
+  private final JMenuItem         saveAsMenu = new JMenuItem("Save As...");
   private final JComponent        newMenu;
   private final RadioMenu         targetMenu;
-  private final JMenuItem         build;
-  private final JMenuItem         progFlash;
-  private final JMenuItem         readFuses;
+  private final JMenuItem         build = new JMenuItem("Build");
+  private final JMenuItem         progFlash = new JMenuItem("Program Flash");
+  private final JMenuItem         readFuses = new JMenuItem("Read/Modify Fuses");
   private final JMenu             progMenu;
   private final Preferences       prefs = Preferences.userRoot().node(this.getClass().getName());
   private final JSSCPort          jPort = new JSSCPort(prefs);
@@ -353,6 +354,25 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     return fc;
   }
 
+  private JFileChooser getElfChooser () {
+    JFileChooser fc = new JFileChooser();
+    String fPath = prefs.get("default.dir", "/");
+    FileNameExtensionFilter filter = new FileNameExtensionFilter("AVR .elf files", "elf");
+    String ext = "elf";
+    fc.addChoosableFileFilter(filter);
+    if (filter.getExtensions()[0].equals(ext)) {
+      fc.setFileFilter(filter);
+    }
+    if (!fPath.endsWith("/")) {
+      fPath += "/";
+    }
+    fc.setCurrentDirectory(new File(fPath));
+    fc.setAcceptAllFileFilterUsed(true);
+    fc.setMultiSelectionEnabled(false);
+    fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+    return fc;
+  }
+
   public void selectTab (Tab tab) {
     tabPane.setSelectedIndex(tab.num);
   }
@@ -402,7 +422,6 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
 
   private MegaTinyIDE (String[] args) {
     super("MegaTinyIDE");
-    boolean debugMode = false;
     // Setup temp directory for code compilation and toolchain
     try {
       tmpDir = Utility.createDir(tempBase + "avr-temp-code");
@@ -410,41 +429,6 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     } catch (IOException ex) {
       showErrorDialog("Unable to create temporary working directories");
       System.exit(1);
-    }
-    // Check for debugger-only startup
-    if (args.length > 0) {
-      if (args.length == 1) {
-        elfFile = new File(args[0]);
-        avrChip = Utility.getTargetFromElf(elfFile);
-        if (avrChip != null) {
-          if (chipTypes.containsKey(avrChip)) {
-            debugMode = true;
-          } else {
-            System.out.println("ELF file specifies unsupported target device '" + avrChip + "'");
-            System.exit(1);
-          }
-        } else {
-          System.out.println("Unable to determine target device from ELF file");
-          System.exit(1);
-        }
-      } else if (args.length == 2) {
-        elfFile = new File(args[1]);
-        if (elfFile.exists()) {
-          avrChip = args[0];
-          if (chipTypes.containsKey(avrChip)) {
-            debugMode = true;
-          } else {
-            System.out.println("Unknown target device " + avrChip);
-            System.exit(1);
-          }
-        } else {
-          System.out.println("File " + elfFile.getAbsolutePath() + " not found");
-          System.exit(1);
-        }
-      } else {
-        System.out.println("Usage MegaTinyIDE<target device> <elf file> ");
-        System.exit(1);
-      }
     }
     // Load version info
     try {
@@ -608,7 +592,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
         }
       });
     }
-    fileMenu.add(openMenu = new JMenuItem("Open"));
+    fileMenu.add(openMenu);
     openMenu.setAccelerator(OPEN_KEY);
     openMenu.addActionListener(e -> {
       JFileChooser fc = getFileChooser();
@@ -641,14 +625,14 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
         }
       }
     });
-    fileMenu.add(saveMenu = new JMenuItem("Save"));
+    fileMenu.add(saveMenu);
     saveMenu.setAccelerator(SAVE_KEY);
     saveMenu.setEnabled(false);
     saveMenu.addActionListener(e -> {
       Utility.saveFile(cFile, codePane.getText());
       setDirtyIndicator(codeDirty = false);
     });
-    fileMenu.add(saveAsMenu = new JMenuItem("Save As..."));
+    fileMenu.add(saveAsMenu);
     saveAsMenu.addActionListener(e -> {
       JFileChooser fc = getFileChooser();
       if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
@@ -699,10 +683,64 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     });
     // Add "Actions" Menu
     JMenu actions = new JMenu("Actions");
-    actions.add(build = new JMenuItem("Build"));
+    // Add "Build" Menu Item
+    actions.add(build);
     build.setToolTipText("Compile Code in Source Code Pane and Display Result in Listing and Hex Output Panes");
     build.setAccelerator(BUILD_KEY);
     build.addActionListener(e -> compileCode());
+    // Add "Load ELF" Menu Item
+    JMenuItem loadElf;
+    actions.add(loadElf = new JMenuItem("Load ELF"));
+    loadElf.setAccelerator(LOAD_KEY);
+    loadElf.addActionListener(e -> {
+      JFileChooser fc = getElfChooser();
+      if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+          File elfFile = fc.getSelectedFile();
+          String fName = elfFile.getName();
+          verifyToolchain(new Thread(() -> {
+          try {
+            Utility.copyFile(elfFile, tmpDir + fName);
+            String target = Utility.getTargetFromElf(elfFile);
+            if (avrChip != null) {
+              setTarget(avrChip = target);
+            }
+            Map<String, String> tags = new HashMap<>();
+            tags.put("TDIR", tmpDir);
+            tags.put("TEXE", tmpExe);
+            tags.put("INTLV", prefs.getBoolean("interleave", true) ? "-S" : "");
+            String[] srcParts = fName.split("\\.");
+            String srcBase = srcParts[0];
+            tags.put("BASE", srcBase);
+            compileMap = MegaTinyCompiler.debugBuild(tags, prefs);
+          } catch (Exception ex) {
+            showErrorDialog("Error loading: " + fName);
+          }
+          listPane.setForeground(Color.black);
+          StringBuilder tmp = new StringBuilder();
+          if (compileMap.containsKey("INFO")) {
+            tmp.append(compileMap.get("INFO"));
+            tmp.append("\n\n");
+          }
+          if (compileMap.containsKey("WARN")) {
+            tmp.append(compileMap.get("WARN"));
+            tmp.append("\n\n");
+          }
+          tmp.append(compileMap.get("SIZE"));
+          tmp.append(compileMap.get("LST"));
+          String listing = tmp.toString();
+          listPane.setText(listing.replace(tmpDir, ""));
+          hexPane.setForeground(Color.black);
+          hexPane.setText(compileMap.get("HEX"));
+          compiled = true;
+          listPane.statusPane.setActive(false);
+          showDebugger = true;
+          debugMenu.setText("Hide Debugger");
+          listPane.showStatusPane(showDebugger);
+          selectTab(Tab.LIST);
+        }));
+      }
+    });
+    // Add "Run Preprocessor" Menu Item
     JMenuItem preprocess = new JMenuItem("Run Preprocessor");
     preprocess.setToolTipText("Run GCC Preprocessor and Display Result in Listing Pane");
     actions.add(preprocess);
@@ -757,7 +795,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     /*
      *    Program Chip Menu
      */
-    actions.add(progFlash = new JMenuItem("Program Flash"));
+    actions.add(progFlash);
     progFlash.setToolTipText("Used to Upload Compiled Program Code to Device");
     progFlash.addActionListener(e -> {
       if (avrChip != null && canProgram()) {
@@ -779,7 +817,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     /*
      *    Read/Modify Fuses Menu Item
      */
-    actions.add(readFuses = new JMenuItem("Read/Modify Fuses"));
+    actions.add(readFuses);
     readFuses.setToolTipText("Used to Read and optionally Modify Device's Fuse Bytes");
     readFuses.addActionListener(e -> {
       // Use chip type, if selected, else use attiny212 as proxy
@@ -989,24 +1027,21 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     settings.add(serialPort);
     settings.addSeparator();
     // Add Debugger Menu Item
-    JMenuItem debugger = new JCheckBoxMenuItem("Show Debugger");
-    debugger.setMnemonic(KeyEvent.VK_D);
-    debugger.setEnabled(tabPane.getSelectedIndex() == Tab.LIST.num);
-    debugger.addItemListener(ev -> {
+    debugMenu.setMnemonic(KeyEvent.VK_D);
+    debugMenu.setEnabled(tabPane.getSelectedIndex() == Tab.LIST.num);
+    debugMenu.addItemListener(ev -> {
       showDebugger = !showDebugger;
-      debugger.setText(showDebugger ? "Hide Debugger" : "Show Debugger");
+      debugMenu.setText(showDebugger ? "Hide Debugger" : "Show Debugger");
       listPane.showStatusPane(showDebugger);
     });
-    settings.add(debugger);
-    debugger.setAccelerator(DEBUG_KEY);
-    tabPane.addChangeListener(ev -> debugger.setEnabled(tabPane.getSelectedIndex() == Tab.LIST.num));
+    settings.add(debugMenu);
+    debugMenu.setAccelerator(DEBUG_KEY);
+    tabPane.addChangeListener(ev -> debugMenu.setEnabled(tabPane.getSelectedIndex() == Tab.LIST.num));
     /*
      *    Target Menu
      */
     targetMenu = new RadioMenu("Target");
-    if (!debugMode) {
-      avrChip = prefs.get("programmer.target", "attiny212");
-    }
+    avrChip = prefs.get("programmer.target", "attiny212");
     ButtonGroup targetGroup = new ButtonGroup();
     menuBar.add(targetMenu);
     String libType = null;
@@ -1065,49 +1100,20 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
       }
     });
     setVisible(true);
-    if (debugMode) {
-      if (true) {
-        verifyToolchain(new Thread(() -> {
-          try {
-            String fName = elfFile.getName();
-            Utility.copyFile(elfFile, tmpDir + fName);
-            Map<String, String> tags = new HashMap<>();
-            tags.put("TDIR", tmpDir);
-            tags.put("TEXE", tmpExe);
-            tags.put("INTLV", prefs.getBoolean("interleave", true) ? "-S" : "");
-            String[] srcParts = fName.split("\\.");
-            String srcBase = srcParts[0];
-            tags.put("BASE", srcBase);
-            compileMap = MegaTinyCompiler.debugBuild(tags, prefs);
-          } catch (Exception ex) {
-            showErrorDialog("Error loading: " + elfFile.getName());
-          }
-          listPane.setForeground(Color.black);
-          StringBuilder tmp = new StringBuilder();
-          if (compileMap.containsKey("INFO")) {
-            tmp.append(compileMap.get("INFO"));
-            tmp.append("\n\n");
-          }
-          if (compileMap.containsKey("WARN")) {
-            tmp.append(compileMap.get("WARN"));
-            tmp.append("\n\n");
-          }
-          tmp.append(compileMap.get("SIZE"));
-          tmp.append(compileMap.get("LST"));
-          String listing = tmp.toString();
-          listPane.setText(listing.replace(tmpDir, ""));
-          hexPane.setForeground(Color.black);
-          hexPane.setText(compileMap.get("HEX"));
-          compiled = true;
-          listPane.statusPane.setActive(false);
-          showDebugger = true;
-          debugger.setText(showDebugger ? "Hide Debugger" : "Show Debugger");
-          listPane.showStatusPane(showDebugger);
-          selectTab(Tab.LIST);
-        }));
+    verifyToolchain(null);
+  }
+
+  private void setTarget (String target) {
+    int items = targetMenu.getItemCount();
+    for (int ii = 0; ii < items; ii++) {
+      JMenuItem item = targetMenu.getItem(ii);
+      if (item instanceof JRadioButtonMenuItem) {
+        String label = item.getText();
+        if (label.equals(target)) {
+          item.setSelected(true);
+          targetMenu.setText("Target->" + target);
+        }
       }
-    } else {
-      verifyToolchain(null);
     }
   }
 
