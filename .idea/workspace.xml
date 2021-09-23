@@ -12,7 +12,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="" />
+    <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="Fixed build process (versions 1.0.1 - 1.0.4 have incorrect jar file)">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/toolchains/combined.zip" beforeDir="false" afterPath="$PROJECT_DIR$/resources/toolchains/combined.zip" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/version.props" beforeDir="false" afterPath="$PROJECT_DIR$/resources/version.props" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -73,7 +78,7 @@
       <recent name="tools" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.MegaTinyIDE">
+  <component name="RunManager" selected="Application.NativeBuilder">
     <configuration name="ElfDump" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="ElfDump" />
       <module name="ToolBuilder" />
@@ -134,13 +139,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1596315993204</updated>
-    </task>
-    <task id="LOCAL-00071" summary="Misc enhancements/fixes">
-      <created>1607040724490</created>
-      <option name="number" value="00071" />
-      <option name="presentableId" value="LOCAL-00071" />
-      <option name="project" value="LOCAL" />
-      <updated>1607040724491</updated>
     </task>
     <task id="LOCAL-00072" summary="Center line number when stepping in debugger">
       <created>1607125530869</created>
@@ -478,7 +476,14 @@
       <option name="project" value="LOCAL" />
       <updated>1632278485747</updated>
     </task>
-    <option name="localTasksCounter" value="120" />
+    <task id="LOCAL-00120" summary="Fixed another cosmetic regression">
+      <created>1632279106738</created>
+      <option name="number" value="00120" />
+      <option name="presentableId" value="LOCAL-00120" />
+      <option name="project" value="LOCAL" />
+      <updated>1632279106738</updated>
+    </task>
+    <option name="localTasksCounter" value="121" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
