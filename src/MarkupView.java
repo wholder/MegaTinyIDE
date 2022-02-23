@@ -1,10 +1,54 @@
 import com.github.rjeschke.txtmark.Processor;
 
+// Setup some basic markdown styles (Note: limited to HTML 3.2)
+// see: https://stackoverflow.com/questions/25147141/why-isnt-my-css-working-right-in-java
+    /*
+      Supported CSS:
+        background
+        background-color (with the exception of transparent)
+        background-image
+        background-position
+        background-repeat
+        border-bottom-color
+        border-bottom-style
+        border-color
+        border-left-color
+        border-left-style
+        border-right-color
+        border-right-style
+        border-style (only supports inset, outset and none)
+        border-top-color
+        border-top-style
+        color
+        font
+        font-family
+        font-size (supports relative units)
+        font-style
+        font-weight
+        list-style-image
+        list-style-position
+        list-style-type
+        margin
+        margin-bottom
+        margin-left
+        margin-right
+        margin-top
+        padding
+        padding-bottom
+        padding-left
+        padding-right
+        padding-top
+        text-align (justify is treated as center)
+        text-decoration (with the exception of blink and overline)
+        vertical-align (only sup and super)
+     */
+
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.text.*;
 import javax.swing.text.html.HTML;
+import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 import java.awt.*;
@@ -17,25 +61,27 @@ import java.io.*;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.*;
+import java.util.List;
 import java.util.prefs.Preferences;
 
 class MarkupView extends JPanel {
   private final JEditorPane           jEditorPane;
+  private final JScrollPane           scrollPane;
   private final ArrayList<StackItem>  stack = new ArrayList<>();
-  private static final Font           codeFont = Utility.getCodeFont(12);
-  private String                      basePath, currentPage;
+  static final Font                   codeFont = Utility.getCodeFont(12);
+  private String                      basePath;
+  private HtmlTable                   regTable;
+  private int                         regIndex;
   Map<String,String>                  parmMap;
 
   private static class StackItem {
-    private final String  location, parms;
+    private final String  location;
     private final Point   position;
 
-    private StackItem (String location, Point position, String parms) {
+    private StackItem (String location, Point position) {
       this.location = location;
       this.position = position;
-      this.parms = parms;
     }
   }
 
@@ -199,24 +245,108 @@ class MarkupView extends JPanel {
     }
   }
 
-  MarkupView (String loc, String parms) {
+  MarkupView (String loc) {
     this();
-    loadMarkup(loc, parms);
+    loadMarkup(loc);
+  }
+
+  static class HtmlTable {
+    List<List<String>>  rows = new ArrayList<>();
+    private final String    font;
+    private final String    color;
+    private final String[]  widths;
+    private int             maxCol;
+
+    HtmlTable (String font, String color, String[] widths) {
+      this.font = font;
+      this.color = color;
+      this.widths = widths;
+    }
+
+    void addItem (int row, int col, String text) {
+      maxCol = Math.max(maxCol, col + 1);
+      while (rows.size() <= row) {
+        rows.add(new ArrayList<>());
+      }
+      for (int ii = 0; ii <= row; ii++) {
+        List<String> line = rows.get(ii);
+        while (line.size() <= col) {
+          line.add("");
+        }
+      }
+      rows.get(row).set(col, text);
+    }
+
+    String getHtmlTable () {
+      // pad out all rows to same size
+      for (java.util.List<String> row : rows) {
+        while (row.size() < maxCol) {
+          row.add("");
+        }
+      }
+      // generate html table
+      StringBuilder buf = new StringBuilder("<table style=\"background-color:" + color + ";padding:0;white-space:nowrap;width:95%;\">\n");
+      String prefix1 = "  <td style=\"background-color:white;color:" + color + ";\"";
+      String blank = "#C0C0C0";
+      String prefix2 = "  <td style=\"background-color:" + blank + ";color:" + blank + ";\"";
+      for (int ii = 0; ii < rows.size(); ii++) {
+        List<String> row = rows.get(ii);
+        buf.append(" <tr style=\"font-family:" + font + ";font-size:12;text-align:center;\">\n");
+        int cols = 0;
+        for (int jj = 0; jj < row.size(); jj++) {
+          String text = row.get(jj);
+          text = text.trim();
+          if (text.length() == 0) {
+            text = "&nbsp;";
+          }
+          if (ii == 0) {
+            if (widths != null) {
+              String width = widths[jj];
+              buf.append("  <th style=\"background-color:" + color + ";color:white;\" width=\"" + width + "\">" + text + "</th>\n");
+            } else {
+              buf.append("  <th style=\"background-color:" + color + ";color:white;\">" + text + "</th>\n");
+            }
+          } else {
+            int idx = text.indexOf("|");
+            if (idx > 0) {
+              String span = text.substring(0, idx);
+              text = text.substring(idx + 1);
+              buf.append(prefix1 + " colspan=\"" + span + "\">" + text + "</td>\n");
+              cols += Integer.parseInt(span);
+            } else {
+              if ("-".equals(text)) {
+                buf.append(prefix2 + ">&nbsp;</td>\n");
+              } else {
+                buf.append(prefix1 + ">" + text + "</td>\n");
+              }
+              cols++;
+            }
+            if (cols >= row.size()) {
+              break;
+            }
+          }
+        }
+        buf.append(" </tr>\n");
+      }
+      buf.append("</table>\n");
+      return buf.toString();
+    }
   }
 
   MarkupView () {
     setLayout(new BorderLayout());
     jEditorPane = new JEditorPane();
-    JScrollPane scrollPane = new JScrollPane(jEditorPane);
+    scrollPane = new JScrollPane(jEditorPane);
     JButton back = new JButton("<<BACK");
     jEditorPane.addHyperlinkListener(new HyperlinkListener() {
-      private String tooltip;
       @Override
       public void hyperlinkUpdate(HyperlinkEvent ev) {
         JEditorPane editor = (JEditorPane) ev.getSource();
-        if (ev.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+        HyperlinkEvent.EventType eventType = ev.getEventType();
+        if (eventType == HyperlinkEvent.EventType.ACTIVATED) {
           String link = ev.getDescription();
           if (link.startsWith("http://") || link.startsWith("https://")) {
+            // Handle link using external browser
             if (Desktop.isDesktopSupported()) {
               try {
                 Desktop.getDesktop().browse(new URI(link));
@@ -225,34 +355,40 @@ class MarkupView extends JPanel {
               }
             }
           } else {
-            // Check for anchor in link
-            String anchor = null;
-            int off = link.indexOf("#");
-            if (off >= 0) {
-              anchor = link.substring(off + 1);
-              link = link.substring(0, off);
-            }
-            // Check for parameters on link
-            String parms = null;
-            off = link.indexOf("?");
-            if (off >= 0) {
-              parms = link.substring(off + 1);
-              link = link.substring(0, off);
-            }
-            Point scrollPosition = scrollPane.getViewport().getViewPosition();
-            stack.add(new StackItem(currentPage, scrollPosition, parms));
-            loadMarkup(link, parms);
-            if (anchor != null) {
-              jEditorPane.scrollToReference(anchor);
-            }
-            SwingUtilities.invokeLater(() -> back.setVisible(stack.size() > 0));
+            // Handle link in MarkupView
+            loadMarkup(link);
+            SwingUtilities.invokeLater(() -> back.setVisible(stack.size() > 1));
           }
-        } else if (ev.getEventType() == HyperlinkEvent.EventType.ENTERED) {
-          tooltip = editor.getToolTipText();
-          String text = ev.getDescription();
-          editor.setToolTipText(text);
-        } else if (ev.getEventType() == HyperlinkEvent.EventType.EXITED) {
-          editor.setToolTipText(tooltip);
+        } else if (eventType == HyperlinkEvent.EventType.ENTERED) {
+          Element source = ev.getSourceElement();
+          if (source instanceof HTMLDocument.RunElement) {
+            HTMLDocument.RunElement elem = (HTMLDocument.RunElement) source;
+            AttributeSet set = elem.getAttributes();
+            Enumeration ee = set.getAttributeNames();
+            while (ee.hasMoreElements()) {
+              Object name = ee.nextElement();
+              Object attr = set.getAttribute(name);
+              if (attr instanceof SimpleAttributeSet) {
+                SimpleAttributeSet tagAttrs = (SimpleAttributeSet) attr;
+                Enumeration<?> e2 = tagAttrs.getAttributeNames();
+                while (e2.hasMoreElements()) {
+                  Object tt = e2.nextElement();
+                  // If tag has "title" attribute, display value as hover text
+                  if ("title".equals(tt.toString())) {
+                    Object tv = tagAttrs.getAttribute(tt);
+                    editor.setToolTipText((String) tv);
+                    return;
+                  }
+                }
+              }
+            }
+          }
+          // Display tooltip
+          //String text = ev.getDescription();
+          //editor.setToolTipText(text);
+        } else if (eventType == HyperlinkEvent.EventType.EXITED) {
+          // Turn off tooltip
+          editor.setToolTipText(null);
         }
       }
     });
@@ -261,12 +397,14 @@ class MarkupView extends JPanel {
     add(scrollPane, BorderLayout.CENTER);
     back.addActionListener(e -> {
       if (stack.size() > 0) {
-        StackItem item = stack.remove(stack.size() - 1);
-        loadMarkup(item.location, item.parms);
-        parmMap = Utility.parseParms(item.parms);
+        // Process "BACK" button
+        stack.remove(stack.size() - 1);
+        StackItem item = stack.get(stack.size() - 1);
+        loadMarkup(item.location);
+        stack.remove(stack.size() - 1);
         SwingUtilities.invokeLater(() -> {
           scrollPane.getViewport().setViewPosition(item.position);
-          back.setVisible(stack.size() > 0);
+          back.setVisible(stack.size() > 1);
         });
       }
     });
@@ -274,8 +412,6 @@ class MarkupView extends JPanel {
     back.setVisible(false);
     HTMLEditorKit kit = new MyEditorKit();
     jEditorPane.setEditorKit(kit);
-    // Setup some basic markdown styles (Note: limited to HTML 3.2)
-    // see: https://stackoverflow.com/questions/25147141/why-isnt-my-css-working-right-in-java
     StyleSheet styleSheet = kit.getStyleSheet();
     styleSheet.addRule("body {color:#000; font-family: Arial, DejaVu Sans, Helvetica; margin: 4px;}");
     styleSheet.addRule("h1 {font-size: 24px; font-weight: 500;}");
@@ -297,19 +433,37 @@ class MarkupView extends JPanel {
     jEditorPane.setText(html);
   }
 
-  public void loadMarkup (String loc, String parms) {
+  public void loadMarkup (String loc) {
     if (loc != null) {
-      if (basePath == null) {
-        int idx = loc.lastIndexOf("/");
+      String link = loc;
+      // Check for anchor in link
+      String anchor = null;
+      int off = link.indexOf("#");
+      if (off >= 0) {
+        anchor = link.substring(off + 1);
+        link = link.substring(0, off);
+      }
+      // Check for parameters on link
+      String parms = null;
+      off = link.indexOf("?");
+      if (off >= 0) {
+        parms = link.substring(off + 1);
+        link = link.substring(0, off);
+      }
+      Point scrollPosition = scrollPane.getViewport().getViewPosition();
+      stack.add(new StackItem(loc, scrollPosition));
+      if (basePath == null || link.lastIndexOf("/") > 0) {
+        int idx = link.lastIndexOf("/");
         if (idx >= 0) {
-          basePath = loc.substring(0, idx + 1);
-          loc = loc.substring(idx + 1);
+          basePath = link.substring(0, idx + 1);
+          link = link.substring(idx + 1);
         } else {
           basePath = "";
         }
       }
       try {
-        String markup = new String(getResource(basePath + loc));
+        String[] widths = {"10%", "10%", "4%", "10%", "10%", "10%", "10%", "10%", "10%", "10%", "10%"};
+        String markup = new String(Utility.getResource(basePath + link));
         parmMap = Utility.parseParms(parms);
         markup = Utility.replaceTags(markup, parmMap, (name, parm, tags) -> {
           switch (name) {
@@ -317,6 +471,85 @@ class MarkupView extends JPanel {
             return parm;
           case "TAG":
             return tags.get(parm);
+          case "BEGIN_REGS":
+            regTable = new HtmlTable(codeFont.getName(), "#606060", widths);
+            regTable.addItem(0, 0, "Address");
+            regTable.addItem(0, 1, "Register");
+            regTable.addItem(0, 2, "");
+            for (int ii = 0; ii < 8; ii++) {
+              regTable.addItem(0, ii + 3, "Bit " + Integer.toString(7 - ii));
+              regTable.addItem(1, ii + 3, "");
+            }
+            regIndex = 1;
+            return "";
+          case "END_REGS":
+            if (regTable != null) {
+              String html = regTable.getHtmlTable();
+              return html;
+            }
+            return "";
+          case "REG_ITEM":
+            if (parm != null) {
+              String[] items = parm.split(",");
+              int dum = 0;
+              for (int ii = 0; ii < items.length; ii++) {
+                regTable.addItem(regIndex, ii, items[ii]);
+              }
+            }
+            regIndex++;
+            return "";
+          case "TABLE":
+            // Generate table of multiplexed pins
+            try {
+              if (parm != null && parm.trim().length() > 0) {
+                String pkg = tags.get("PKG").toLowerCase();
+                HtmlTable tbl = new HtmlTable(codeFont.getName(), "#606060", null);
+                Map<String,String> mux_pins = Utility.getResourceMap("pins/chip_features.props");
+                Map<String,String> peripherals = Utility.getResourceMap("pins/peripherals.props");
+                String avrChip = mux_pins.get(tags.get("CHIP"));
+                String[] features = avrChip.split(",");
+                Map<String,Integer> colNames = new HashMap<>();
+                for (int ii = 0; ii < features.length; ii++) {
+                  String colName = features[ii];
+                  colNames.put(colName, ii);
+                  if (peripherals.containsKey(colName)) {
+                    String url = peripherals.get(colName);
+                    colName = "<a color = \"white\" href=\"" + url + "\">" + colName + "</a>";
+                  }
+                  tbl.addItem(0, ii, colName);
+                }
+                String[] pins = Utility.arrayFromText("pins/" + pkg + ".props");
+                Map<String,String> ports = Utility.getResourceMap("pins/mux_pins.props");
+                int row = 1;
+                for (int ii = 0; ii < pins.length; ii++) {
+                  String[] pin = pins[ii].split("/");
+                  if (pin.length > 1) {
+                    String pinNum = Integer.toString(ii + 1);
+                    String pinName = pin[0];
+                    tbl.addItem(row, 0, pinNum);
+                    tbl.addItem(row, 1, pinName);
+                    String altPins = ports.get(pinName);
+                    if (altPins != null) {
+                      String[] pairs = altPins.split(",");
+                      for (String str : pairs) {
+                        String[] pair = str.split("\\.");
+                        String colName = pair[0];
+                        if (colNames.containsKey(colName)) {
+                          int colIndex = colNames.get(colName);
+                          tbl.addItem(row, colIndex, pair[1]);
+                        }
+                      }
+                    }
+                    row++;
+                  }
+                }
+                return tbl.getHtmlTable();
+              } else {
+                return "Alternate pin configurations available using Port Multiplexer not shown.  See datasheet for details.";
+              }
+            } catch (IOException ex) {
+              return "TABLE tag parameter: unable to generate table";
+            }
           case "INFO":
             String[] parts = parm.split("-");
             if (parts.length > 1) {
@@ -326,7 +559,7 @@ class MarkupView extends JPanel {
                 String val = info.get(type);
                 if (val != null) {
                   if ("sig".equals(type) && val.length() == 6) {
-                    val = "0x" + val.substring(0, 2) + ", 0x"+ val.substring(2, 4) + ", 0x"+ val.substring(4);
+                    val = "0x" + val.substring(0, 2) + ", 0x" + val.substring(2, 4) + ", 0x" + val.substring(4);
                   }
                   return val;
                 }
@@ -338,25 +571,15 @@ class MarkupView extends JPanel {
           return "callback tag \"" + name + "\" undefined";
         });
         setText(markup);
-        currentPage = loc;
         jEditorPane.setCaretPosition(0);
       } catch (Exception ex) {
         ex.printStackTrace();
       }
-    }
-  }
-
-  private byte[] getResource (String file) throws IOException {
-    InputStream fis = MarkupView.class.getClassLoader().getResourceAsStream(file);
-    if (fis != null) {
-      byte[] data = new byte[fis.available()];
-      if (fis.read(data) != data.length) {
-        throw new IOException("getResource() not all bytes read from file: " + file);
+      // Position to anchor on page (if defined)
+      if (anchor != null) {
+        jEditorPane.scrollToReference(anchor);
       }
-      fis.close();
-      return data;
     }
-    throw new IllegalStateException("MarkupView.getResource() " + file + " not found");
   }
 
   /*
@@ -365,7 +588,7 @@ class MarkupView extends JPanel {
   public static void main (String[] args) {
     Preferences prefs = Preferences.userRoot().node(MarkupView.class.getName());
     JFrame frame = new JFrame();
-    MarkupView mView = new MarkupView("documentation/index.md", null);
+    MarkupView mView = new MarkupView("documentation/index.md");
     frame.add(mView, BorderLayout.CENTER);
     frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
     frame.setSize(prefs.getInt("window.width", 800), prefs.getInt("window.height", 900));

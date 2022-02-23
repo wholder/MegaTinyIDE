@@ -14,7 +14,7 @@ The nice thing about about the UPDI interface is that, in addition to Vcc and Gn
 
 <p align="center"><img src="images/Atmel-ICE.png"></p>
 
-The [Atmel-ICE](https://www.microchip.com/DevelopmentTools/ProductDetails/ATATMEL-ICE) is currently the most expensive ([~$117 at Mouser](https://www.mouser.com/ProductDetail/Microchip-Technology-Atmel/ATATMEL-ICE-BASIC?qs=KLFHFgXTQiAG498QgmqIdw%3D%3D), [~$xxx at Digi-Key](xxxx)) and least flexible of Microchip's UPDI-compatible programmers.  In addition older versions of the Atmel-ICE may need to be updated and modified using Microchip's MPLAB software before MegaTinyIDE will be able to detect them, as the USB interface has changed over time.  Debugging with the Snap requires making three connections to the target ATtiny using the 6-pin adapter usually provided with the Atmel ICE kit, as follows:
+The [Atmel-ICE](https://www.microchip.com/DevelopmentTools/ProductDetails/ATATMEL-ICE) is currently the most expensive ([~$117 at Mouser](https://www.mouser.com/ProductDetail/Microchip-Technology-Atmel/ATATMEL-ICE-BASIC?qs=KLFHFgXTQiAG498QgmqIdw%3D%3D), [~$117 at Digi-Key](https://www.digikey.com/en/products/detail/microchip-technology/ATATMEL-ICE-BASIC/4753381)) and least flexible of Microchip's UPDI-compatible programmers.  In addition older versions of the Atmel-ICE may need to be updated and modified using Microchip's MPLAB software before MegaTinyIDE will be able to detect them, as the USB interface has changed over time.  Debugging with the Snap requires making three connections to the target ATtiny using the 6-pin adapter usually provided with the Atmel ICE kit, as follows:
 
 <p align="center"><img src="images/Adapter.png"></p>
 

@@ -1,8 +1,12 @@
 ## *[NAME]* in *[PKG]* Package
 <p align="center"><img src="chiplayout:*[CHIP]*"></p>
-**Note:** Alternate pin configurations available using Port Multiplexer not shown.  See datasheet for details.
 
-## Specifications
+### Multiplexed Signals
+<DIV align="center">
+*[TABLE:*{MUX}*]*
+</DIV>
+
+### Specifications
 
   <table>
     <tr>
@@ -37,38 +41,4 @@
         <td>EEPROM base:</td>
         <td>*[INFO:*{CHIP}*-ebase]*</td>
     </tr>
-     <tr>
-        <td></td>
-        <td>Touch Controllers:</td>
-        <td>*[INFO:*{CHIP}*-ptc]*</td>
-        <td></td>
-        <td>Number of DACs:</td>
-        <td>*[INFO:*{CHIP}*-dacs]*</td>
-     </tr>
-    <tr>
-        <td></td>
-        <td>Number of ADCs:</td>
-        <td>*[INFO:*{CHIP}*-adcs]*</td>
-        <td></td>
-        <td>ADC Channels:</td>
-        <td>*[INFO:*{CHIP}*-adch]*</td>
-   </tr>
-     <tr>
-        <td></td>
-        <td>16 Bit TCA Timers:</td>
-        <td>*[INFO:*{CHIP}*-tca]*</td>
-        <td></td>
-        <td>16 Bit TCB Timers:</td>
-        <td>*[INFO:*{CHIP}*-tcb]*</td>
-     </tr>
-      <tr>
-         <td></td>
-         <td>12 Bit TCD Timers:</td>
-         <td>*[INFO:*{CHIP}*-tcd]*</td>
-         <td></td>
-         <td></td>
-         <td></td>
-     </tr>
  </table>
- 
- **Other features:** all devices include one USART, TWI controller, SPI controller, and Configurable Logic Unit.

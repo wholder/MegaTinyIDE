@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 
 /*
    * GNU Toolchain Controller for Compiling and Assembling code for avrxmega3 Series Chips
-   * Author: Wayne Holder, 2017
+   * Author: Wayne Holder, 2017-2021
    * License: MIT (https://opensource.org/licenses/MIT)
    *
    * References:
@@ -159,7 +159,7 @@ class MegaTinyCompiler {
     }
   }
 
-  static Map<String, String> debugBuild (Map<String, String> tags, Preferences prefs) throws Exception {
+  static Map<String, String> debugBuild (Map<String, String> tags, Preferences prefs) {
     // Generate Arduino-like sketch hex output, listing and code/data size info
     try {
       Map<String, String> out = new HashMap<>();

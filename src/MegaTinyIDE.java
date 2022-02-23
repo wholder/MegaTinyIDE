@@ -31,7 +31,7 @@ import static javax.swing.JOptionPane.*;
 
 /**
    *  An IDE for tinyAVR® 1-series and 0-series Microcontrollers
-   *  Author: Wayne Holder, 2011-2019
+   *  Author: Wayne Holder, 2011-2021
    *  License: MIT (https://opensource.org/licenses/MIT)
    */
 
@@ -454,7 +454,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
       listPane.setForeground(Color.red);
       hexPane.setForeground(Color.red);
     });
-    MarkupView howToPane = new MarkupView("documentation/index.md", null);
+    MarkupView howToPane = new MarkupView("documentation/index.md");
     tabPane.addTab("How To", null, howToPane, "This is the documentation page");
     tabPane.addTab("Source Code", null, codePane, "This is the editor pane where you enter source code");
     listPane = new ListingPane(tabPane, "Listing", "Select this pane to view the assembler listing", this, prefs);
@@ -1045,14 +1045,9 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     avrChip = prefs.get("programmer.target", "attiny212");
     ButtonGroup targetGroup = new ButtonGroup();
     menuBar.add(targetMenu);
-    String libType = null;
     int pinCount = 0;
     for (String type : chipTypes.keySet()) {
       ChipInfo info = chipTypes.get(type);
-      if ((libType != null && !libType.equals(info.variant)) || (libType == null && info.variant != null)) {
-        targetMenu.addSeparator();
-      }
-      libType = info.variant;
       if (pinCount != info.pins) {
         JMenuItem pinLabel = new JMenuItem(info.pins + " pins");
         pinLabel.setEnabled(false);

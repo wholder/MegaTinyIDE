@@ -49,6 +49,7 @@ While more testing is needed, I am declaring the code as operational (Beta statu
     - 1.0.3 - Fixed cosmetic regression
     - 1.0.4 - Fixed a few more cosmetic regressions
     - 1.0.5 - Fixed build process (builds 1.0.1 - 1.0.4 did not package proper jar file)
+    - 1.0.6 - Added document table for multiplexed pins and peripheral address map
 
 ### Debugging Interface
 

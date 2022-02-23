@@ -2,6 +2,7 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -212,6 +213,33 @@ class Utility {
     String fName = font.getFontName();
     int size = font.getSize();
     return "style=\"font-family:" + fName + ";font-size:" + size + ";margin: 1em 0;display: block;\"";
+  }
+
+  static byte[] getResource (String file) throws IOException {
+    InputStream fis = MarkupView.class.getClassLoader().getResourceAsStream(file);
+    if (fis != null) {
+      byte[] data = new byte[fis.available()];
+      if (fis.read(data) != data.length) {
+        throw new IOException("getResource() not all bytes read from file: " + file);
+      }
+      fis.close();
+      return data;
+    }
+    throw new IllegalStateException("MarkupView.getResource() " + file + " not found");
+  }
+
+  static String getResourceAsString (String file) throws IOException {
+    return new String(getResource(file));
+  }
+
+  static String[] arrayFromText (String file) {
+    try {
+      String list = getResourceAsString(file);
+      return list.split("\n");
+    } catch (IOException ex) {
+      ex.printStackTrace();
+      return new String[0];
+    }
   }
 
   interface TagCallback {
@@ -658,6 +686,14 @@ class Utility {
     } catch (IOException ex) {
       return null;
     }
+  }
+
+  public static void expand (Rectangle dst, Rectangle2D src) {
+    int lft = (int) Math.min(dst.x, src.getX());
+    int top = (int) Math.min(dst.y, src.getY());
+    int rht = (int) Math.max(dst.x + dst.width, src.getX() + src.getWidth());
+    int bot = (int) Math.max(dst.y + dst.height, src.getY() + src.getHeight());
+    dst.setBounds(lft, top, bot - top, rht - lft);
   }
 
   // Test code for getTargetFromElf()

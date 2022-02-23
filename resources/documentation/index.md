@@ -9,6 +9,7 @@
    + [Using the Debugger](debugging.md)
    + [OCD Messaging](ocdmsg.md)
    + [Debugging ELF files](elfdebug.md)
+   + [Peripheral Address Space](peripherals.md)
 
 #### [Compatible Programmers/Debuggers & Development Boards](programmers.md)
    + [Atmel-ICE](programmers.md#Atmel-ICE)
@@ -119,8 +120,8 @@
 		<table style="background-color:#EEEEEE;">
 			<tr>
 				<td style="width:10px;"></td>
-				<td style="width: 80px;">ATtiny202</td>
-				<td style="width: 80px;"><a href="pinouts.md?CHIP=attiny202,NAME=ATtiny202,PKG=SOIC-8">SOIC-8</a></td>
+				<td style="width:80px;">ATtiny202</td>
+				<td style="width:80px;"><a href="pinouts.md?CHIP=attiny202,NAME=ATtiny212,PKG=SOIC-8">SOIC-8</a></td>
 				<td></td>
 			</tr>
 			<tr>
@@ -133,7 +134,7 @@
 				<td></td>
 				<td>ATtiny204</td>
 				<td><a href="pinouts.md?CHIP=attiny204,NAME=ATtiny204,PKG=SOIC-14">SOIC-14</a></td>
-				<td></td>
+				<t></t> 
 			</tr>
 			<tr>
 				<td></td>
@@ -173,6 +174,18 @@
 			</tr>
 			<tr>
 				<td></td>
+				<td>--</td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>--</td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td></td>
 				<td>ATtiny807</td>
 				<td></td>
 				<td><a href="pinouts.md?CHIP=attiny807,NAME=ATtiny807,PKG=VQFN-24">VQFN-24</a></td>
@@ -182,6 +195,12 @@
 				<td>ATtiny1607</td>
 				<td></td>
 				<td><a href="pinouts.md?CHIP=attiny1607,NAME=ATtiny1607,PKG=VQFN-24">VQFN-24</a></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>--</td>
+				<td></td>
+				<td></td>
 			</tr>
 		</table>
 		</td>

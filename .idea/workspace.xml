@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="AnalysisUIOptions">
-    <option name="SCOPE_TYPE" value="3" />
-  </component>
   <component name="ArtifactsWorkspaceSettings">
     <artifacts-to-build>
       <artifact name="MegaTinyIDE:jar" />
@@ -13,10 +10,29 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="Fixed build process (versions 1.0.1 - 1.0.4 have incorrect jar file)">
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/documentation/peripherals.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/pins/chip_features.props" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/pins/mux_pins.props" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/pins/peripherals.props" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/pins/soic-14.props" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/pins/soic-20.props" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/pins/soic-8.props" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/pins/vqfn-20.props" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/pins/vqfn-24.props" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.MD" beforeDir="false" afterPath="$PROJECT_DIR$/README.MD" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/toolchains/combined.zip" beforeDir="false" afterPath="$PROJECT_DIR$/resources/toolchains/combined.zip" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/attinys.props" beforeDir="false" afterPath="$PROJECT_DIR$/resources/attinys.props" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/documentation/index.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/index.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/documentation/pinouts.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/pinouts.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/documentation/programmers.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/programmers.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/version.props" beforeDir="false" afterPath="$PROJECT_DIR$/resources/version.props" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ChipLayout.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ChipLayout.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MarkupView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MarkupView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MegaTinyCompiler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MegaTinyCompiler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MegaTinyIDE.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MegaTinyIDE.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Utility.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Utility.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,6 +49,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
   <component name="ProjectId" id="1fVvICyR5lQAbgG0GhRqVpzkFVE" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -42,7 +61,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/images" />
-    <property name="project.structure.last.edited" value="Libraries" />
+    <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
@@ -59,11 +78,11 @@
       <recent name="Utility" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/examples" />
+      <recent name="$PROJECT_DIR$/resources/documentation" />
+      <recent name="$PROJECT_DIR$/resources/pins" />
       <recent name="$PROJECT_DIR$/docs" />
+      <recent name="$PROJECT_DIR$/examples" />
       <recent name="$PROJECT_DIR$/app notes" />
-      <recent name="$PROJECT_DIR$/RTOS Ideas" />
-      <recent name="$PROJECT_DIR$/resources/documentation/images" />
     </key>
     <key name="ExtractSuperBase.RECENT_KEYS">
       <recent name="" />
@@ -78,14 +97,7 @@
       <recent name="tools" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.NativeBuilder">
-    <configuration name="ElfDump" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="ElfDump" />
-      <module name="ToolBuilder" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager" selected="Application.MegaTinyIDE">
     <configuration name="MegaTinyIDE" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="MegaTinyIDE" />
       <module name="MegaTinyIDE" />
@@ -100,34 +112,14 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ToolchainCombiner" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="ToolchainCombiner" />
-      <module name="ToolBuilder" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="Utility" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="Utility" />
-      <module name="MegaTinyIDE" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <list>
       <item itemvalue="Application.MegaTinyIDE" />
       <item itemvalue="Application.NativeBuilder" />
-      <item itemvalue="Application.ElfDump" />
-      <item itemvalue="Application.Utility" />
-      <item itemvalue="Application.ToolchainCombiner" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.NativeBuilder" />
         <item itemvalue="Application.MegaTinyIDE" />
-        <item itemvalue="Application.ToolchainCombiner" />
-        <item itemvalue="Application.ElfDump" />
-        <item itemvalue="Application.Utility" />
+        <item itemvalue="Application.NativeBuilder" />
       </list>
     </recent_temporary>
   </component>
@@ -139,20 +131,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1596315993204</updated>
-    </task>
-    <task id="LOCAL-00072" summary="Center line number when stepping in debugger">
-      <created>1607125530869</created>
-      <option name="number" value="00072" />
-      <option name="presentableId" value="LOCAL-00072" />
-      <option name="project" value="LOCAL" />
-      <updated>1607125530869</updated>
-    </task>
-    <task id="LOCAL-00073" summary="Tooltip now shows IN/OUT state of PORTs">
-      <created>1607158204935</created>
-      <option name="number" value="00073" />
-      <option name="presentableId" value="LOCAL-00073" />
-      <option name="project" value="LOCAL" />
-      <updated>1607158204935</updated>
     </task>
     <task id="LOCAL-00074" summary="Misc code cleanup">
       <created>1607212675783</created>
@@ -483,7 +461,21 @@
       <option name="project" value="LOCAL" />
       <updated>1632279106738</updated>
     </task>
-    <option name="localTasksCounter" value="121" />
+    <task id="LOCAL-00121" summary="Fixed build process (versions 1.0.1 - 1.0.4 have incorrect jar file)">
+      <created>1632360195814</created>
+      <option name="number" value="00121" />
+      <option name="presentableId" value="LOCAL-00121" />
+      <option name="project" value="LOCAL" />
+      <updated>1632360195814</updated>
+    </task>
+    <task id="LOCAL-00122" summary="Fixed build process (versions 1.0.1 - 1.0.4 have incorrect jar file)">
+      <created>1632360306025</created>
+      <option name="number" value="00122" />
+      <option name="presentableId" value="LOCAL-00122" />
+      <option name="project" value="LOCAL" />
+      <updated>1632360306025</updated>
+    </task>
+    <option name="localTasksCounter" value="123" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -506,12 +498,10 @@
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Center line number when stepping in debugger" />
     <MESSAGE value="Tooltip now shows IN/OUT state of PORTs" />
     <MESSAGE value="Misc code cleanup" />
     <MESSAGE value="Rework debugger interface" />
@@ -536,16 +526,12 @@
     <MESSAGE value="Rework ELF file debugging to load from menu rather than from the command line" />
     <MESSAGE value="Fixed cosmetic regression" />
     <MESSAGE value="Fixed another cosmetic regression" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed another cosmetic regression" />
+    <MESSAGE value="Fixed build process (versions 1.0.1 - 1.0.4 have incorrect jar file)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed build process (versions 1.0.1 - 1.0.4 have incorrect jar file)" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/Utility.java</url>
-          <line>250</line>
-          <option name="timeStamp" value="16" />
-        </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/ToolBuilder/src/ElfDump.java</url>
           <line>235</line>
@@ -555,8 +541,8 @@
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/MegaTinyIDE$BinFileCompare.ic" NAME="BinFileCompare Coverage Results" MODIFIED="1601853378592" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/MegaTinyIDE$MegaTinyIDE.ic" NAME="MegaTinyIDE Coverage Results" MODIFIED="1602453257039" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/MegaTinyIDE$ElfDump.ic" NAME="ElfDump Coverage Results" MODIFIED="1631841301760" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
-    <SUITE FILE_PATH="coverage/MegaTinyIDE$BinFileCompare.ic" NAME="BinFileCompare Coverage Results" MODIFIED="1601853378592" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>
