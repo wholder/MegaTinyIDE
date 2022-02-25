@@ -9,7 +9,7 @@
    + [Using the Debugger](debugging.md)
    + [OCD Messaging](ocdmsg.md)
    + [Debugging ELF files](elfdebug.md)
-   + [Peripheral Address Space](peripherals.md)
+   + [I/O Memory Table](peripherals.md)
 
 #### [Compatible Programmers/Debuggers & Development Boards](programmers.md)
    + [Atmel-ICE](programmers.md#Atmel-ICE)

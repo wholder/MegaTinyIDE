@@ -1265,6 +1265,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     }
     if (reloadTools) {
       new Thread(() -> loadToolchain(thread)).start();
+      prefs.putBoolean("reload_toolchain", false);
     } else {
       if (thread != null) {
         thread.start();

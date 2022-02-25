@@ -1,11 +1,6 @@
 ## *[NAME]* in *[PKG]* Package
 <p align="center"><img src="chiplayout:*[CHIP]*"></p>
 
-### Multiplexed Signals
-<DIV align="center">
-*[TABLE:*{MUX}*]*
-</DIV>
-
 ### Specifications
 
   <table>
@@ -42,3 +37,14 @@
         <td>*[INFO:*{CHIP}*-ebase]*</td>
     </tr>
  </table>
+
+### Multiplexed Signals
+<DIV align="center">
+*[MUX_TABLE:*{MUX}*]*
+</DIV>
+
+
+### Interrupt Vectors
+<DIV align="center">
+*[INT_VECS:*{CHIP}*]*
+</DIV>

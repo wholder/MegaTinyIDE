@@ -413,7 +413,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
     if (prefs.getBoolean("vector_names", false)) {
       try {
         MegaTinyIDE.ChipInfo chip = MegaTinyIDE.getChipInfo(ide.getAvrChip());
-        vecs = Utility.getResourceMap("vecset" + chip.get("vecs") + ".props");
+        vecs = Utility.getResourceMap("interrupts/vec" + chip.get("vecs") + ".props");
         addressSize = chip.getInt("flash") >= 16 ? 4 : 2;
         for (String key : vecs.keySet()) {
           maxVector = Math.max(maxVector, Integer.parseInt(key));
@@ -443,8 +443,15 @@ public class ListingPane extends JPanel {   // https://regex101.com
         if (vecs != null) {
           int vector = address / addressSize;
           if (vector <= maxVector) {
-            String vecName = vecs.get(Integer.toString(vector));
-            vecName = vecName != null && vecName.length() > 0 ? vecName : "not used";
+            String vecName = vecs.get(String.format("%02d", vector));
+            if (vecName.length() > 0) {
+              int idx = vecName.indexOf('[');
+              if (idx >= 0) {
+                vecName = vecName.substring(0, idx);
+              }
+            } else {
+              vecName = "not used";
+            }
             // Add vector name to end of line
             line = line + " - " + vecName;
           }

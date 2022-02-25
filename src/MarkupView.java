@@ -64,12 +64,15 @@ import java.net.URLDecoder;
 import java.util.*;
 import java.util.List;
 import java.util.prefs.Preferences;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 class MarkupView extends JPanel {
   private final JEditorPane           jEditorPane;
   private final JScrollPane           scrollPane;
   private final ArrayList<StackItem>  stack = new ArrayList<>();
   static final Font                   codeFont = Utility.getCodeFont(12);
+  private static final Pattern        BracesMatch = Pattern.compile("\\[(.*)]");
   private String                      basePath;
   private HtmlTable                   regTable;
   private int                         regIndex;
@@ -251,15 +254,19 @@ class MarkupView extends JPanel {
   }
 
   static class HtmlTable {
-    List<List<String>>  rows = new ArrayList<>();
-    private final String    font;
-    private final String    color;
-    private final String[]  widths;
-    private int             maxCol;
+    private static final String   grid = "black";
+    private static final String   blank = "#C0C0C0";
+    private static final String   color = "#606060";
+    private static final String   header = "#808080";
+    List<List<String>>            rows = new ArrayList<>();
+    private final String          font;
+    private final int             fontSize;
+    private final String[]        widths;
+    private int                   maxCol;
 
-    HtmlTable (String font, String color, String[] widths) {
+    HtmlTable (String font, int fontSize, String[] widths) {
       this.font = font;
-      this.color = color;
+      this.fontSize = fontSize;
       this.widths = widths;
     }
 
@@ -277,6 +284,17 @@ class MarkupView extends JPanel {
       rows.get(row).set(col, text);
     }
 
+    private String decodeHover (String text) {
+      // If present, convert hover text into unmarked <a> tag with "title" attribute
+      Matcher mat = BracesMatch.matcher(text);
+      if (mat.find()) {
+        String hover = mat.group(1);
+        text = mat.replaceAll("").trim();
+        text = "<a style=\"color:" + color + ";text-decoration:none\" title=\"" + hover + "\" href=\"\">" + text + "</a>";
+      }
+      return text;
+    }
+
     String getHtmlTable () {
       // pad out all rows to same size
       for (java.util.List<String> row : rows) {
@@ -285,38 +303,43 @@ class MarkupView extends JPanel {
         }
       }
       // generate html table
-      StringBuilder buf = new StringBuilder("<table style=\"background-color:" + color + ";padding:0;white-space:nowrap;width:95%;\">\n");
+      StringBuilder buf = new StringBuilder("<table style=\"background-color:" + grid + ";padding:0;white-space:nowrap;width:95%;\">\n");
       String prefix1 = "  <td style=\"background-color:white;color:" + color + ";\"";
-      String blank = "#C0C0C0";
       String prefix2 = "  <td style=\"background-color:" + blank + ";color:" + blank + ";\"";
-      for (int ii = 0; ii < rows.size(); ii++) {
-        List<String> row = rows.get(ii);
-        buf.append(" <tr style=\"font-family:" + font + ";font-size:12;text-align:center;\">\n");
+      for (int rowIdx = 0; rowIdx < rows.size(); rowIdx++) {
+        List<String> row = rows.get(rowIdx);
+        buf.append(" <tr style=\"font-family:" + font + ";font-size:" + fontSize + ";text-align:center;\">\n");
         int cols = 0;
-        for (int jj = 0; jj < row.size(); jj++) {
-          String text = row.get(jj);
+        for (int colIdx = 0; colIdx < row.size(); colIdx++) {
+          String text = row.get(colIdx);
           text = text.trim();
           if (text.length() == 0) {
             text = "&nbsp;";
           }
-          if (ii == 0) {
+          if (rowIdx == 0) {
+            // Draw header row
             if (widths != null) {
-              String width = widths[jj];
-              buf.append("  <th style=\"background-color:" + color + ";color:white;\" width=\"" + width + "\">" + text + "</th>\n");
+              String width = widths[colIdx];
+              buf.append("  <th style=\"background-color:" + header + ";color:white;\" width=\"" + width + "\">" + text + "</th>\n");
             } else {
-              buf.append("  <th style=\"background-color:" + color + ";color:white;\">" + text + "</th>\n");
+              buf.append("  <th style=\"background-color:" + header + ";color:white;\">" + text + "</th>\n");
             }
           } else {
+            // Draw data rows
             int idx = text.indexOf("|");
             if (idx > 0) {
+              // Draw spanning cell
               String span = text.substring(0, idx);
               text = text.substring(idx + 1);
+              text = decodeHover(text);
               buf.append(prefix1 + " colspan=\"" + span + "\">" + text + "</td>\n");
               cols += Integer.parseInt(span);
             } else {
+              // Draw single cell
               if ("-".equals(text)) {
                 buf.append(prefix2 + ">&nbsp;</td>\n");
               } else {
+                text = decodeHover(text);
                 buf.append(prefix1 + ">" + text + "</td>\n");
               }
               cols++;
@@ -345,6 +368,9 @@ class MarkupView extends JPanel {
         HyperlinkEvent.EventType eventType = ev.getEventType();
         if (eventType == HyperlinkEvent.EventType.ACTIVATED) {
           String link = ev.getDescription();
+          if (link.length() == 0) {
+            return;
+          }
           if (link.startsWith("http://") || link.startsWith("https://")) {
             // Handle link using external browser
             if (Desktop.isDesktopSupported()) {
@@ -364,28 +390,25 @@ class MarkupView extends JPanel {
           if (source instanceof HTMLDocument.RunElement) {
             HTMLDocument.RunElement elem = (HTMLDocument.RunElement) source;
             AttributeSet set = elem.getAttributes();
-            Enumeration ee = set.getAttributeNames();
-            while (ee.hasMoreElements()) {
-              Object name = ee.nextElement();
+            Enumeration<?> ee1 = set.getAttributeNames();
+            while (ee1.hasMoreElements()) {
+              Object name = ee1.nextElement();
               Object attr = set.getAttribute(name);
               if (attr instanceof SimpleAttributeSet) {
                 SimpleAttributeSet tagAttrs = (SimpleAttributeSet) attr;
-                Enumeration<?> e2 = tagAttrs.getAttributeNames();
-                while (e2.hasMoreElements()) {
-                  Object tt = e2.nextElement();
+                Enumeration<?> ee2 = tagAttrs.getAttributeNames();
+                while (ee2.hasMoreElements()) {
+                  Object tagElem = ee2.nextElement();
                   // If tag has "title" attribute, display value as hover text
-                  if ("title".equals(tt.toString())) {
-                    Object tv = tagAttrs.getAttribute(tt);
-                    editor.setToolTipText((String) tv);
+                  if ("title".equals(tagElem.toString())) {
+                    Object tagVal = tagAttrs.getAttribute(tagElem);
+                    editor.setToolTipText((String) tagVal);
                     return;
                   }
                 }
               }
             }
           }
-          // Display tooltip
-          //String text = ev.getDescription();
-          //editor.setToolTipText(text);
         } else if (eventType == HyperlinkEvent.EventType.EXITED) {
           // Turn off tooltip
           editor.setToolTipText(null);
@@ -462,7 +485,6 @@ class MarkupView extends JPanel {
         }
       }
       try {
-        String[] widths = {"10%", "10%", "4%", "10%", "10%", "10%", "10%", "10%", "10%", "10%", "10%"};
         String markup = new String(Utility.getResource(basePath + link));
         parmMap = Utility.parseParms(parms);
         markup = Utility.replaceTags(markup, parmMap, (name, parm, tags) -> {
@@ -471,8 +493,39 @@ class MarkupView extends JPanel {
             return parm;
           case "TAG":
             return tags.get(parm);
+          case "INT_VECS":
+            // Generate Interrupt Vector Mapping Table
+            MegaTinyIDE.ChipInfo info2 = MegaTinyIDE.getChipInfo(parm);
+            String vecSet = info2.get("vecs");
+            int baseAdd = info2.getInt("fbase");
+            try {
+              Map<String, String> vecs = Utility.getResourceMap("interrupts/vec" + vecSet + ".props");
+              String[] widths = {"5%", "15%", "15%", "65%",};
+              HtmlTable vecTable = new HtmlTable(codeFont.getName(), 13, widths);
+              vecTable.addItem(0, 0, "Vec #");
+              vecTable.addItem(0, 1, "Offset");
+              vecTable.addItem(0, 2, "Address");
+              vecTable.addItem(0, 3, "Peripheral Source");
+              int idx = 0;
+              for (String key : vecs.keySet()) {
+                String val = vecs.get(key).trim();
+                if (val.length() == 0) {
+                  val = "--";
+                }
+                vecTable.addItem(idx + 1, 0, String.format("%d", idx));
+                vecTable.addItem(idx + 1, 1, String.format("0x%04X", (idx * 2)));
+                vecTable.addItem(idx + 1, 2, String.format("0x%04X", (idx * 2 + baseAdd)));
+                vecTable.addItem(idx + 1, 3, val);
+                idx++;
+              }
+              String html = vecTable.getHtmlTable();
+              return html;
+            } catch (IOException ex) {
+              return "INT_VECS tag parameter: unable to generate table";
+            }
           case "BEGIN_REGS":
-            regTable = new HtmlTable(codeFont.getName(), "#606060", widths);
+            String[] widths = {"10%", "15%", "3%", "9%", "9%", "9%", "9%", "9%", "9%", "9%", "9%"};
+            regTable = new HtmlTable(codeFont.getName(), 13, widths);
             regTable.addItem(0, 0, "Address");
             regTable.addItem(0, 1, "Register");
             regTable.addItem(0, 2, "");
@@ -491,19 +544,19 @@ class MarkupView extends JPanel {
           case "REG_ITEM":
             if (parm != null) {
               String[] items = parm.split(",");
-              int dum = 0;
               for (int ii = 0; ii < items.length; ii++) {
-                regTable.addItem(regIndex, ii, items[ii]);
+                String text = items[ii];
+                regTable.addItem(regIndex, ii, text);
               }
             }
             regIndex++;
             return "";
-          case "TABLE":
+          case "MUX_TABLE":
             // Generate table of multiplexed pins
             try {
               if (parm != null && parm.trim().length() > 0) {
                 String pkg = tags.get("PKG").toLowerCase();
-                HtmlTable tbl = new HtmlTable(codeFont.getName(), "#606060", null);
+                HtmlTable tbl = new HtmlTable(codeFont.getName(), 12, null);
                 Map<String,String> mux_pins = Utility.getResourceMap("pins/chip_features.props");
                 Map<String,String> peripherals = Utility.getResourceMap("pins/peripherals.props");
                 String avrChip = mux_pins.get(tags.get("CHIP"));
@@ -514,7 +567,7 @@ class MarkupView extends JPanel {
                   colNames.put(colName, ii);
                   if (peripherals.containsKey(colName)) {
                     String url = peripherals.get(colName);
-                    colName = "<a color = \"white\" href=\"" + url + "\">" + colName + "</a>";
+                    colName = "<a style=\"color:white\" href=\"" + url + "\">" + colName + "</a>";
                   }
                   tbl.addItem(0, ii, colName);
                 }
@@ -548,7 +601,7 @@ class MarkupView extends JPanel {
                 return "Alternate pin configurations available using Port Multiplexer not shown.  See datasheet for details.";
               }
             } catch (IOException ex) {
-              return "TABLE tag parameter: unable to generate table";
+              return "MUX_TABLE tag parameter: unable to generate table";
             }
           case "INFO":
             String[] parts = parm.split("-");
