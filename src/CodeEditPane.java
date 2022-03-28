@@ -63,23 +63,6 @@ class CodeEditPane extends JPanel {
     return synKit.getEditMenu(codePane);
   }
 
-  private void splitPane () {
-    removeAll();
-    docPane = new MarkupView();
-    JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, docPane, codeScrollpane);
-    splitPane.setOneTouchExpandable(true);
-    splitPane.setDividerLocation(0);
-    add(splitPane, BorderLayout.CENTER);
-  }
-
-  void setMarkup (String markup) {
-    if (docPane == null) {
-      docPane = new MarkupView();
-      splitPane();
-    }
-    docPane.setText(markup);
-  }
-
   void setCode (String code) {
     if (docPane != null) {
       docPane = null;

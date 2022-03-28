@@ -10,26 +10,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/resources/interrupts/vec1.props" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/interrupts/vec2.props" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/documentation/examples.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/documentation/examples/and_gate.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/documentation/examples/dac0_sine_wave.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/documentation/examples/read_adc0.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/documentation/examples/real_time_counter.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/documentation/examples/uart_printf.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/documentation/examples/virtual_ports.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.MD" beforeDir="false" afterPath="$PROJECT_DIR$/README.MD" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/OCDTest.c" beforeDir="false" afterPath="$PROJECT_DIR$/examples/OCDTest.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/attinys.props" beforeDir="false" afterPath="$PROJECT_DIR$/resources/attinys.props" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/documentation/index.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/index.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/documentation/peripherals.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/peripherals.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/documentation/pinouts.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/pinouts.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/vecset1.props" beforeDir="false" afterPath="$PROJECT_DIR$/resources/interrupts/vec4.props" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/vecset2.props" beforeDir="false" afterPath="$PROJECT_DIR$/resources/interrupts/vec5.props" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/vecset3.props" beforeDir="false" afterPath="$PROJECT_DIR$/resources/interrupts/vec6.props" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/vecset4.props" beforeDir="false" afterPath="$PROJECT_DIR$/resources/interrupts/vec3.props" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/vecset5.props" beforeDir="false" afterPath="$PROJECT_DIR$/resources/interrupts/vec7.props" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/vecset6.props" beforeDir="false" afterPath="$PROJECT_DIR$/resources/interrupts/vec8.props" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/vecset7.props" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/version.props" beforeDir="false" afterPath="$PROJECT_DIR$/resources/version.props" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ListingPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ListingPane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/toolchains/combined.zip" beforeDir="false" afterPath="$PROJECT_DIR$/resources/toolchains/combined.zip" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/CodeEditPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/CodeEditPane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Diagrams.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Diagrams.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/MarkupView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MarkupView.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/MegaTinyIDE.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MegaTinyIDE.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Utility.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Utility.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,11 +74,11 @@
       <recent name="Utility" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/resources/interrupts" />
+      <recent name="$PROJECT_DIR$/docs/UPDI 3rd party programmers/microUPDIcore" />
+      <recent name="$PROJECT_DIR$/docs/UPDI 3rd party programmers" />
       <recent name="$PROJECT_DIR$/resources/documentation" />
+      <recent name="$PROJECT_DIR$/resources/interrupts" />
       <recent name="$PROJECT_DIR$/resources/pins" />
-      <recent name="$PROJECT_DIR$/docs" />
-      <recent name="$PROJECT_DIR$/examples" />
     </key>
     <key name="ExtractSuperBase.RECENT_KEYS">
       <recent name="" />
@@ -94,7 +93,7 @@
       <recent name="tools" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.MegaTinyIDE">
+  <component name="RunManager" selected="Application.NativeBuilder">
     <configuration name="MegaTinyIDE" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="MegaTinyIDE" />
       <module name="MegaTinyIDE" />
@@ -109,13 +108,22 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="ToolchainCombiner" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="ToolchainCombiner" />
+      <module name="ToolBuilder" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <list>
       <item itemvalue="Application.MegaTinyIDE" />
       <item itemvalue="Application.NativeBuilder" />
+      <item itemvalue="Application.ToolchainCombiner" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.NativeBuilder" />
+        <item itemvalue="Application.ToolchainCombiner" />
         <item itemvalue="Application.MegaTinyIDE" />
       </list>
     </recent_temporary>
@@ -128,13 +136,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1596315993204</updated>
-    </task>
-    <task id="LOCAL-00075" summary="Misc code cleanup">
-      <created>1607292669308</created>
-      <option name="number" value="00075" />
-      <option name="presentableId" value="LOCAL-00075" />
-      <option name="project" value="LOCAL" />
-      <updated>1607292669308</updated>
     </task>
     <task id="LOCAL-00076" summary="Rework debugger interface">
       <created>1607376592717</created>
@@ -472,7 +473,14 @@
       <option name="project" value="LOCAL" />
       <updated>1645580324684</updated>
     </task>
-    <option name="localTasksCounter" value="124" />
+    <task id="LOCAL-00124" summary="Bug and Documentation fixes and enhancements">
+      <created>1645751882184</created>
+      <option name="number" value="00124" />
+      <option name="presentableId" value="LOCAL-00124" />
+      <option name="project" value="LOCAL" />
+      <updated>1645751882184</updated>
+    </task>
+    <option name="localTasksCounter" value="125" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -499,7 +507,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Misc code cleanup" />
     <MESSAGE value="Rework debugger interface" />
     <MESSAGE value="Misc updates" />
     <MESSAGE value="Revise preprocessor step in compile" />
@@ -524,7 +531,8 @@
     <MESSAGE value="Fixed another cosmetic regression" />
     <MESSAGE value="Fixed build process (versions 1.0.1 - 1.0.4 have incorrect jar file)" />
     <MESSAGE value="Added document table for multiplexed pins and peripheral address map" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added document table for multiplexed pins and peripheral address map" />
+    <MESSAGE value="Bug and Documentation fixes and enhancements" />
+    <option name="LAST_COMMIT_MESSAGE" value="Bug and Documentation fixes and enhancements" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -535,22 +543,12 @@
           <option name="timeStamp" value="72" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/MarkupView.java</url>
-          <line>511</line>
-          <option name="timeStamp" value="89" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/MegaTinyIDE.java</url>
-          <line>976</line>
+          <line>984</line>
           <properties>
             <option name="lambda-ordinal" value="1" />
           </properties>
           <option name="timeStamp" value="92" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/MegaTinyIDE.java</url>
-          <line>1325</line>
-          <option name="timeStamp" value="95" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

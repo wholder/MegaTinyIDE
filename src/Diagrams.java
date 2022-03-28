@@ -84,7 +84,7 @@ public class Diagrams {
   public static void main (String[] args) {
     Preferences prefs = Preferences.userRoot().node(MarkupView.class.getName());
     JFrame frame = new JFrame();
-    MarkupView mView = new MarkupView();
+    MarkupView mView = new MarkupView(null);
     mView.setText("<p align=\"center\"><img src=\"bitfield:7:4:FIFO_CTRL:RW,3:3:XXXX:RO,2:2,1:0:YYYYY:WO\"></p>");
     frame.add(mView, BorderLayout.CENTER);
     frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);

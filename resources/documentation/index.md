@@ -1,23 +1,24 @@
 <p align="center"><img src="/images/MegaTinyIDE.png"></p>
 
-#### [Introducing MegaTinyIDE](ideintro.md)
-   + [Linux Users - Please Read](linux.md)
-   + [Troubleshooting](trouble.md)
+#### [Introducing MegaTinyIDE](documentation/ideintro.md)
+   + [Linux Users - Please Read](documentation/linux.md)
+   + [Troubleshooting](documentation/trouble.md)
    
 #### Special Features
-   + [Pragmas](pragmas.md)
-   + [Using the Debugger](debugging.md)
-   + [OCD Messaging](ocdmsg.md)
-   + [Debugging ELF files](elfdebug.md)
-   + [I/O Memory Table](peripherals.md)
+   + [Pragmas](documentation/pragmas.md)
+   + [Using the Debugger](documentation/debugging.md)
+   + [OCD Messaging](documentation/ocdmsg.md)
+   + [Debugging ELF files](documentation/elfdebug.md)
+   + [I/O Memory Addresses](documentation/peripherals.md)
+   *[DEV:+ [Example Code](documentation/examples.md)]*
 
-#### [Compatible Programmers/Debuggers & Development Boards](programmers.md)
-   + [Atmel-ICE](programmers.md#Atmel-ICE)
-   + [PICKit-4](programmers.md#PICKit-4)
-   + [MPLAB Snap](programmers.md#Snap)
-   + [ATTiny3217-Curiosity-Nano](programmers.md#3217Nano)
-   + [ATTiny817-Xplained-Mini](programmers.md#817Mini)
-   + [ATTiny416-Xplained-Nano](programmers.md#416Nano)
+#### [Compatible Programmers/Debuggers & Development Boards](documentation/programmers.md)
+   + [Atmel-ICE](documentation/programmers.md#Atmel-ICE)
+   + [PICKit-4](documentation/programmers.md#PICKit-4)
+   + [MPLAB Snap](documentation/programmers.md#Snap)
+   + [ATTiny3217-Curiosity-Nano]documentation/(programmers.md#3217Nano)
+   + [ATTiny817-Xplained-Mini](documentation/programmers.md#817Mini)
+   + [ATTiny416-Xplained-Nano](documentation/programmers.md#416Nano)
 
 #### Pinout Guides
 <table>

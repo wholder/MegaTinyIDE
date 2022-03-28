@@ -19,10 +19,8 @@ import java.util.stream.Stream;
 import java.util.zip.CRC32;
 
 class Utility {
-  private static final String   StartMarker = "//:Begin Embedded Markdown Data (do not edit)";
-  private static final String   EndMarker   = "\n//:End Embedded Markdown Data";
   private static final String   fileSep =  System.getProperty("file.separator");
-  private static final Pattern  pat1 = Pattern.compile("(\\*\\[(.*?)]\\*)");
+  private static final Pattern  pat1 = Pattern.compile("(\\*\\[(.*?)]\\*)", Pattern.DOTALL | Pattern.MULTILINE);
 
   static String createDir (String path) throws IOException {
     File base = (new File(path));
@@ -88,6 +86,21 @@ class Utility {
       lastTab = isTab;
     }
     return tmp.toString();
+  }
+
+  public static String escapeHTML (String s) {
+    StringBuilder out = new StringBuilder(Math.max(16, s.length()));
+    for (int i = 0; i < s.length(); i++) {
+      char c = s.charAt(i);
+      if (c > 127 || c == '"' || c == '\'' || c == '<' || c == '>' || c == '&') {
+        out.append("&#");
+        out.append((int) c);
+        out.append(';');
+      } else {
+        out.append(c);
+      }
+    }
+    return out.toString();
   }
 
   static void copyFile (File src, String dest) throws IOException {
@@ -261,10 +274,10 @@ class Utility {
         tag = replaceTags(tag, tags, callback);
       }
       String parm = null;
-      String[] parts = tag.split(":");
-      if (parts.length > 1) {
-        tag = parts[0];
-        parm = parts[1];
+      int idx = tag.indexOf(':');
+      if (idx > 0) {
+        parm = tag.substring((idx + 1));
+        tag = tag.substring(0, idx);
       }
       String rep = tags.get(tag);
       if (rep != null) {
@@ -381,43 +394,6 @@ class Utility {
       }
     }
     return dependencies;
-  }
-
-  /**
-   * Scans input code for a comment block containing encoded markdown text and, if present, extracts and
-   * decodes it along with the source code (minus the comment block)
-   * @param src input source code with optional encoded and embedded comment block
-   * @return String[] array of length 1 of no embedded markdown, else String[] of length 2 where first
-   * element in the array if the source code (minus the block comment) and the 2nd element is the extracted
-   * and decoded markdown text.
-   */
-  static String[] decodeMarkdown (String src) {
-    try {
-      List<String> list = new ArrayList<>();
-      int idx1 = src.indexOf(StartMarker);
-      int idx2 = src.indexOf(EndMarker);
-      if (idx1 >= 0 && idx2 > idx1) {
-        list.add(src.substring(0, idx1) + src.substring(idx2 + EndMarker.length()));
-        String tmp = src.substring(idx1 + StartMarker.length(), idx2);
-        StringTokenizer tok = new StringTokenizer(tmp, "\n");
-        StringBuilder buf = new StringBuilder();
-        while (tok.hasMoreElements()) {
-          String line = (String) tok.nextElement();
-          if (line.startsWith("//:") && line.length() == 128 + 3) {
-            buf.append(line.substring(3));
-          }
-        }
-        tmp = new String(Base64.getDecoder().decode(buf.toString()), StandardCharsets.UTF_8);
-        tmp = URLDecoder.decode(tmp, "utf8");
-        list.add(tmp);
-      } else {
-        list.add(src);
-      }
-      return list.toArray(new String[0]);
-    } catch (UnsupportedEncodingException ex) {
-      ex.printStackTrace();
-      return new String[] {src};
-    }
   }
 
   /**

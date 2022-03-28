@@ -79,7 +79,8 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
   private String                  progVidPid;
   private String                  avrChip;
   private String                  editFile;
-  private boolean                 directHex, compiled, codeDirty, showDebugger;
+  private boolean                 compiled, codeDirty, showDebugger;
+  boolean                         directHex;
   private File                    cFile;
   private Map<String, String>     compileMap;
   private Map<String, String>     versionInfo;
@@ -117,6 +118,16 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     progFlash.setEnabled(!active);
     readFuses.setEnabled(!active);
     progMenu.setEnabled(!active);
+  }
+
+  void setSource (String src) {
+    if (codePane.getText().length() == 0 || discardChanges()) {
+      codePane.setCode(src);
+      setDirtyIndicator(false);
+      directHex = false;
+      selectTab(MegaTinyIDE.Tab.SRC);
+      saveMenu.setEnabled(true);
+    }
   }
 
   public boolean decodeUpdi () {
@@ -379,7 +390,8 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     tabPane.setSelectedIndex(tab.num);
   }
 
-  private void setDirtyIndicator (boolean dirty) {
+  void setDirtyIndicator (boolean dirty) {
+    codeDirty = dirty;
     this.setTitle("MegaTinyIDE: " + (editFile != null ? editFile : "") + (dirty ? " [unsaved]" : ""));
   }
 
@@ -448,13 +460,13 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     add("Center", tabPane);
     codePane = new CodeEditPane(prefs);
     codePane.setCodeChangeListener(() -> {
-      setDirtyIndicator(codeDirty = true);
+      setDirtyIndicator(true);
       updateChip(codePane.getText());
       compiled = false;
       listPane.setForeground(Color.red);
       hexPane.setForeground(Color.red);
     });
-    MarkupView howToPane = new MarkupView("documentation/index.md");
+    MarkupView howToPane = new MarkupView(this, "documentation/index.md");
     tabPane.addTab("How To", null, howToPane, "This is the documentation page");
     tabPane.addTab("Source Code", null, codePane, "This is the editor pane where you enter source code");
     listPane = new ListingPane(tabPane, "Listing", "Select this pane to view the assembler listing", this, prefs);
@@ -559,7 +571,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
           directHex = false;
           compiled = false;
           editFile = null;
-          setDirtyIndicator(codeDirty = false);
+          setDirtyIndicator(false);
           selectTab(Tab.SRC);
           cFile = null;
         }
@@ -574,7 +586,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
           directHex = false;
           compiled = false;
           editFile = null;
-          setDirtyIndicator(codeDirty = false);
+          setDirtyIndicator(false);
           selectTab(Tab.SRC);
           cFile = null;
         }
@@ -588,7 +600,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
           directHex = false;
           compiled = false;
           editFile = null;
-          setDirtyIndicator(codeDirty = false);
+          setDirtyIndicator(false);
           selectTab(Tab.SRC);
           cFile = null;
         }
@@ -610,14 +622,10 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
             String src = Utility.getFile(oFile);
             cFile = oFile;
             codePane.setForeground(Color.black);
-            String[] tmp = Utility.decodeMarkdown(src);
-            codePane.setCode(tmp[0]);
-            if (tmp.length > 1) {
-              codePane.setMarkup(tmp[1]);
-            }
+            codePane.setCode(src);
             editFile = oFile.getAbsolutePath();
             prefs.put("default.dir", oFile.getParent());
-            setDirtyIndicator(codeDirty = false);
+            setDirtyIndicator(false);
             directHex = false;
             selectTab(Tab.SRC);
             saveMenu.setEnabled(true);
@@ -632,7 +640,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     saveMenu.setEnabled(false);
     saveMenu.addActionListener(e -> {
       Utility.saveFile(cFile, codePane.getText());
-      setDirtyIndicator(codeDirty = false);
+      setDirtyIndicator(false);
     });
     fileMenu.add(saveAsMenu);
     saveAsMenu.addActionListener(e -> {

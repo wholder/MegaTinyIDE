@@ -109,7 +109,7 @@
 *[REG_ITEM:0x0122,STATUS,-,-,-,-,-,-,-,OK[CRC OK],BUSY[CRC Busy]]*
 *[END_REGS]*
 
-## RTC - Real-Time Counter
+## RTC - Real-Time Counter<a name='RTC'></a>
 *[BEGIN_REGS]*
 *[REG_ITEM:0x0140,CTRLA,-,RUNSTDBY[Run in Standby],4|PRESCALER[Prescaler],-,-,RTCEN[RTC Peripheral Enable]]*
 *[REG_ITEM:0x0141,STATUS,-,-,-,-,-,CMPBUSY[Compare Synchronization Busy],PERBUSY[Period Synchronization Busy],CNTBUSY[Counter Synchronization Busy],CTRLABUSY[Control A Synchronization Busy]]*
@@ -126,7 +126,7 @@
 *[REG_ITEM:0x014C,CMP,-,8|CMP(7-0)[Compare Low Byte]]*
 *[REG_ITEM:0x014D,CMP,-,8|CMP(15-8)[Compare High Byte]]*
 *[REG_ITEM:0x014E-0F,reserved,-,-,-,-,-,-,-,-,-]*
-*[REG_ITEM:0x0150,PITCTRLA,-,-,PERIOD[Period],-,-,PITEN[Periodic Interrupt Timer Enable]]*
+*[REG_ITEM:0x0150,PITCTRLA,-,-,4|PERIOD[Period],-,-,PITEN[Periodic Interrupt Timer Enable]]*
 *[REG_ITEM:0x0151,PITSTATUS,-,-,-,-,-,-,-,-,CTRLBUSY[PITCTRLA Synchronization Busy]]*
 *[REG_ITEM:0x0152,PITINTCTRL,-,-,-,-,-,-,-,-,PI[Periodic Interrupt]]*
 *[REG_ITEM:0x0153,PITINTFLAGS,-,-,-,-,-,-,-,-,PI[Periodic Interrupt Flag]]*
@@ -187,7 +187,7 @@
 *[REG_ITEM:0x0203,CTRLD,-,-,-,-,-,-,-,TCB1[TCB1 Output],TCB0[TCB0 Output]]*
 *[END_REGS]*
 
-## PORTA - I/O Pin Configuration
+## PORTA - I/O Pin Configuration<a name='PORTA'></a>
 *[BEGIN_REGS]*
 *[REG_ITEM:0x400,DIR,-,8|DIR(7-0)[Data Direction]]*
 *[REG_ITEM:0x401,DIRSET,-,,8|DIRSET(7-0)[Data Direction Set]]*
