@@ -9,26 +9,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/resources/documentation/examples.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/documentation/examples/and_gate.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/documentation/examples/dac0_sine_wave.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/documentation/examples/read_adc0.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/documentation/examples/real_time_counter.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/documentation/examples/uart_printf.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/documentation/examples/virtual_ports.md" afterDir="false" />
+    <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="Update version number to 1.0.8">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.MD" beforeDir="false" afterPath="$PROJECT_DIR$/README.MD" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/examples/OCDTest.c" beforeDir="false" afterPath="$PROJECT_DIR$/examples/OCDTest.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/documentation/index.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/index.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/documentation/peripherals.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/peripherals.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/toolchains/combined.zip" beforeDir="false" afterPath="$PROJECT_DIR$/resources/toolchains/combined.zip" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/CodeEditPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/CodeEditPane.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Diagrams.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Diagrams.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MarkupView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MarkupView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MegaTinyIDE.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MegaTinyIDE.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Utility.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Utility.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/version.props" beforeDir="false" afterPath="$PROJECT_DIR$/resources/version.props" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -123,8 +110,8 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.NativeBuilder" />
-        <item itemvalue="Application.ToolchainCombiner" />
         <item itemvalue="Application.MegaTinyIDE" />
+        <item itemvalue="Application.ToolchainCombiner" />
       </list>
     </recent_temporary>
   </component>
@@ -136,13 +123,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1596315993204</updated>
-    </task>
-    <task id="LOCAL-00076" summary="Rework debugger interface">
-      <created>1607376592717</created>
-      <option name="number" value="00076" />
-      <option name="presentableId" value="LOCAL-00076" />
-      <option name="project" value="LOCAL" />
-      <updated>1607376592717</updated>
     </task>
     <task id="LOCAL-00077" summary="Rework debugger interface">
       <created>1607381639884</created>
@@ -480,7 +460,14 @@
       <option name="project" value="LOCAL" />
       <updated>1645751882184</updated>
     </task>
-    <option name="localTasksCounter" value="125" />
+    <task id="LOCAL-00125" summary="Regression fix for linux version and misc updates">
+      <created>1648444553593</created>
+      <option name="number" value="00125" />
+      <option name="presentableId" value="LOCAL-00125" />
+      <option name="project" value="LOCAL" />
+      <updated>1648444553593</updated>
+    </task>
+    <option name="localTasksCounter" value="126" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -507,7 +494,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Rework debugger interface" />
     <MESSAGE value="Misc updates" />
     <MESSAGE value="Revise preprocessor step in compile" />
     <MESSAGE value="Revise Settings Menu" />
@@ -532,7 +518,8 @@
     <MESSAGE value="Fixed build process (versions 1.0.1 - 1.0.4 have incorrect jar file)" />
     <MESSAGE value="Added document table for multiplexed pins and peripheral address map" />
     <MESSAGE value="Bug and Documentation fixes and enhancements" />
-    <option name="LAST_COMMIT_MESSAGE" value="Bug and Documentation fixes and enhancements" />
+    <MESSAGE value="Regression fix for linux version and misc updates" />
+    <option name="LAST_COMMIT_MESSAGE" value="Regression fix for linux version and misc updates" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -4,13 +4,6 @@
 #pragma chip 	attiny212
 #pragma clock 20 MHz
 
-//            +----------+
-//				Vdd | 1   	 8 | Gnd					PORTA |7|6|-|-|3|2|1|0|
-//    		PA6 | 2   	 7 | PA3/CLK
-//    		PA7 | 3   	 6 | PA0/UPDI/RESET
-//    		PA1 | 4   	 5 | PA2
-//            +----------+
-
 #define SYSCFG_OCDM     _SFR_IO8(0x0F18)    // Message port
 #define SYSCFG_OCDMS    _SFR_IO8(0x0F19)    // Status Port (bit 0 is HIGH while busy)
 

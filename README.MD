@@ -51,7 +51,8 @@ While more testing is needed, I am declaring the code as operational (Beta statu
     - 1.0.5 - Fixed build process (builds 1.0.1 - 1.0.4 did not package proper jar file)
     - 1.0.6 - Added document table for multiplexed pins and peripheral address map
     - 1.0.7 - Bug and Documentation fixes and enhancements
-    - 1.0.8 - Added way to display code examples with documentation
+    - 1.0.8 - Regression fix for #include problem in Linux version
+    - 1.0.9 - Added code examples embedded in markup-type documentation
 
 ### Debugging Interface
 

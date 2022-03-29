@@ -10,7 +10,7 @@
    + [OCD Messaging](documentation/ocdmsg.md)
    + [Debugging ELF files](documentation/elfdebug.md)
    + [I/O Memory Addresses](documentation/peripherals.md)
-   *[DEV:+ [Example Code](documentation/examples.md)]*
+   + [Example Code](documentation/examples.md)
 
 #### [Compatible Programmers/Debuggers & Development Boards](documentation/programmers.md)
    + [Atmel-ICE](documentation/programmers.md#Atmel-ICE)
