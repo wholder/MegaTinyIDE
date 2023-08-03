@@ -2,12 +2,11 @@
 
 #### [Introducing MegaTinyIDE](documentation/ideintro.md)
    + [Linux Users - Please Read](documentation/linux.md)
-   + [Troubleshooting](documentation/trouble.md)
+ [examples](..%2F..%2Fexamples)  + [Troubleshooting](documentation/trouble.md)
    
 #### Special Features
    + [Pragmas](documentation/pragmas.md)
    + [Using the Debugger](documentation/debugging.md)
-   + [OCD Messaging](documentation/ocdmsg.md)
    + [Debugging ELF files](documentation/elfdebug.md)
    + [I/O Memory Addresses](documentation/peripherals.md)
    + [Example Code](documentation/examples.md)
@@ -16,7 +15,7 @@
    + [Atmel-ICE](documentation/programmers.md#Atmel-ICE)
    + [PICKit-4](documentation/programmers.md#PICKit-4)
    + [MPLAB Snap](documentation/programmers.md#Snap)
-   + [ATTiny3217-Curiosity-Nano]documentation/(programmers.md#3217Nano)
+   + [ATTiny3217-Curiosity-Nano](documentation/programmers.md#3217Nano)
    + [ATTiny817-Xplained-Mini](documentation/programmers.md#817Mini)
    + [ATTiny416-Xplained-Nano](documentation/programmers.md#416Nano)
 

@@ -550,8 +550,8 @@ class MarkupView extends JPanel {
             buf2.append("</pre>\n");
             return buf2.toString();
           case "DEV":
-            // Conditional tag for my use only
-            if ("wholder".equals(System.getProperty("user.name"))) {
+            // Conditional tag for developer (me) use only.  Usage: *[DEV:dev feature markup]*
+            if (MegaTinyIDE.isDeveloper()) {
               return parm;
             }
             return "";

@@ -130,6 +130,10 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     }
   }
 
+  public static boolean isDeveloper () {
+    return "wholder".equals(System.getProperty("user.name"));
+  }
+
   public boolean decodeUpdi () {
     return prefs.getBoolean("decode_updi", false);
   }

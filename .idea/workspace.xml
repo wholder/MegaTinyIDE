@@ -9,13 +9,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="Update version number to 1.0.8">
+    <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="Version 1.0.9: Added code examples embedded in markup-type documentation">
+      <change afterPath="$PROJECT_DIR$/resources/documentation/examples/ocdmessaging.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.MD" beforeDir="false" afterPath="$PROJECT_DIR$/README.MD" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/OCDTest.c" beforeDir="false" afterPath="$PROJECT_DIR$/examples/OCDTest.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/OCDTest.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/documentation/examples.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/examples.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/documentation/index.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/index.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/version.props" beforeDir="false" afterPath="$PROJECT_DIR$/resources/version.props" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/FusePane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/FusePane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MarkupView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MarkupView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MegaTinyIDE.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MegaTinyIDE.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,20 +44,15 @@
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/images" />
-    <property name="project.structure.last.edited" value="Artifacts" />
-    <property name="project.structure.proportion" value="0.15" />
-    <property name="project.structure.side.proportion" value="0.2" />
-    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.ChangelistConflict" />
-    <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/src/StatusPane.java" />
-    <property name="two.files.diff.last.used.folder" value="$PROJECT_DIR$/toolchains-7.3.0/avr-gcc-7.3.0-atmel3.6.1-arduino5-x86_64-apple-darwin14/avr" />
-  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;last_opened_file_path&quot;: &quot;/Users/wholder/IdeaProjects/MegaTinyIDE/docs&quot;
+  }
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/docs" />
+      <recent name="$PROJECT_DIR$/resources/documentation/examples/images" />
       <recent name="$PROJECT_DIR$/images" />
       <recent name="$PROJECT_DIR$/resources/test" />
     </key>
@@ -61,11 +60,11 @@
       <recent name="Utility" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/docs" />
       <recent name="$PROJECT_DIR$/docs/UPDI 3rd party programmers/microUPDIcore" />
       <recent name="$PROJECT_DIR$/docs/UPDI 3rd party programmers" />
       <recent name="$PROJECT_DIR$/resources/documentation" />
       <recent name="$PROJECT_DIR$/resources/interrupts" />
-      <recent name="$PROJECT_DIR$/resources/pins" />
     </key>
     <key name="ExtractSuperBase.RECENT_KEYS">
       <recent name="" />
@@ -81,6 +80,27 @@
     </key>
   </component>
   <component name="RunManager" selected="Application.NativeBuilder">
+    <configuration name="FusePane" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="FusePane" />
+      <module name="MegaTinyIDE" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="GraphPaperLayout" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="GraphPaperLayout" />
+      <module name="MegaTinyIDE" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="HexEditPane" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="HexEditPane" />
+      <module name="MegaTinyIDE" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="MegaTinyIDE" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="MegaTinyIDE" />
       <module name="MegaTinyIDE" />
@@ -95,23 +115,20 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ToolchainCombiner" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="ToolchainCombiner" />
-      <module name="ToolBuilder" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <list>
-      <item itemvalue="Application.MegaTinyIDE" />
       <item itemvalue="Application.NativeBuilder" />
-      <item itemvalue="Application.ToolchainCombiner" />
+      <item itemvalue="Application.GraphPaperLayout" />
+      <item itemvalue="Application.HexEditPane" />
+      <item itemvalue="Application.FusePane" />
+      <item itemvalue="Application.MegaTinyIDE" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.NativeBuilder" />
         <item itemvalue="Application.MegaTinyIDE" />
-        <item itemvalue="Application.ToolchainCombiner" />
+        <item itemvalue="Application.HexEditPane" />
+        <item itemvalue="Application.GraphPaperLayout" />
+        <item itemvalue="Application.FusePane" />
       </list>
     </recent_temporary>
   </component>
@@ -123,13 +140,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1596315993204</updated>
-    </task>
-    <task id="LOCAL-00077" summary="Rework debugger interface">
-      <created>1607381639884</created>
-      <option name="number" value="00077" />
-      <option name="presentableId" value="LOCAL-00077" />
-      <option name="project" value="LOCAL" />
-      <updated>1607381639884</updated>
     </task>
     <task id="LOCAL-00078" summary="Rework debugger interface">
       <created>1607381675077</created>
@@ -467,7 +477,14 @@
       <option name="project" value="LOCAL" />
       <updated>1648444553593</updated>
     </task>
-    <option name="localTasksCounter" value="126" />
+    <task id="LOCAL-00126" summary="Version 1.0.9: Added code examples embedded in markup-type documentation">
+      <created>1648522232986</created>
+      <option name="number" value="00126" />
+      <option name="presentableId" value="LOCAL-00126" />
+      <option name="project" value="LOCAL" />
+      <updated>1648522232986</updated>
+    </task>
+    <option name="localTasksCounter" value="127" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -494,7 +511,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Misc updates" />
     <MESSAGE value="Revise preprocessor step in compile" />
     <MESSAGE value="Revise Settings Menu" />
     <MESSAGE value="Revert to jssc-2-8.0" />
@@ -519,7 +535,8 @@
     <MESSAGE value="Added document table for multiplexed pins and peripheral address map" />
     <MESSAGE value="Bug and Documentation fixes and enhancements" />
     <MESSAGE value="Regression fix for linux version and misc updates" />
-    <option name="LAST_COMMIT_MESSAGE" value="Regression fix for linux version and misc updates" />
+    <MESSAGE value="Version 1.0.9: Added code examples embedded in markup-type documentation" />
+    <option name="LAST_COMMIT_MESSAGE" value="Version 1.0.9: Added code examples embedded in markup-type documentation" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -531,7 +548,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/MegaTinyIDE.java</url>
-          <line>984</line>
+          <line>988</line>
           <properties>
             <option name="lambda-ordinal" value="1" />
           </properties>
@@ -542,7 +559,7 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/MegaTinyIDE$BinFileCompare.ic" NAME="BinFileCompare Coverage Results" MODIFIED="1601853378592" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
-    <SUITE FILE_PATH="coverage/MegaTinyIDE$MegaTinyIDE.ic" NAME="MegaTinyIDE Coverage Results" MODIFIED="1602453257039" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/MegaTinyIDE$ElfDump.ic" NAME="ElfDump Coverage Results" MODIFIED="1631841301760" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/MegaTinyIDE$MegaTinyIDE.ic" NAME="MegaTinyIDE Coverage Results" MODIFIED="1602453257039" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>

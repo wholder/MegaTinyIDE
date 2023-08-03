@@ -162,6 +162,9 @@ public class FusePane extends JPanel {
     return comps.get(name).hasChanged();
   }
 
+  //    0     1     2     3     4     5     6     7     8     9    A
+  // 0xFF, 0xFF, 0x83, 0x00, 0xFF, 0xDD, 0x07, 0xFF, 0xFF, 0x00, 0x00
+
   public boolean hasChanged (int offset) {
     return (priorVals[offset] & usedBitMasks[offset]) != (getFuse(offset) & usedBitMasks[offset]);
   }
@@ -170,47 +173,53 @@ public class FusePane extends JPanel {
     priorVals[offset] = value;
     switch (offset) {
     case 0x00:    // WDTCFG - Watchdog Configuration
-      setFieldValue("WINDOW",     (value >> 4) & 0x0F);
-      setFieldValue("PERIOD",     value & 0x0F);
+      setFieldValue("WINDOW",     (value >> 4) & 0x0F);       // Mask - 0xF0
+      setFieldValue("PERIOD",     value & 0x0F);              // Mask = 0x0F
+                                                              // ORed = 0xFF
       break;
     case 0x01:    // BODCFG - Brown Out Detector Configuration
-      setFieldValue("LVL",        (value >> 5) & 0x07);
-      setFieldValue("SAMPFREQ",   (value >> 4) & 0x01);
-      setFieldValue("ACTIVE",     (value >> 2) & 0x03);
-      setFieldValue("SLEEP",      value & 0x03);
+      setFieldValue("LVL",        (value >> 5) & 0x07);       // Mask = 0xE0
+      setFieldValue("SAMPFREQ",   (value >> 4) & 0x01);       // Mask = 0x10
+      setFieldValue("ACTIVE",     (value >> 2) & 0x03);;      // Mask = 0x0C
+      setFieldValue("SLEEP",      value & 0x03);;             // Mask = 0x03
+                                                              // ORed = 0xFF
       break;
     case 0x02:    // OSCCFG - Oscillator Configuration
-      setFieldValue("OSCLOCK",    (value >> 7) & 0x01);
-      setFieldValue("FREQSEL",    value & 0x03);
+      setFieldValue("OSCLOCK",    (value >> 7) & 0x01);       // Mask = 0x80
+      setFieldValue("FREQSEL",    value & 0x03);              // Mask = 0x03
+                                                              // ORed = 0x83
       break;
     case 0x04:    // Timer Counter Type D Configuration
-      setFieldValue("CMPDEN",     (value >> 7) & 0x01);
-      setFieldValue("CMPCEN",     (value >> 6) & 0x01);
-      setFieldValue("CMPBEN",     (value >> 5) & 0x01);
-      setFieldValue("CMPAEN",     (value >> 4) & 0x01);
-      setFieldValue("CMPD",       (value >> 3) & 0x01);
-      setFieldValue("CMPC",       (value >> 2) & 0x01);
-      setFieldValue("CMPB",       (value >> 3) & 0x01);
-      setFieldValue("CMPA",       value & 0x01);
+      setFieldValue("CMPDEN",     (value >> 7) & 0x01);       // Mask = 0x80
+      setFieldValue("CMPCEN",     (value >> 6) & 0x01);       // Mask = 0x40
+      setFieldValue("CMPBEN",     (value >> 5) & 0x01);       // Mask = 0x20
+      setFieldValue("CMPAEN",     (value >> 4) & 0x01);       // Mask = 0x10
+      setFieldValue("CMPD",       (value >> 3) & 0x01);       // Mask = 0x08
+      setFieldValue("CMPC",       (value >> 2) & 0x01);       // Mask = 0x04
+      setFieldValue("CMPB",       (value >> 1) & 0x01);       // Mask = 0x02
+      setFieldValue("CMPA",       value & 0x01);              // Mask = 0x01
+                                                              // ORed = 0xFF
       break;
     case 0x05:    // SYSCFG0 - System Configuration 0
-      setFieldValue("CRCSRC",     (value >> 6) & 0x03);
-      setFieldValue("TOUTDIS",    (value >> 4) & 0x01);
-      setFieldValue("RSTPINCFG",  (value >> 2) & 0x03);
-      setFieldValue("EESAVE",     value & 0x01);
+      setFieldValue("CRCSRC",     (value >> 6) & 0x03);       //  Mask = 0xC0
+      setFieldValue("TOUTDIS",    (value >> 4) & 0x01);       //  Mask = 0x10
+      setFieldValue("RSTPINCFG",  (value >> 2) & 0x03);       //  Mask = 0x0C
+      setFieldValue("EESAVE",     value & 0x01);              //  Mask = 0x01
+                                                              //  ORed = 0xDD
       break;
     case 0x06:    // SYSCFG1 - System Configuration 1
-      setFieldValue("SUT",        value & 0x07);
+      setFieldValue("SUT",        value & 0x07);              // Mask = 0x07
+                                                              // ORed = 0x07
       break;
     case 0x07:    // APPEND - Application Code End
-      appEnd = value;
+      appEnd = value;                                         // Mask = 0xFF
       updateBootApp();
       break;
     case 0x08:    // BOOTEND - Boot End
-      bootEnd = value;
+      bootEnd = value;                                         // Mask = 0xFF
       break;
     case 0x0A:    // LOCKBIT - Lockbits
-      break;
+      break;                                                  // Mask = 0x00
     default:
       throw new IllegalStateException("Invalid fuse offset " + offset);
     }

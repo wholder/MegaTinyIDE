@@ -6,3 +6,4 @@
   - [DAC0 Sine Wave](documentation/examples/dac0_sine_wave.md) - Generate a 50 Hz Sine Wave to the DAC0's output
   - [UART0 printf()](documentation/examples/uart_printf.md) - Use printf() to print a string using UART0's TXD output
   - [3 Input AND Gate](documentation/examples/and_gate.md) - Implements a 3-input AND gate using the Configurable Custom Logic (CCL)
+  - [OCD Messaging](documentation/examples/ocdmessaging.md) - Shows how to use OCD Messaging to print a string
