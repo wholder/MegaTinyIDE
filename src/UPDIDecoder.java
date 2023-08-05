@@ -285,7 +285,7 @@ public class UPDIDecoder {
             data = new byte[8];
           }
           for (int ii = 0; ii < data.length; ii++) {
-            data[ii] = (byte) read(bin);;
+            data[ii] = (byte) read(bin);
           }
           for (byte cc : data) {
             out.printf("0x%02X ", ((int) cc & 0xFF));

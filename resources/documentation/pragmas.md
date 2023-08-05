@@ -38,7 +38,7 @@ However, unlike the `clock` pragma, only a numeric value (without commas and in 
 
 <p align="center"><img src="images/parms.png"></p>
 
-The `parm` pragma is used to dynamically create a pop up GUI that appears when the "Build" option is invoked which you can use to prompt for various compile time options.  For example, the follow `parm` pragma will prompt you to select from one of 5 values (1-5) with the default value of 2 being preselected:
+The `parm` pragma is used to dynamically create a pop up GUI that appears when the "Build" option is invoked.  You can use this feature to prompt for various compile time options.  For example, the following `parm` pragma will prompt you to select from one of 5 values (1-5) with the default value of 2 being preselected:
 
     #pragma parm (BIT:1:2:3:4:5, 2)
 

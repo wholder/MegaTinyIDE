@@ -7,7 +7,6 @@ import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.*;
@@ -146,7 +145,7 @@ class Utility {
     if (file.startsWith("res:")) {
       fis = Utility.class.getClassLoader().getResourceAsStream(file.substring(4));
     } else {
-      fis = new FileInputStream(file);
+      fis = Files.newInputStream(Paths.get(file));
     }
     if (fis != null) {
       byte[] data = new byte[fis.available()];

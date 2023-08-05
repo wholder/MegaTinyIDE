@@ -94,7 +94,7 @@ class CodeEditPane extends JPanel {
     int tabSize = prefs.getInt("text.tabPane", 4);
     setTabSize(tabSize);
     for (int ii = 2; ii <= 8; ii += 2) {
-      JRadioButtonMenuItem item = new JRadioButtonMenuItem("" + ii, tabSize == ii);
+      JRadioButtonMenuItem item = new JRadioButtonMenuItem(String.valueOf(ii), tabSize == ii);
       item.addActionListener(e -> {
         int newSize = Integer.parseInt(item.getText());
         setTabSize(newSize);
@@ -118,7 +118,7 @@ class CodeEditPane extends JPanel {
     int fontSize = prefs.getInt("text.fontsize", 12);
     setFontSize(fontSize);
     for (int ii : new int[] {10, 12, 14, 16, 18}) {
-      JRadioButtonMenuItem item = new JRadioButtonMenuItem("" + ii, fontSize == ii);
+      JRadioButtonMenuItem item = new JRadioButtonMenuItem(String.valueOf(ii), fontSize == ii);
       item.addActionListener(e -> {
         int newSize = Integer.parseInt(item.getText());
         setFontSize(newSize);

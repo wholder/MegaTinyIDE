@@ -40,7 +40,7 @@ public class PropertyMap {
     public boolean getBoolean (String key, boolean defVal) {
       String val = get(key);
       if (val != null) {
-        return val.toLowerCase().equals("true");
+        return val.equalsIgnoreCase("true");
       }
       return defVal;
     }

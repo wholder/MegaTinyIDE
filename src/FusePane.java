@@ -2,8 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static javax.swing.JOptionPane.*;
 
@@ -180,8 +179,8 @@ public class FusePane extends JPanel {
     case 0x01:    // BODCFG - Brown Out Detector Configuration
       setFieldValue("LVL",        (value >> 5) & 0x07);       // Mask = 0xE0
       setFieldValue("SAMPFREQ",   (value >> 4) & 0x01);       // Mask = 0x10
-      setFieldValue("ACTIVE",     (value >> 2) & 0x03);;      // Mask = 0x0C
-      setFieldValue("SLEEP",      value & 0x03);;             // Mask = 0x03
+      setFieldValue("ACTIVE",     (value >> 2) & 0x03);// Mask = 0x0C
+      setFieldValue("SLEEP",      value & 0x03);// Mask = 0x03
                                                               // ORed = 0xFF
       break;
     case 0x02:    // OSCCFG - Oscillator Configuration
@@ -312,7 +311,7 @@ public class FusePane extends JPanel {
       @Override
       public void actionPerformed (ActionEvent ev) {
         if (!"UPDI".equals(tmp.getSelectedItem())) {
-          ImageIcon icon = new ImageIcon(Utility.class.getResource("images/warning-32x32.png"));
+          ImageIcon icon = new ImageIcon(Objects.requireNonNull(Utility.class.getResource("images/warning-32x32.png")));
           showMessageDialog(tmp, "<html>Setting this value to anything other than \"UPDI\" will disable<br> the ability to edit fuses, " +
               "program and debug the target</html>", "Warning!", JOptionPane.PLAIN_MESSAGE, icon);
         }

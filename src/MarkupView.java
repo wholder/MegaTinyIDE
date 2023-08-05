@@ -65,7 +65,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 class MarkupView extends JPanel {
-  private final MegaTinyIDE           ide;
   private final JEditorPane           jEditorPane;
   private final JScrollPane           scrollPane;
   private final ArrayList<StackItem>  stack = new ArrayList<>();
@@ -361,7 +360,6 @@ class MarkupView extends JPanel {
   }
 
   MarkupView (MegaTinyIDE ide) {
-    this.ide = ide;
     setLayout(new BorderLayout());
     jEditorPane = new JEditorPane();
     scrollPane = new JScrollPane(jEditorPane);
@@ -523,7 +521,7 @@ class MarkupView extends JPanel {
             return tags.get(parm);
           case "CODE_BLOCK":
             String block = Utility.escapeHTML(parm.trim());
-            StringBuilder buf1 = new StringBuilder("");
+            StringBuilder buf1 = new StringBuilder();
             buf1.append("<form action=\"submit\"><input type=\"submit\" value=\"Open Code in Editor\"/>\n");
             buf1.append("<input type=\"hidden\" name=\"block\" value=\"");
             buf1.append(block);
@@ -534,7 +532,7 @@ class MarkupView extends JPanel {
             return buf1.toString();
           case "CODE_FILE":
             // Based on: https://www.sitepoint.com/everything-need-know-html-pre-element/
-            StringBuilder buf2 = new StringBuilder("");
+            StringBuilder buf2 = new StringBuilder();
             try {
               String file = new String(Utility.getResource(parm));
               buf2.append("<form action=\"submit\"><input type=\"submit\" value=\"Open Code in Editor\"/>\n");
@@ -580,8 +578,7 @@ class MarkupView extends JPanel {
                 vecTable.addItem(idx + 1, 3, val);
                 idx++;
               }
-              String html = vecTable.getHtmlTable();
-              return html;
+              return vecTable.getHtmlTable();
             } catch (IOException ex) {
               return "INT_VECS tag parameter: unable to generate table";
             }
@@ -592,15 +589,14 @@ class MarkupView extends JPanel {
             regTable.addItem(0, 1, "Register");
             regTable.addItem(0, 2, "");
             for (int ii = 0; ii < 8; ii++) {
-              regTable.addItem(0, ii + 3, "Bit " + Integer.toString(7 - ii));
+              regTable.addItem(0, ii + 3, "Bit " + (7 - ii));
               regTable.addItem(1, ii + 3, "");
             }
             regIndex = 1;
             return "";
           case "END_REGS":
             if (regTable != null) {
-              String html = regTable.getHtmlTable();
-              return html;
+              return regTable.getHtmlTable();
             }
             return "";
           case "REG_ITEM":

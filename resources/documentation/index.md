@@ -2,7 +2,7 @@
 
 #### [Introducing MegaTinyIDE](documentation/ideintro.md)
    + [Linux Users - Please Read](documentation/linux.md)
- [examples](..%2F..%2Fexamples)  + [Troubleshooting](documentation/trouble.md)
+   + [Troubleshooting](documentation/trouble.md)
    
 #### Special Features
    + [Pragmas](documentation/pragmas.md)

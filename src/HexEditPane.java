@@ -15,7 +15,7 @@ public class HexEditPane extends JTextPane {
   private final int           rows, cols;
 
   interface Update {
-    void setValue (int offset, int value) throws Exception;
+    void setValue (int offset, int value);
   }
 
   HexEditPane (Component parent, int rows, int cols) {

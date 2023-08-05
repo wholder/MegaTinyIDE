@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="ANALYZE_INJECTED_CODE" value="false" />
+  </component>
   <component name="ArtifactsWorkspaceSettings">
     <artifacts-to-build>
       <artifact name="MegaTinyIDE:jar" />
@@ -9,17 +12,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="Version 1.0.9: Added code examples embedded in markup-type documentation">
-      <change afterPath="$PROJECT_DIR$/resources/documentation/examples/ocdmessaging.md" afterDir="false" />
+    <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.MD" beforeDir="false" afterPath="$PROJECT_DIR$/README.MD" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/OCDTest.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/documentation/examples.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/examples.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/documentation/index.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/index.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/version.props" beforeDir="false" afterPath="$PROJECT_DIR$/resources/version.props" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/documentation/pragmas.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/pragmas.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/documentation/programmers.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/programmers.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/CodeEditPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/CodeEditPane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/EDBG.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/EDBG.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/FusePane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/FusePane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/HexEditPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/HexEditPane.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/MarkupView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MarkupView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MegaTinyIDE.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MegaTinyIDE.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/PropertyMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/PropertyMap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UPDIDecoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UPDIDecoder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Utility.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Utility.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,7 +51,9 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
-    &quot;last_opened_file_path&quot;: &quot;/Users/wholder/IdeaProjects/MegaTinyIDE/docs&quot;
+    &quot;last_opened_file_path&quot;: &quot;/Users/wholder/IdeaProjects/MegaTinyIDE/docs&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;Settings.Markdown&quot;
   }
 }</component>
   <component name="RecentsManager">
@@ -79,7 +86,7 @@
       <recent name="tools" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.NativeBuilder">
+  <component name="RunManager" selected="Application.MegaTinyIDE">
     <configuration name="FusePane" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="FusePane" />
       <module name="MegaTinyIDE" />
@@ -124,11 +131,11 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.NativeBuilder" />
         <item itemvalue="Application.MegaTinyIDE" />
+        <item itemvalue="Application.FusePane" />
+        <item itemvalue="Application.NativeBuilder" />
         <item itemvalue="Application.HexEditPane" />
         <item itemvalue="Application.GraphPaperLayout" />
-        <item itemvalue="Application.FusePane" />
       </list>
     </recent_temporary>
   </component>
@@ -484,7 +491,7 @@
       <option name="project" value="LOCAL" />
       <updated>1648522232986</updated>
     </task>
-    <option name="localTasksCounter" value="127" />
+    <option name="localTasksCounter" value="128" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -511,7 +518,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Revise preprocessor step in compile" />
     <MESSAGE value="Revise Settings Menu" />
     <MESSAGE value="Revert to jssc-2-8.0" />
     <MESSAGE value="Convert jpg images to png" />
@@ -536,16 +542,12 @@
     <MESSAGE value="Bug and Documentation fixes and enhancements" />
     <MESSAGE value="Regression fix for linux version and misc updates" />
     <MESSAGE value="Version 1.0.9: Added code examples embedded in markup-type documentation" />
-    <option name="LAST_COMMIT_MESSAGE" value="Version 1.0.9: Added code examples embedded in markup-type documentation" />
+    <MESSAGE value="Bug fix for FusePane" />
+    <option name="LAST_COMMIT_MESSAGE" value="Bug fix for FusePane" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/ToolBuilder/src/ElfDump.java</url>
-          <line>235</line>
-          <option name="timeStamp" value="72" />
-        </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/MegaTinyIDE.java</url>
           <line>988</line>
@@ -556,6 +558,10 @@
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/MegaTinyIDE$BinFileCompare.ic" NAME="BinFileCompare Coverage Results" MODIFIED="1601853378592" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />

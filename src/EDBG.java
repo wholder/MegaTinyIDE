@@ -86,7 +86,10 @@ import java.util.*;
       0x0038  USART0_DRE  Universal Asynchronous Receiver-Transmitter 0, DRE
       0x003A  USART0_TXC  Universal Asynchronous Receiver-Transmitter 0, TXC
       0x003C  NVMCTRL_EE  Nonvolatile Memory
-   */
+
+     High Voltage Activation
+        See: https://microchipdeveloper.com/mplabx:avr-updi-info
+     */
 
 public class EDBG /* implements JSSCPort.RXEvent */ {
   private static final int                    MaxPkt = 60;
@@ -151,7 +154,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
     if (memTypes.containsKey(memType)) {
       return memTypes.get(memType);
     }
-    return String.format("0x%02X", (int) memType & 0xFF);
+    return String.format("0x%02X", memType & 0xFF);
   }
 
   private void debugPrint(String msg) {
@@ -260,7 +263,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
         }
       }
     }
-    Programmer prog = getProgrammer(ide.getProgPidVid());;
+    Programmer prog = getProgrammer(ide.getProgPidVid());
     if (prog != null) {
       this.chip = MegaTinyIDE.chipTypes.get(ide.getAvrChip());
       hidServices = HidManager.getHidServices();
@@ -891,7 +894,7 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    * Resets the target and holds it stopped, in reset. A break event will be sent when the reset is done
    * and the target is stopped.
    */
-  public byte[] resetTarget () throws EDBGException {
+  public void resetTarget () throws EDBGException {
     if (debugActive) {
       sendAvrCmd(new byte[] {
           0x12,                 // AVR8GENERIC
@@ -905,7 +908,6 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
         ex.printStackTrace();
       }
       printUpdi("resetTarget()");
-      return new byte[0];
     } else {
       throw new EDBGException("Call to resetTarget() when debug mode is not active");
     }
@@ -1192,9 +1194,8 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
    *                0x05 = Boot page erase
    *                0x06 = EEPROM page erase
    *                0x07 = User signature erase
-   * @return null
    */
-  public byte[] eraseTarget (int address, int mode) throws EDBGException {
+  public void eraseTarget (int address, int mode) throws EDBGException {
     if (programActive) {
       sendAvrCmd(new byte[] {
           0x12,                 // AVR8GENERIC
@@ -1210,7 +1211,6 @@ public class EDBG /* implements JSSCPort.RXEvent */ {
     } else {
       throw new EDBGException("Call to eraseTarget() when program mode is not active");
     }
-    return null;
   }
 
   /**
