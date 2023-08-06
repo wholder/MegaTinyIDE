@@ -1,5 +1,26 @@
 import com.github.rjeschke.txtmark.Processor;
 
+import javax.swing.*;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
+import javax.swing.text.*;
+import javax.swing.text.html.*;
+import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.geom.Rectangle2D;
+import java.io.*;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.util.*;
+import java.util.List;
+import java.util.prefs.Preferences;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 // Setup some basic markdown styles (Note: limited to HTML 3.2)
 // see: https://stackoverflow.com/questions/25147141/why-isnt-my-css-working-right-in-java
     /*
@@ -43,27 +64,6 @@ import com.github.rjeschke.txtmark.Processor;
         vertical-align (only sup and super)
      */
 
-import javax.swing.*;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
-import javax.swing.text.*;
-import javax.swing.text.html.*;
-import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.geom.Rectangle2D;
-import java.io.*;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.util.*;
-import java.util.List;
-import java.util.prefs.Preferences;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 class MarkupView extends JPanel {
   private final JEditorPane           jEditorPane;
   private final JScrollPane           scrollPane;
@@ -82,12 +82,6 @@ class MarkupView extends JPanel {
     private StackItem (String location, Point position) {
       this.location = location;
       this.position = position;
-    }
-  }
-
-  public static class HTMLButton extends JButton {
-    public HTMLButton () {
-      super("JButton");
     }
   }
 
@@ -172,12 +166,12 @@ class MarkupView extends JPanel {
     public float getPreferredSpan (int axis) {
       Image newImage = getImage(getImageURL());
       switch (axis) {
-      case View.X_AXIS:
-        return newImage.getWidth(null);
-      case View.Y_AXIS:
-        return newImage.getHeight(null);
-      default:
-        throw new IllegalArgumentException("Invalid axis: " + axis);
+        case View.X_AXIS:
+          return newImage.getWidth(null);
+        case View.Y_AXIS:
+          return newImage.getHeight(null);
+        default:
+          throw new IllegalArgumentException("Invalid axis: " + axis);
       }
     }
 
@@ -323,7 +317,8 @@ class MarkupView extends JPanel {
             // Draw header row
             if (widths != null) {
               String width = widths[colIdx];
-              buf.append("  <th style=\"background-color:" + header + ";color:white;\" width=\"" + width + "\">" + text + "</th>\n");
+              buf.append("  <th style=\"background-color:" + header + ";color:white;\" width=\"" + width +
+                         "\">" + text + "</th>\n");
             } else {
               buf.append("  <th style=\"background-color:" + header + ";color:white;\">" + text + "</th>\n");
             }
@@ -482,6 +477,19 @@ class MarkupView extends JPanel {
     jEditorPane.setText(html);
   }
 
+  private static String addMarkHover (String text) {
+    Pattern LinkMatch = Pattern.compile("\\[(.+)\\]\\((.+)\\)");
+    Matcher mat = LinkMatch.matcher(text);
+    StringBuffer buf = new StringBuffer();
+    while (mat.find()) {
+      String g1 = mat.group(1);
+      String g2 = mat.group(2);
+      mat.appendReplacement(buf, "[" + g1 + "](" + g2 + " \"" + g2 + "\")");
+    }
+    mat.appendTail(buf);
+    return buf.toString();
+  }
+
   public void loadMarkup (String loc) {
     if (loc != null) {
       String link = loc;
@@ -512,8 +520,10 @@ class MarkupView extends JPanel {
       }
       try {
         String markup = new String(Utility.getResource(basePath + link));
+        markup = addMarkHover(markup);
         parmMap = Utility.parseParms(parms);
         markup = Utility.replaceTags(markup, parmMap, (name, parm, tags) -> {
+          // Uses TagCallback interface to process the following tags
           switch (name) {
           case "PARM":
             return parm;

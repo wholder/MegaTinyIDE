@@ -14,17 +14,8 @@
   <component name="ChangeListManager">
     <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/documentation/pragmas.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/pragmas.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/documentation/programmers.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/programmers.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/CodeEditPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/CodeEditPane.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/EDBG.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/EDBG.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/FusePane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/FusePane.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/HexEditPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/HexEditPane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.MD" beforeDir="false" afterPath="$PROJECT_DIR$/README.MD" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/MarkupView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MarkupView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/PropertyMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/PropertyMap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UPDIDecoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UPDIDecoder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Utility.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Utility.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -94,15 +85,15 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="GraphPaperLayout" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="GraphPaperLayout" />
+    <configuration name="HexEditPane" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="HexEditPane" />
       <module name="MegaTinyIDE" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="HexEditPane" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="HexEditPane" />
+    <configuration name="MarkupView" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="MarkupView" />
       <module name="MegaTinyIDE" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -123,8 +114,8 @@
       </method>
     </configuration>
     <list>
+      <item itemvalue="Application.MarkupView" />
       <item itemvalue="Application.NativeBuilder" />
-      <item itemvalue="Application.GraphPaperLayout" />
       <item itemvalue="Application.HexEditPane" />
       <item itemvalue="Application.FusePane" />
       <item itemvalue="Application.MegaTinyIDE" />
@@ -132,10 +123,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.MegaTinyIDE" />
+        <item itemvalue="Application.MarkupView" />
         <item itemvalue="Application.FusePane" />
         <item itemvalue="Application.NativeBuilder" />
         <item itemvalue="Application.HexEditPane" />
-        <item itemvalue="Application.GraphPaperLayout" />
       </list>
     </recent_temporary>
   </component>
@@ -491,7 +482,7 @@
       <option name="project" value="LOCAL" />
       <updated>1648522232986</updated>
     </task>
-    <option name="localTasksCounter" value="128" />
+    <option name="localTasksCounter" value="129" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -518,7 +509,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Revise Settings Menu" />
     <MESSAGE value="Revert to jssc-2-8.0" />
     <MESSAGE value="Convert jpg images to png" />
     <MESSAGE value="debugger-related changes" />
@@ -543,7 +533,8 @@
     <MESSAGE value="Regression fix for linux version and misc updates" />
     <MESSAGE value="Version 1.0.9: Added code examples embedded in markup-type documentation" />
     <MESSAGE value="Bug fix for FusePane" />
-    <option name="LAST_COMMIT_MESSAGE" value="Bug fix for FusePane" />
+    <MESSAGE value="Misc doc fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Misc doc fixes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
