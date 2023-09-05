@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.prefs.Preferences;
 import java.util.regex.Pattern;
@@ -40,6 +41,7 @@ public class JSSCPort implements SerialPortEventListener {
   private int                               baudRate, dataBits, stopBits, parity;
   private SerialPort                        serialPort;
   private final List<RXEvent>               rxHandlers = new ArrayList<>();
+  private boolean                           hasRxHandler;
 
   interface RXEvent {
     void rxChar (byte cc);
@@ -88,11 +90,45 @@ public class JSSCPort implements SerialPortEventListener {
     baudRate = prefs.getInt("serial.baud", SerialPort.BAUDRATE_115200);
   }
 
+  public void sendBreak () throws SerialPortException {
+    if (true) {
+      serialPort.purgePort(SerialPort.PURGE_RXCLEAR);
+      serialPort.setParams(SerialPort.BAUDRATE_300, dataBits, stopBits, parity, false, false);
+      serialPort.writeBytes(new byte[] {0});
+      try {
+        Thread.sleep(25 + 50);
+      } catch (InterruptedException ex) {}
+      serialPort.setParams(baudRate, dataBits, stopBits, parity, false, false);
+      serialPort.purgePort(SerialPort.PURGE_RXCLEAR);
+    } else {
+      serialPort.sendBreak(25);
+    }
+  }
+
+  /**
+   * Note: time is in milliseonds (1000 = 1 second)
+   * @throws SerialPortException
+   */
+  public void sendDoubleBreak () throws SerialPortException {
+    serialPort.purgePort(SerialPort.PURGE_RXCLEAR);
+    for (int ii = 0; ii < 2; ii++) {
+      sendBreak();
+      serialPort.purgePort(SerialPort.PURGE_RXCLEAR);
+      // Wait 50 ms
+      try {
+        Thread.sleep(50);
+      } catch (Exception ex) {
+        // do nothing
+      }
+    }
+    serialPort.purgePort(SerialPort.PURGE_RXCLEAR);
+  }
+
   /**
    * Checks if user has selected a Serial Port
    * @return true if selected, else false
    */
-  boolean postSelected () {
+  public boolean postSelected () {
     return portName != null;
   }
 
@@ -115,23 +151,6 @@ public class JSSCPort implements SerialPortEventListener {
     portName = port;
   }
 
-  /**
-   * Set the baud rate
-   * @param rate baud rate
-   */
-  public void setRate (String rate) {
-    baudRate = baudRates.get(rate);
-  }
-
-  /**
-   * Get available baud rates
-   * @return array of available baud rates
-   */
-  public static String[] getBaudRates () {
-    List<String> rates = new ArrayList<>(baudRates.keySet());
-    return rates.toArray(new String[0]);
-  }
-
   public void setParameters (int baudRate, int dataBits, int stopBits, int parity) {
     this.baudRate = baudRate;
     this.dataBits = dataBits;
@@ -142,53 +161,53 @@ public class JSSCPort implements SerialPortEventListener {
   /**
    * Open serial port and assign RX handler
    * @param handler RX handler
-   * @return true if port was opened, else false
    * @throws SerialPortException on error
    */
-  boolean open (RXEvent handler) throws SerialPortException {
+  void open (RXEvent handler) throws SerialPortException {
     if (serialPort != null) {
       if (serialPort.isOpened()) {
         close();
       }
     }
     if (portName != null) {
-      try {
-        synchronized (this) {
+      synchronized (this) {
+        if (handler != null) {
+          hasRxHandler = true;
           rxHandlers.add(handler);
         }
-        serialPort = new SerialPort(portName);
-        serialPort.openPort();
-        serialPort.purgePort(SerialPort.PURGE_RXCLEAR | SerialPort.PURGE_TXCLEAR);
-        serialPort.setParams(baudRate, dataBits, stopBits, parity, false, false);
-        serialPort.setEventsMask(eventMasks);
-        serialPort.setFlowControlMode(flowCtrl);
+      }
+      serialPort = new SerialPort(portName);
+      serialPort.openPort();
+      serialPort.purgePort(SerialPort.PURGE_RXCLEAR | SerialPort.PURGE_TXCLEAR);
+      serialPort.setParams(baudRate, dataBits, stopBits, parity, false, false);
+      serialPort.setEventsMask(eventMasks);
+      serialPort.setFlowControlMode(flowCtrl);
+      purgePort(SerialPort.PURGE_RXCLEAR + SerialPort.PURGE_TXCLEAR);
+      if (handler != null) {
         serialPort.addEventListener(this);
-        return true;
-      } catch (SerialPortException ex) {
-        prefs.remove("serial.port");
-        throw ex;
       }
     }
-    return false;
   }
 
   /**
    * Close serial port, open
    */
-  public void close () {
+  public void close () throws SerialPortException {
     if (serialPort != null && serialPort.isOpened()) {
-      try {
-        synchronized (this) {
-          rxHandlers.clear();
-        }
-        serialPort.removeEventListener();
-        serialPort.purgePort(SerialPort.PURGE_RXCLEAR | SerialPort.PURGE_TXCLEAR);
-        serialPort.closePort();
-        serialPort = null;
-      } catch (SerialPortException ex) {
-        ex.printStackTrace();
+      synchronized (this) {
+        rxHandlers.clear();
       }
+      if (hasRxHandler) {
+        serialPort.removeEventListener();
+      }
+      serialPort.purgePort(SerialPort.PURGE_RXCLEAR | SerialPort.PURGE_TXCLEAR);
+      serialPort.closePort();
+      serialPort = null;
     }
+  }
+
+  public void purgePort(int flags) throws SerialPortException {
+    serialPort.purgePort(flags);
   }
 
   /**
@@ -215,7 +234,6 @@ public class JSSCPort implements SerialPortEventListener {
           }
         }
       } else if (type == SerialPortEvent.BREAK) {
-        //int val = se.getEventValue();
         for (RXEvent handler : rxHandlers) {
           handler.breakEvent();
         }
@@ -226,21 +244,27 @@ public class JSSCPort implements SerialPortEventListener {
   }
 
   /**
-   * Send break lasting duration milliseconds
-   * @param duration duration of break (in milliseconds)
-   * @throws SerialPortException
+   * Send bytes of data to TX
+   * @param data bytes to send
+   * @throws SerialPortException on error
    */
-  public void sendBreak (int duration) throws SerialPortException {
-    serialPort.sendBreak(duration);
+  void writeBytes (byte[] data) throws SerialPortException {
+    try {
+      serialPort.writeBytes(data);
+    } catch (Exception ex) {
+      int dum = 0;
+    }
   }
 
   /**
-   * Send byte of data to TX
-   * @param data byte to send
-   * @throws SerialPortException on error
+   * Read bytes from the serial port
+   * @param count number of bytes to read
+   * @param timeout timeout vaue (in milliseconds)
+   * @return data read
+   * @throws SerialPortException
    */
-  void sendByte (byte data) throws SerialPortException {
-    serialPort.writeByte(data);
+  byte[] readBytes (int count, int timeout) throws SerialPortException, SerialPortTimeoutException {
+    return serialPort.readBytes(count, timeout);
   }
 
   /**
@@ -256,8 +280,8 @@ public class JSSCPort implements SerialPortEventListener {
    * Returns JMenu that can be used to select a serial port
    * @return Serial Port JMenu
    */
-  JMenu getPortMenu () {
-    JMenu menu = new JMenu("Port");
+  JMenu getPortMenu (String menuName, ButtonGroup progGroup) {
+    JMenu menu = new JMenu(menuName);
     menu.addMenuListener(new MenuListener() {
       @Override
       public void menuSelected (MenuEvent e) {
@@ -266,7 +290,7 @@ public class JSSCPort implements SerialPortEventListener {
         ButtonGroup group = new ButtonGroup();
         for (String pName : SerialPortList.getPortNames(macPat)) {
           JRadioButtonMenuItem item = new JRadioButtonMenuItem(pName, pName.equals(portName));
-          menu.setVisible(true);
+          //menu.setVisible(true);
           menu.add(item);
           group.add(item);
           item.addActionListener((ev) -> {
@@ -283,6 +307,21 @@ public class JSSCPort implements SerialPortEventListener {
       public void menuCanceled (MenuEvent e) { }
     });
     return menu;
+  }
+
+  List<JRadioButtonMenuItem> getPortMenuItems () {
+    List<JRadioButtonMenuItem> list = new ArrayList<>();
+    for (String pName : SerialPortList.getPortNames(macPat)) {
+      if (!pName.toLowerCase(Locale.ROOT).contains("bluetooth")) {
+        JRadioButtonMenuItem item = new JRadioButtonMenuItem(pName, pName.equals(portName));
+        list.add(item);
+        item.addActionListener((ev) -> {
+          portName = ev.getActionCommand();
+          prefs.put("serial.port", portName);
+        });
+      }
+    }
+    return list;
   }
 
   /**

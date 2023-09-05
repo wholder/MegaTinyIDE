@@ -551,6 +551,81 @@ class Utility {
     return new CodeImage(code, fuses);
   }
 
+  public static String toIntelHex (byte[] data) {
+    ByteArrayOutputStream bout = new ByteArrayOutputStream();
+    PrintStream pout = new PrintStream(bout);
+    for (int address = 0; address < data.length; address += 16) {
+      int len = Math.min(data.length - address, 16);
+      pout.printf(":%02X%04X00", len, address);
+      int check = -(len & 0xFF) -(address & 0xFF) + (-(address >> 8) & 0xFF);
+      for (int ii = 0; ii < len; ii++) {
+        int cc = data[address + ii] & 0xFF;
+        check -= cc;
+        pout.printf("%02X", cc);
+      }
+      pout.printf("%02X\n", check & 0xFF);
+    }
+    pout.println(":00000001FF");
+    return bout.toString();
+  }
+
+  public static byte[] trimAvrCode (byte[] data) {
+    ByteArrayOutputStream buf = new ByteArrayOutputStream();
+    for (int ii = 0; ii < data.length; ii += 2) {
+      int b1 = data[ii] & 0xFF;
+      int b2 = data[ii + 1] & 0xFF;
+      if (b1 == 0xFF && b2 == 0xFF) {
+        break;
+      }
+      buf.write(b1);
+      buf.write(b2);
+    }
+    return buf.toByteArray();
+  }
+
+  /*
+  // Test code for printHexAscii()
+  public static void main (String[] args) throws Exception {
+    byte[] data = new byte[66];
+    for (int ii = 0; ii < data.length; ii++) {
+      data[ii] = (byte) ii;
+    }
+    String intelHex = toIntelHex(data);
+    System.out.println(intelHex);
+  }
+  */
+
+  /*
+    /Users/wholder/IdeaProjects/MegaTinyIDE/test/blink.hex
+
+    avr-objdump -h /Users/wholder/IdeaProjects/MegaTinyIDE/test/blink.hex
+  */
+
+/*
+  private static final String toObj = "avr-objdump " +
+    "-h " +                       // Disassemble code
+    "*[PATH]*";                   // Input file
+
+  private static String decompile (byte[] data) {
+    //String intelHex = toIntelHex(data);
+    Map<String,String> tags = new HashMap<>();
+    tags.put("PATH", "/Users/wholder/IdeaProjects/MegaTinyIDE/test/blink.hex");
+    String cmd = Utility.replaceTags(toObj, tags);
+    try {
+      Process proc = Runtime.getRuntime().exec(cmd);
+      String ret = Utility.runCmd(proc);
+      int dum = 0;
+    } catch (IOException ex) {
+      ex.printStackTrace();
+    }
+    return "";
+  }
+
+  public static void main (String[] args) throws Exception {
+    String ret = decompile(null);
+  }
+*/
+
   static int fromHex (char cc) {
     cc = Character.toUpperCase(cc);
     return cc >= 'A' ? cc - 'A' + 10 : cc - '0';
@@ -560,7 +635,7 @@ class Utility {
     printHex(System.out, "", data);
   }
 
-    public static void printHex (PrintStream out, String indent, byte[] data) {
+  public static void printHex (PrintStream out, String indent, byte[] data) {
     for (int ii = 0; ii < data.length; ii++) {
       if ((ii & 0x0F) == 0) {
         out.println(indent);
@@ -671,12 +746,14 @@ class Utility {
     dst.setBounds(lft, top, bot - top, rht - lft);
   }
 
+/*
   // Test code for getTargetFromElf()
   public static void main (String[] args) throws IOException {
     File file = new File("examples/attiny212.elf");
     String target = getTargetFromElf(file);
     System.out.println(target);
   }
+*/
 
   public static byte lsb (int val) {
     return (byte) (val & 0xFF);

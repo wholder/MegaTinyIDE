@@ -2,15 +2,30 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-  /*
-   *  This is experimental code I'm using to learn how to decode the undocumented UPDI protocol
-   */
+/*
+ *  This is experimental code I'm using to learn how to decode the undocumented UPDI protocol
+ */
 
 public class UPDIDecoder {
   private static final String[]   ptrs = {"*(ptr)", "*(ptr++)", "ptr", "err"};
-  private static final String[]   updi = {"STATUSA", "STATUSB", "CTRLA", "CTRLB", "Reserved_4", "Reserved_5", "Reserved_6",
-                                          "ASI_KEY_STATUS", "ASI_RESET_REQ", "ASI_CTRLA", "ASI_SYS_CTRLA", "ASI_SYS_STATUS",
-                                          "ASI_CRC_STATUS", "Reserved_D", "Reserved_E", "Reserved_F"};
+  private static final String[]   updi = {
+    "STATUSA",            // 0: Status A
+    "STATUSB",            // 1; Status B
+    "CTRLA",              // 2: Control A
+    "CTRLB",              // 3: Control B
+    "Reserved_4",         // 4:
+    "Reserved_5",         // 5:
+    "Reserved_6",         // 6:
+    "ASI_KEY_STATUS",     // 7: Asynchronous System Interface Key Status
+    "ASI_RESET_REQ",      // 8: Asynchronous System Interface Reset Request (write 0x59 to reset)
+    "ASI_CTRLA",          // 9: Asynchronous System Interface Control A
+    "ASI_SYS_CTRLA",      // A: Asynchronous System Interface System Control A
+    "ASI_SYS_STATUS",     // B: Asynchronous System Interface System Status
+    "ASI_CRC_STATUS",     // C: Asynchronous System Interface CRC Status
+    "Reserved_D",         // D:
+    "Reserved_E",         // E:
+    "Reserved_F"          // F:
+  };
   /*
    *  UPDI Registers
    *
@@ -138,10 +153,10 @@ public class UPDIDecoder {
    *         't'  'i'  'n'  'y'  'A'  'V'  'R'  ' '  'P'  ':'  '0'  'D'  ':'  '0'  '-'  '3'
    *          0    1    2    3    4    5    6    7    8    9   10   11   12   13   14   15
    *    0-6 = Family ID     "tinyAVR"
-   *      7 = Reserved
+   *      7 = Reserved      " "
    *   8-10 = NVM Version   "P:0"
    *  11-13 = OCD Version   "D:0"
-   *     14 = Reserved
+   *     14 = Reserved      "-"
    *     15 = DBG_OSC_FREQ  "3"
    */
 
@@ -162,145 +177,149 @@ public class UPDIDecoder {
     while (bin.available() > 0) {
       int code = read(bin);
       switch (state) {
-      case 0:                                   // Waiting for SYNC (0x55)
-        if (code == 0x55) {
-          state = 1;
-        }
-        break;
-      case 1:
-        out.printf("  0x55 0x%02X: ", code);
-        switch (code & 0xE0) {
-        case 0x00: {                            // LDS  (load)
-          int sizeA = (code >> 2) & 0x03;
-          int sizeB = code & 0x03;
-          int addr = getData(bin, sizeA);
-          int data = getData(bin, sizeB);
-          if (sizeA == 0) {
-            if (sizeB == 0) {
-              out.printf("LDS from addr: 0x%02X returns: 0x%02X\n", addr, data);
-            } else {
-              out.printf("LDS from addr: 0x%02X returns: 0x%04X\n", addr, data);
-            }
-          } else {
-            if (sizeB == 0) {
-              out.printf("LDS from addr: 0x%04X returns: 0x%02X\n", addr, data);
-            } else {
-              out.printf("LDS from addr: 0x%04X returns: 0x%04X\n", addr, data);
-            }
+        case 0:                                   // Waiting for SYNC (0x55)
+          if (code == 0x55) {
+            state = 1;
           }
-        } break;
-        case 0x20: {                            // LD  (load)
-          int ptr = (code >> 2) & 0x03;
-          int sizeAB = code & 0x03;
-          int data = getData(bin, sizeAB);
-          if (sizeAB == 0) {
-            out.printf("LD load via %s returns: 0x%02X\n", ptrs[ptr], data);
-          } else {
-            out.printf("LD load via %s returns: 0x%04X\n", ptrs[ptr], data);
-          }
-          while (repeat-- > 0) {
-            data = getData(bin, sizeAB);
-            if (sizeAB == 0) {
-              out.printf("  RPT: LD load via %s returns: 0x%02X\n", ptrs[ptr], data);
-            } else {
-              out.printf("  RPT: LD load via %s returns: 0x%04X\n", ptrs[ptr], data);
-            }
-          }
-        } break;
-        case 0x40: {                          // STS (store)
-          int sizeA = (code >> 2) & 0x03;
-          int sizeB = code & 0x03;
-          int addr = getData(bin, sizeA);
-          int ack1 = read(bin);
-          if (ack1 == 0x40) {
-            int data = getData(bin, sizeB);
-            int ack2 = read(bin);
-            if (ack2 == 0x40) {
-              if (sizeA == 0) {
-                if (sizeB == 0) {
-                  out.printf("STS store data: 0x%02X into addr: 0x%02X\n", data, addr);
-                } else {
-                  out.printf("STS store data: 0x%02X into addr: 0x%04X\n", data, addr);
-                }
-              } else {
-                if (sizeB == 0) {
-                  out.printf("STS store data: 0x%04X into addr: 0x%02X\n", data, addr);
-                } else {
-                  out.printf("STS store data: 0x%04X into addr: 0x%04X\n", data, addr);
-                }
-              }
-            }
-          }
-        } break;
-        case 0x60: {                          // ST (store)
-          int ptr = (code >> 2) & 0x03;
-          int sizeAB = code & 0x03;
-          int data = getData(bin, sizeAB);
-          int ack1 = read(bin);
-          if (ack1 == 0x40) {
-            if (ptr == 2) {
-              out.printf("ST store data: 0x%04X into %s\n", data, ptrs[ptr]);
-            } else {
-              if (sizeAB == 0) {
-                out.printf("ST store data: 0x%02X via %s\n", data, ptrs[ptr]);
-              } else {
-                out.printf("ST store data: 0x%04X via %s\n", data, ptrs[ptr]);
-              }
-            }
-          }
-          while (repeat-- > 0) {
-            data = getData(bin, sizeAB);
-            ack1 = read(bin);
-            if (ack1 == 0x40) {
-              if (sizeAB == 0) {
-                out.printf("  RPT: ST store data: 0x%02X via %s\n", data, ptrs[ptr]);
-              } else {
-                out.printf("  RPT: ST store data: 0x%04X via %s\n", data, ptrs[ptr]);
-              }
-            }
-          }
-        } break;
-        case 0x80: {                          // LDCS (load)
-          int reg = code & 0x0F;
-          int data = read(bin);
-          out.printf("LDCS load from %s returns: 0x%02X\n", updi[reg], data);
-        } break;
-        case 0xA0: {                          // REPEAT
-          repeat = read(bin);
-          out.printf("REPEAT following instruction %d times\n", repeat + 1);
-         } break;
-        case 0xC0: {                          // STCS (store)
-          int reg = code & 0x0F;
-          int data = read(bin);
-          out.printf("STCS store data 0x%02X into %s\n", data, updi[reg]);
-        } break;
-        case 0xE0: {                          // KEY
-          boolean sib = (code & 0x04) != 0;
-          byte[] data;
-          if (sib) {
-            out.print("SIB = ");
-            data = new byte[16];
-          } else {
-            out.print("KEY = ");
-            data = new byte[8];
-          }
-          for (int ii = 0; ii < data.length; ii++) {
-            data[ii] = (byte) read(bin);
-          }
-          for (byte cc : data) {
-            out.printf("0x%02X ", ((int) cc & 0xFF));
-          }
-          out.print("\n                    ");
-          for (byte cc : data) {
-            out.printf("'%c'  ", (char) cc);
-          }
-          out.println();
-        } break;
-        default:
-          out.println("error");
           break;
-        }
-        state = 0;
+        case 1:
+          out.printf("  0x55 0x%02X: ", code);
+          switch (code & 0xE0) {
+            case 0x00: {                            // LDS  (load)
+              int sizeA = (code >> 2) & 0x03;       // Size of address (0 = byte, 1 = word)
+              int sizeB = code & 0x03;              // Size of data (0 = byte[1], 1 = byte[2])
+              int addr = getData(bin, sizeA);
+              int data = getData(bin, sizeB);
+              if (sizeA == 1) {
+                // Address is 2 bytes (one word)
+                if (sizeB == 1) {
+                  out.printf("LDS from addr: 0x%04X returns: 0x%04X\n", addr, data);          // data is 2 bytes
+                } else {
+                  out.printf("LDS from addr: 0x%04X returns: 0x%02X\n", addr, data);          // data is 1 byte
+                }
+              } else {
+                // Address is one byte
+                if (sizeB == 1) {
+                  out.printf("LDS from addr: 0x%02X returns: 0x%04X\n", addr, data);          // data is 2 bytes
+                } else {
+                  out.printf("LDS from addr: 0x%02X returns: 0x%02X\n", addr, data);          // data is 1 byte
+                }
+              }
+            } break;
+            case 0x20: {                            // LD  (load)
+              int ptr = (code >> 2) & 0x03;         // 0 = *(ptr), if 1 = *(ptr++), else 3 = ptr
+              int sizeB = code & 0x03;              // Size of data (0 = byte[1], 1 = byte[2])
+              int data = getData(bin, sizeB);
+              if (sizeB == 1) {
+                out.printf("LD load via %s returns: 0x%04X\n", ptrs[ptr], data);              // data is 2 bytes
+              } else {
+                out.printf("LD load via %s returns: 0x%02X\n", ptrs[ptr], data);              // data is 1 byte
+              }
+              while (repeat-- > 0) {
+                data = getData(bin, sizeB);
+                if (sizeB == 1) {
+                  out.printf("  RPT: LD load via %s returns: 0x%04X\n", ptrs[ptr], data);       // data is 2 bytes
+                } else {
+                  out.printf("  RPT: LD load via %s returns: 0x%02X\n", ptrs[ptr], data);       // data is 1 byte
+                }
+              }
+            } break;
+            case 0x40: {                          // STS (store)
+              int sizeA = (code >> 2) & 0x03;     // Size of address (0 = byte, 1 = word)
+              int sizeB = code & 0x03;            // Size of data (0 = byte[1], 1 = byte[2])
+              int addr = getData(bin, sizeA);
+              int ack1 = read(bin);
+              if (ack1 == 0x40) {
+                int data = getData(bin, sizeB);
+                int ack2 = read(bin);
+                if (ack2 == 0x40) {
+                  if (sizeA == 1) {
+                    // Address is 2 bytes (one word)
+                    if (sizeB == 1) {
+                      out.printf("STS store data: 0x%04X into addr: 0x%04X\n", data, addr);   // data is 2 bytes
+                    } else {
+                      out.printf("STS store data: 0x%02X into addr: 0x%04X\n", data, addr);   // data is 1 byte
+                    }
+                  } else {
+                    // Address is one byte
+                    if (sizeB == 1) {
+                      out.printf("STS store data: 0x%04X into addr: 0x%02X\n", data, addr);   // data is 2 bytes
+                    } else {
+                      out.printf("STS store data: 0x%02X into addr: 0x%02X\n", data, addr);   // data is 1 byte
+                    }
+                  }
+                }
+              }
+            } break;
+            case 0x60: {                          // ST (store)
+              int ptr = (code >> 2) & 0x03;       // 0 = *(ptr), if 1 = *(ptr++), else 3 = ptr
+              int sizeB = code & 0x03;            // Size of data (0 = byte[1], 1 = byte[2])
+              int data = getData(bin, sizeB);
+              int ack1 = read(bin);
+              if (ack1 == 0x40) {
+                if (ptr == 2) {
+                  out.printf("ST store data: 0x%04X into %s\n", data, ptrs[ptr]);
+                } else {
+                  if (sizeB == 1) {
+                    out.printf("ST store data: 0x%04X via %s\n", data, ptrs[ptr]);            // data is 2 bytes
+                  } else {
+                    out.printf("ST store data: 0x%02X via %s\n", data, ptrs[ptr]);            // data is 1 byte
+                  }
+                }
+              }
+              while (repeat-- > 0) {
+                data = getData(bin, sizeB);
+                ack1 = read(bin);
+                if (ack1 == 0x40) {
+                  if (sizeB == 1) {
+                    out.printf("  RPT: ST store data: 0x%04X via %s\n", data, ptrs[ptr]);       // data is 2 bytes
+                  } else {
+                    out.printf("  RPT: ST store data: 0x%02X via %s\n", data, ptrs[ptr]);       // data is 1 byte
+                  }
+                }
+              }
+            } break;
+            case 0x80: {                          // LDCS (load)
+              int reg = code & 0x0F;              // Register (0-15)
+              int data = read(bin);
+              out.printf("LDCS load from %s returns: 0x%02X\n", updi[reg], data);
+            } break;
+            case 0xA0: {                          // REPEAT
+              repeat = read(bin);
+              out.printf("REPEAT following instruction %d times\n", repeat + 1);
+            } break;
+            case 0xC0: {                          // STCS (store)
+              int reg = code & 0x0F;              // Register (0-15)
+              int data = read(bin);
+              out.printf("STCS store data 0x%02X into %s\n", data, updi[reg]);
+            } break;
+            case 0xE0: {                          // KEY
+              boolean sib = (code & 0x04) != 0;
+              byte[] data;
+              if (sib) {
+                out.print("SIB = ");
+                data = new byte[16];
+              } else {
+                out.print("KEY = ");
+                data = new byte[8];
+              }
+              for (int ii = 0; ii < data.length; ii++) {
+                data[ii] = (byte) read(bin);
+              }
+              for (byte cc : data) {
+                out.printf("0x%02X ", ((int) cc & 0xFF));
+              }
+              out.print("\n                    ");
+              for (byte cc : data) {
+                out.printf("'%c'  ", (char) cc);
+              }
+              out.println();
+            } break;
+            default:
+              out.println("error");
+              break;
+          }
+          state = 0;
       }
     }
     return bout.toString();
@@ -311,6 +330,7 @@ public class UPDIDecoder {
     if (size == 0) {
       return read(bin);
     } else {
+      // GET 16 BIT, LSB-ORDER DATA
       return (read(bin) & 0xFF) + (read(bin) << 8);
     }
   }

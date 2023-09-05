@@ -180,6 +180,7 @@ public class HexEditPane extends JTextPane {
       panel.add(label, BorderLayout.NORTH);
     }
     panel.add(scroll, BorderLayout.CENTER);
+    setCaretPosition(0);
     JOptionPane.showConfirmDialog(parent, panel, type, JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
   }
 
@@ -201,8 +202,11 @@ public class HexEditPane extends JTextPane {
 
   // Test code
   public static void main (String[] args) {
-    HexEditPane varPane = new HexEditPane(null, 8, 8);
-    byte[] data = new byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17};
+    HexEditPane varPane = new HexEditPane(null, 16, 16);
+    byte[] data = new byte[256];
+    for (int ii = 0; ii < data.length; ii++) {
+      data[ii] = (byte) ii;
+    }
     varPane.showVariable ("Test", "var1", 0, data, new Update() {
       public void setValue (int offset, int value) {
         System.out.printf("setValue(0x%02X, 0x%02X)\n", offset, value);

@@ -58,7 +58,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
   private String                  osCode;
   private final JTabbedPane       tabPane;
   public final CodeEditPane       codePane;
-  public EDBG                     debugger = null;
+  public Programmer               programmer = null;
   private ListingPane             listPane;
   private MyTextPane              hexPane;
   private final MyTextPane        infoPane;
@@ -70,6 +70,8 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
   private final RadioMenu         targetMenu;
   private final JMenuItem         build = new JMenuItem("Build");
   private final JMenuItem         loadElf = new JMenuItem("Load ELF");
+  private final JMenuItem         readFlash = new JMenuItem("Read Flash");
+  private final JMenuItem         disasmFlash = new JMenuItem("Disassemble Flash");
   private final JMenuItem         progFlash = new JMenuItem("Program Flash");
   private final JMenuItem         readFuses = new JMenuItem("Read/Modify Fuses");
   private final JMenu             progMenu;
@@ -77,6 +79,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
   private final JSSCPort          jPort = new JSSCPort(prefs);
   private String                  tmpDir, tmpExe;
   private String                  progVidPid;
+  private EDBG.ProgDevice         progDev;
   private String                  avrChip;
   private String                  editFile;
   private boolean                 compiled, codeDirty, showDebugger;
@@ -115,6 +118,8 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
       build.setEnabled(!active);
       loadElf.setEnabled(!active);
     }
+    readFlash.setEnabled(!active);
+    disasmFlash.setEnabled(!active);
     progFlash.setEnabled(!active);
     readFuses.setEnabled(!active);
     progMenu.setEnabled(!active);
@@ -158,11 +163,17 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     return progVidPid;
   }
 
-  public EDBG getDebugger (boolean program) {
-    if (debugger != null) {
-      return debugger;
+  public Programmer getProgrammer (boolean program) {
+    if (programmer != null) {
+      return programmer;
     }
-    return debugger = new EDBG(this, program);
+    if (progVidPid != null && progVidPid.length() > 0) {
+      return programmer = new EDBG(this, program);
+
+    } else if (jPort != null && jPort.postSelected()) {
+      return programmer = new SDBG(jPort);
+    }
+    throw new IllegalStateException("Unvalid Progerammerr");
   }
 
   static class MyTextPane extends JEditorPane {
@@ -246,8 +257,8 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     }
 
     public String getInfo () {
-      return "series: " + series + ", signature: " + signature + ", flash: " + flash + "K, sram: " + sram + " bytes, eeprom: " +
-          eeprom + " bytes";
+      return "series: " + series + ", signature: " + signature + ", flash: " + flash + "K, sram: " + sram +
+        " bytes, eeprom: " + eeprom + " bytes";
     }
 
     // negative == less, zero = equals, positive = greater (than the specified object)
@@ -806,7 +817,57 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     });
     actions.addSeparator();
     /*
-     *    Program Chip Menu
+     *    "Read Flash" Menu Item
+     */
+    actions.add(readFlash);
+    readFlash.setToolTipText("Used to Read Program Code from Device");
+    readFlash.addActionListener(e -> {
+      if (avrChip != null) {
+        try {
+          Programmer edbg = getProgrammer(true);
+          try {
+            byte[] sig = edbg.getDeviceSignature();         // 3 bytes
+            String code = String.format("%02X%02X%02X", sig[0], sig[1], sig[2]);
+            ChipInfo chip = chipSignatures.get(code);
+            int flashSize = chip.getInt("flash") * 1024;
+            byte[] data = edbg.readFlash(0, flashSize);
+            HexEditPane flashPane = new HexEditPane(this, 16, 16);
+            flashPane.showVariable("Flash Code", "Flash Code", 0, data, null);
+          } finally {
+            edbg.close();
+          }
+        } catch (EDBG.EDBGException ex) {
+          showErrorDialog(ex.getMessage());
+        }
+      }
+    });
+    /*
+     *    "Disassemble Flash" Menu Item
+     */
+    actions.add(disasmFlash);
+    disasmFlash.setToolTipText("Used to Disassemble Program Code from Device");
+    disasmFlash.addActionListener(e -> {
+      if (avrChip != null) {
+        try {
+          Programmer edbg = getProgrammer(true);
+          try {
+            byte[] sig = edbg.getDeviceSignature();         // 3 bytes
+            String code = String.format("%02X%02X%02X", sig[0], sig[1], sig[2]);
+            ChipInfo chip = chipSignatures.get(code);
+            int flashSize = chip.getInt("flash") * 1024;
+            byte[] data = edbg.readFlash(0, flashSize);
+            disassemble(chip, listPane, data);
+            tabPane.setSelectedIndex(Tab.LIST.num);
+          } finally {
+            edbg.close();
+          }
+        } catch (EDBG.EDBGException ex) {
+          showErrorDialog(ex.getMessage());
+        }
+      }
+    });
+    /*
+     *    "Program Flash" Menu  Item
      */
     actions.add(progFlash);
     progFlash.setToolTipText("Used to Upload Compiled Program Code to Device");
@@ -814,9 +875,9 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
       if (avrChip != null && canProgram()) {
         try {
           Utility.CodeImage codeImg = Utility.parseIntelHex(hexPane.getText());
-          EDBG edbg = getDebugger(true);
+          Programmer edbg = getProgrammer(true);
           try {
-            edbg.eraseTarget(0, 0);
+            edbg.eraseTarget(0, 0);         //
             edbg.writeFlash(0, codeImg.data);
           } finally {
             edbg.close();
@@ -835,14 +896,16 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     readFuses.addActionListener(e -> {
       // Use chip type, if selected, else use attiny212 as proxy
       ChipInfo info = chipTypes.get(avrChip != null ? avrChip : "attiny212");
-      EDBG edbg = null;
+      Programmer edbg = null;
       try {
-        edbg = getDebugger(true);
+        edbg = getProgrammer(true);
         FusePane fusePane = new FusePane(info);
         int[] offsets = new int[] {0, 1, 2, 4, 5, 6, 7, 8 /*, 10*/};
+        Map<Integer,Integer> reverse = new HashMap<>();
         byte[] fuses = edbg.readFuses(offsets);
         for (int ii = 0; ii < offsets.length; ii++) {
           fusePane.setFuse(offsets[ii], fuses[ii]);
+          reverse.put(offsets[ii], ii);
         }
         if (JOptionPane.showConfirmDialog(this, fusePane, "FUSES for " + info.name, OK_CANCEL_OPTION, PLAIN_MESSAGE) == 0) {
           List<Integer> changedOffsets = new ArrayList<>();
@@ -851,7 +914,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
               changedOffsets.add(offset);
             }
           }
-          if (changedOffsets.size() > 0) {
+          if (!changedOffsets.isEmpty()) {
             int[] cOffs = changedOffsets.stream().mapToInt(Integer::intValue).toArray();
             byte[] cFuses = new byte[cOffs.length];
             for (int ii = 0; ii < cOffs.length; ii++) {
@@ -860,7 +923,11 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
             StringBuilder msg = new StringBuilder("<html>Confirm update to changed fuses?<br><br>");
             msg.append("<p style=\"font-family:Courier;font-size:12\">");
             for (int ii = 0; ii < cOffs.length; ii++) {
-              msg.append(String.format("Fuse 0x%02X: 0x%02X -> 0x%02X<br>", cOffs[ii], fuses[cOffs[ii]], cFuses[ii]));
+              int offset = cOffs[ii];
+              int revOff = reverse.get(offset);
+              int oldVal = fuses[revOff];
+              int newVal = cFuses[ii];
+              msg.append(String.format("Fuse 0x%02X: 0x%02X -> 0x%02X<br>", offset, oldVal, newVal));
             }
             msg.append("</p>");
             msg.append("<br>Note: Changes will not take effect until<br>processor is RESET</html>");
@@ -884,19 +951,26 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     actions.add(readEeprom = new JMenuItem("Read/Modify EEPROM"));
     readEeprom.setToolTipText("Used to Read & Modify Device's EEPROM Bytes");
     readEeprom.addActionListener(e -> {
-      EDBG edbg = null;
+      Programmer edbg = null;
       boolean attached = false;
       try {
-        attached = debugger != null;
-        edbg = getDebugger(false);
+        attached = programmer != null;
+        edbg = getProgrammer(false);
         byte[] sig = edbg.getDeviceSignature();         // 3 bytes
         String code = String.format("%02X%02X%02X", sig[0], sig[1], sig[2]);
         ChipInfo chip = chipSignatures.get(code);
         int eBytes = chip.getInt("eeprom");
         byte[] data = edbg.readEeprom(0, eBytes);
         HexEditPane hexPane = new HexEditPane(this, 8, 8);
-        EDBG debugger = edbg;
-        hexPane.showVariable("EEPROM", null, 0, data, (offset, value) -> debugger.writeEeprom(offset, new byte[] {(byte) value}));
+        Programmer debugger = edbg;
+        boolean[] changed = new boolean[] {false};
+        hexPane.showVariable("EEPROM", null, 0, data, (offset, value) -> {
+          data[offset] = (byte) value;
+          changed[0] = true;
+        });
+        if (changed[0]) {
+          debugger.writeEeprom(0, data);
+        }
       } catch (EDBG.EDBGException ex) {
         showErrorDialog(ex.getMessage());
       } finally {
@@ -913,15 +987,23 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     actions.add(readUserRow = new JMenuItem("Read/Modify USERROW"));
     readUserRow.setToolTipText("Used to Read & Modify Device's USERROW Bytes");
     readUserRow.addActionListener(e -> {
-      EDBG edbg = null;
+      Programmer edbg = null;
       boolean attached = false;
       try {
-        attached = debugger != null;
-        edbg = getDebugger(false);
+        attached = programmer != null;
+        edbg = getProgrammer(false);
         byte[] data = edbg.readUserRow(0, 32);
         HexEditPane hexPane = new HexEditPane(this, 8, 8);
-        EDBG debugger = edbg;
-        hexPane.showVariable("USERROW", null, 0, data, (offset, value) -> debugger.writeUserRow(offset, new byte[] {(byte) value}));
+        Programmer debugger = edbg;
+        byte[] userRpw = debugger.readUserRow(0, 16);
+        boolean[] changed = new boolean[] {false};
+        hexPane.showVariable("USERROW", null, 0, data, (offset, value) -> {
+          userRpw[offset] = (byte) value;
+          changed[0] = true;
+        });
+        if (changed[0]) {
+          debugger.writeUserRow(0, userRpw);
+        }
       } catch (EDBG.EDBGException ex) {
         showErrorDialog(ex.getMessage());
       } finally {
@@ -932,17 +1014,17 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
       }
     });
     /*
-     *    Read Signature and Serial Number
+     *    Read Device Info (Signature and Serial Number)
      */
     JMenuItem idTarget;
     actions.add(idTarget = new JMenuItem("Identify Device"));
     idTarget.setToolTipText("Used to Read and Send Back Device's Signature & Serial Number");
     idTarget.addActionListener(e -> {
-      EDBG edbg = null;
+      Programmer edbg = null;
       boolean attached = false;
       try {
-        attached = debugger != null;
-        edbg = getDebugger(true);
+        attached = programmer != null;
+        edbg = getProgrammer(true);
         byte[] sig = edbg.getDeviceSignature();         // 3 bytes
         String code = String.format("%02X%02X%02X", sig[0], sig[1], sig[2]);
         ChipInfo chip = chipSignatures.get(code);
@@ -1009,43 +1091,52 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
         // Populate menu on demand
         progMenu.removeAll();
         ButtonGroup progGroup = new ButtonGroup();
-        for (EDBG.Programmer prog : EDBG.getProgrammers()) {
-          JRadioButtonMenuItem item = new JRadioButtonMenuItem(prog.name, prog.key.equals(progVidPid));
-          String tTip = String.format("<html><b>Product</b>: %s <br><b>VID</b>: 0x%04X<br><b>PID</b>: 0x%02X<br><b>Seria</b>l: %s " +
-                                          "<br><b>Release:</b> %d </html>",
-                                      prog.product, prog.vid, prog.pid, prog.serial, prog.release);
-          item.setToolTipText(tTip);
+        for (EDBG.ProgDevice prog : EDBG.getProgrammers(decodeUpdi())) {
+          boolean selected = prog.key.equals(progVidPid);
+          JRadioButtonMenuItem item = new JRadioButtonMenuItem(prog.name, selected);
+          item.setToolTipText(prog.getInfo());
           progMenu.add(item);
           progGroup.add(item);
-          item.addActionListener((ev) -> prefs.put("progVidPid", progVidPid = prog.key));
+          item.addActionListener((ActionEvent ev) -> {
+            progDev = prog;
+            prefs.put("progVidPid", progVidPid = prog.key);
+          });
+        }
+        if (!decodeUpdi()){
+          List<JRadioButtonMenuItem> items = jPort.getPortMenuItems();
+          for (JRadioButtonMenuItem item : items) {
+            progMenu.add(item);
+            progGroup.add(item);
+            item.addActionListener(ev -> {
+              prefs.put("progVidPid", progVidPid = "");
+            });
+          }
         }
       }
       @Override
-      public void menuDeselected (MenuEvent e) {
-      }
+      public void menuDeselected (MenuEvent e) {}
       @Override
-      public void menuCanceled (MenuEvent e) {
-      }
+      public void menuCanceled (MenuEvent e) {}
     });
     settings.add(progMenu);
     // Add Serial Port Menu, if "decode_updi" preference enabled
     jPort.setParameters (EDBG.UPDIClock * 1000, 8, 2, SerialPort.PARITY_EVEN);
-    JMenu serialPort = new JMenu("Serial Port");
-    serialPort.add(jPort.getPortMenu());
-    serialPort.setVisible(prefs.getBoolean("decode_updi", false));
+    JMenu serialPort = jPort.getPortMenu("Serial Port", null);
+    serialPort.setVisible(decodeUpdi());
     prefs.addPreferenceChangeListener(evt -> {
-      serialPort.setVisible(prefs.getBoolean("decode_updi", false));
+      serialPort.setVisible(decodeUpdi());
       jPort.setPort(prefs.get("serial.port", ""));
     });
     settings.add(serialPort);
     settings.addSeparator();
     // Add Debugger Menu Item
     debugMenu.setMnemonic(KeyEvent.VK_D);
-    debugMenu.setEnabled(tabPane.getSelectedIndex() == Tab.LIST.num);
+    //debugMenu.setEnabled(tabPane.getSelectedIndex() == Tab.LIST.num);
     debugMenu.addItemListener(ev -> {
       showDebugger = !showDebugger;
       debugMenu.setText(showDebugger ? "Hide Debugger" : "Show Debugger");
       listPane.showStatusPane(showDebugger);
+      tabPane.setSelectedIndex(Tab.LIST.num);
     });
     settings.add(debugMenu);
     debugMenu.setAccelerator(DEBUG_KEY);
@@ -1111,6 +1202,43 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     verifyToolchain(null);
   }
 
+  private void disassemble (ChipInfo chip, ListingPane listPane, byte[] data) {
+    data = Utility.trimAvrCode(data);
+    String intelHex = Utility.toIntelHex(data);
+    verifyToolchain(new Thread(() -> {
+      try {
+        Utility.removeFiles(new File(tmpDir));
+        // Write intel hex to temp dir
+        File file = new File(tmpDir + "intel.hex");
+        FileOutputStream out = new FileOutputStream(file);
+        PrintStream print = new PrintStream(out);
+        print.print(intelHex);
+        print.close();
+        // decompile intel hex
+        Map<String, String> tags = new HashMap<>();
+        tags.put("TDIR", tmpDir);
+        tags.put("TEXE", tmpExe);
+        String arch = "avr" +  chip.variant.substring(3);
+        String cmd = "*[TEXE]*bin/avr-objdump -m " + arch + " -D *[TDIR]*intel.hex";
+        cmd = Utility.replaceTags(cmd, tags);
+        Process proc = Runtime.getRuntime().exec(cmd);
+        String disasm =  Utility.runCmd(proc);
+        String pat = "00000000 <.sec1>:\n";
+        int idx = disasm.indexOf(pat);
+        if (idx >= 0) {
+          disasm = disasm.substring(idx + pat.length());
+        }
+        avrChip = chip.name;
+        targetMenu.setSelected(avrChip);
+        targetMenu.setText("Target->" + avrChip);
+        listPane.setText(disasm);
+        hexPane.setText(intelHex);
+      } catch (Exception ex) {
+        ex.printStackTrace();
+      }
+    }));
+  }
+
   private void setTarget (String target) {
     int items = targetMenu.getItemCount();
     for (int ii = 0; ii < items; ii++) {
@@ -1167,7 +1295,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
                 col = "0";
               }
               if (seq != null) {
-                mat.appendReplacement(buf, "<a href=\"err:" + line + ":" + col + "\">" + seq + "</a>");
+                mat.appendReplacement(buf, Matcher.quoteReplacement("<a href=\"err:" + line + ":" + col + "\">" + seq + "</a>"));
               }
             }
             mat.appendTail(buf);
@@ -1245,6 +1373,13 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     if (compiled || directHex) {
       return true;
     } else {
+      String hex = hexPane.getText();
+      if (hex != null && hex.length() > 0) {
+        Utility.CodeImage code = Utility.parseIntelHex(hex);
+        if (code.data.length > 0) {
+          return true;
+        }
+      }
       showErrorDialog("Code not built!");
     }
     return false;
@@ -1257,7 +1392,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
   }
 
   /**
-   * Very all the files in the toolchain are intact by computing a CRC2 value from the tree
+   * Verify all the files in the toolchain are intact by computing a CRC2 value from the tree
    * of directory and file names.  Note: the CRC is not based on the content of the files.
    */
   private void verifyToolchain (Thread thread) {

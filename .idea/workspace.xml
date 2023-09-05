@@ -13,9 +13,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/Programmer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/SDBG.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.MD" beforeDir="false" afterPath="$PROJECT_DIR$/README.MD" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/EDBG.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/EDBG.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/HexEditPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/HexEditPane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/JSSCPort.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/JSSCPort.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ListingPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ListingPane.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/MarkupView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MarkupView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MegaTinyIDE.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MegaTinyIDE.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UPDIDecoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UPDIDecoder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Utility.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Utility.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,20 +43,29 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
   <component name="ProjectId" id="1fVvICyR5lQAbgG0GhRqVpzkFVE" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;last_opened_file_path&quot;: &quot;/Users/wholder/IdeaProjects/MegaTinyIDE/docs&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;Settings.Markdown&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "/Users/wholder/IdeaProjects/MegaTinyIDE/Trace Files",
+    "project.structure.last.edited": "Problems",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.2",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/Trace Files" />
       <recent name="$PROJECT_DIR$/docs" />
       <recent name="$PROJECT_DIR$/resources/documentation/examples/images" />
       <recent name="$PROJECT_DIR$/images" />
@@ -58,11 +75,11 @@
       <recent name="Utility" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/test" />
       <recent name="$PROJECT_DIR$/docs" />
       <recent name="$PROJECT_DIR$/docs/UPDI 3rd party programmers/microUPDIcore" />
       <recent name="$PROJECT_DIR$/docs/UPDI 3rd party programmers" />
       <recent name="$PROJECT_DIR$/resources/documentation" />
-      <recent name="$PROJECT_DIR$/resources/interrupts" />
     </key>
     <key name="ExtractSuperBase.RECENT_KEYS">
       <recent name="" />
@@ -85,7 +102,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="HexEditPane" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+    <configuration name="HexEditPane (1)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="HexEditPane" />
       <module name="MegaTinyIDE" />
       <method v="2">
@@ -106,27 +123,27 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="NativeBuilder" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="NativeBuilder" />
-      <module name="NativeBuilder" />
+    <configuration name="Utility" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Utility" />
+      <module name="MegaTinyIDE" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <list>
+      <item itemvalue="Application.Utility" />
+      <item itemvalue="Application.HexEditPane (1)" />
       <item itemvalue="Application.MarkupView" />
-      <item itemvalue="Application.NativeBuilder" />
-      <item itemvalue="Application.HexEditPane" />
       <item itemvalue="Application.FusePane" />
       <item itemvalue="Application.MegaTinyIDE" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.MegaTinyIDE" />
+        <item itemvalue="Application.Utility" />
+        <item itemvalue="Application.HexEditPane (1)" />
         <item itemvalue="Application.MarkupView" />
         <item itemvalue="Application.FusePane" />
-        <item itemvalue="Application.NativeBuilder" />
-        <item itemvalue="Application.HexEditPane" />
       </list>
     </recent_temporary>
   </component>
@@ -138,6 +155,9 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1596315993204</updated>
+      <workItem from="1692902693255" duration="16000" />
+      <workItem from="1692902837197" duration="59000" />
+      <workItem from="1692926497546" duration="41000" />
     </task>
     <task id="LOCAL-00078" summary="Rework debugger interface">
       <created>1607381675077</created>
@@ -482,7 +502,7 @@
       <option name="project" value="LOCAL" />
       <updated>1648522232986</updated>
     </task>
-    <option name="localTasksCounter" value="129" />
+    <option name="localTasksCounter" value="130" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -509,7 +529,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Revert to jssc-2-8.0" />
     <MESSAGE value="Convert jpg images to png" />
     <MESSAGE value="debugger-related changes" />
     <MESSAGE value="debugger-related fixes" />
@@ -534,21 +553,8 @@
     <MESSAGE value="Version 1.0.9: Added code examples embedded in markup-type documentation" />
     <MESSAGE value="Bug fix for FusePane" />
     <MESSAGE value="Misc doc fixes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Misc doc fixes" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/MegaTinyIDE.java</url>
-          <line>988</line>
-          <properties>
-            <option name="lambda-ordinal" value="1" />
-          </properties>
-          <option name="timeStamp" value="92" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="Add markdown hover text that shows file path for links" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add markdown hover text that shows file path for links" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
@@ -557,6 +563,6 @@
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/MegaTinyIDE$BinFileCompare.ic" NAME="BinFileCompare Coverage Results" MODIFIED="1601853378592" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/MegaTinyIDE$ElfDump.ic" NAME="ElfDump Coverage Results" MODIFIED="1631841301760" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
-    <SUITE FILE_PATH="coverage/MegaTinyIDE$MegaTinyIDE.ic" NAME="MegaTinyIDE Coverage Results" MODIFIED="1602453257039" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/MegaTinyIDE$MegaTinyIDE.ic" NAME="MegaTinyIDE Coverage Results" MODIFIED="1693439561917" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>

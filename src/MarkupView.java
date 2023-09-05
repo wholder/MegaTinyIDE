@@ -484,7 +484,8 @@ class MarkupView extends JPanel {
     while (mat.find()) {
       String g1 = mat.group(1);
       String g2 = mat.group(2);
-      mat.appendReplacement(buf, "[" + g1 + "](" + g2 + " \"" + g2 + "\")");
+      // Need call to Matcher.quoteReplacement to prevent recursive matching on replacement string
+      mat.appendReplacement(buf, Matcher.quoteReplacement("[" + g1 + "](" + g2 + " \"" + g2 + "\")"));
     }
     mat.appendTail(buf);
     return buf.toString();

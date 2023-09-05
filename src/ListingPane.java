@@ -55,7 +55,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
   private int                         ePos;
   private int                         lineCount;
   private boolean                     attached, running;
-  private EDBG                        debugger;
+  private Programmer                  debugger;
   private String                      rawSrc = "";
 
   interface DebugListener {
@@ -261,8 +261,8 @@ public class ListingPane extends JPanel {   // https://regex101.com
     this.prefs = prefs;
     prefs.addPreferenceChangeListener(evt -> {
       if ("decode_updi".equals(evt.getKey())) {
-        // Disable RUN button when decode_updi is active (interferes with UPDI timing)
-        boolean state = prefs.getBoolean("decode_updi", false);
+        // Disable RUN button when UPDI decoding is active (interferes with UPDI timing)
+        boolean state = ide.decodeUpdi();
         if (statusPane != null && attached) {
           statusPane.run.setEnabled(!state);
         }
@@ -544,7 +544,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
           portB.setActiveMask((portMask >> 8) & 0xFF);
           portA.setActiveMask(portMask & 0xFF);
           try {
-            debugger = ide.getDebugger(false);
+            debugger = ide.getProgrammer(false);
             debugger.resetTarget();
             debugger.setOcdListener(text -> {
               if (running) {
