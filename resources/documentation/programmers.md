@@ -63,3 +63,10 @@ The [ATTiny817-XPlained-Mini](https://www.microchip.com/developmenttools/Product
 <p align="center"><img src="images/416Nano.png"></p>
 
 The [ATTiny416-XPlained-Nano](https://www.microchip.com/developmenttools/ProductDetails/attiny817-xmini) is a small, inexpensive ([~$15 at Mouser](https://www.mouser.com/ProductDetail/Microchip-Technology-Atmel/ATTINY416-XNANO?qs=1mbolxNpo8fQGr9Vr3B9Wg%3D%3D), [~$15 at Digi-Key](https://www.digikey.com/en/products/detail/microchip-technology/ATTINY416-XNANO/7801795?s=N4IgTCBcDaIIIBUEEsB2BPALARgGwgF0BfIA)) development board that contains both an ATTiny416 and a ATmega32U4 pre-programmed to act as a programmer and debugger for the ATTiny416.  The ATmega32U4 acting as the debugger is relatively slow and runs a cut down version version of Microchip's debugger software called mEDBG.  In theory, the on-board ATmega32U4 could be used to program and debug external target devices, as the UPDI protocol is the same for all members of the new attiny family, but Microchip does not supply instructions on how to do this.
+
+## USB/Serial-based Programmers<a name='UpdiProg'></a>
+
+With the addition of a few components, it's possible to use a USB/Serial adapter as a UPDI programmer.  The following circuit can be used with a CH340-based adapter board to build one:
+
+<p align="center"><img src="images/UpdiProg.png"></p>
+

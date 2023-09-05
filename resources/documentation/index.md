@@ -18,6 +18,7 @@
    + [ATTiny3217-Curiosity-Nano](documentation/programmers.md#3217Nano)
    + [ATTiny817-Xplained-Mini](documentation/programmers.md#817Mini)
    + [ATTiny416-Xplained-Nano](documentation/programmers.md#416Nano)
+   + [USB/Serial-based programmers](documentation/programmers.md#UpdiProg)
 
 #### Pinout Guides
 <table>

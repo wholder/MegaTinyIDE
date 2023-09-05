@@ -13,11 +13,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/resources/fuseFields.props" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/documentation/images/UpdiProg.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/FusePane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/FusePane.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/HexEditPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/HexEditPane.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/SDBG.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/SDBG.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/documentation/programmers.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/programmers.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,7 +46,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "/Users/wholder/IdeaProjects/MegaTinyIDE/Trace Files",
+    "last_opened_file_path": "/Users/wholder/IdeaProjects/MegaTinyIDE/resources/documentation/images",
     "project.structure.last.edited": "Problems",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.2",
@@ -59,11 +57,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/resources/documentation/images" />
       <recent name="$PROJECT_DIR$/Trace Files" />
       <recent name="$PROJECT_DIR$/docs" />
       <recent name="$PROJECT_DIR$/resources/documentation/examples/images" />
       <recent name="$PROJECT_DIR$/images" />
-      <recent name="$PROJECT_DIR$/resources/test" />
     </key>
     <key name="MoveMembersDialog.RECENTS_KEY">
       <recent name="Utility" />
@@ -496,7 +494,7 @@
       <option name="project" value="LOCAL" />
       <updated>1648522232986</updated>
     </task>
-    <option name="localTasksCounter" value="132" />
+    <option name="localTasksCounter" value="133" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -523,7 +521,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="debugger-related changes" />
     <MESSAGE value="debugger-related fixes" />
     <MESSAGE value="Add Actions-&gt;Read EEPROM feature" />
     <MESSAGE value="View &amp; Edit SRAM variables and EEPROM" />
@@ -548,7 +545,8 @@
     <MESSAGE value="Misc doc fixes" />
     <MESSAGE value="Add markdown hover text that shows file path for links" />
     <MESSAGE value="Prelim support for usb/serial-based programming&#10;Note: still experimental" />
-    <option name="LAST_COMMIT_MESSAGE" value="Prelim support for usb/serial-based programming&#10;Note: still experimental" />
+    <MESSAGE value="Misc changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Misc changes" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
