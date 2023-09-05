@@ -1,0 +1,23 @@
+WINDOW: Watchdog Window Timeout Period
+PERIOD: Watchdog Timeout Period
+LVL: BOD Level
+SAMPFREQ: BOD Sample Frequency
+ACTIVE: BOD Operation Mode in Active and Idle
+SLEEP: BOD Operation Mode in Sleep
+OSCLOCK: Oscillator Lock
+FREQSEL: Frequency Select
+CMPDEN: Compare D Enable
+CMPCEN: Compare C Enable
+CMPBEN: Compare E Enable
+CMPAEN: Compare A Enable
+CMPD: Compare D
+CMPC: Compare C
+CMPB: Compare B
+CMPA: Compare A
+CRCSRC: CRC Source
+TOUTDIS: Time-Out Disable
+RSTPINCFG: Reset Pin Configuration
+EESAVE: EEPROM Save during chip erase
+SUT: Start Up Time Setting
+APPSIZE: Application Code Section End
+BOOTSIZE: Boot Section End

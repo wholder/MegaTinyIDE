@@ -87,19 +87,19 @@ public class SDBG extends Programmer {
   public static final int     SRAM_128_BASE = 0x3F80;   //
   public static final int     SRAM__256_BASE = 0x3F00;  //
   public static final int     FLASH_BASE = 0x8000;      //
-  // NVMCTRL Registers
-  public static final int     NVM_CTRLA = 0x00;         // Note: Offset from NVMCTRL_BASE
-  public static final int     NVM_CTRLB = 0x01;
-  public static final int     NVM_STATUS = 0x02;
-  public static final int     NVM_INTCTRL = 0x03;
-  public static final int     NVM_INTFLAGS = 0x04;
-  public static final int     NVM_DATAL = 0x06;
-  public static final int     NVM_DATAH = 0x07;
-  public static final int     NVM_ADDL = 0x08;
-  public static final int     NVM_ADDH = 0x09;
+  // NVMCTRL Registers (Offset from NVMCTRL_BASE)
+  public static final int     NVM_CTRLA = 0x00;         // NVMCTRL_BASE.CTRLA
+  public static final int     NVM_CTRLB = 0x01;         // NVMCTRL_BASE.CTRLB
+  public static final int     NVM_STATUS = 0x02;        // NVMCTRL_BASE.STATUS
+  public static final int     NVM_INTCTRL = 0x03;       // NVMCTRL_BASE.INTCTRL
+  public static final int     NVM_INTFLAGS = 0x04;      // NVMCTRL_BASE.INTFLAGS
+  public static final int     NVM_DATAL = 0x06;         // NVMCTRL_BASE.DATAL
+  public static final int     NVM_DATAH = 0x07;         // NVMCTRL_BASE.DATAH
+  public static final int     NVM_ADDL = 0x08;          // NVMCTRL_BASE.ADDL
+  public static final int     NVM_ADDH = 0x09;          // NVMCTRL_BASE.ADDH
   // Misc constants
-  public static final int     BYTE = 0;                 // Byte xdress or data
-  public static final int     WORD = 1;                 // Word xdress or data
+  public static final int     BYTE = 0;                 // Byte address or data
+  public static final int     WORD = 1;                 // Word address or data
   // Variables
   private final JSSCPort        jPort;
 
@@ -432,7 +432,7 @@ public class SDBG extends Programmer {
   private void exitNvmProgMode () throws SerialPortException {
     stcs(ASI_RESET_REQ, 0x59);
     stcs(ASI_RESET_REQ, 0x00);
-    ldcs(ASI_SYS_STATUS);                                     // Clears RSTSYS bit
+    ldcs(ASI_SYS_STATUS);                                             // Clears RSTSYS bit
   }
 
   /**
@@ -638,30 +638,30 @@ public class SDBG extends Programmer {
     new NvmHandler() {
       @Override
       byte[] action () throws SerialPortException {
-        int pageSize = 64;                                                      // 32 words
-        waitRegMaskZero(NVMCTRL_BASE + NVM_STATUS, 0x03);                   // Wait for FBUSY and EEBUSY == 0
-        stsByte(NVMCTRL_BASE + NVM_CTRLA, NVM_CHER);                        // 0x05 -> NVM.NVM.CTRLA (Chip erase)
-        waitRegMaskZero(NVMCTRL_BASE + NVM_STATUS, 0x03);                   // Wait for FBUSY and EEBUSY == 0
+        int pageSize = 64;                                            // 32 words
+        waitRegMaskZero(NVMCTRL_BASE + NVM_STATUS, 0x03);             // Wait for FBUSY and EEBUSY == 0
+        stsByte(NVMCTRL_BASE + NVM_CTRLA, NVM_CHER);                  // 0x05 -> NVM.NVM.CTRLA (Chip erase)
+        waitRegMaskZero(NVMCTRL_BASE + NVM_STATUS, 0x03);             // Wait for FBUSY and EEBUSY == 0
         for (int idx = 0; idx < data.length; idx += pageSize) {
-          stsByte(NVMCTRL_BASE + NVM_CTRLA, NVM_PBC);                       // 0x04 -> NVM.NVM.CTRLA (Page buffer clear)
-          waitRegMaskZero(NVMCTRL_BASE + NVM_STATUS, 0x03);                 // Wait for FBUSY and EEBUSY == 0
-          stWord(PTR, FLASH_BASE + address + idx);                              // FLASH_BASE + address + idx -> ptr
+          stsByte(NVMCTRL_BASE + NVM_CTRLA, NVM_PBC);                 // 0x04 -> NVM.NVM.CTRLA (Page buffer clear)
+          waitRegMaskZero(NVMCTRL_BASE + NVM_STATUS, 0x03);           // Wait for FBUSY and EEBUSY == 0
+          stWord(PTR, FLASH_BASE + address + idx);                    // FLASH_BASE + address + idx -> ptr
           byte[] page = new byte[pageSize];
-          int remain = Math.min(pageSize, data.length - idx);                   // remaining bytes to write in page
-          System.arraycopy(data, idx, page, 0, remain);                         // Copy bytes into page[] array
+          int remain = Math.min(pageSize, data.length - idx);         // remaining bytes to write in page
+          System.arraycopy(data, idx, page, 0, remain);               // Copy bytes into page[] array
           for (int ii = remain; ii < pageSize; ii++) {
-            page[ii] = (byte) 0xFF;                                             // Fill unused bytes with 0xFF
+            page[ii] = (byte) 0xFF;                                   // Fill unused bytes with 0xFF
           }
           int[] words = bytesToWords(page);
-          setRepeat(pageSize / 2 - 1);                                          // Repeat fllowing command pageSize / 2 -1 times
-          stWord(AT_PTR_PP, words[0]);                                          // Write first word to ptr
+          setRepeat(pageSize / 2 - 1);                                // Repeat fllowing command pageSize / 2 -1 times
+          stWord(AT_PTR_PP, words[0]);                                // Write first word to ptr
           for (int ii = 1; ii < words.length; ii++) {
             int word = words[ii];
             sendBytes(new byte[] {(byte) word, (byte) (word >> 8)});
             getAck();
           }
-          stsByte(NVMCTRL_BASE + NVM_CTRLA, NVM_WP);                        // 0x01 -> NVM.NVM.CTRLA (Write page buffer to memory)
-          waitRegMaskZero(NVMCTRL_BASE + NVM_STATUS, 0x03);                 // Wait for FBUSY and EEBUSY == 0
+          stsByte(NVMCTRL_BASE + NVM_CTRLA, NVM_WP);                  // 0x01 -> NVM.NVM.CTRLA (Write page buffer to memory)
+          waitRegMaskZero(NVMCTRL_BASE + NVM_STATUS, 0x03);           // Wait for FBUSY and EEBUSY == 0
         }
         return null;
       }
@@ -798,15 +798,15 @@ public class SDBG extends Programmer {
       @Override
       byte[] action () throws SerialPortException {
         waitFlash();
-        stsByte(NVMCTRL_BASE + NVM_CTRLA, NVM_EEER);              // 0x06 (Erase EEPROM)
+        stsByte(NVMCTRL_BASE + NVM_CTRLA, NVM_EEER);                  // 0x06 (Erase EEPROM)
         for (int idx = 0; idx < data.length; idx += 32) {
           int remain = Math.min(32, data.length - idx);
           byte[] buf = new byte[remain];
           System.arraycopy(data, idx, buf, 0, buf.length);
           waitFlash();
-          stsByte(NVMCTRL_BASE + NVM_CTRLA, NVM_PBC);             // 0x04 (Page buffer clear)
+          stsByte(NVMCTRL_BASE + NVM_CTRLA, NVM_PBC);                 // 0x04 (Page buffer clear)
           writeMemory(EEPROM_BASE + address + idx, buf);
-          stsByte(NVMCTRL_BASE + NVM_CTRLA, NVM_WP);              // 0x01 (Write page buffer to memory)
+          stsByte(NVMCTRL_BASE + NVM_CTRLA, NVM_WP);                  // 0x01 (Write page buffer to memory)
         }
         waitFlash();
         return null;

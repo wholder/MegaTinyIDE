@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.*;
 
 import static javax.swing.JOptionPane.*;
@@ -48,11 +49,21 @@ import static javax.swing.JOptionPane.*;
  */
 
 public class FusePane extends JPanel {
-  Map<String,MyJComboBox>   comps = new HashMap<>();
-  private int               col, row;
-  private int               appEnd, bootEnd;
-  private final byte[]      priorVals = new byte[11];
-  private final int[]       usedBitMasks = new int[] {0xFF, 0xFF, 0x83, 0x00, 0xFF, 0xDD, 0x07, 0xFF, 0xFF, 0x00, 0x00};
+  static Map<String,String>   tooltips = new HashMap<>();
+  Map<String,MyJComboBox>     comps = new HashMap<>();
+  private int                 col, row;
+  private int                 appEnd, bootEnd;
+  private final byte[]        priorVals = new byte[11];
+  private final int[]         usedBitMasks = new int[] {0xFF, 0xFF, 0x83, 0x00, 0xFF, 0xDD, 0x07, 0xFF, 0xFF, 0x00, 0x00};
+
+  static {
+    try {
+      tooltips = Utility.getResourceMap("fuseFields.props");
+      int dum = 0;
+    } catch (IOException ex) {
+      ex.printStackTrace();
+    }
+  }
 
   static class MyJComboBox extends JComboBox<String> {
     private final Map<Integer,Integer>  valueIndex = new HashMap<>();
@@ -60,7 +71,9 @@ public class FusePane extends JPanel {
     private int                         initialValue;
 
     MyJComboBox (String name, String[] values) {
-      setToolTipText(name);
+      String toolTip = tooltips.get(name);
+      setToolTipText(toolTip != null ? (name + ": " + toolTip) : name);
+      System.out.println(name);
       setPrototypeDisplayValue("xx");
       DefaultListCellRenderer listRenderer = new DefaultListCellRenderer();
       listRenderer.setHorizontalAlignment(DefaultListCellRenderer.CENTER);
@@ -201,7 +214,7 @@ public class FusePane extends JPanel {
       break;
     case 0x05:    // SYSCFG0 - System Configuration 0
       setFieldValue("CRCSRC",     (value >> 6) & 0x03);       //  Mask = 0xC0
-      setFieldValue("TOUTDIS",    (value >> 4) & 0x01);       //  Mask = 0x10
+      setFieldValue("TOUTDIS",    (value >> 4) & 0x01);       //  Mask = 0x10   // ATtiny3216/3217
       setFieldValue("RSTPINCFG",  (value >> 2) & 0x03);       //  Mask = 0x0C
       setFieldValue("EESAVE",     value & 0x01);              //  Mask = 0x01
                                                               //  ORed = 0xDD

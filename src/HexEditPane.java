@@ -79,6 +79,7 @@ public class HexEditPane extends JTextPane {
       addMouseListener(new MouseAdapter() {
         @Override
         public void mousePressed (MouseEvent ev) {
+          int clickCount = ev.getClickCount();
           int pos = getUI().viewToModel(HexEditPane.this, ev.getPoint());
           int row = pos / rowWidth;
           int col = pos % rowWidth;
@@ -91,7 +92,7 @@ public class HexEditPane extends JTextPane {
                 Highlighter highlighter = getHighlighter();
                 highlighter.addHighlight(posHex[off], posHex[off] + 4, hp);
                 highlighter.addHighlight(posChr[off], posChr[off] + 1, hp);
-                if (SwingUtilities.isRightMouseButton(ev)) {
+                if (SwingUtilities.isRightMouseButton(ev) || clickCount == 2) {
                   setToolTipText(null);
                   JPanel panel = new JPanel();
                   panel.setLayout(new FlowLayout());
