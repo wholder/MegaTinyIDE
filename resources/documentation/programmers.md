@@ -66,7 +66,16 @@ The [ATTiny416-XPlained-Nano](https://www.microchip.com/developmenttools/Product
 
 ## USB/Serial-based Programmers<a name='UpdiProg'></a>
 
-With the addition of a few components, it's possible to use a USB/Serial adapter as a UPDI programmer.  The following circuit can be used with a CH340-based adapter board to build one:
+With the addition of a few components, it's possible to use a USB/Serial adapter as a UPDI programmer.  The following circuit can be used with a USB/Serial adapter board, such as as one based on the CH340, to build one:
 
 <p align="center"><img src="images/UpdiProg.png"></p>
 
+Note: this approach only supports the following basic programming functions and not debugging:
+
+ + Read Flash
+ + Disassemble Flash
+ + Program Flash
+ + Read/Modify Fuses
+ + Read/Modify EEPROM
+ + Read/Modify USERROW
+ + Identify Device

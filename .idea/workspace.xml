@@ -14,10 +14,8 @@
   <component name="ChangeListManager">
     <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/EDBG.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/EDBG.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MegaTinyIDE.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MegaTinyIDE.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Programmer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Programmer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/SDBG.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/SDBG.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/documentation/images/UpdiProg.png" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/images/UpdiProg.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/documentation/programmers.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/programmers.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,11 +67,11 @@
       <recent name="Utility" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/resources/documentation/images" />
       <recent name="$PROJECT_DIR$/test" />
       <recent name="$PROJECT_DIR$/docs" />
       <recent name="$PROJECT_DIR$/docs/UPDI 3rd party programmers/microUPDIcore" />
       <recent name="$PROJECT_DIR$/docs/UPDI 3rd party programmers" />
-      <recent name="$PROJECT_DIR$/resources/documentation" />
     </key>
     <key name="ExtractSuperBase.RECENT_KEYS">
       <recent name="" />
@@ -496,7 +494,7 @@
       <option name="project" value="LOCAL" />
       <updated>1648522232986</updated>
     </task>
-    <option name="localTasksCounter" value="136" />
+    <option name="localTasksCounter" value="137" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -545,10 +543,10 @@
     <MESSAGE value="Misc doc fixes" />
     <MESSAGE value="Add markdown hover text that shows file path for links" />
     <MESSAGE value="Prelim support for usb/serial-based programming&#10;Note: still experimental" />
-    <MESSAGE value="Misc changes" />
     <MESSAGE value="Add documentation" />
     <MESSAGE value="Bug fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="Bug fix" />
+    <MESSAGE value="Misc changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Misc changes" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
