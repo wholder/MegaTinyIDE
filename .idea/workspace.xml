@@ -13,9 +13,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/resources/documentation/images/UpdiProg.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/documentation/programmers.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/programmers.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Programmer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Programmer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,18 +42,18 @@
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "/Users/wholder/IdeaProjects/MegaTinyIDE/resources/documentation/images",
-    "project.structure.last.edited": "Problems",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.2",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/wholder/IdeaProjects/MegaTinyIDE/resources/documentation/images&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Problems&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/resources/documentation/images" />
@@ -494,7 +493,7 @@
       <option name="project" value="LOCAL" />
       <updated>1648522232986</updated>
     </task>
-    <option name="localTasksCounter" value="133" />
+    <option name="localTasksCounter" value="134" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -521,7 +520,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="debugger-related fixes" />
     <MESSAGE value="Add Actions-&gt;Read EEPROM feature" />
     <MESSAGE value="View &amp; Edit SRAM variables and EEPROM" />
     <MESSAGE value="Code cleanup and toolchain loader fix" />
@@ -546,7 +544,8 @@
     <MESSAGE value="Add markdown hover text that shows file path for links" />
     <MESSAGE value="Prelim support for usb/serial-based programming&#10;Note: still experimental" />
     <MESSAGE value="Misc changes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Misc changes" />
+    <MESSAGE value="Add documentation" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add documentation" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

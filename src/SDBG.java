@@ -137,15 +137,16 @@ public class SDBG extends Programmer {
           };
           System.out.println("init() " + errCodes[code]);
         } else {
+          ldcs(UPDI_STATUSA);
+          ldcs(UPDI_STATUSB);
           return;
         }
       } catch (Exception ex) {
         System.out.println("init() retry on err: " + ex.getMessage());
-        ldcs(UPDI_STATUSB);
       }
       retry--;
     } while (code != 0 || retry > 0);
-    jPort.purgePort(SerialPort.PURGE_RXCLEAR | SerialPort.PURGE_TXCLEAR);
+    throw new IllegalStateException("init() timeout");
   }
 
   /**

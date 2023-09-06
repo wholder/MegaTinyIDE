@@ -5,7 +5,7 @@ import org.hid4java.HidServices;
 import java.io.IOException;
 import java.util.*;
 
-public class Programmer {
+abstract public class Programmer {
   // System base addresses
   static final int SIGNATURES_BASE = 0x1100; // SIGROW
   static final int SERIAL_NUM_BASE = 0x1103;
@@ -94,66 +94,42 @@ public class Programmer {
     return list;
   }
 
-  // Programming Methods
-  public byte[] getDeviceSignature () throws EDBGException {
-    throw new EDBGException("Programmer.getDeviceSignature() not implemented");
-  }
+  // Target Programming Methods
+  abstract public byte[] getDeviceSignature () throws EDBGException;
 
-  public byte[] readFlash (int address, int len) throws EDBGException {
-    throw new EDBGException("Programmer.readFlash(int address, int len) not implemented");
-  }
+  abstract public byte[] readFlash (int address, int len) throws EDBGException;
 
-  public void eraseTarget (int address, int mode) throws EDBGException {
-    throw new EDBGException("Programmer.eraseTarget(int address, int mode) not implemented");
-  }
+  abstract public void eraseTarget (int address, int mode) throws EDBGException;
 
-  public void writeFlash (int address, byte[] data) throws EDBGException {
-    throw new EDBGException("Programmer.eraseTarget(int address, int mode) not implemented");
-  }
+  abstract public void writeFlash (int address, byte[] data) throws EDBGException;
 
-  public byte[] readFuses (int[] offsets) throws EDBGException {
-    throw new EDBGException("Programmer.readFuses(int[] offsets) not implemented");
-  }
+  abstract public byte[] readFuses (int[] offsets) throws EDBGException;
 
-  public void writeFuses (int[] offsets, byte[] fuses) throws EDBGException {
-    throw new EDBGException("Programmer.writeFuses(int[] offsets, byte[] fuses) not implemented");
-  }
+  abstract  public void writeFuses (int[] offsets, byte[] fuses) throws EDBGException;
 
-  public byte[] readEeprom (int address, int len) throws EDBGException {
-    throw new EDBGException("Programmer.readEeprom(int address, int len) not implemented");
-  }
+  abstract public byte[] readEeprom (int address, int len) throws EDBGException;
 
-  public void writeEeprom (int address, byte[] data) throws EDBGException {
-    throw new EDBGException("Programmer.writeEeprom(int address, byte[] data) not implemented");
-  }
+  abstract public void writeEeprom (int address, byte[] data) throws EDBGException;
 
-  public byte[] readUserRow (int address, int len) throws EDBGException {
-    throw new EDBGException("Programmer.readUserRow(int address, int len) not implemented");
-  }
+  abstract public byte[] readUserRow (int address, int len) throws EDBGException;
 
-  public void writeUserRow (int address, byte[] data) throws EDBGException {
-    throw new EDBGException("Programmer.writeUserRow(int address, byte[] data) not implemented");
-  }
+  abstract public void writeUserRow (int address, byte[] data) throws EDBGException;
 
-  public byte[] getDeviceSerialNumber () throws EDBGException {
-    throw new EDBGException("Programmer.getDeviceSerialNumber() not implemented");
-  }
+  abstract public byte[] getDeviceSerialNumber () throws EDBGException;
 
-  public void close () {
-    throw new EDBGException("Programmer.close() not implemented");
-  }
+  abstract public void close ();
 
-  // Debugging Methods (Note: currently these are only implmeneted in the EDBG class)
+  // Target Debugging Methods (Note: currently these are only implmeneted in the EDBG class)
   public void resetTarget () throws EDBGException {
     throw new EDBGException("Programmer.resetTarget() not implemented");
   }
 
-  public void stopTarget () throws InterruptedException, EDBGException {
-    throw new EDBGException("Programmer.stopTarget() not implemented");
-  }
-
   public void runTarget () throws InterruptedException, EDBGException {
     throw new EDBGException("Programmer.runTarget() not implemented");
+  }
+
+  public void stopTarget () throws InterruptedException, EDBGException {
+    throw new EDBGException("Programmer.stopTarget() not implemented");
   }
 
   public void runToAddress (int address) throws InterruptedException, EDBGException {
