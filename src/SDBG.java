@@ -109,6 +109,10 @@ public class SDBG extends Programmer {
     jPort.setParameters(SerialPort.BAUDRATE_57600, SerialPort.DATABITS_8, SerialPort.STOPBITS_2, SerialPort.PARITY_EVEN);
   }
 
+  public boolean canDebug () {
+    return false;
+  }
+
   /**
    * Initiaoize the UPDI interface (in case it's jammed up)
    * @throws SerialPortException

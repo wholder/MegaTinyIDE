@@ -1100,6 +1100,9 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
           item.addActionListener((ActionEvent ev) -> {
             progDev = prog;
             prefs.put("progVidPid", progVidPid = prog.key);
+            if (debugMenu != null) {
+              debugMenu.setEnabled(true);
+            }
           });
         }
         if (!decodeUpdi()){
@@ -1109,6 +1112,9 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
             progGroup.add(item);
             item.addActionListener(ev -> {
               prefs.put("progVidPid", progVidPid = "");
+              if (debugMenu != null) {
+                debugMenu.setEnabled(false);
+              }
             });
           }
         }
@@ -1131,13 +1137,13 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     settings.addSeparator();
     // Add Debugger Menu Item
     debugMenu.setMnemonic(KeyEvent.VK_D);
-    //debugMenu.setEnabled(tabPane.getSelectedIndex() == Tab.LIST.num);
     debugMenu.addItemListener(ev -> {
       showDebugger = !showDebugger;
       debugMenu.setText(showDebugger ? "Hide Debugger" : "Show Debugger");
       listPane.showStatusPane(showDebugger);
       tabPane.setSelectedIndex(Tab.LIST.num);
     });
+    debugMenu.setEnabled(progVidPid != null && progVidPid.length() > 0);
     settings.add(debugMenu);
     debugMenu.setAccelerator(DEBUG_KEY);
     tabPane.addChangeListener(ev -> debugMenu.setEnabled(tabPane.getSelectedIndex() == Tab.LIST.num));
