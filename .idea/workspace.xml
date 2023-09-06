@@ -86,13 +86,6 @@
     </key>
   </component>
   <component name="RunManager" selected="Application.MegaTinyIDE">
-    <configuration name="FusePane" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="FusePane" />
-      <module name="MegaTinyIDE" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="HexEditPane (1)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="HexEditPane" />
       <module name="MegaTinyIDE" />
@@ -114,6 +107,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="NativeBuilder" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="NativeBuilder" />
+      <module name="NativeBuilder" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Utility" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Utility" />
       <module name="MegaTinyIDE" />
@@ -122,19 +122,19 @@
       </method>
     </configuration>
     <list>
+      <item itemvalue="Application.NativeBuilder" />
       <item itemvalue="Application.Utility" />
       <item itemvalue="Application.HexEditPane (1)" />
       <item itemvalue="Application.MarkupView" />
-      <item itemvalue="Application.FusePane" />
       <item itemvalue="Application.MegaTinyIDE" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.MegaTinyIDE" />
+        <item itemvalue="Application.NativeBuilder" />
         <item itemvalue="Application.Utility" />
         <item itemvalue="Application.HexEditPane (1)" />
         <item itemvalue="Application.MarkupView" />
-        <item itemvalue="Application.FusePane" />
       </list>
     </recent_temporary>
   </component>
