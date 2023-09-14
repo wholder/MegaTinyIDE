@@ -830,9 +830,25 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
             String code = String.format("%02X%02X%02X", sig[0], sig[1], sig[2]);
             ChipInfo chip = chipSignatures.get(code);
             int flashSize = chip.getInt("flash") * 1024;
-            byte[] data = edbg.readFlash(0, flashSize);
-            HexEditPane flashPane = new HexEditPane(this, 16, 16);
-            flashPane.showVariable("Flash Code", "Flash Code", 0, data, null);
+            new Thread(() -> {
+              Utility.ProgressBar progress = null;
+              if (edbg instanceof SDBG) {
+                progress = new Utility.ProgressBar(MegaTinyIDE.this, "Reading Flash");
+                ((SDBG) edbg).setProgress(progress);
+              }
+              byte[] data1 = edbg.readFlash(0, flashSize);
+              progress.setMessage("Verifying...");
+              byte[] data2 = edbg.readFlash(0, flashSize);
+              if (progress != null) {
+                progress.close();
+              }
+              if (Arrays.equals(data1, data2)) {
+                HexEditPane flashPane = new HexEditPane(MegaTinyIDE.this, 16, 16);
+                flashPane.showVariable("Flash Code", "Flash Code", 0, data1, null);
+              } else {
+                showErrorDialog("Verify failed");
+              }
+            }).start();
           } finally {
             edbg.close();
           }
@@ -851,13 +867,29 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
         try {
           Programmer edbg = getProgrammer(true);
           try {
-            byte[] sig = edbg.getDeviceSignature();         // 3 bytes
-            String code = String.format("%02X%02X%02X", sig[0], sig[1], sig[2]);
-            ChipInfo chip = chipSignatures.get(code);
-            int flashSize = chip.getInt("flash") * 1024;
-            byte[] data = edbg.readFlash(0, flashSize);
-            disassemble(chip, listPane, data);
-            tabPane.setSelectedIndex(Tab.LIST.num);
+            new Thread(() -> {
+              byte[] sig = edbg.getDeviceSignature();         // 3 bytes
+              String code = String.format("%02X%02X%02X", sig[0], sig[1], sig[2]);
+              ChipInfo chip = chipSignatures.get(code);
+              int flashSize = chip.getInt("flash") * 1024;
+              Utility.ProgressBar progress = null;
+              if (edbg instanceof SDBG) {
+                progress = new Utility.ProgressBar(MegaTinyIDE.this, "Reading Flash");
+                ((SDBG) edbg).setProgress(progress);
+              }
+              byte[] data1 = edbg.readFlash(0, flashSize);
+              progress.setMessage("Verifying...");
+              byte[] data2 = edbg.readFlash(0, flashSize);
+              if (progress != null) {
+                progress.close();
+              }
+              if (Arrays.equals(data1, data2)) {
+                disassemble(chip, listPane, data1);
+                tabPane.setSelectedIndex(Tab.LIST.num);
+              } else {
+                showErrorDialog("Verify failed");
+              }
+            }).start();
           } finally {
             edbg.close();
           }
@@ -877,8 +909,23 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
           Utility.CodeImage codeImg = Utility.parseIntelHex(hexPane.getText());
           Programmer edbg = getProgrammer(true);
           try {
-            edbg.eraseTarget(0, 0);         //
-            edbg.writeFlash(0, codeImg.data);
+            new Thread(() -> {
+              Utility.ProgressBar progress = null;
+              if (edbg instanceof SDBG) {
+                progress = new Utility.ProgressBar(MegaTinyIDE.this, "Writing Flash");
+                ((SDBG) edbg).setProgress(progress);
+              }
+              edbg.eraseTarget(0, 0);         //
+              edbg.writeFlash(0, codeImg.data);
+              progress.setMessage("Verifying...");
+              byte[] data2 = edbg.readFlash(0, codeImg.data.length);
+              if (progress != null) {
+                progress.close();
+              }
+              if (!Arrays.equals(codeImg.data, data2)) {
+                showErrorDialog("Verify failed");
+              }
+            }).start();
           } finally {
             edbg.close();
           }

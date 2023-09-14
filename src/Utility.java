@@ -766,6 +766,7 @@ class Utility {
   static class ProgressBar extends JFrame {
     private final JDialog       frame;
     private final JProgressBar  progress;
+    private final JTextArea txt;
 
     ProgressBar (JFrame comp, String msg) {
       frame = new JDialog(comp);
@@ -774,13 +775,18 @@ class Utility {
       pnl.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
       frame.add(pnl, BorderLayout.CENTER);
       pnl.add(progress = new JProgressBar(), BorderLayout.NORTH);
-      JTextArea txt = new JTextArea(msg);
+      progress.setMaximum(100);
+      txt = new JTextArea(msg);
       txt.setEditable(false);
       pnl.add(txt, BorderLayout.SOUTH);
       Rectangle loc = comp.getBounds();
       frame.pack();
       frame.setLocation(loc.x + loc.width / 2 - 150, loc.y + loc.height / 2 - 150);
       frame.setVisible(true);
+    }
+
+    void setMessage (String msg) {
+      SwingUtilities.invokeLater(() -> txt.setText(msg));
     }
 
     void setValue (int value) {
