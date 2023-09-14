@@ -12,10 +12,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.MD" beforeDir="false" afterPath="$PROJECT_DIR$/README.MD" afterDir="false" />
-    </list>
+    <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -85,7 +82,7 @@
       <recent name="tools" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.NativeBuilder (2)">
+  <component name="RunManager" selected="Application.MegaTinyIDE">
     <configuration name="MegaTinyIDE" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="MegaTinyIDE" />
       <module name="MegaTinyIDE" />
@@ -130,8 +127,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.NativeBuilder (2)" />
         <item itemvalue="Application.MegaTinyIDE" />
+        <item itemvalue="Application.NativeBuilder (2)" />
         <item itemvalue="Application.NativeBuilder (1)" />
         <item itemvalue="Application.NativeBuilder" />
         <item itemvalue="Application.Utility" />
@@ -493,7 +490,7 @@
       <option name="project" value="LOCAL" />
       <updated>1648522232986</updated>
     </task>
-    <option name="localTasksCounter" value="139" />
+    <option name="localTasksCounter" value="140" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -543,9 +540,9 @@
     <MESSAGE value="Add documentation" />
     <MESSAGE value="Bug fix" />
     <MESSAGE value="Misc changes" />
-    <MESSAGE value="Documentation changes" />
     <MESSAGE value="Documentation changes, bug fixes and improvements" />
-    <option name="LAST_COMMIT_MESSAGE" value="Documentation changes, bug fixes and improvements" />
+    <MESSAGE value="Documentation changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Documentation changes" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

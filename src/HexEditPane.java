@@ -36,6 +36,7 @@ public class HexEditPane extends JTextPane {
       public void mouseDragged (MouseEvent e) {
       }
     });
+    setToolTipText("Right clock, or double click on a value to edit");
   }
 
   private boolean isPrintable (int val) {
