@@ -12,15 +12,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="Documentation changes">
-      <change afterPath="$PROJECT_DIR$/resources/documentation/images/CH340NUPDIPCB.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/documentation/images/Updi12V.JPG" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/documentation/images/UpdiProg2.png" afterDir="false" />
+    <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/documentation/programmers.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/programmers.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/JSSCPort.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/JSSCPort.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/SDBG.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/SDBG.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.MD" beforeDir="false" afterPath="$PROJECT_DIR$/README.MD" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,7 +85,7 @@
       <recent name="tools" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.MegaTinyIDE">
+  <component name="RunManager" selected="Application.NativeBuilder (2)">
     <configuration name="MegaTinyIDE" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="MegaTinyIDE" />
       <module name="MegaTinyIDE" />
@@ -136,8 +130,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.MegaTinyIDE" />
         <item itemvalue="Application.NativeBuilder (2)" />
+        <item itemvalue="Application.MegaTinyIDE" />
         <item itemvalue="Application.NativeBuilder (1)" />
         <item itemvalue="Application.NativeBuilder" />
         <item itemvalue="Application.Utility" />
@@ -499,7 +493,7 @@
       <option name="project" value="LOCAL" />
       <updated>1648522232986</updated>
     </task>
-    <option name="localTasksCounter" value="138" />
+    <option name="localTasksCounter" value="139" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -526,7 +520,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Code cleanup and toolchain loader fix" />
     <MESSAGE value="Revise debugger code" />
     <MESSAGE value="Add USERROW view/edit Menu in Actions" />
     <MESSAGE value="Revise README" />
@@ -551,7 +544,8 @@
     <MESSAGE value="Bug fix" />
     <MESSAGE value="Misc changes" />
     <MESSAGE value="Documentation changes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Documentation changes" />
+    <MESSAGE value="Documentation changes, bug fixes and improvements" />
+    <option name="LAST_COMMIT_MESSAGE" value="Documentation changes, bug fixes and improvements" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
