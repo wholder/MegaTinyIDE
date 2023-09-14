@@ -12,10 +12,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="">
+    <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="Documentation changes">
+      <change afterPath="$PROJECT_DIR$/resources/documentation/images/CH340NUPDIPCB.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/documentation/images/Updi12V.JPG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/documentation/images/UpdiProg2.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/documentation/images/UpdiProg.png" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/images/UpdiProg.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/documentation/programmers.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/programmers.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/JSSCPort.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/JSSCPort.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/SDBG.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/SDBG.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -87,13 +92,6 @@
     </key>
   </component>
   <component name="RunManager" selected="Application.MegaTinyIDE">
-    <configuration name="HexEditPane (1)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="HexEditPane" />
-      <module name="MegaTinyIDE" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="MegaTinyIDE" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="MegaTinyIDE" />
       <module name="MegaTinyIDE" />
@@ -102,6 +100,13 @@
       </method>
     </configuration>
     <configuration name="NativeBuilder (1)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="NativeBuilder" />
+      <module name="NativeBuilder" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="NativeBuilder (2)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="NativeBuilder" />
       <module name="NativeBuilder" />
       <method v="2">
@@ -123,19 +128,19 @@
       </method>
     </configuration>
     <list>
+      <item itemvalue="Application.NativeBuilder (2)" />
       <item itemvalue="Application.NativeBuilder" />
       <item itemvalue="Application.NativeBuilder (1)" />
       <item itemvalue="Application.Utility" />
-      <item itemvalue="Application.HexEditPane (1)" />
       <item itemvalue="Application.MegaTinyIDE" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.MegaTinyIDE" />
+        <item itemvalue="Application.NativeBuilder (2)" />
         <item itemvalue="Application.NativeBuilder (1)" />
         <item itemvalue="Application.NativeBuilder" />
         <item itemvalue="Application.Utility" />
-        <item itemvalue="Application.HexEditPane (1)" />
       </list>
     </recent_temporary>
   </component>
@@ -494,7 +499,7 @@
       <option name="project" value="LOCAL" />
       <updated>1648522232986</updated>
     </task>
-    <option name="localTasksCounter" value="137" />
+    <option name="localTasksCounter" value="138" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -521,7 +526,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="View &amp; Edit SRAM variables and EEPROM" />
     <MESSAGE value="Code cleanup and toolchain loader fix" />
     <MESSAGE value="Revise debugger code" />
     <MESSAGE value="Add USERROW view/edit Menu in Actions" />
@@ -546,7 +550,8 @@
     <MESSAGE value="Add documentation" />
     <MESSAGE value="Bug fix" />
     <MESSAGE value="Misc changes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Misc changes" />
+    <MESSAGE value="Documentation changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Documentation changes" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

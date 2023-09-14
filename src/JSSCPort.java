@@ -39,6 +39,8 @@ public class JSSCPort implements SerialPortEventListener {
   private final Preferences                 prefs;
   private String                            portName;
   private int                               baudRate, dataBits, stopBits, parity;
+  private boolean                           setRTS = true;
+  private boolean                           setDTR;
   private SerialPort                        serialPort;
   private final List<RXEvent>               rxHandlers = new ArrayList<>();
   private boolean                           hasRxHandler;
@@ -90,19 +92,24 @@ public class JSSCPort implements SerialPortEventListener {
     baudRate = prefs.getInt("serial.baud", SerialPort.BAUDRATE_115200);
   }
 
-  public void sendBreak () throws SerialPortException {
-    if (true) {
-      serialPort.purgePort(SerialPort.PURGE_RXCLEAR);
-      serialPort.setParams(SerialPort.BAUDRATE_300, dataBits, stopBits, parity, false, false);
-      serialPort.writeBytes(new byte[] {0});
-      try {
-        Thread.sleep(25 + 50);
-      } catch (InterruptedException ex) {}
-      serialPort.setParams(baudRate, dataBits, stopBits, parity, false, false);
-      serialPort.purgePort(SerialPort.PURGE_RXCLEAR);
-    } else {
-      serialPort.sendBreak(25);
+  public byte[] readBytes (int size) throws SerialPortException {
+    try {
+      return serialPort.readBytes(size, 100);
+    } catch (SerialPortTimeoutException ex) {
+      throw new IllegalStateException("readBytes() Timeout");
     }
+  }
+
+  public void sendBreak () throws SerialPortException {
+    serialPort.purgePort(SerialPort.PURGE_RXCLEAR);
+    serialPort.setParams(SerialPort.BAUDRATE_300, dataBits, stopBits, parity, setRTS, setDTR);
+    serialPort.writeBytes(new byte[] {0});
+    readBytes(1);
+    try {
+      Thread.sleep(5);
+    } catch (InterruptedException ex) {}
+    serialPort.purgePort(SerialPort.PURGE_RXCLEAR);
+    serialPort.setParams(baudRate, dataBits, stopBits, parity, setRTS, setDTR);
   }
 
   /**
@@ -114,12 +121,6 @@ public class JSSCPort implements SerialPortEventListener {
     for (int ii = 0; ii < 2; ii++) {
       sendBreak();
       serialPort.purgePort(SerialPort.PURGE_RXCLEAR);
-      // Wait 50 ms
-      try {
-        Thread.sleep(50);
-      } catch (Exception ex) {
-        // do nothing
-      }
     }
     serialPort.purgePort(SerialPort.PURGE_RXCLEAR);
   }
@@ -179,7 +180,7 @@ public class JSSCPort implements SerialPortEventListener {
       serialPort = new SerialPort(portName);
       serialPort.openPort();
       serialPort.purgePort(SerialPort.PURGE_RXCLEAR | SerialPort.PURGE_TXCLEAR);
-      serialPort.setParams(baudRate, dataBits, stopBits, parity, false, false);
+      serialPort.setParams(baudRate, dataBits, stopBits, parity, setRTS, setDTR);
       serialPort.setEventsMask(eventMasks);
       serialPort.setFlowControlMode(flowCtrl);
       purgePort(SerialPort.PURGE_RXCLEAR + SerialPort.PURGE_TXCLEAR);

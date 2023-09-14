@@ -66,16 +66,33 @@ The [ATTiny416-XPlained-Nano](https://www.microchip.com/developmenttools/Product
 
 ## USB/Serial-based Programmers<a name='UpdiProg'></a>
 
-With the addition of a few components, it's possible to use a USB/Serial adapter as a UPDI programmer.  The following circuit can be used with a USB/Serial adapter board, such as as one based on the CH340, to build one:
+Note: the following schemes only supports the following basic programming functions and do not support debugging:
+
++ Read Flash
++ Disassemble Flash
++ Program Flash
++ Read/Modify Fuses
++ Read/Modify EEPROM
++ Read/Modify USERROW
++ Identify Device
+
+First, using nothing more than some basic wiring and a single 1K resistor, it's possible to use a USB/Serial adapter as a UPDI programmer.  The circuit looks like this:
+
+<p align="center"><img src="images/UpdiProg2.png"></p>
+
+However, I've found that this circuit only works with certain USB/Serial adaptera, such as Adafuit's [FTDI Friend](https://www.adafruit.com/product/284) or Sprkfun's [FTDI Basic Breakout](https://www.sparkfun.com/products/9716) boards.
+Other adapters often contain additional components, such as LEDs that are directly connected to the RX and TX lines which add extra loads.  For adapter boards with LEDs on these lines, it sometimes works to remove these LEDs (and any accompany resistors,) 
+
+A better approach mey be to use a circuit that adds tri-state buffers to the RX and TX lines, as the following circuit does:
 
 <p align="center"><img src="images/UpdiProg.png"></p>
 
-Note: this approach only supports the following basic programming functions and not debugging:
+Note: you may need to add a pullup resistor to the UPDI pin in some case.
 
- + Read Flash
- + Disassemble Flash
- + Program Flash
- + Read/Modify Fuses
- + Read/Modify EEPROM
- + Read/Modify USERROW
- + Identify Device
+### 12 Volt Programming</a>
+
+You might also consider using a [commercially available USB/Serial-based programmer](https://www.tindie.com/products/leonerd/avr-updi-programmer-with-12v/).  This design has a switch to select sending a 12 volt (high voltage) pulse which can enable programming even when the UPDI pin has been set to function in one of its alternate roles, such as a RESET or IO pin.
+
+<p align="center"><img src="images/Updi12V.JPG"></p>
+
+Note: this programmers uses a Silicon Labs CP2105 for its USB to serial interface.  This IC actually contains 2 serial interfaces, so you need to select the one that's used as the programmer side.  This should appear as something like "/dev/cu.SLAB_USBtoUART" in the progerammer selection menu.
