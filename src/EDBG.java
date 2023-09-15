@@ -148,7 +148,7 @@ public class EDBG extends Programmer          /* implements JSSCPort.RXEvent */ 
   private final MegaTinyIDE                   ide;
   private JSSCPort                            jPort;
   private final ByteArrayOutputStream         rxOut = new ByteArrayOutputStream();
-
+  private Utility.ProgressBar                 progress;
   //                                                                ( prog/debug)
   private static final int MEMTYPE_SRAM                   = 0x20;   // (--/RW) - Absolute SRAM address
   private static final int MEMTYPE_EEPROM                 = 0x22;   // (RW/RW) - Absolute EEPROM address
@@ -176,6 +176,28 @@ public class EDBG extends Programmer          /* implements JSSCPort.RXEvent */ 
     memTypes.put(0xB2, "FUSES");
     memTypes.put(0xB4, "SIGNATURE");
     memTypes.put(0xB8, "REGFILE");
+  }
+
+  // Progress Bar methods
+
+  public void setProgressMessage (String msg) {
+    if (progress == null) {
+      progress = new Utility.ProgressBar(ide, "");
+    }
+    progress.setMessage(msg);
+  }
+
+  public void setProgressValue (int value) {
+    if (progress != null) {
+      progress.setValue(value);
+    }
+  }
+
+  public void closeProgressBar () {
+    if (progress != null) {
+      progress.close();
+    }
+    progress = null;
   }
 
   public boolean canDebug () {
@@ -1228,6 +1250,7 @@ public class EDBG extends Programmer          /* implements JSSCPort.RXEvent */ 
       int remain = Math.min(len - ii, 64);
       byte[] chunk = memoryRead(address + ii, memType, remain);
       bout.write(chunk, 0, chunk.length);
+      setProgressValue((int) ((float) ii / len * 100.0));
     }
     return bout.toByteArray();
   }
@@ -1238,6 +1261,7 @@ public class EDBG extends Programmer          /* implements JSSCPort.RXEvent */ 
       byte[] buf = new byte[remain];
       System.arraycopy(data, ii, buf, 0, remain);
       memoryWrite(address + ii, memType, buf);
+      setProgressValue((int) ((float) ii / data.length * 100.0));
     }
   }
 
