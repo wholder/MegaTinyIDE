@@ -113,10 +113,6 @@ public class SDBG extends Programmer {
     jPort.setParameters(SerialPort.BAUDRATE_57600, SerialPort.DATABITS_8, SerialPort.STOPBITS_2, SerialPort.PARITY_EVEN);
   }
 
-  public boolean canDebug () {
-    return false;
-  }
-
   // Progress Bar methods
 
   public void setProgressMessage (String msg) {

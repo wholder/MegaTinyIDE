@@ -200,10 +200,6 @@ public class EDBG extends Programmer          /* implements JSSCPort.RXEvent */ 
     progress = null;
   }
 
-  public boolean canDebug () {
-    return false;
-  }
-
   private static String getTypeDesc (int memType) {
     if (memTypes.containsKey(memType)) {
       return memTypes.get(memType);

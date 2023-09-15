@@ -133,8 +133,6 @@ abstract public class Programmer {
 
   abstract public void close ();
 
-  abstract public boolean canDebug ();
-
   // Target Debugging Methods (Note: currently these are only implmeneted in the EDBG class)
   public void resetTarget () throws EDBGException {
     throw new EDBGException("Programmer.resetTarget() not implemented");

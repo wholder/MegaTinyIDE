@@ -80,14 +80,7 @@ First, using nothing more than some basic wiring and a single 1K resistor, it's 
 
 <p align="center"><img src="images/UpdiProg2.png"></p>
 
-However, I've found that this circuit only works with certain USB/Serial adaptera, such as Adafuit's [FTDI Friend](https://www.adafruit.com/product/284) or Sprkfun's [FTDI Basic Breakout](https://www.sparkfun.com/products/9716) boards.
-Other adapters often contain additional components, such as LEDs that are directly connected to the RX and TX lines which add extra loads.  For adapter boards with LEDs on these lines, it sometimes works to remove these LEDs (and any accompany resistors,) 
-
-A better approach mey be to use a circuit that adds tri-state buffers to the RX and TX lines, as the following circuit does:
-
-<p align="center"><img src="images/UpdiProg.png"></p>
-
-Note: you may need to add a pullup resistor to the UPDI pin in some case.
+However, I've found that this circuit only works with certain USB/Serial adaptera, such as Adafruit's [FTDI Friend](https://www.adafruit.com/product/284) or Sparkfun's [FTDI Basic Breakout](https://www.sparkfun.com/products/9716) boards.  Other adapters often contain additional components, such as LEDs that are directly connected to the RX and TX lines which add extra loads.  For adapter boards with LEDs on these lines (which are often based on the CH340 series chips), it sometimes works to remove these LEDs (and any accompany resistors.)  But, I think is easier to stick with adapters that don't do this.
 
 ### 12 Volt Programming</a>
 
@@ -95,4 +88,4 @@ You might also consider using a [commercially available USB/Serial-based program
 
 <p align="center"><img src="images/Updi12V.JPG"></p>
 
-Note: this programmers uses a Silicon Labs CP2105 for its USB to serial interface.  This IC actually contains 2 serial interfaces, so you need to select the one that's used as the programmer side.  This should appear as something like "/dev/cu.SLAB_USBtoUART" in the progerammer selection menu.
+Note: this programmers uses a Silicon Labs CP2105 for its USB to serial interface.  This IC actually contains 2 serial interfaces, so you need to select the one that's used as the programmer side.  This should appear as something like "/dev/cu.SLAB_USBtoUART" in the programmer selection menu.
