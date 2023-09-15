@@ -94,6 +94,20 @@ abstract public class Programmer {
     return list;
   }
 
+  // Progress Bar methods
+
+  public void setProgressMessage (String meg) {
+    // Override, as needed
+  }
+
+  public void setProgressValue (int value) {
+    // Override, as needed
+  }
+
+  public void closeProgressBar () {
+    // Override, as needed
+  }
+
   // Target Programming Methods
   abstract public byte[] getDeviceSignature () throws EDBGException;
 

@@ -435,7 +435,7 @@ public class EDBG extends Programmer          /* implements JSSCPort.RXEvent */ 
     byte[] buf = new byte[64];
     System.arraycopy(cmd, 0, buf, 0, cmd.length);
     device.write(buf, buf.length, (byte) 0);
-    Byte[] bytes = device.read();
+    Byte[] bytes = device.read();             // Note; an array of Byte objects
     byte[] data = new byte[bytes.length];
     for (int ii = 0; ii < bytes.length; ii++) {
       data[ii] = bytes[ii];

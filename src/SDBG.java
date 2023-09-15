@@ -3,6 +3,7 @@ import jssc.SerialPortException;
 import jssc.SerialPortTimeoutException;
 
 import java.io.ByteArrayOutputStream;
+import javax.swing.*;
 import java.util.*;
 
 public class SDBG extends Programmer {
@@ -101,10 +102,12 @@ public class SDBG extends Programmer {
   public static final int     BYTE = 0;                 // Byte address or data
   public static final int     WORD = 1;                 // Word address or data
   // Variables
-  private final JSSCPort        jPort;
+  private final JSSCPort      jPort;
   private Utility.ProgressBar progress;
+  private MegaTinyIDE         ide;
 
-  public SDBG (JSSCPort jPort) {
+  public SDBG (MegaTinyIDE ide, JSSCPort jPort) {
+    this.ide = ide;
     this.jPort = jPort;
     // setParameters(int baudRate, int dataBits, int stopBits, int parity)
     jPort.setParameters(SerialPort.BAUDRATE_57600, SerialPort.DATABITS_8, SerialPort.STOPBITS_2, SerialPort.PARITY_EVEN);
@@ -114,8 +117,26 @@ public class SDBG extends Programmer {
     return false;
   }
 
-  public void setProgress (Utility.ProgressBar progress) {
-    this.progress = progress;
+  // Progress Bar methods
+
+  public void setProgressMessage (String msg) {
+    if (progress == null) {
+      progress = new Utility.ProgressBar(ide, "");
+    }
+    progress.setMessage(msg);
+  }
+
+  public void setProgressValue (int value) {
+    if (progress != null) {
+      progress.setValue(value);
+    }
+  }
+
+  public void closeProgressBar () {
+    if (progress != null) {
+      progress.close();
+    }
+    progress = null;
   }
 
   /**
@@ -629,9 +650,7 @@ public class SDBG extends Programmer {
         for (int idx = 0; idx < data.length; idx += buf.length) {
           int remain = Math.min(256, data.length - idx);
           buf = readMemory(FLASH_BASE + address + idx, remain);
-          if (progress != null) {
-            progress.setValue((int) ((float) idx / data.length * 100.0));
-          }
+          setProgressValue((int) ((float) idx / data.length * 100.0));
           System.arraycopy(buf, 0, data, idx, remain);
         }
         return data;
@@ -674,9 +693,7 @@ public class SDBG extends Programmer {
           }
           stsByte(NVMCTRL_BASE + NVM_CTRLA, NVM_WP);                  // 0x01 -> NVM.NVM.CTRLA (Write page buffer to memory)
           waitRegMaskZero(NVMCTRL_BASE + NVM_STATUS, 0x03);           // Wait for FBUSY and EEBUSY == 0
-          if (progress != null) {
-            progress.setValue((int) ((float) idx / data.length * 100.0));
-          }
+          setProgressValue((int) ((float) idx / data.length * 100.0));
         }
         return null;
       }

@@ -171,7 +171,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
       return programmer = new EDBG(this, program);
 
     } else if (jPort != null && jPort.postSelected()) {
-      return programmer = new SDBG(jPort);
+      return programmer = new SDBG(this, jPort);
     }
     throw new IllegalStateException("Unvalid Progerammerr");
   }
@@ -825,33 +825,27 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
       if (avrChip != null) {
         try {
           Programmer edbg = getProgrammer(true);
-          try {
-            byte[] sig = edbg.getDeviceSignature();         // 3 bytes
-            String code = String.format("%02X%02X%02X", sig[0], sig[1], sig[2]);
-            ChipInfo chip = chipSignatures.get(code);
-            int flashSize = chip.getInt("flash") * 1024;
-            new Thread(() -> {
-              Utility.ProgressBar progress = null;
-              if (edbg instanceof SDBG) {
-                progress = new Utility.ProgressBar(MegaTinyIDE.this, "Reading Flash");
-                ((SDBG) edbg).setProgress(progress);
-              }
-              byte[] data1 = edbg.readFlash(0, flashSize);
-              progress.setMessage("Verifying...");
-              byte[] data2 = edbg.readFlash(0, flashSize);
-              if (progress != null) {
-                progress.close();
-              }
-              if (Arrays.equals(data1, data2)) {
-                HexEditPane flashPane = new HexEditPane(MegaTinyIDE.this, 16, 16);
-                flashPane.showVariable("Flash Code", "Flash Code", 0, data1, null);
-              } else {
-                showErrorDialog("Verify failed");
-              }
-            }).start();
-          } finally {
-            edbg.close();
-          }
+          new Thread(() -> {
+            try {
+              byte[] sig = edbg.getDeviceSignature();         // 3 bytes
+              String code = String.format("%02X%02X%02X", sig[0], sig[1], sig[2]);
+              ChipInfo chip = chipSignatures.get(code);
+              int flashSize = chip.getInt("flash") * 1024;
+                edbg.setProgressMessage("Reading Flash");
+                byte[] data1 = edbg.readFlash(0, flashSize);
+                edbg.setProgressMessage("Verifying...");
+                byte[] data2 = edbg.readFlash(0, flashSize);
+                edbg.closeProgressBar();
+                if (Arrays.equals(data1, data2)) {
+                  HexEditPane flashPane = new HexEditPane(MegaTinyIDE.this, 16, 16);
+                  flashPane.showVariable("Flash Code", "Flash Code", 0, data1, null);
+                } else {
+                  showErrorDialog("Verify failed");
+                }
+            } finally {
+              edbg.close();
+            }
+          }).start();
         } catch (EDBG.EDBGException ex) {
           showErrorDialog(ex.getMessage());
         }
@@ -866,33 +860,27 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
       if (avrChip != null) {
         try {
           Programmer edbg = getProgrammer(true);
-          try {
-            new Thread(() -> {
-              byte[] sig = edbg.getDeviceSignature();         // 3 bytes
-              String code = String.format("%02X%02X%02X", sig[0], sig[1], sig[2]);
-              ChipInfo chip = chipSignatures.get(code);
-              int flashSize = chip.getInt("flash") * 1024;
-              Utility.ProgressBar progress = null;
-              if (edbg instanceof SDBG) {
-                progress = new Utility.ProgressBar(MegaTinyIDE.this, "Reading Flash");
-                ((SDBG) edbg).setProgress(progress);
-              }
-              byte[] data1 = edbg.readFlash(0, flashSize);
-              progress.setMessage("Verifying...");
-              byte[] data2 = edbg.readFlash(0, flashSize);
-              if (progress != null) {
-                progress.close();
-              }
-              if (Arrays.equals(data1, data2)) {
-                disassemble(chip, listPane, data1);
-                tabPane.setSelectedIndex(Tab.LIST.num);
-              } else {
-                showErrorDialog("Verify failed");
-              }
-            }).start();
-          } finally {
-            edbg.close();
-          }
+          new Thread(() -> {
+            try {
+                byte[] sig = edbg.getDeviceSignature();         // 3 bytes
+                String code = String.format("%02X%02X%02X", sig[0], sig[1], sig[2]);
+                ChipInfo chip = chipSignatures.get(code);
+                int flashSize = chip.getInt("flash") * 1024;
+                edbg.setProgressMessage("Reading Flash");
+                byte[] data1 = edbg.readFlash(0, flashSize);
+                edbg.setProgressMessage("Verifying...");
+                byte[] data2 = edbg.readFlash(0, flashSize);
+                edbg.closeProgressBar();
+                if (Arrays.equals(data1, data2)) {
+                  disassemble(chip, listPane, data1);
+                  tabPane.setSelectedIndex(Tab.LIST.num);
+                } else {
+                  showErrorDialog("Verify failed");
+                }
+            } finally {
+              edbg.close();
+            }
+          }).start();
         } catch (EDBG.EDBGException ex) {
           showErrorDialog(ex.getMessage());
         }
@@ -908,27 +896,21 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
         try {
           Utility.CodeImage codeImg = Utility.parseIntelHex(hexPane.getText());
           Programmer edbg = getProgrammer(true);
-          try {
-            new Thread(() -> {
-              Utility.ProgressBar progress = null;
-              if (edbg instanceof SDBG) {
-                progress = new Utility.ProgressBar(MegaTinyIDE.this, "Writing Flash");
-                ((SDBG) edbg).setProgress(progress);
-              }
-              edbg.eraseTarget(0, 0);         //
-              edbg.writeFlash(0, codeImg.data);
-              progress.setMessage("Verifying...");
-              byte[] data2 = edbg.readFlash(0, codeImg.data.length);
-              if (progress != null) {
-                progress.close();
-              }
-              if (!Arrays.equals(codeImg.data, data2)) {
-                showErrorDialog("Verify failed");
-              }
-            }).start();
-          } finally {
-            edbg.close();
-          }
+          new Thread(() -> {
+            try {
+                edbg.setProgressMessage("Reading Flash");
+                edbg.eraseTarget(0, 0);         //
+                edbg.writeFlash(0, codeImg.data);
+                edbg.setProgressMessage("Verifying...");
+                byte[] data2 = edbg.readFlash(0, codeImg.data.length);
+                edbg.closeProgressBar();
+                if (!Arrays.equals(codeImg.data, data2)) {
+                  showErrorDialog("Verify failed");
+                }
+            } finally {
+              edbg.close();
+            }
+          }).start();
           showMessageDialog(this, "Done");
         } catch (EDBG.EDBGException ex) {
           showErrorDialog(ex.getMessage());
@@ -1147,9 +1129,8 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
           item.addActionListener((ActionEvent ev) -> {
             progDev = prog;
             prefs.put("progVidPid", progVidPid = prog.key);
-            if (debugMenu != null) {
-              debugMenu.setEnabled(true);
-            }
+            debugMenu.setEnabled(true);
+            programmer = null;
           });
         }
         if (!decodeUpdi()){
@@ -1159,9 +1140,8 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
             progGroup.add(item);
             item.addActionListener(ev -> {
               prefs.put("progVidPid", progVidPid = "");
-              if (debugMenu != null) {
-                debugMenu.setEnabled(false);
-              }
+              debugMenu.setEnabled(false);
+              programmer = null;
             });
           }
         }
