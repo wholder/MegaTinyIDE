@@ -318,7 +318,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
             int len = Integer.parseInt(parts[3]);
             byte[] data = debugger.readSRam(add, len);
             HexEditPane hexPane = new HexEditPane(ide, 4, 8);
-            hexPane.showVariable("SRAM", parts[1], add, data, new HexEditPane.Update() {
+            hexPane.showDialog("SRAM", parts[1], add, data, new HexEditPane.Update() {
               @Override
               public void setValue (int offset, int value) throws EDBG.EDBGException {
                 debugger.writeSRam(add + offset, new byte[] {(byte) value});

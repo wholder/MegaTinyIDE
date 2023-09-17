@@ -75,14 +75,13 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
   private final JMenuItem         progFlash = new JMenuItem("Program Flash");
   private final JMenuItem         readFuses = new JMenuItem("Read/Modify Fuses");
   private final JMenu             progMenu;
-  private final Preferences       prefs = Preferences.userRoot().node(this.getClass().getName());
-  private final JSSCPort          jPort = new JSSCPort(prefs);
   private String                  tmpDir, tmpExe;
   private String                  progVidPid;
-  private EDBG.ProgDevice         progDev;
   private String                  avrChip;
   private String                  editFile;
   private boolean                 compiled, codeDirty, showDebugger;
+  final Preferences               prefs = Preferences.userRoot().node(this.getClass().getName());
+  final JSSCPort                  jPort = new JSSCPort(prefs);
   boolean                         directHex;
   private File                    cFile;
   private Map<String, String>     compileMap;
@@ -298,6 +297,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     prefs.putBoolean("interleave", prefs.getBoolean("interleave", false));
     prefs.putBoolean("symbol_table", prefs.getBoolean("symbol_table", false));
     prefs.putBoolean("vector_names", prefs.getBoolean("vector_names", true));
+    prefs.putInt("sdbg_baud", prefs.getInt("sdbg_baud", 57600));
     prefs.putBoolean("enable_preprocessing", prefs.getBoolean("enable_preprocessing", false));
     prefs.putBoolean("developer_features", prefs.getBoolean("developer_features", false));
     prefs.putBoolean("decode_updi", prefs.getBoolean("decode_updi", false));
@@ -435,8 +435,9 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     items.add(new ParmDialog.Item("Interleave Source and ASM", "*[INTERLEAVE]*", "interleave", true));
     items.add(new ParmDialog.Item("Add Vector Names in Listing", "*[VECNAMES]*", "vector_names", true));
     items.add(new ParmDialog.Item("Include Full Symbol Table in Listing", "*[SYMTABLE]*", "symbol_table", false));
-    boolean devFeatures = (modifiers & InputEvent.CTRL_MASK) != 0;
-    if (devFeatures) {
+    items.add(new ParmDialog.Item("Serial Programmer Baud Rate:19200:38400:57600:115200", "*[PROGBAUD]*", "sdbg_baud", 57600));
+    if ((modifiers & InputEvent.CTRL_MASK) != 0) {
+      // Developer features
       items.add(new ParmDialog.Item("Enable Preprocessing (Developer)", "*[PREPROCESS]*", "enable_preprocessing", false));
       items.add(new ParmDialog.Item("Enable Developer Features", "*[DEV_ONLY]*", "developer_features", false));
       items.add(new ParmDialog.Item("Decode UPDI Commands", "*[UPDI_DECODE]*", "decode_updi", false));
@@ -838,7 +839,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
               edbg.closeProgressBar();
               if (Arrays.equals(data1, data2)) {
                 HexEditPane flashPane = new HexEditPane(MegaTinyIDE.this, 16, 16);
-                flashPane.showVariable("Flash Code", "Flash Code", 0, data1, null);
+                flashPane.showDialog("Flash Code", "Flash Code", 0, data1, null);
               } else {
                 showErrorDialog("Verify failed");
               }
@@ -954,8 +955,8 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
             for (int ii = 0; ii < cOffs.length; ii++) {
               int offset = cOffs[ii];
               int revOff = reverse.get(offset);
-              int oldVal = fuses[revOff];
-              int newVal = cFuses[ii];
+              int oldVal = fuses[revOff] & 0xFF;
+              int newVal = cFuses[ii] & 0xFF;
               msg.append(String.format("Fuse 0x%02X: 0x%02X -> 0x%02X<br>", offset, oldVal, newVal));
             }
             msg.append("</p>");
@@ -993,7 +994,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
         HexEditPane hexPane = new HexEditPane(this, 8, 8);
         Programmer debugger = edbg;
         boolean[] changed = new boolean[] {false};
-        hexPane.showVariable("EEPROM", null, 0, data, (offset, value) -> {
+        hexPane.showDialog("EEPROM", null, 0, data, (offset, value) -> {
           data[offset] = (byte) value;
           changed[0] = true;
         });
@@ -1026,7 +1027,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
         Programmer debugger = edbg;
         byte[] userRpw = debugger.readUserRow(0, 16);
         boolean[] changed = new boolean[] {false};
-        hexPane.showVariable("USERROW", null, 0, data, (offset, value) -> {
+        hexPane.showDialog("USERROW", null, 0, data, (offset, value) -> {
           userRpw[offset] = (byte) value;
           changed[0] = true;
         });
@@ -1096,9 +1097,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     actions.addSeparator();
     actions.add(mItem = new JMenuItem("Reinstall Toolchain"));
     mItem.setToolTipText("Copies AVR Toolchain into Java Temporary Disk Space where it can be Executed");
-    mItem.addActionListener(e -> {
-      new Thread(() -> loadToolchain(null)).start();
-    });
+    mItem.addActionListener(e -> new Thread(() -> loadToolchain(null)).start());
     menuBar.add(actions);
     /*
      *    Settings menu
@@ -1127,7 +1126,6 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
           progMenu.add(item);
           progGroup.add(item);
           item.addActionListener((ActionEvent ev) -> {
-            progDev = prog;
             prefs.put("progVidPid", progVidPid = prog.key);
             debugMenu.setEnabled(true);
             programmer = null;

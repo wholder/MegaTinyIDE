@@ -15,9 +15,16 @@
     <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/documentation/programmers.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/programmers.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/version.props" beforeDir="false" afterPath="$PROJECT_DIR$/resources/version.props" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/dialoginfo.props" beforeDir="false" afterPath="$PROJECT_DIR$/resources/dialoginfo.props" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ChipLayout.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ChipLayout.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/EDBG.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/EDBG.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/FusePane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/FusePane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/HexEditPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/HexEditPane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/JSSCPort.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/JSSCPort.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ListingPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ListingPane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MarkupView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MarkupView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MegaTinyCompiler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MegaTinyCompiler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MegaTinyIDE.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MegaTinyIDE.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Programmer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Programmer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/SDBG.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/SDBG.java" afterDir="false" />
     </list>
@@ -98,48 +105,48 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="NativeBuilder (1)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="NativeBuilder" />
-      <module name="NativeBuilder" />
+    <configuration name="ParmDialog (2)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="ParmDialog" />
+      <module name="MegaTinyIDE" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="NativeBuilder (2)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="NativeBuilder" />
-      <module name="NativeBuilder" />
+    <configuration name="ParmDialog (3)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="ParmDialog" />
+      <module name="MegaTinyIDE" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="NativeBuilder" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="NativeBuilder" />
-      <module name="NativeBuilder" />
+    <configuration name="ParmDialog (4)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="ParmDialog" />
+      <module name="MegaTinyIDE" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Utility" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="Utility" />
+    <configuration name="ParmDialog" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="ParmDialog" />
       <module name="MegaTinyIDE" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <list>
-      <item itemvalue="Application.NativeBuilder (2)" />
-      <item itemvalue="Application.NativeBuilder" />
-      <item itemvalue="Application.NativeBuilder (1)" />
-      <item itemvalue="Application.Utility" />
+      <item itemvalue="Application.ParmDialog" />
+      <item itemvalue="Application.ParmDialog (2)" />
+      <item itemvalue="Application.ParmDialog (3)" />
+      <item itemvalue="Application.ParmDialog (4)" />
       <item itemvalue="Application.MegaTinyIDE" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.MegaTinyIDE" />
-        <item itemvalue="Application.NativeBuilder (2)" />
-        <item itemvalue="Application.NativeBuilder (1)" />
-        <item itemvalue="Application.NativeBuilder" />
-        <item itemvalue="Application.Utility" />
+        <item itemvalue="Application.ParmDialog (4)" />
+        <item itemvalue="Application.ParmDialog" />
+        <item itemvalue="Application.ParmDialog (3)" />
+        <item itemvalue="Application.ParmDialog (2)" />
       </list>
     </recent_temporary>
   </component>
@@ -498,7 +505,7 @@
       <option name="project" value="LOCAL" />
       <updated>1648522232986</updated>
     </task>
-    <option name="localTasksCounter" value="145" />
+    <option name="localTasksCounter" value="146" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -551,17 +558,6 @@
     <MESSAGE value="Bug fix for progeress bar" />
     <MESSAGE value="More bug fixes for progeress bar" />
     <option name="LAST_COMMIT_MESSAGE" value="More bug fixes for progeress bar" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/MegaTinyIDE.java</url>
-          <line>834</line>
-          <option name="timeStamp" value="22" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

@@ -150,7 +150,9 @@ class MegaTinyCompiler {
   };
 
   static class CompFile {
-    String srcDir, dstDir, file;
+    final String srcDir;
+    final String dstDir;
+    final String file;
 
     CompFile (String srcDir, String dstDir, String file) {
       this.srcDir = srcDir;

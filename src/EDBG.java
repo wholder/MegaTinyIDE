@@ -6,7 +6,6 @@ import org.hid4java.HidServices;
 import org.hid4java.jna.HidApi;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -324,9 +323,14 @@ public class EDBG extends Programmer          /* implements JSSCPort.RXEvent */ 
   }
 
   private static class ProgrammerInfo {
-    int     vendId, prodId, iFace, release;
-    String  manf, product, serial;
-    boolean isOpen;
+    final int     vendId;
+    final int prodId;
+    int iFace;
+    final int release;
+    final String  manf;
+    final String product;
+    final String serial;
+    final boolean isOpen;
 
     public ProgrammerInfo (HidDevice device) {
       vendId = device.getVendorId();
@@ -538,7 +542,10 @@ public class EDBG extends Programmer          /* implements JSSCPort.RXEvent */ 
   }
 
   private static class ProgInfo {
-    int   hwRev, fwMajor, fwMinor, fwBuild;
+    final int   hwRev;
+    final int fwMajor;
+    final int fwMinor;
+    final int fwBuild;
 
     ProgInfo (byte[] data) {
       hwRev = Utility.lsb(data[0]);
@@ -987,7 +994,6 @@ public class EDBG extends Programmer          /* implements JSSCPort.RXEvent */ 
    * Modifies the PC on the target.
    *
    * @param address new Program Counter value (word address)
-   * @return true
    */
   public void setProgramCounter (int address) throws EDBGException {
     if (debugActive) {
@@ -1735,7 +1741,7 @@ public class EDBG extends Programmer          /* implements JSSCPort.RXEvent */ 
      6. LEAVE_PROG_MODE
    */
   private static class Break {
-    int pc;
+    final int pc;
     int ext;
     boolean reset, stop, swbp, bp0, bp1;
 

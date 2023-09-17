@@ -39,7 +39,6 @@ abstract public class Programmer {
     public final int pid;
     public final int vid;
     public final String name;
-    public final String type;
     public final boolean hasVRef;
     public String serial;
     private String product;
@@ -52,7 +51,6 @@ abstract public class Programmer {
         this.vid = Integer.parseInt(parts[0], 16);
         this.pid = Integer.parseInt(parts[1], 16);
         this.name = parmSet.get("name");
-        this.type = parmSet.get("type");
         this.hasVRef = parmSet.getBoolean("vRef", false);
       } else {
         throw new IllegalArgumentException("Unable to parse key: " + key);

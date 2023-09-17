@@ -43,7 +43,7 @@ public class HexEditPane extends JTextPane {
     return val <= 0x7F && val >= 0x20;
   }
 
-  public void showVariable (String type, String varName, int add, byte[] data, Update updater) {
+  public void showDialog (String frameLabel, String boxLabel, int add, byte[] data, Update updater) {
     int[] posHex = new int[data.length];
     int[] posChr = new int[data.length];
     int rowWidth = 8 + cols * 6 + 2 + 1;
@@ -176,14 +176,23 @@ public class HexEditPane extends JTextPane {
     }
     setText(buf.toString());
     JPanel panel = new JPanel(new BorderLayout());
-    if (varName != null) {
-      JLabel label = new JLabel(varName + " (" + data.length + " bytes)");
+    if (boxLabel != null) {
+      JLabel label = new JLabel(boxLabel + " (" + data.length + " bytes)");
       label.setHorizontalAlignment(SwingConstants.LEFT);
       panel.add(label, BorderLayout.NORTH);
     }
     panel.add(scroll, BorderLayout.CENTER);
     setCaretPosition(0);
-    JOptionPane.showConfirmDialog(parent, panel, type, JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
+    JOptionPane.showConfirmDialog(parent, panel, frameLabel, JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+/*
+    // Buttons in reversd order
+    Object[] buttons = {"OK", "Get IntelHex"};
+    int val = JOptionPane.showOptionDialog(parent, panel, frameLabel, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
+      null, buttons, buttons[0]);
+    System.out.println(val);
+*/
+
   }
 
   @Override
@@ -209,7 +218,7 @@ public class HexEditPane extends JTextPane {
     for (int ii = 0; ii < data.length; ii++) {
       data[ii] = (byte) ii;
     }
-    varPane.showVariable ("Test", "var1", 0, data, new Update() {
+    varPane.showDialog("Test", "var1", 0, data, new Update() {
       public void setValue (int offset, int value) {
         System.out.printf("setValue(0x%02X, 0x%02X)\n", offset, value);
       }

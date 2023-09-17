@@ -3,7 +3,6 @@ import jssc.SerialPortException;
 import jssc.SerialPortTimeoutException;
 
 import java.io.ByteArrayOutputStream;
-import javax.swing.*;
 import java.util.*;
 
 public class SDBG extends Programmer {
@@ -104,13 +103,14 @@ public class SDBG extends Programmer {
   // Variables
   private final JSSCPort      jPort;
   private Utility.ProgressBar progress;
-  private MegaTinyIDE         ide;
+  private final MegaTinyIDE   ide;
 
   public SDBG (MegaTinyIDE ide, JSSCPort jPort) {
     this.ide = ide;
     this.jPort = jPort;
+    int baudRate = ide.prefs.getInt("sdbg_baud", SerialPort.BAUDRATE_57600);
     // setParameters(int baudRate, int dataBits, int stopBits, int parity)
-    jPort.setParameters(SerialPort.BAUDRATE_57600, SerialPort.DATABITS_8, SerialPort.STOPBITS_2, SerialPort.PARITY_EVEN);
+    jPort.setParameters(baudRate, SerialPort.DATABITS_8, SerialPort.STOPBITS_2, SerialPort.PARITY_EVEN);
   }
 
   // Progress Bar methods
@@ -137,9 +137,8 @@ public class SDBG extends Programmer {
 
   /**
    * Initiaoize the UPDI interface (in case it's jammed up)
-   * @throws SerialPortException
    */
-  void init () throws SerialPortException {
+  void init () {
     int code =  0;
     int retry = 5;
     do {
@@ -352,7 +351,7 @@ public class SDBG extends Programmer {
   /**
    * Use the st() method to send an bit BYTE of data
    * @param ptr if 0 = *(ptr), if 1 = *(ptr++), else 3 = ptr
-   * @param valus 8 bit word value
+   * @param value 8 bit word value
    * @throws SerialPortException
    */
   public void stByte (int ptr, int value) throws SerialPortException {
@@ -385,11 +384,11 @@ public class SDBG extends Programmer {
 
   /**
    * Set Instruction Repeat Counter
-   * @param size
+   * @param count numver of times to repeat following command
    * @throws SerialPortException
    */
-  public void setRepeat (int size) throws SerialPortException {
-    byte[] cmd = new byte[] {SYNC, (byte) REPEAT, (byte) size};
+  public void setRepeat (int count) throws SerialPortException {
+    byte[] cmd = new byte[] {SYNC, (byte) REPEAT, (byte) count};
     sendBytes(cmd);
   }
 
@@ -544,7 +543,7 @@ public class SDBG extends Programmer {
 
   /** Wait for value in register ANDed with mask to goto zero
    * @param register selected register
-   * @param bit selected bit number
+   * @param mask selected bits mask
    * @throws SerialPortException
    */
   private void waitRegMaskZero (int register, int mask) throws SerialPortException{
@@ -658,7 +657,7 @@ public class SDBG extends Programmer {
    * Write code to flash in 32 word chunks
    * @param address zero-based address
    * @param data byte[] array of code
-   * @throws SerialPortException
+   * @throws EDBGException
    */
   @Override
   public void writeFlash (int address, byte[] data) throws EDBGException {
@@ -816,7 +815,7 @@ public class SDBG extends Programmer {
   /**
    * @param address offset from BASE (Note: assumes 128 bytes of EEPROM for ATTiny412)
    * @param data    byte[] array of EEPROM data to write
-   * @throws SerialPortException
+   * @throws EDBGException
    *
    * Write 0x13 to UPDI_NVMCTRL.CTRLA (NVMCTRL_BASE (0x1000 )+ 0x00)
    */
@@ -873,7 +872,7 @@ public class SDBG extends Programmer {
         stcs(ASI_RESET_REQ, 0x59);                                    // Reset resuest (0x59)
         ldcs(ASI_SYS_STATUS);                                         // Read tp clear RSTSYS (bit 5)
         stcs(ASI_RESET_REQ, 0x00);                                    // Clear Reset request (0x00)
-        waitRegBitSet(ASI_SYS_STATUS, 2);                              // Wait for UROWPROG (bit 2) of ASI_SYS_STATUS == 1
+        waitRegBitSet(ASI_SYS_STATUS, 2);                             // Wait for UROWPROG (bit 2) of ASI_SYS_STATUS == 1
         writeMemory(USERROW_BASE + address, data);
         stcs(ASI_SYS_CTRLA, (1 << 1));                                // UROWWRITE_FINAL (bit 1) = 1
         waitRegBitClear(ASI_SYS_STATUS, 2);                           // Wait for UROWPROG (bit 2) == 0

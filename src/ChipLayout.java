@@ -34,7 +34,8 @@ public class ChipLayout {
   private static final String[] DCLR = new String[] {"PIN", "PORT", "AIN", "PIN", "PIN", "PIN"};  // Default lbl color by column
 
   static class ColorSet {
-    Color  txtClr, lblClr;
+    final Color  txtClr;
+    final Color lblClr;
 
     ColorSet (Color txtClr, Color lblClr) {
       this.txtClr = txtClr;
@@ -64,9 +65,9 @@ public class ChipLayout {
   }
 
   static class DrawShape {
-    Shape   shape;
-    Color   color;
-    boolean fill;
+    final Shape   shape;
+    final Color   color;
+    final boolean fill;
 
     DrawShape(Shape shape, Color color, boolean fill) {
       this.shape = shape;
@@ -142,8 +143,8 @@ public class ChipLayout {
   }
 
   static class HoverText {
-    Rectangle rect;
-    String    text;
+    final Rectangle rect;
+    final String    text;
 
     HoverText (Rectangle rect,  String text) {
       this.rect = rect;

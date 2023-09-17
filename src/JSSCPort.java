@@ -1,5 +1,4 @@
 import java.util.*;
-import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.prefs.Preferences;
 import java.util.regex.Pattern;
@@ -39,8 +38,8 @@ public class JSSCPort implements SerialPortEventListener {
   private final Preferences                 prefs;
   private String                            portName;
   private int                               baudRate, dataBits, stopBits, parity;
-  private boolean                           setRTS = true;
-  private boolean                           setDTR;
+  private final boolean                     setRTS = true;
+  private final boolean                     setDTR = false;
   private SerialPort                        serialPort;
   private final List<RXEvent>               rxHandlers = new ArrayList<>();
   private boolean                           hasRxHandler;
@@ -247,9 +246,8 @@ public class JSSCPort implements SerialPortEventListener {
   /**
    * Send bytes of data to TX
    * @param data bytes to send
-   * @throws SerialPortException on error
    */
-  void writeBytes (byte[] data) throws SerialPortException {
+  void writeBytes (byte[] data) {
     try {
       serialPort.writeBytes(data);
     } catch (Exception ex) {

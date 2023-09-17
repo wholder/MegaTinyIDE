@@ -59,7 +59,6 @@ public class FusePane extends JPanel {
   static {
     try {
       tooltips = Utility.getResourceMap("fuseFields.props");
-      int dum = 0;
     } catch (IOException ex) {
       ex.printStackTrace();
     }
@@ -320,14 +319,11 @@ public class FusePane extends JPanel {
     addReservedBits(1);
     addField("TOUTDIS:1=Enable NVM write block:0,Disable NVM write block:1");
     MyJComboBox tmp = addField("RSTPINCFG:2=GPIO:0,UPDI:1,RESET:2");
-    tmp.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed (ActionEvent ev) {
-        if (!"UPDI".equals(tmp.getSelectedItem())) {
-          ImageIcon icon = new ImageIcon(Objects.requireNonNull(Utility.class.getResource("images/warning-32x32.png")));
-          showMessageDialog(tmp, "<html>Setting this value to anything other than \"UPDI\" will disable<br> the ability to edit fuses, " +
-              "program and debug the target</html>", "Warning!", JOptionPane.PLAIN_MESSAGE, icon);
-        }
+    tmp.addActionListener(ev -> {
+      if (!"UPDI".equals(tmp.getSelectedItem())) {
+        ImageIcon icon = new ImageIcon(Objects.requireNonNull(Utility.class.getResource("images/warning-32x32.png")));
+        showMessageDialog(tmp, "<html>Setting this value to anything other than \"UPDI\" will disable<br> the ability to edit fuses, " +
+            "program and debug the target</html>", "Warning!", JOptionPane.PLAIN_MESSAGE, icon);
       }
     });
     addReservedBits(1);

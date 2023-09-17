@@ -221,7 +221,7 @@ class MarkupView extends JPanel {
   }
 
   class MyViewFactory implements ViewFactory {
-    ViewFactory view;
+    final ViewFactory view;
 
     private MyViewFactory (ViewFactory view) {
       this.view = view;
@@ -255,7 +255,7 @@ class MarkupView extends JPanel {
     private static final String   blank = "#C0C0C0";
     private static final String   color = "#606060";
     private static final String   header = "#808080";
-    List<List<String>>            rows = new ArrayList<>();
+    final List<List<String>>            rows = new ArrayList<>();
     private final String          font;
     private final int             fontSize;
     private final String[]        widths;
@@ -359,79 +359,76 @@ class MarkupView extends JPanel {
     jEditorPane = new JEditorPane();
     scrollPane = new JScrollPane(jEditorPane);
     JButton back = new JButton("<<BACK");
-    jEditorPane.addHyperlinkListener(new HyperlinkListener() {
-      @Override
-      public void hyperlinkUpdate(HyperlinkEvent ev) {
-        if (ev instanceof FormSubmitEvent) {
-          // Process form submit GET
-          FormSubmitEvent fEvent = (FormSubmitEvent) ev;
-          String file = fEvent.getData();
-          try {
-            file = java.net.URLDecoder.decode(file, "UTF-8");
-            int idx = file.indexOf("=");
-            if (idx > 0) {
-              String type = file.substring(0, idx);
-              file = file.substring(idx + 1);
-              if ("file".equals(type)) {
-                String src = new String(Utility.getResource(file));
-                ide.setSource(src);
-              } else if ("block".equals(type)) {
-                ide.setSource(file);
-              }
+    jEditorPane.addHyperlinkListener(ev -> {
+      if (ev instanceof FormSubmitEvent) {
+        // Process form submit GET
+        FormSubmitEvent fEvent = (FormSubmitEvent) ev;
+        String file = fEvent.getData();
+        try {
+          file = URLDecoder.decode(file, "UTF-8");
+          int idx = file.indexOf("=");
+          if (idx > 0) {
+            String type = file.substring(0, idx);
+            file = file.substring(idx + 1);
+            if ("file".equals(type)) {
+              String src = new String(Utility.getResource(file));
+              ide.setSource(src);
+            } else if ("block".equals(type)) {
+              ide.setSource(file);
             }
-          } catch (Exception ex) {
-            ex.printStackTrace();
           }
-        } else {
-          HyperlinkEvent.EventType eventType = ev.getEventType();
-          String link = ev.getDescription();
-          JEditorPane editor = (JEditorPane) ev.getSource();
-          if (eventType == HyperlinkEvent.EventType.ACTIVATED) {
-            if (link.length() == 0) {
-              return;
-            }
-            if (link.startsWith("http://") || link.startsWith("https://")) {
-              // Handle link using external browser
-              if (Desktop.isDesktopSupported()) {
-                try {
-                  Desktop.getDesktop().browse(new URI(link));
-                } catch (Exception ex) {
-                  ex.printStackTrace();
-                }
+        } catch (Exception ex) {
+          ex.printStackTrace();
+        }
+      } else {
+        HyperlinkEvent.EventType eventType = ev.getEventType();
+        String link = ev.getDescription();
+        JEditorPane editor = (JEditorPane) ev.getSource();
+        if (eventType == HyperlinkEvent.EventType.ACTIVATED) {
+          if (link.length() == 0) {
+            return;
+          }
+          if (link.startsWith("http://") || link.startsWith("https://")) {
+            // Handle link using external browser
+            if (Desktop.isDesktopSupported()) {
+              try {
+                Desktop.getDesktop().browse(new URI(link));
+              } catch (Exception ex) {
+                ex.printStackTrace();
               }
-            } else {
-              // Handle link in MarkupView
-              loadMarkup(link);
-              SwingUtilities.invokeLater(() -> back.setVisible(stack.size() > 1));
             }
-          } else if (eventType == HyperlinkEvent.EventType.ENTERED) {
-            Element source = ev.getSourceElement();
-            if (source instanceof HTMLDocument.RunElement) {
-              HTMLDocument.RunElement elem = (HTMLDocument.RunElement) source;
-              AttributeSet set = elem.getAttributes();
-              Enumeration<?> ee1 = set.getAttributeNames();
-              while (ee1.hasMoreElements()) {
-                Object name = ee1.nextElement();
-                Object attr = set.getAttribute(name);
-                if (attr instanceof SimpleAttributeSet) {
-                  SimpleAttributeSet tagAttrs = (SimpleAttributeSet) attr;
-                  Enumeration<?> ee2 = tagAttrs.getAttributeNames();
-                  while (ee2.hasMoreElements()) {
-                    Object tagElem = ee2.nextElement();
-                    // If tag has "title" attribute, display value as hover text
-                    if ("title".equals(tagElem.toString())) {
-                      Object tagVal = tagAttrs.getAttribute(tagElem);
-                      editor.setToolTipText((String) tagVal);
-                      return;
-                    }
+          } else {
+            // Handle link in MarkupView
+            loadMarkup(link);
+            SwingUtilities.invokeLater(() -> back.setVisible(stack.size() > 1));
+          }
+        } else if (eventType == HyperlinkEvent.EventType.ENTERED) {
+          Element source = ev.getSourceElement();
+          if (source instanceof HTMLDocument.RunElement) {
+            HTMLDocument.RunElement elem = (HTMLDocument.RunElement) source;
+            AttributeSet set = elem.getAttributes();
+            Enumeration<?> ee1 = set.getAttributeNames();
+            while (ee1.hasMoreElements()) {
+              Object name = ee1.nextElement();
+              Object attr = set.getAttribute(name);
+              if (attr instanceof SimpleAttributeSet) {
+                SimpleAttributeSet tagAttrs = (SimpleAttributeSet) attr;
+                Enumeration<?> ee2 = tagAttrs.getAttributeNames();
+                while (ee2.hasMoreElements()) {
+                  Object tagElem = ee2.nextElement();
+                  // If tag has "title" attribute, display value as hover text
+                  if ("title".equals(tagElem.toString())) {
+                    Object tagVal = tagAttrs.getAttribute(tagElem);
+                    editor.setToolTipText((String) tagVal);
+                    return;
                   }
                 }
               }
             }
-          } else if (eventType == HyperlinkEvent.EventType.EXITED) {
-            // Turn off tooltip
-            editor.setToolTipText(null);
           }
+        } else if (eventType == HyperlinkEvent.EventType.EXITED) {
+          // Turn off tooltip
+          editor.setToolTipText(null);
         }
       }
     });

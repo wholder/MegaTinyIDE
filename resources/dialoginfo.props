@@ -31,3 +31,4 @@ ENABLE_PROJECTS: <b>Enable Project Folders</b><br/>When enabled, allows creation
 INTERLEAVE:<b>Interleave Code</b><br/>When enabled, display source code intermixed with disassembly
 SYMTABLE:<b>Symbol Table</b><br/>When enabled, include symbol table in listing
 VECNAMES:<b>Vector Names</b><br/>When enabled, add Vector Names in listing
+PROGBAUD:Serial Programmer Baud Rate
