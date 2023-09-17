@@ -2,7 +2,9 @@
 
 ## MegaTinyIDE (for 64 bit macOS, Windows & Linux)
 
-MegaTinyIDE is a simple, GNU-based IDE that's derived from another project of mine called [ATTiny10IDE](https://github.com/wholder/ATTiny10IDE), which I originally wrote to simplify writing code for the ATTiny10 Series Microcontrollers using C. C++ or Assembly language.  This new version is intended to support coding for the new MegaTiny chips (tinyAVR® 1-series and 0-series), such as the ATtiny212, which feature a greatly expanded set of features compared to the original, Atmel-designed ATTiny series chips.
+MegaTinyIDE is a simple, GNU-based IDE that's derived from another project of mine called [ATTiny10IDE](https://github.com/wholder/ATTiny10IDE), which I originally wrote to simplify writing code for the ATTiny10 Series Microcontrollers using C. C++ or Assembly language.  This new version is intended to support coding for the new MegaTiny chips (tinyAVR® 1-series and 0-series), such as the ATtiny112, which feature 4K of Flash memory and a greatly expanded set of features compared to the original, Atmel-designed ATTiny series chips.
+
+Note: native release for 64-bit Windows, Linuc and MacOs are available in the **Releases** section to the right of this page.  These come with and embedded Java runtime and do not require you to first install a compatible Java runtime on your computer.  However, please note, this feature is still experimental.
 
 ### Project Goals
 
@@ -17,7 +19,7 @@ The tinyAVR® 1-series and 0-series chips introduce a single-pin Unified Program
       - Viewing and Editing USERROW bytes
       - Viewing and Editing Variables in SRAM
       - Identifying Target Chip
-  - [Hardware Debugging](https://github.com/wholder/MegaTinyIDE/blob/master/resources/documentation/debugging.md) (via the UPDI interface using [compatible programmer/debugger](https://github.com/wholder/MegaTinyIDE/blob/master/resources/documentation/programmers.md)):
+      - [Hardware Debugging](https://github.com/wholder/MegaTinyIDE/blob/master/resources/documentation/debugging.md) (via the UPDI interface using [compatible programmer/debugger](https://github.com/wholder/MegaTinyIDE/blob/master/resources/documentation/programmers.md)):
       - Set a Hardware Breakpoint by selecting the checkbox on an executable line of code in the Listing View
       - Single Step while the highlighted line in the Listing View shows the next line to execute
       - Right click on Registers and Status Flags in debugger pane to change value (I/O ports not currently supported)
@@ -54,7 +56,7 @@ While more testing is needed, I am declaring the code as operational (Beta statu
     - 1.0.8 - Regression fix for #include problem in Linux version
     - 1.0.9 - Added code examples embedded in markup-type documentation
     - 1.0.10 - Added support for using UBB/Serial adapters as programmers
-    - 1.0.11 - Regression fixes for Flash programming functions
+    - 1.0.11 - Regression fixes for Flash programming functions and other changes
 
 ### Debugging Interface
 
