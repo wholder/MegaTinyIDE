@@ -358,7 +358,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
       }
     } else {
       List<FileFilter> filterList = new ArrayList<>();
-      filterList.add(new FileNameExtensionFilter("AVR .c , .cpp or .ino files", "c", "cpp", "ino"));
+      filterList.add(new FileNameExtensionFilter("AVR .c, .cpp or .ino files", "c", "cpp", "ino"));
       filterList.add(new FileNameExtensionFilter("AVR .asm or .s files", "asm", "s"));
       if (prefs.getBoolean("enable_projects", false)) {
         filterList.add(new ProjectFolderFilter());
@@ -579,7 +579,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     fileMenu.addSeparator();
     if (prefs.getBoolean("enable_projects", false)) {
       fileMenu.add(newMenu = new JMenu("New"));
-      JMenuItem newProject = new JMenuItem("Project Folder");             // New->Project Folder
+      JMenuItem newProject = new JMenuItem("Project Folder");         // New->Project Folder
       newProject.addActionListener(e -> {
         if (codePane.getText().length() == 0 || discardChanges()) {
           codePane.setForeground(Color.black);
@@ -593,7 +593,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
         }
       });
       newMenu.add(newProject);
-      JMenuItem newFile = new JMenuItem("Project File");                  // New->Project File
+      JMenuItem newFile = new JMenuItem("Project File");              // New->Project File
       newMenu.add(newFile);
       newFile.addActionListener(e -> {
         if (codePane.getText().length() == 0 || discardChanges()) {
@@ -608,7 +608,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
         }
       });
     } else {
-      fileMenu.add(newMenu = new JMenuItem("New"));                       // New (file)
+      fileMenu.add(newMenu = new JMenuItem("New"));                   // New (file)
       ((JMenuItem) newMenu).addActionListener(e -> {
         if (codePane.getText().length() == 0 || discardChanges()) {
           codePane.setForeground(Color.black);
@@ -622,7 +622,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
         }
       });
     }
-    fileMenu.add(openMenu);
+    fileMenu.add(openMenu);                                           // Open
     openMenu.setAccelerator(OPEN_KEY);
     openMenu.addActionListener(e -> {
       JFileChooser fc = getFileChooser();
@@ -651,14 +651,14 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
         }
       }
     });
-    fileMenu.add(saveMenu);
+    fileMenu.add(saveMenu);                                           // Save
     saveMenu.setAccelerator(SAVE_KEY);
     saveMenu.setEnabled(false);
     saveMenu.addActionListener(e -> {
       Utility.saveFile(cFile, codePane.getText());
       setDirtyIndicator(false);
     });
-    fileMenu.add(saveAsMenu);
+    fileMenu.add(saveAsMenu);                                         // Save As
     saveAsMenu.addActionListener(e -> {
       JFileChooser fc = getFileChooser();
       if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
@@ -687,7 +687,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
       }
     });
     fileMenu.addSeparator();
-    fileMenu.add(mItem = new JMenuItem("Quit MegaTinyIDE"));
+    fileMenu.add(mItem = new JMenuItem(""));                          // Quit MegaTinyIDE
     mItem.setAccelerator(QUIT_KEY);
     mItem.addActionListener(e -> {
       if (!codeDirty || discardChanges()) {
@@ -702,7 +702,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
     tabPane.addChangeListener(ev -> {
       int idx = tabPane.getSelectedIndex();
       editMenu.setEnabled(idx == Tab.SRC.num);
-      openMenu.setEnabled(idx == Tab.SRC.num || idx == Tab.DOC.num);
+      openMenu.setEnabled(idx == Tab.SRC.num || idx == Tab.DOC.num || idx == Tab.HEX.num);
       saveMenu.setEnabled(idx == Tab.SRC.num);
       saveAsMenu.setEnabled(idx == Tab.SRC.num || idx == Tab.HEX.num || idx == Tab.LIST.num);
       newMenu.setEnabled(idx == Tab.SRC.num);

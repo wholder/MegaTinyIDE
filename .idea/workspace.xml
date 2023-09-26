@@ -15,6 +15,16 @@
     <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.MD" beforeDir="false" afterPath="$PROJECT_DIR$/README.MD" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/documentation/images/UpdiProg2.png" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/images/UpdiProg2.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/documentation/index.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/index.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/documentation/programmers.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/programmers.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/documentation/trouble.md" beforeDir="false" afterPath="$PROJECT_DIR$/resources/documentation/trouble.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/FusePane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/FusePane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/HexEditPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/HexEditPane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MarkupView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MarkupView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MegaTinyIDE.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MegaTinyIDE.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/SDBG.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/SDBG.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,6 +35,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Class" />
+        <option value="Fortran File" />
       </list>
     </option>
   </component>
@@ -66,9 +77,9 @@
       <recent name="Utility" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/docs" />
       <recent name="$PROJECT_DIR$/resources/documentation/images" />
       <recent name="$PROJECT_DIR$/test" />
-      <recent name="$PROJECT_DIR$/docs" />
       <recent name="$PROJECT_DIR$/docs/UPDI 3rd party programmers/microUPDIcore" />
       <recent name="$PROJECT_DIR$/docs/UPDI 3rd party programmers" />
     </key>
@@ -85,7 +96,14 @@
       <recent name="tools" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.NativeBuilder">
+  <component name="RunManager" selected="Application.MegaTinyIDE">
+    <configuration name="FusePane" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="FusePane" />
+      <module name="MegaTinyIDE" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="MegaTinyIDE" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="MegaTinyIDE" />
       <module name="MegaTinyIDE" />
@@ -96,13 +114,6 @@
     <configuration name="NativeBuilder" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="NativeBuilder" />
       <module name="NativeBuilder" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="ParmDialog (3)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="ParmDialog" />
-      <module name="MegaTinyIDE" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -122,19 +133,19 @@
       </method>
     </configuration>
     <list>
+      <item itemvalue="Application.FusePane" />
       <item itemvalue="Application.ParmDialog" />
-      <item itemvalue="Application.ParmDialog (3)" />
       <item itemvalue="Application.ParmDialog (4)" />
       <item itemvalue="Application.NativeBuilder" />
       <item itemvalue="Application.MegaTinyIDE" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.NativeBuilder" />
         <item itemvalue="Application.MegaTinyIDE" />
+        <item itemvalue="Application.NativeBuilder" />
+        <item itemvalue="Application.FusePane" />
         <item itemvalue="Application.ParmDialog (4)" />
         <item itemvalue="Application.ParmDialog" />
-        <item itemvalue="Application.ParmDialog (3)" />
       </list>
     </recent_temporary>
   </component>
@@ -493,7 +504,7 @@
       <option name="project" value="LOCAL" />
       <updated>1648522232986</updated>
     </task>
-    <option name="localTasksCounter" value="147" />
+    <option name="localTasksCounter" value="149" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -520,7 +531,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Fix compile error line match regex" />
     <MESSAGE value="Misc fixes and improvements" />
     <MESSAGE value="Refactor toolchain loading and add ELF file debugging" />
     <MESSAGE value="Rework ELF file debugging to load from menu rather than from the command line" />
@@ -545,7 +555,19 @@
     <MESSAGE value="Bug fix for progeress bar" />
     <MESSAGE value="More bug fixes for progeress bar" />
     <MESSAGE value="Add baud rate setting feature in Preferences and fic a few bugs" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add baud rate setting feature in Preferences and fic a few bugs" />
+    <MESSAGE value="Update README.MD" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update README.MD" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/EDBG.java</url>
+          <line>283</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

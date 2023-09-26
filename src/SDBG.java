@@ -31,10 +31,10 @@ public class SDBG extends Programmer {
   public static final byte[]  OcdAttach = {0x20, 0x20, 0x20, 0x20, 0x20, 0x44, 0x43, 0x4F};   // "     DCO" - "OCD     "
   // UPDI Registers
   // addresses 0x0-0x3 are the UPDI Physical configuration registers
-  public static final int     UPDI_STATUSA = 0x00;     // Status A
-  public static final int     UPDI_STATUSB = 0x01;     // Status B
-  public static final int     UPDI_CTRLA = 0x02;       //
-  public static final int     UPDI_CTRLB = 0x03;       //
+  public static final int     UPDI_STATUSA = 0x00;      // Status A
+  public static final int     UPDI_STATUSB = 0x01;      // Status B
+  public static final int     UPDI_CTRLA = 0x02;        //
+  public static final int     UPDI_CTRLB = 0x03;        //
   // addresses 0x4-0xC are the ASI level registers
   public static final int     ASI_KEY_STATUS = 0x07;    //
   public static final int     ASI_RESET_REQ = 0x08;     // ASI Reset Request (write 0x59 to reset)
@@ -139,7 +139,7 @@ public class SDBG extends Programmer {
    * Initiaoize the UPDI interface (in case it's jammed up)
    */
   void init () {
-    int code =  0;
+    int code;
     int retry = 5;
     do {
       try {
@@ -473,7 +473,7 @@ public class SDBG extends Programmer {
       throw new IllegalStateException("readMemory() size > 256");
     }
     stWord(PTR, address);                                             // Write address to ptr
-    setRepeat(size - 1);;                                             // Set repeat
+    setRepeat(size - 1);                                              // Set repeat
     return ld(AT_PTR_PP, BYTE, size);                                 // Read data bytes
   }
 
@@ -499,7 +499,7 @@ public class SDBG extends Programmer {
 
   public void waitFlash () throws SerialPortException {
     for (int ii = 0; ii < 10; ii++) {
-      int status = (byte) lds(WORD, NVMCTRL_BASE + NVM_STATUS, 1)[0];
+      int status = lds(WORD, NVMCTRL_BASE + NVM_STATUS, 1)[0];
       if ((status & (1 << 2)) != 0) {                                 // Write error
         throw new IllegalStateException("waitFlash() write errir");
       }

@@ -2,7 +2,6 @@ import com.github.rjeschke.txtmark.Processor;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
 import javax.swing.text.*;
 import javax.swing.text.html.*;
 import java.awt.*;
@@ -255,7 +254,7 @@ class MarkupView extends JPanel {
     private static final String   blank = "#C0C0C0";
     private static final String   color = "#606060";
     private static final String   header = "#808080";
-    final List<List<String>>            rows = new ArrayList<>();
+    final List<List<String>>      rows = new ArrayList<>();
     private final String          font;
     private final int             fontSize;
     private final String[]        widths;
@@ -457,16 +456,16 @@ class MarkupView extends JPanel {
     styleSheet.addRule("body {color:#000; font-family: Arial, DejaVu Sans, Helvetica; margin: 4px;}");
     styleSheet.addRule("h1 {font-size: 24px; font-weight: 500;}");
     styleSheet.addRule("h2 {font-size: 20px; font-weight: 500;}");
-    styleSheet.addRule("h3 {font-size: 16px; font-weight: 500;}");
-    styleSheet.addRule("h4 {font-size: 14px; font-weight: 500;}");
-    styleSheet.addRule("h5 {font-size: 12px; font-weight: 500;}");
-    styleSheet.addRule("h6 {font-size: 10px; font-weight: 500;}");
+    styleSheet.addRule("h3 {font-size: 18px; font-weight: 500;}");
+    styleSheet.addRule("h4 {font-size: 16px; font-weight: 500;}");
+    styleSheet.addRule("h5 {font-size: 14px; font-weight: 500;}");
+    styleSheet.addRule("h6 {font-size: 12px; font-weight: 500;}");
     styleSheet.addRule("pre {margin-left: 0.5cm;}");
     styleSheet.addRule("ol {margin-left: 1cm;}");
-    styleSheet.addRule("ol, li {font-size: 12px; padding-bottom: 6px;}");
-    styleSheet.addRule("ul, li {font-size: 12px; padding-bottom: 6px;}");
-    //styleSheet.addRule("code {font-family: " + codeFont + "; font-size: 12px; margin-bottom: 3px;}"); // doesn't work?
-    styleSheet.addRule("p {font-size: 12px; margin-top: 5px; margin-bottom: 5px;}");
+    styleSheet.addRule("ol, li {font-size: 14px; padding-bottom: 6px;}");
+    styleSheet.addRule("ul, li {font-size: 14px; padding-bottom: 6px;}");
+    styleSheet.addRule("code {font-family: " + codeFont + "; font-size: 14px; margin-bottom: 3px;}");
+    styleSheet.addRule("p {font-size: 14px; margin-top: 5px; margin-bottom: 5px;}");
   }
 
   public void setText (String markup) {
@@ -482,7 +481,10 @@ class MarkupView extends JPanel {
       String g1 = mat.group(1);
       String g2 = mat.group(2);
       // Need call to Matcher.quoteReplacement to prevent recursive matching on replacement string
-      mat.appendReplacement(buf, Matcher.quoteReplacement("[" + g1 + "](" + g2 + " \"" + g2 + "\")"));
+      if (!g1.toLowerCase().contains("http")) {
+        String rep = Matcher.quoteReplacement("[" + g1 + "](" + g2 + " \"" + g2 + "\")");
+        mat.appendReplacement(buf, rep);
+      }
     }
     mat.appendTail(buf);
     return buf.toString();

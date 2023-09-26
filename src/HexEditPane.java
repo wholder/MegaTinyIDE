@@ -184,15 +184,6 @@ public class HexEditPane extends JTextPane {
     panel.add(scroll, BorderLayout.CENTER);
     setCaretPosition(0);
     JOptionPane.showConfirmDialog(parent, panel, frameLabel, JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
-
-/*
-    // Buttons in reversd order
-    Object[] buttons = {"OK", "Get IntelHex"};
-    int val = JOptionPane.showOptionDialog(parent, panel, frameLabel, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
-      null, buttons, buttons[0]);
-    System.out.println(val);
-*/
-
   }
 
   @Override

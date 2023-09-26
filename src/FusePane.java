@@ -1,7 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.*;
 
@@ -55,6 +53,7 @@ public class FusePane extends JPanel {
   private int                 appEnd, bootEnd;
   private final byte[]        priorVals = new byte[11];
   private final int[]         usedBitMasks = new int[] {0xFF, 0xFF, 0x83, 0x00, 0xFF, 0xDD, 0x07, 0xFF, 0xFF, 0x00, 0x00};
+  boolean                     disableChangeDetect;
 
   static {
     try {
@@ -64,7 +63,7 @@ public class FusePane extends JPanel {
     }
   }
 
-  static class MyJComboBox extends JComboBox<String> {
+  class MyJComboBox extends JComboBox<String> {
     private final Map<Integer,Integer>  valueIndex = new HashMap<>();
     private final Map<Integer,Integer>  indexValue = new HashMap<>();
     private int                         initialValue;
@@ -72,7 +71,6 @@ public class FusePane extends JPanel {
     MyJComboBox (String name, String[] values) {
       String toolTip = tooltips.get(name);
       setToolTipText(toolTip != null ? (name + ": " + toolTip) : name);
-      System.out.println(name);
       setPrototypeDisplayValue("xx");
       DefaultListCellRenderer listRenderer = new DefaultListCellRenderer();
       listRenderer.setHorizontalAlignment(DefaultListCellRenderer.CENTER);
@@ -93,8 +91,10 @@ public class FusePane extends JPanel {
     }
 
     public void setValue (int value) {
+      disableChangeDetect = true;
       initialValue = value;
       setSelectedIndex(valueIndex.get(value));
+      disableChangeDetect = false;
     }
 
     public boolean hasChanged () {
@@ -320,9 +320,9 @@ public class FusePane extends JPanel {
     addField("TOUTDIS:1=Enable NVM write block:0,Disable NVM write block:1");
     MyJComboBox tmp = addField("RSTPINCFG:2=GPIO:0,UPDI:1,RESET:2");
     tmp.addActionListener(ev -> {
-      if (!"UPDI".equals(tmp.getSelectedItem())) {
+      if (!disableChangeDetect && !"UPDI".equals(tmp.getSelectedItem())) {
         ImageIcon icon = new ImageIcon(Objects.requireNonNull(Utility.class.getResource("images/warning-32x32.png")));
-        showMessageDialog(tmp, "<html>Setting this value to anything other than \"UPDI\" will disable<br> the ability to edit fuses, " +
+        showMessageDialog(tmp, "<html>Setting RSTPINCFG to anything other than \"UPDI\" will disable<br> the ability to edit fuses, " +
             "program and debug the target</html>", "Warning!", JOptionPane.PLAIN_MESSAGE, icon);
       }
     });

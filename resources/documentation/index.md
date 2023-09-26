@@ -19,6 +19,7 @@
    + [ATTiny817-Xplained-Mini](documentation/programmers.md#817Mini)
    + [ATTiny416-Xplained-Nano](documentation/programmers.md#416Nano)
    + [USB/Serial-based programmers](documentation/programmers.md#UpdiProg)
+   + [12 Volt Programming](documentation/programmers.md#12vProg)
 
 #### Pinout Guides
 <table>
