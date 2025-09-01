@@ -28,7 +28,7 @@ Note: the Vcc connection is used by the Atmel-ICE to detect that the targt has p
 
 <p align="center"><img src="images/PICKit-4.png"></p>
 
-The [PICKit-4](https://www.microchip.com/developmenttools/ProductDetails/PG164140) is less expensive ([~$90 at Mouser](https://www.mouser.com/ProductDetail/Microchip-Technology/PG164140?qs=sGAEpiMZZMu3sxpa5v1qrvyz3TtLhlhta1L5sRADGIM%3D), [~$90 at Digi-Key](https://www.digikey.com/en/products/detail/microchip-technology/PG164140/8536593)) and more flexible than the Atmel-ICE, as it can also be used with PIC-based MCUs and is also capable of High Voltage program, which can be used to unlocked locked chips (not currently supported by MegaTinyIDE.)  Debugging with the Snap requires making three connections to the target ATtiny, as follows:
+The [PICKit-4](https://www.microchip.com/developmenttools/ProductDetails/PG164140) is less expensive ([~$90 at Mouser](https://www.mouser.com/ProductDetail/Microchip-Technology/PG164140?qs=sGAEpiMZZMu3sxpa5v1qrvyz3TtLhlhta1L5sRADGIM%3D), [~$90 at Digi-Key](https://www.digikey.com/en/products/detail/microchip-technology/PG164140/8536593)) and more flexible than the Atmel-ICE, as it can also be used with PIC-based MCUs and is also capable of High Voltage program, which can be used to unlocked locked chips (not currently supported by MegaTinyIDE.)  Debugging with the PICKit-4 requires making three connections to the target ATtiny, as follows:
 
   - Connect PICKit-4 pin 2 to Vcc on the target (note: pin 1 is indicated by the triangle)
   - Connect PICKit-4 pin 3 to Gnd on the target
@@ -90,4 +90,4 @@ You might also consider using a [USB/Serial-based programmer](https://www.tindie
 
 <p align="center"><img src="images/Updi12V.JPG"></p>
 
-Note: this programmers uses a Silicon Labs CP2105 for its USB to serial interface.  This IC actually contains 2 serial interfaces, so you need to select the one that's used as the programmer side.  This should appear as something like "/dev/cu.SLAB_USBtoUART" in the programmer selection menu.  The other serial port is intended for use as a regular serial port and should appear as something ilke "/dev/cu.SLAB_USBtoUART23".
+Note: this programmers uses a Silicon Labs CP2105 for its USB to serial interface.  This IC actually contains 2 serial interfaces, so you need to select the one that's used as the programmer side.  On macos, this should appear as something like "/dev/cu.SLAB_USBtoUART" in the programmer selection menu.  The other serial port is intended for use as a regular serial port and should appear as something ilke "/dev/cu.SLAB_USBtoUART23".

@@ -958,7 +958,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
       step.addActionListener(ev -> {
         if (debugger != null) {
           debugger.stepTarget();
-          updateState(true);
+          SwingUtilities.invokeLater(() -> updateState(true));
         }
       });
       buttons.add(reset);
@@ -973,7 +973,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
             }
           }
           debugger.resetTarget();
-          updateState(false);
+          SwingUtilities.invokeLater(() -> updateState(true));
         }
       });
       setActive(false);

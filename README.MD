@@ -4,7 +4,9 @@
 
 MegaTinyIDE is a simple, GNU-based IDE that's derived from another project of mine called [ATTiny10IDE](https://github.com/wholder/ATTiny10IDE), which I originally wrote to simplify writing code for the ATTiny10 Series Microcontrollers using C. C++ or Assembly language.  This new version is intended to support coding for the new MegaTiny chips (tinyAVR® 1-series and 0-series), such as the ATtiny112, which feature 4K of Flash memory and a greatly expanded set of features when compared to the original, Atmel-designed ATTiny series chips.
 
-Note: native release for 64-bit Windows, Linux and MacOs are available in the **Releases** section to the right of this page.  These come with and embedded Java runtime and do not require you to first install a compatible Java runtime on your computer.  However, please note, this feature is still experimental.
+Note: native release for 64-bit Windows, Linux and MacOs are available in the **Releases** section to the right of this page.  These come with and embedded Java runtime and do not require you to first install a compatible Java runtime on your computer.  However, this feature is still experimental.
+
+Note: 8/31/2125 - I recently discovered that the code I wrote to detect what device programmers/debuggers are connected uses USB vendor id (VID) values from Atmel (0x03EB) and may not detect programmers using Micochip's VID (0x04D8).  This is controlled by the resource file programmers.props.  If you have problems detecting a programmer, you can experiment with editing this file (requires restart).  I'm currently unable to test this, as I don't own the devices needed to test this.  Please leave a comment if you have any info on this topic.
 
 ### Project Goals
 
@@ -117,7 +119,7 @@ This project would have been much harder and much less cool without help from th
 
 ### MIT License
 
-Copyright 2014-2023 Wayne Holder
+Copyright 2014-2025 Wayne Holder
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 

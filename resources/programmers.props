@@ -1,8 +1,11 @@
+#Note: vRef is true if programmer can detect the targets vcc voltage
 03EB-2175: name = ATTiny3217-Curiosity-Nano, vRef = true
 03EB-2145: name = ATTiny416-Xplained-Nano/Mini, vRef = true
 03EB-2141: name = Atmel-ICE, vRef = true
 03EB-2177: name = PICkit4, vRef = true
 03EB-2180: name = MPLAB Snap, vRef = true
-#04D8-9012: PICkit4 (?)
-#04D8-9015: ICD 4 (?)
-#04D8-9018: MPLAB Snap (?)
+#Note: VID changed from 03EB (Atmel) to 04D8 (Microchip) when Microchip acquired Atmel
+#Uncomment and restart to try the alternate values below
+#04D8-9012: PICkit4, vRef = true
+#04D8-9015: ICD 4, vRef = true
+#04D8-9018: MPLAB Snap, vRef = true

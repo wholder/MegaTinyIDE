@@ -1,3 +1,4 @@
 ### Troubleshooting
 If you experience an unexpected error when compiling or uploading, try using the menu option "**`Actions->Reinstall ToolChain`**" and then try again.
 
+If you have trouble programming or debugging a chip, first double check that you have the programmer/debugger connected to the proper pin for that target devoce  If this fails to remedy the problem, try quitting MegaTinyUDE, disconnecting and then reconnecting the programmer, then restart MegaTinyIDE. If this fails, try using a diffrent attiny device.  It's possible that you may have inadverently changed the UPDI setting in the FUSES block to some other value.  If so, you'll need a HV (12 volt) programmer to restore this setting to UPDI.

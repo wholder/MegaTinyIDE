@@ -1799,16 +1799,16 @@ public class EDBG extends Programmer          /* implements JSSCPort.RXEvent */ 
     int timeout = 20;
     StringBuilder msg = new StringBuilder();
     while (!doTimeout || timeout-- > 0) {
-      byte[] data = sendCmd(new byte[] {(byte) 0x82});
+      byte[] data = sendCmd(new byte[] {(byte) 0x82});  // AVR_EVENT
       byte[] rsp = decodeResponse(data);
       if (rsp != null) {
-        if (rsp[0] == 0x40) {                 // EVT_AVR8_BREAK
+        if (rsp[0] == 0x40) {                           // EVT_AVR8_BREAK
           if (DEBUG_PRINT) {
             Break brk = new Break(rsp);
             debugPrint(brk.toString());
           }
           return;
-        } else if (rsp[0] == 0x41) {         // EVT_AVR8_IDR
+        } else if (rsp[0] == 0x41) {                    // EVT_AVR8_IDR
           char cc = (char) rsp[2];
           msg.append(cc);
           if (cc == '\n') {
