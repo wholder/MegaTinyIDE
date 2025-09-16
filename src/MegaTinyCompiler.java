@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 
 /*
    * GNU Toolchain Controller for Compiling and Assembling code for avrxmega3 Series Chips
-   * Author: Wayne Holder, 2017-2021
+   * Author: Wayne Holder, 2017-2025
    * License: MIT (https://opensource.org/licenses/MIT)
    *
    * References:
@@ -145,7 +145,7 @@ class MegaTinyCompiler {
 
   static final String[][] build = {
       {"TOHEX", tohex},
-      {"LST", list},   // Note add "-l' for source path and line numbers (Warning: large lines!)
+      {"LST", list},   // Note add "-l" for source path and line numbers (Warning: large lines!)
       {"SIZE", size},
   };
 

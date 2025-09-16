@@ -7,10 +7,10 @@ import java.util.*;
    *    valset1: val1 = 1, val2 = 4, val3 = 5
    *    valset2: val1 = 1, val2 = 4, val3 = 1
 
-   * In addition, the "parent" keyword can be used to import a shared set of values from the top level Map such as:
+   * In addition, the "base" keyword can be used to import a shared set of values from the top level Map such as:
    *    baseVals: val1 = 1, val2 = 4
-   *    valset1: parent = baseVals, val3 = 5
-   *    valset2: parent = baseVals, val3 = 1
+   *    valset1: base = baseVals, val3 = 5
+   *    valset2: base = baseVals, val3 = 1
    *
    * Note: baseVals is removed from the top level Map, so the full enumeration of the ProperyMap created
    * will look like this:
@@ -70,12 +70,12 @@ public class PropertyMap {
     for (String key : properties.keySet()) {
       Map<String,String> propMap = properties.get(key);
       for (String key2 : propMap.keySet()) {
-        if ("parent".equals(key2)) {
+        if ("base".equals(key2)) {
           String val = propMap.get(key2);
           Map<String,String> exMap = properties.get(val);
           propMap.putAll(exMap);
           exList.add(val);
-          propMap.remove("parent");
+          propMap.remove("base");
           break;
         }
       }
@@ -105,9 +105,11 @@ public class PropertyMap {
     return revMap;
   }
 
+/*
   public static void main (String[] args) throws IOException {
     PropertyMap pMap = new PropertyMap("attinys.props");
     if (false) {
+      // Test code
       for (String key : pMap.properties.keySet()) {
         System.out.println(key);
         Map<String, String> propMap = pMap.get(key);
@@ -129,4 +131,5 @@ public class PropertyMap {
       }
     }
   }
+*/
 }

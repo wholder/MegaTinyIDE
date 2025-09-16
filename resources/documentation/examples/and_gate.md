@@ -40,4 +40,4 @@ int main (void) {
 
 Note 1: Adapted from Microchip Technical Note TB3218 "Getting Started with CCL"
 
-Note 3: Pin 6 is also the UPDI pin, so sing this could will require disabling the UPDI interface.
+Note 3: Pin 6 is also the UPDI pin, so using this will require disabling the UPDI interface.

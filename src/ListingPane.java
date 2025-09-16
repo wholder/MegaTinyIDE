@@ -544,7 +544,7 @@ public class ListingPane extends JPanel {   // https://regex101.com
           portB.setActiveMask((portMask >> 8) & 0xFF);
           portA.setActiveMask(portMask & 0xFF);
           try {
-            debugger = ide.getProgrammer(false);
+            debugger = ide.getProgrammerInstance(false);
             debugger.resetTarget();
             debugger.setOcdListener(text -> {
               if (running) {

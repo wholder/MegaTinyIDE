@@ -14,6 +14,7 @@ import java.io.*;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.List;
 import java.util.prefs.Preferences;
@@ -25,7 +26,7 @@ import java.util.regex.Pattern;
     /*
       Supported CSS:
         background
-        background-color (with the exception of transparent)
+        background-color (except transparent)
         background-image
         background-position
         background-repeat
@@ -59,7 +60,7 @@ import java.util.regex.Pattern;
         padding-right
         padding-top
         text-align (justify is treated as center)
-        text-decoration (with the exception of blink and overline)
+        text-decoration (except blink and overline)
         vertical-align (only sup and super)
      */
 
@@ -72,11 +73,12 @@ class MarkupView extends JPanel {
   private String                      basePath;
   private HtmlTable                   regTable;
   private int                         regIndex;
+  private final JButton               back = new JButton("<<BACK");
   Map<String,String>                  parmMap;
 
   private static class StackItem {
     private final String  location;
-    private final Point   position;
+    public Point          position;
 
     private StackItem (String location, Point position) {
       this.location = location;
@@ -91,12 +93,8 @@ class MarkupView extends JPanel {
 
     private MyImageView (Element elem) {
       super(elem);
-      try {
-        AttributeSet attributes = elem.getAttributes();
-        loc = URLDecoder.decode((String) attributes.getAttribute(HTML.Attribute.SRC), "UTF-8");
-      } catch (UnsupportedEncodingException ex) {
-        ex.printStackTrace();
-      }
+      AttributeSet attributes = elem.getAttributes();
+      loc = URLDecoder.decode((String) attributes.getAttribute(HTML.Attribute.SRC), StandardCharsets.UTF_8);
     }
 
     /**
@@ -123,7 +121,7 @@ class MarkupView extends JPanel {
       if (img != null) {
         return img;
       } else if (loc.startsWith("chiplayout:")) {                                   // chiplayout
-        this.ds = ChipLayout.getLayout(parmMap.get("CHIP"), parmMap.get("PKG"));
+        ds = ChipLayout.getLayout(parmMap.get("CHIP"), parmMap.get("PKG"));
         return img = ds != null ? ds.img : null;
       } else if (loc.startsWith("bitfield:")) {                                     // bitfield
         return img = Diagrams.drawBitfield(loc.substring(9), parmMap);
@@ -246,7 +244,9 @@ class MarkupView extends JPanel {
 
   MarkupView (MegaTinyIDE ide, String loc) {
     this(ide);
+    ToolTipManager.sharedInstance().registerComponent(this);    // Voodoo 2
     loadMarkup(loc);
+    pushPageOnStack(loc);
   }
 
   static class HtmlTable {
@@ -258,12 +258,21 @@ class MarkupView extends JPanel {
     private final String          font;
     private final int             fontSize;
     private final String[]        widths;
+    private final String          width;
     private int                   maxCol;
 
     HtmlTable (String font, int fontSize, String[] widths) {
       this.font = font;
       this.fontSize = fontSize;
       this.widths = widths;
+      this.width = "95%";
+    }
+
+    HtmlTable (String font, int fontSize, String[] widths, String width) {
+      this.font = font;
+      this.fontSize = fontSize;
+      this.widths = widths;
+      this.width = width;
     }
 
     void addItem (int row, int col, String text) {
@@ -299,7 +308,7 @@ class MarkupView extends JPanel {
         }
       }
       // generate html table
-      StringBuilder buf = new StringBuilder("<table style=\"background-color:" + grid + ";padding:0;white-space:nowrap;width:95%;\">\n");
+      StringBuilder buf = new StringBuilder("<table style=\"background-color:" + grid + ";padding:0;white-space:nowrap;width:" + width + ";\">\n");
       String prefix1 = "  <td style=\"background-color:white;color:" + color + ";\"";
       String prefix2 = "  <td style=\"background-color:" + blank + ";color:" + blank + ";\"";
       for (int rowIdx = 0; rowIdx < rows.size(); rowIdx++) {
@@ -354,17 +363,21 @@ class MarkupView extends JPanel {
   }
 
   MarkupView (MegaTinyIDE ide) {
+    setToolTipText(null);                                       // These are voodoo to get call to getToolTipText() working
+    ToolTipManager.sharedInstance().registerComponent(this);    // Voodoo 2
+    setFocusable(true);                                         // Voodoo 3
     setLayout(new BorderLayout());
     jEditorPane = new JEditorPane();
     scrollPane = new JScrollPane(jEditorPane);
-    JButton back = new JButton("<<BACK");
+    add(back, BorderLayout.NORTH);
+    back.setVisible(false);
     jEditorPane.addHyperlinkListener(ev -> {
       if (ev instanceof FormSubmitEvent) {
         // Process form submit GET
         FormSubmitEvent fEvent = (FormSubmitEvent) ev;
         String file = fEvent.getData();
         try {
-          file = URLDecoder.decode(file, "UTF-8");
+          file = URLDecoder.decode(file, StandardCharsets.UTF_8);
           int idx = file.indexOf("=");
           if (idx > 0) {
             String type = file.substring(0, idx);
@@ -399,7 +412,7 @@ class MarkupView extends JPanel {
           } else {
             // Handle link in MarkupView
             loadMarkup(link);
-            SwingUtilities.invokeLater(() -> back.setVisible(stack.size() > 1));
+            pushPageOnStack(link);
           }
         } else if (eventType == HyperlinkEvent.EventType.ENTERED) {
           Element source = ev.getSourceElement();
@@ -435,20 +448,16 @@ class MarkupView extends JPanel {
     scrollPane.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
     add(scrollPane, BorderLayout.CENTER);
     back.addActionListener(e -> {
-      if (stack.size() > 0) {
-        // Process "BACK" button
-        stack.remove(stack.size() - 1);
-        StackItem item = stack.get(stack.size() - 1);
-        loadMarkup(item.location);
-        stack.remove(stack.size() - 1);
-        SwingUtilities.invokeLater(() -> {
-          scrollPane.getViewport().setViewPosition(item.position);
-          back.setVisible(stack.size() > 1);
-        });
-      }
+      // Process "BACK" button
+      stack.remove(stack.size() - 1);
+      StackItem item = stack.get(stack.size() - 1);
+      Point position = item.position;
+      loadMarkup(item.location);
+      SwingUtilities.invokeLater(() -> {
+        scrollPane.getViewport().setViewPosition(position);
+        back.setVisible(stack.size() > 1);
+      });
     });
-    add(back, BorderLayout.NORTH);
-    back.setVisible(false);
     HTMLEditorKit kit = new MyEditorKit();
     kit.setAutoFormSubmission(false);
     jEditorPane.setEditorKit(kit);
@@ -476,7 +485,7 @@ class MarkupView extends JPanel {
   private static String addMarkHover (String text) {
     Pattern LinkMatch = Pattern.compile("\\[(.+)\\]\\((.+)\\)");
     Matcher mat = LinkMatch.matcher(text);
-    StringBuffer buf = new StringBuffer();
+    StringBuilder buf = new StringBuilder();
     while (mat.find()) {
       String g1 = mat.group(1);
       String g2 = mat.group(2);
@@ -490,6 +499,17 @@ class MarkupView extends JPanel {
     return buf.toString();
   }
 
+  private void pushPageOnStack (String loc) {
+    if (stack.size() > 0) {
+      Point scrollPosition = scrollPane.getViewport().getViewPosition();
+      StackItem item = stack.get(stack.size() - 1);
+      item.position = scrollPosition;
+    }
+    stack.add(new StackItem(loc, new Point()));
+    back.setVisible(stack.size() > 1);
+  }
+
+  // Load new page
   public void loadMarkup (String loc) {
     if (loc != null) {
       String link = loc;
@@ -507,8 +527,6 @@ class MarkupView extends JPanel {
         parms = link.substring(off + 1);
         link = link.substring(0, off);
       }
-      Point scrollPosition = scrollPane.getViewport().getViewPosition();
-      stack.add(new StackItem(loc, scrollPosition));
       if (basePath == null || link.lastIndexOf("/") > 0) {
         int idx = link.lastIndexOf("/");
         if (idx >= 0) {
@@ -619,7 +637,49 @@ class MarkupView extends JPanel {
             }
             regIndex++;
             return "";
+          case "TINYS_COMPARED":                                              // *[TINYS_COMPARED]*
+            String[] cWidths = {"15%", "8%", "8%", "13%", "13%", "10%", "10%", "15%"};
+            HtmlTable compTable = new HtmlTable(codeFont.getName(), 12, cWidths, "70%");
+            int xOff = 0;
+            for (String hdr : new String[] {"Part", "Series", "Flash", "SRam", "Eeprom", "Dacs", "Pins", "package"}) {
+              compTable.addItem(0, xOff++, hdr);
+            }
+            try {
+              PropertyMap pMap = new PropertyMap("attinys.props");
+              int index = 1;
+              for (Map<String, String> items : Utility.mapToOrderedArray(pMap, "ii")) {
+                int yOff = 0;
+                compTable.addItem(index, yOff++, Utility.getMicrochipLink(items.get("key")));
+                compTable.addItem(index, yOff++, items.get("series"));
+                compTable.addItem(index, yOff++, items.get("flash") + "K");
+                compTable.addItem(index, yOff++, items.get("sram") + " bytes");
+                compTable.addItem(index, yOff++, items.get("eeprom") + " bytes");
+                compTable.addItem(index, yOff++, items.get("dacs"));
+                compTable.addItem(index, yOff++, items.get("pins"));
+                String[] parts = items.get("pkg").toUpperCase().split("/");
+                if (parts.length > 1) {
+                  String temp = Utility.getPinoutLink(items, parts[0])  + " " + Utility.getPinoutLink(items, parts[1]);
+                  compTable.addItem(index, yOff++, temp);
+                } else {
+                  compTable.addItem(index, yOff++,Utility.getPinoutLink(items, parts[0]));
+                }
+                index++;
+              }
+            } catch (Exception ex) {
+              ex.printStackTrace();
+            }
+            return compTable.getHtmlTable();
           case "MUX_TABLE":
+            try {
+              PropertyMap pMap = new PropertyMap("attinys.props");
+              Map<String,String> props = pMap.get(parmMap.get("CHIP"));
+              if ("false".equals(props.get("mux"))) {
+                return "Multiplex table not implemented";
+              }
+            } catch (Exception ex) {
+              System.out.println(ex);
+              return "-";
+            }
             // Generate table of multiplexed pins
             try {
               if (parm != null && parm.trim().length() > 0) {
@@ -706,6 +766,7 @@ class MarkupView extends JPanel {
   /*
    *  Test code for MarkupView Pane
    */
+/*
   public static void main (String[] args) {
     Preferences prefs = Preferences.userRoot().node(MarkupView.class.getName());
     JFrame frame = new JFrame();
@@ -736,4 +797,5 @@ class MarkupView extends JPanel {
     });
     frame.setVisible(true);
   }
+*/
 }

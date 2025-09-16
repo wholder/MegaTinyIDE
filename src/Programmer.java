@@ -7,13 +7,13 @@ import java.util.*;
 
 abstract public class Programmer {
   // System base addresses
-  static final int SIGNATURES_BASE = 0x1100; // SIGROW
+  static final int SIGNATURES_BASE = 0x1100;  // SIGROW
   static final int SERIAL_NUM_BASE = 0x1103;
-  static final int EEPROM_BASE = 0x1400; // EEPROM
-  static final int FUSES_BASE = 0x1280; // FUSES
-  static final int LOCKBITS_BASE = 0x128A; // LOCKBITS
-  static final int USERROW_BASE = 0x1300; // USERROW
-  static final Map<String, ProgDevice> programmers = new TreeMap<>();
+  static final int EEPROM_BASE = 0x1400;      // EEPROM
+  static final int FUSES_BASE = 0x1280;       // FUSES
+  static final int LOCKBITS_BASE = 0x128A;    // LOCKBITS
+  static final int USERROW_BASE = 0x1300;     // USERROW
+  static final Map<String, DebugDevice> programmers = new TreeMap<>();
 
   public static class EDBGException extends IllegalStateException {
     EDBGException (String cause) {
@@ -21,12 +21,15 @@ abstract public class Programmer {
     }
   }
 
+  /*
+   * Build "programmers" map which uses VID:PID values to look up the device infor, such as its name
+   */
   static {
     try {
       PropertyMap progs = new PropertyMap("programmers.props");
       for (String key : progs.keySet()) {
         PropertyMap.ParmSet parmSet = progs.get(key);
-        ProgDevice prog = new ProgDevice(parmSet, key);
+        DebugDevice prog = new DebugDevice(parmSet, key);
         programmers.put(key, prog);
       }
     } catch (IOException ex) {
@@ -34,17 +37,43 @@ abstract public class Programmer {
     }
   }
 
-  public static class ProgDevice {
-    public final String key;
-    public final int pid;
-    public final int vid;
-    public final String name;
-    public final boolean hasVRef;
-    public String serial;
-    private String product;
-    private int release;
+  interface DeviceInfo {
+    String getKey();
+    String getName();
+    String getInfo();
+  }
 
-    public ProgDevice (PropertyMap.ParmSet parmSet, String key) {
+  public static class SerialDevice implements DeviceInfo {
+    public final String key;            // Key value is device name for serial port0
+
+    public SerialDevice (String key) {
+      this.key = key;
+    }
+
+    public String getKey () {
+      return key;
+    }
+
+    public String getName () {
+      return key;
+    }
+
+    public String getInfo () {
+      return "";
+    }
+  }
+
+  public static class DebugDevice implements DeviceInfo {
+    public final String   key;          // Key value in "programers.props" (VID + "-" + PID)
+    public final int      vid;          // USB Vendor ID
+    public final int      pid;          // USB Product ID
+    public final String   name;         // Valus of "name" attrribute in "programers.props"
+    public final boolean  hasVRef;      // Value of "vRef" attrribute in "programers.props" (false if not defined)
+    public String         serialNum;    // HID serial number (read from device)
+    private String        product;      // HID Product Description (read from device)
+    private int           release;      // HID Release info (read from device)
+
+    public DebugDevice (PropertyMap.ParmSet parmSet, String key) {
       this.key = key;
       String[] parts = key.split("-");
       if (parts.length == 2) {
@@ -57,27 +86,40 @@ abstract public class Programmer {
       }
     }
 
+    public String getKey () {
+      return key;
+    }
+
+    public String getName () {
+      return name;
+    }
+
     public String getInfo () {
       return String.format("<html><b>Product</b>: %s <br><b>VID</b>: 0x%04X<br><b>PID</b>: " +
-        "0x%02X<br><b>Seria</b>l: %s <br><b>Release:</b> %d </html>", product, vid, pid, serial, release);
+        "0x%02X<br><b>Serial</b>: %s <br><b>Release:</b> %d </html>", product, vid, pid, serialNum, release);
     }
   }
 
-  public static ProgDevice getProgrammer (String progVidPid) {
+  public static DebugDevice getProgrammer (String progVidPid) {
     return programmers.get(progVidPid);
   }
 
-  public static List<ProgDevice> getProgrammers (boolean decodeUpdi) {
-    List<ProgDevice> list = new ArrayList<>();
+  /**
+   * Scan USB for connected HID devices that can use UPDI to debug and program target devices
+   * Note: resource file "programmers.props" use to specify VID-PID values for these devices
+   * @return List of devices detected
+   */
+  public static List<DebugDevice> getDebuggers () {
+    List<DebugDevice> list = new ArrayList<>();
     HidServices hidServices = HidManager.getHidServices();
     for (String key : programmers.keySet()) {
-      ProgDevice prog = programmers.get(key);
+      DebugDevice prog = programmers.get(key);
       HidDevice device = null;
       try {
         device = hidServices.getHidDevice(prog.vid, prog.pid, null);
         if (device != null) {
           prog.product = device.getProduct();
-          prog.serial = device.getSerialNumber();
+          prog.serialNum = device.getSerialNumber();
           prog.release = device.getReleaseNumber();
           list.add(prog);
         }

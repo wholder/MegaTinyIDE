@@ -145,7 +145,7 @@ public class EDBG extends Programmer          /* implements JSSCPort.RXEvent */ 
   private boolean                             programActive;
   private OcdListener                         ocdListener;
   private final MegaTinyIDE                   ide;
-  private JSSCPort                            jPort;
+  private final JSSCPort                      jsscPort;
   private final ByteArrayOutputStream         rxOut = new ByteArrayOutputStream();
   private Utility.ProgressBar                 progress;
   //                                                                ( prog/debug)
@@ -233,21 +233,22 @@ public class EDBG extends Programmer          /* implements JSSCPort.RXEvent */ 
     }
   }
 
-  EDBG (MegaTinyIDE ide, boolean program) throws EDBGException {
-    this.ide = ide;
-    if (ide.decodeUpdi()) {
-      jPort = ide.getSerialPort();
-      if (jPort != null) {
-        jPort.setParameters(EDBG.UPDIClock * 1000, 8, 2, SerialPort.PARITY_EVEN);
+  EDBG (MegaTinyIDE frame, JSSCPort port, String pidVid, boolean program) throws EDBGException {
+    this.ide = frame;
+    this.jsscPort = port;
+    if (frame.decodeUpdi()) {
+      // If used, setup UPDI decoder before setting up debugger
+      if (jsscPort != null) {
+        jsscPort.setParameters(EDBG.UPDIClock * 1000, 8, 2, SerialPort.PARITY_EVEN);
         try {
-          jPort.open(new JSSCPort.RXEvent() {
+          jsscPort.open(new JSSCPort.RXEvent() {
             @Override
             public void rxChar (byte cc) {
               rxOut.write(cc);
             }
             @Override
             public void breakEvent () {
-              ide.infoPrintln("BREAK");
+              frame.infoPrintln("BREAK");
             }
           });
         } catch (SerialPortException ex) {
@@ -255,12 +256,13 @@ public class EDBG extends Programmer          /* implements JSSCPort.RXEvent */ 
         }
       }
     }
-    ProgDevice prog = getProgrammer(ide.getProgPidVid());
+    DebugDevice prog = getProgrammer(pidVid);
     if (prog != null) {
-      this.chip = MegaTinyIDE.chipTypes.get(ide.getAvrChip());
+      String target = frame.getAvrChip();
+         this.chip = MegaTinyIDE.chipTypes.get(target);
       hidServices = HidManager.getHidServices();
       this.program = program;
-      device = hidServices.getHidDevice(prog.vid, prog.pid, prog.serial);
+      device = hidServices.getHidDevice(prog.vid, prog.pid, prog.serialNum);
       if (device != null) {
         if (device.isOpen()) {
           device.close();
@@ -309,13 +311,13 @@ public class EDBG extends Programmer          /* implements JSSCPort.RXEvent */ 
     }
     deactivatePhysical();
     endSession();
-    ide.programmer = null;
+    ide.removeProgrammer();
     device.close();
     hidServices.shutdown();
     HidApi.exit();
-    if (jPort != null) {
+    if (jsscPort != null) {
       try {
-        jPort.close();
+        jsscPort.close();
       } catch (SerialPortException ex) {
         throw new EDBGException("EDBG.close()");
       }
@@ -1563,7 +1565,7 @@ public class EDBG extends Programmer          /* implements JSSCPort.RXEvent */ 
    */
   public byte[] getDeviceSerialNumber () throws EDBGException {
     if (debugActive || programActive) {
-      return memoryRead(0x1100 + 3, MEMTYPE_SIGNATURE, 16 - 3);
+      return memoryRead(0x1100 + 3, MEMTYPE_SIGNATURE, 10);
     } else {
       throw new EDBGException("Call to getDeviceSerialNumber() when debug or program mode is not active");
     }

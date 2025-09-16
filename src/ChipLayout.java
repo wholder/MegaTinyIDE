@@ -187,7 +187,7 @@ public class ChipLayout {
     void addHoverText (Rectangle rect, String text) {
        if (text.matches("P[ABC][0-7]")) {
          text = text + ": Port " + text.charAt(1) + ", Bit " + text.charAt(2);
-       } else if (text.matches("A[0-9]")) {
+       } else if (text.matches("A[0-9]+")) {
          text = text + ": Analog Input, Channel " + text.substring(1);
        } else if (text.matches("^\\d+$")) {
          text = "Pin " + text;
@@ -195,7 +195,7 @@ public class ChipLayout {
          text = text + ": " + pins.get(text);
        }
        String html = "<html><body><p style=\"font-family:Courier;font-size:24\">" + text + "</p></body></html>";
-      hoverList.add(new HoverText(rect, html));
+       hoverList.add(new HoverText(rect, html));
     }
   }
 
@@ -325,7 +325,7 @@ public class ChipLayout {
     MegaTinyIDE.ChipInfo info = MegaTinyIDE.getChipInfo(avrChip);
     String chipLabel = "AT" + avrChip.substring(2);
     boolean hasDacs = info.getInt("dacs") > 0;
-    String[] pinNames = Utility.arrayFromText("pins/" + pkg + ".props");
+    String[] pinNames = Utility.arrayFromText("pins/" + pkg.toLowerCase() + ".props");
     int pinCount = info.getInt("pins");
     if (pkg.toLowerCase().startsWith("soic")) {
       return getSoic(chipLabel, pinCount, pinNames, hasDacs);

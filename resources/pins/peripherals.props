@@ -6,6 +6,7 @@ AC1:  peripherals.md#AC1
 AC2:  peripherals.md#AC2
 DAC0: peripherals.md#DAC0
 USART0:peripherals.md#USART0
+USART1:peripherals.md#USART1
 SPI0: peripherals.md#SPI0
 TWI0: peripherals.md#TWI0
 TCA0: peripherals.md#TCA0

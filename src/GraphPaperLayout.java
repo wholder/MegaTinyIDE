@@ -87,11 +87,11 @@ public class GraphPaperLayout implements LayoutManager2 {
   /**
    * Algorithm for calculating layout size (minimum or preferred).
    * <p>
-   * The width of a graph paper layout is the largest cell width (calculated in <code>getLargestCellSize()</code>
+   * The width of a graph paper layout is the largest cell width (calculated in <code>getLargestCellSize())</code>
    * times the number of columns, plus the horizontal padding times the number of columns plus one, plus the left
    * and right insets of the target container.
    * <p>
-   * The height of a graph paper layout is the largest cell height (calculated in <code>getLargestCellSize()</code>
+   * The height of a graph paper layout is the largest cell height (calculated in <code>getLargestCellSize())</code>
    * times the number of rows, plus the vertical padding times the number of rows plus one, plus the top and bottom
    * insets of the target container.
    * @param parent      the container in which to do the layout.
@@ -207,7 +207,7 @@ public class GraphPaperLayout implements LayoutManager2 {
   }
 
   /**
-   * Returns the alignment along the x axis.  This specifies how the component would like to be aligned relative to other
+   * Returns the alignment along the x-axis.  This specifies how the component would like to be aligned relative to other
    * components.  The value should be a number between 0 and 1 where 0 represents alignment along the origin, 1 is aligned
    * the furthest away from the origin, 0.5 is centered, etc.
    */
@@ -216,7 +216,7 @@ public class GraphPaperLayout implements LayoutManager2 {
   }
 
   /**
-   * Returns the alignment along the y axis.  This specifies how the component would like to be aligned relative to other
+   * Returns the alignment along the y-axis.  This specifies how the component would like to be aligned relative to other
    * components.  The value should be a number between 0 and 1 where 0 represents alignment along the origin, 1 is aligned
    * the furthest away from the origin, 0.5 is centered, etc.
    */
@@ -234,6 +234,7 @@ public class GraphPaperLayout implements LayoutManager2 {
   /*
    * Test and demo code
    */
+/*
   public static void main(String[] args) {
     SwingUtilities.invokeLater(() -> {
       JFrame frame = new JFrame("GraphPaperTest");
@@ -251,4 +252,5 @@ public class GraphPaperLayout implements LayoutManager2 {
       frame.setVisible(true);
     });
   }
+*/
 }

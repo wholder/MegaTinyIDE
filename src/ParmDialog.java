@@ -216,7 +216,7 @@ class ParmDialog extends JDialog {
    * Constructor for Pop Up Parameters Dialog with error checking
    * @param title text for parameter dialog window
    * @param parms array of ParmItem objects that describe each parameter
-   * @param buttons String] array of button names (first name in array is action button)
+   * @param buttons String[] array of button names (first name in array is action button)
    */
   ParmDialog (String title, Item[] parms, String[] buttons) {
     super((Frame) null, true);
@@ -328,8 +328,8 @@ class ParmDialog extends JDialog {
       jj++;
       parm.hookActionListener();
     }
-    // Define a custom action button so we can catch and save the screen coordinates where the "Place" button was clicked...
-    // Yeah, it's a lot of weird code but it avoids having the placed object not show up until the mouse is moved.
+    // Define a custom action button, so we can catch and save the screen coordinates where the "Place" button was clicked...
+    // Yeah, it's a lot of weird code, but it avoids having the placed object not show up until the mouse is moved.
     JButton button = new JButton(buttons[0]);
     button.addActionListener(actionEvent -> {
       JButton but = ((JButton) actionEvent.getSource());
@@ -409,6 +409,7 @@ class ParmDialog extends JDialog {
     setResizable(false);
   }
 
+/*
   public static void main (String... args) {
     Item[] parmSet = {
         new Item("(CYCLES, 1)"),
@@ -425,4 +426,5 @@ class ParmDialog extends JDialog {
       System.out.println("Cancel");
     }
   }
+*/
 }

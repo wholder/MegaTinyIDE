@@ -19,5 +19,5 @@ TOUTDIS: Time-Out Disable
 RSTPINCFG: Reset Pin Configuration
 EESAVE: EEPROM Save during chip erase
 SUT: Start Up Time Setting
-APPSIZE: Application Code Section End
-BOOTSIZE: Boot Section End
+APPEND: Application Code Section End (see datasheet)
+BOOTEND: Boot Section End (see datasheet)

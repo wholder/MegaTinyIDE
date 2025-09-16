@@ -3,8 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MegaTinyIDE.iml" filepath="$PROJECT_DIR$/MegaTinyIDE.iml" />
-      <module fileurl="file://$PROJECT_DIR$/NativeBuilder/NativeBuilder.iml" filepath="$PROJECT_DIR$/NativeBuilder/NativeBuilder.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ToolBuilder/ToolBuilder.iml" filepath="$PROJECT_DIR$/ToolBuilder/ToolBuilder.iml" />
     </modules>
   </component>
 </project>

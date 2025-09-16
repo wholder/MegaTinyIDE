@@ -44,7 +44,7 @@ int main (void) {
 }
 ]*
 
-Data value are written to the `SYSCFG_OCDM` register which, in turn, sets a bit in the `SYSCFG_OCDMS` register which causes the debugger to receive an event that indicates a byte of message data is waiting.  The bit is in the `SYSCFG_OCDMS` register is cleared when the debugger reads the byte which in turn, signals the target code that it is free to send the next byte of data.  These byte are accumulated in a buffer until a LF character is received, at which time the message is printed to the OCD Message window and the buffer is cleared.
+Data value are written to the `SYSCFG_OCDM` register which, in turn, sets a bit in the `SYSCFG_OCDMS` register which causes the debugger to receive an event that indicates a byte of message data is waiting.  The bit is in the `SYSCFG_OCDMS` register is cleared when the debugger reads the byte which in turn, signals the target code that it is free to send the next byte of data.  These bytes are accumulated in a buffer until a LF character is received, at which time the message is printed to the OCD Message window and the buffer cleared.
 
 Note 1: Adapted from [Microchip's online example code](https://onlinedocs.microchip.com/pr/GUID-F897CF19-8EAC-457A-BE11-86BDAC9B59CF-en-US-10/index.html?GUID-E78EB8EB-1033-4015-8BFD-8532C4BD9DAE).
 

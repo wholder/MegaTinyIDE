@@ -380,6 +380,30 @@
 *[REG_ITEM:0x0807,CTRLC,*,2|CMODE[Communication Mode],-,-,-,UDORD[Data Order],UCPHA[Clock Phase],-]*
 *[END_REGS]*
 
+## USART1 - (Asynchronous Mode)<a name='USART1'></a>
+*[BEGIN_REGS]*
+*[REG_ITEM:0x0820,RXDATAL,-,8|DATA(7-0)[Receiver Data Register LSB]]*
+*[REG_ITEM:0x0821,RXDATAH,-,RXCIF[Receive Complete Interrupt Flag],BUFOVF[Buffer Overflow],-,-,-,FERR[Frame Error],PERR[Parity Error],DATA(8)[Receiver Data Register High Bit]]*
+*[REG_ITEM:0x0822,TXDATAL,-,8|DATA(7-0)[Transmit Data Register LSB]]*
+*[REG_ITEM:0x0823,TXDATAH,-,-,-,-,-,-,-,-,DATA(8)[Transmit Data Register High Bit]]*
+*[REG_ITEM:0x0824,STATUS,-,RXCIF[Receive Complete Interrupt Flag],TXCIF[Transmit Complete Interrupt Flag],DREIF[Data Register Empty Flag],RXSIF[Receive Start Interrupt Flag],ISFIF[Inconsistent Sync Field Interrupt Flag],-,BDF[Break Detected Flag],WFB[Wait For Break]]*
+*[REG_ITEM:0x0825,CTRLA,-,RXCIE[Receive Complete Interrupt Enable],TXCIE[Transmit Complete Interrupt Enable],DREIE[Data Register Empty Interrupt Enable],RXSIE[Receiver Start Frame Interrupt Enable],LBME[Loop-back Mode Enable],ABEIE[Auto-baud Error Interrupt Enable],2|RS485[RS-485 Mode]]*
+*[REG_ITEM:0x0826,CTRLB,-,RXEN[Receiver Enable],TXEN[Transmitter Enable],-,SFDEN[Start-of-Frame Detection Enable],ODME[Open Drain Mode Enable],2|RXMODE[Receiver Mode],MPCM[Multi-Processor Communication Mode]]*
+*[REG_ITEM:0x0827,CTRLC,*,2|CMODE[Communication Mode],2|PMODE[Parity Mode],SBMODE[Stop Bit Mode],3|CHSIZE[Character Size]]*
+*[REG_ITEM:0x0828,BAUD,-,8|BAUD(7-0)[Baud Rate Low Byte]]*
+*[REG_ITEM:0x0829,BAUD,-,8|BAUD(15-8)[Baud Rate High Byte]]*
+*[REG_ITEM:0x080A,CTRLD,-,2|ABW,-,-,-,-,-,-]*
+*[REG_ITEM:0x082B,DBGCTRL,-,-,-,-,-,-,-,-,DBGRUN[Debug Run]]*
+*[REG_ITEM:0x082C,EVCTRL,-,-,-,-,-,-,-,-,IREI[IrDA Event Input Enable]]*
+*[REG_ITEM:0x082D,TXPLCTRL,-,8|TXPL(7-0)[Transmitter Pulse Length]]*
+*[REG_ITEM:0x082E,RXPLCTRL,-,-,7|RXPL(6-0)[Receiver Pulse Length]]*
+*[END_REGS]*
+
+## USART1 - (SPI Master Mode)
+*[BEGIN_REGS]*
+*[REG_ITEM:0x0827,CTRLC,*,2|CMODE[Communication Mode],-,-,-,UDORD[Data Order],UCPHA[Clock Phase],-]*
+*[END_REGS]*
+
 ## TWI0 - Two Wire Interface / I2C<a name='TWI0'></a>
 *[BEGIN_REGS]*
 *[REG_ITEM:0x0810,CTRLA,-,-,-,-,SDASETUP[SDA Setup Time],2|SDAHOLD[SDA Hold Time],FMPEN[FM Plus Enable],-]*

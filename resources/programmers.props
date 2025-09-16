@@ -1,11 +1,10 @@
+#UPDI-debuggers are HID devices with assigned VID and PID values
 #Note: vRef is true if programmer can detect the targets vcc voltage
-03EB-2175: name = ATTiny3217-Curiosity-Nano, vRef = true
-03EB-2145: name = ATTiny416-Xplained-Nano/Mini, vRef = true
-03EB-2141: name = Atmel-ICE, vRef = true
-03EB-2177: name = PICkit4, vRef = true
-03EB-2180: name = MPLAB Snap, vRef = true
 #Note: VID changed from 03EB (Atmel) to 04D8 (Microchip) when Microchip acquired Atmel
-#Uncomment and restart to try the alternate values below
-#04D8-9012: PICkit4, vRef = true
-#04D8-9015: ICD 4, vRef = true
-#04D8-9018: MPLAB Snap, vRef = true
+03EB-2141: name = Atmel-ICE, vRef = true
+03EB-2180: name = MPLAB Snap, vRef = true
+03EB-2177: name = PICkit4, vRef = true
+#The following is untested, just listed here for future reference
+04D8-9036: name = PICkit5, vRef = true
+03EB-2175: name = nEDBG CMSIS-DAP
+03EB-2145: name = mEDBG CMSIS-DAP

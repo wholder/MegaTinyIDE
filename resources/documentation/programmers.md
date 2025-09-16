@@ -2,7 +2,7 @@ While Microchip currently chooses to make the debugging portion of the UPDI prot
 
 ## How UPDI Works
 
-The nice thing about about the UPDI interface is that, in addition to Vcc and Gnd, you only need to make a single connections to a target device to both program and debug it.  For the Atmel-ICE and PICKit-4, the Vcc connection is only used to determine the voltage your target attiny chip is using.  For all the current 1-series and 0-series attiny chips, this debugging connection is made to the RESET pin, which also the PA0 pin.  For these new attiny chips, Vcc is always pin 1 a Gnd is always the last numerical pin.  While I recommend you check the datasheet to be sure, the location of the UPDI/RESET/PA0 pin can be located, as follows:
+The nice thing about the UPDI interface is that, in addition to Vcc and Gnd, you only need to make a single connections to a target device to both program and debug it.  For the Atmel-ICE and PICKit-4, the Vcc connection is only used to determine the voltage your target attiny chip is using.  For all the current 1-series and 0-series attiny chips, this debugging connection is made to the RESET pin, which also the PA0 pin.  For these new attiny chips, Vcc is always pin 1 a Gnd is always the last numerical pin.  While I recommend you check the datasheet to be sure, the location of the UPDI/RESET/PA0 pin can be located, as follows:
 
   - SOIC-8  - pin 6
   - SOIC-14 - pin 10
@@ -14,7 +14,7 @@ The nice thing about about the UPDI interface is that, in addition to Vcc and Gn
 
 <p align="center"><img src="images/Atmel-ICE.png"></p>
 
-The [Atmel-ICE](https://www.microchip.com/DevelopmentTools/ProductDetails/ATATMEL-ICE) is currently the most expensive ([~$150 at Mouser](https://www.mouser.com/ProductDetail/Microchip-Technology-Atmel/ATATMEL-ICE-BASIC?qs=KLFHFgXTQiAG498QgmqIdw%3D%3D), [~$150 at Digi-Key](https://www.digikey.com/en/products/detail/microchip-technology/ATATMEL-ICE-BASIC/4753381)) and least flexible of Microchip's UPDI-compatible programmers.  In addition older versions of the Atmel-ICE may need to be updated and modified using Microchip's MPLAB software before MegaTinyIDE will be able to detect them, as the USB interface has changed over time.  Debugging with the Snap requires making three connections to the target ATtiny using the 6-pin adapter usually provided with the Atmel ICE kit, as follows:
+The [Atmel-ICE](https://www.microchip.com/DevelopmentTools/ProductDetails/ATATMEL-ICE) is currently the most expensive ([~$150 at Mouser](https://www.mouser.com/ProductDetail/Microchip-Technology-Atmel/ATATMEL-ICE-BASIC?qs=KLFHFgXTQiAG498QgmqIdw%3D%3D), [~$150 at Digi-Key](https://www.digikey.com/en/products/detail/microchip-technology/ATATMEL-ICE-BASIC/4753381)) and least flexible of Microchip's UPDI-compatible programmers.  In addition, older versions of the Atmel-ICE may need to be updated and modified using Microchip's MPLAB software before MegaTinyIDE will be able to detect them, as the USB interface has changed over time.  Debugging with the Snap requires making three connections to the target ATtiny using the 6-pin adapter usually provided with the Atmel ICE kit, as follows:
 
 <p align="center"><img src="images/Adapter.png"></p>
 
@@ -57,14 +57,14 @@ Note: Section 3.5 "Programming External Microcontrollers" of the [ATTiny3217-Cur
 
 <p align="center"><img src="images/817Mini.png"></p>
 
-The [ATTiny817-XPlained-Mini](https://www.microchip.com/developmenttools/ProductDetails/attiny817-xmini) is a small, inexpensive ([~$15 at Mouser](https://www.mouser.com/ProductDetail/Microchip-Technology-Atmel/ATTINY817-XMINI?qs=4HkvMi8iULuSEeBz6fjmlQ%3D%3D), [~$15 at Digi-Key](https://www.digikey.com/en/products/detail/microchip-technology/ATTINY817-XMINI/6226926)) development board that contains both an ATTiny817 and a ATmega32U4 pre-programmed to act as a programmer and debugger for the ATTiny817.  The ATmega32U4 acting as the debugger is relatively slow and runs a cut-down version version of Microchip's debugger software called mEDBG.  In theory, the on-board ATmega32U4 could be used to program and debug external target devices, as the UPDI protocol is the same for all members of the new attiny family, but Microchip does not supply instructions on how to do this.
+The [ATTiny817-XPlained-Mini](https://www.microchip.com/developmenttools/ProductDetails/attiny817-xmini) is a small, inexpensive ([~$15 at Mouser](https://www.mouser.com/ProductDetail/Microchip-Technology-Atmel/ATTINY817-XMINI?qs=4HkvMi8iULuSEeBz6fjmlQ%3D%3D), [~$15 at Digi-Key](https://www.digikey.com/en/products/detail/microchip-technology/ATTINY817-XMINI/6226926)) development board that contains both an ATTiny817 and a ATmega32U4 pre-programmed to act as a programmer and debugger for the ATTiny817.  The ATmega32U4 acting as the debugger is relatively slow and runs a cut-down version of Microchip's debugger software called mEDBG.  In theory, the on-board ATmega32U4 could be used to program and debug external target devices, as the UPDI protocol is the same for all members of the new attiny family, but Microchip does not supply instructions on how to do this.
 
 
 ## ATTiny416-Xplained-Nano<a name='416Nano'></a>
 
 <p align="center"><img src="images/416Nano.png"></p>
 
-The [ATTiny416-XPlained-Nano](https://www.microchip.com/developmenttools/ProductDetails/attiny817-xmini) is a small, inexpensive ([~$15 at Mouser](https://www.mouser.com/ProductDetail/Microchip-Technology-Atmel/ATTINY416-XNANO?qs=1mbolxNpo8fQGr9Vr3B9Wg%3D%3D), [~$15 at Digi-Key](https://www.digikey.com/en/products/detail/microchip-technology/ATTINY416-XNANO/7801795?s=N4IgTCBcDaIIIBUEEsB2BPALARgGwgF0BfIA)) development board that contains both an ATTiny416 and a ATmega32U4 pre-programmed to act as a programmer and debugger for the ATTiny416.  The ATmega32U4 acting as the debugger is relatively slow and runs a cut-down version version of Microchip's debugger software called mEDBG.  In theory, the on-board ATmega32U4 could be used to program and debug external target devices, as the UPDI protocol is the same for all members of the new attiny family, but Microchip does not supply instructions on how to do this.
+The [ATTiny416-XPlained-Nano](https://www.microchip.com/developmenttools/ProductDetails/attiny817-xmini) is a small, inexpensive ([~$15 at Mouser](https://www.mouser.com/ProductDetail/Microchip-Technology-Atmel/ATTINY416-XNANO?qs=1mbolxNpo8fQGr9Vr3B9Wg%3D%3D), [~$15 at Digi-Key](https://www.digikey.com/en/products/detail/microchip-technology/ATTINY416-XNANO/7801795?s=N4IgTCBcDaIIIBUEEsB2BPALARgGwgF0BfIA)) development board that contains both an ATTiny416 and a ATmega32U4 pre-programmed to act as a programmer and debugger for the ATTiny416.  The ATmega32U4 acting as the debugger is relatively slow and runs a cut-down version of Microchip's debugger software called mEDBG.  In theory, the on-board ATmega32U4 could be used to program and debug external target devices, as the UPDI protocol is the same for all members of the new attiny family, but Microchip does not supply instructions on how to do this.
 
 ## USB/Serial-based Programmers<a name='UpdiProg'></a>
 
@@ -82,12 +82,26 @@ First, using nothing more than some basic wiring and a single 1K resistor, it's 
 
 <p align="center"><img src="images/UpdiProg2.png"></p>
 
-However, I've found that this circuit only works with certain USB/Serial adaptera, such as Adafruit's [FTDI Friend](https://www.adafruit.com/product/284) or Sparkfun's [FTDI Basic Breakout](https://www.sparkfun.com/products/9716) boards.  Other adapters often contain additional components, such as LEDs that are directly connected to the RX and TX lines which add extra loads.  For adapter boards with LEDs on these lines (which are often based on the CH340 series chips), it sometimes works to remove these LEDs (and any accompany resistors.)  But, I think is easier to stick with adapters that don't do this.
+However, I've found that this circuit only works with certain USB/Serial adapters, such as Adafruit's [FTDI Friend](https://www.adafruit.com/product/284) or Sparkfun's [FTDI Basic Breakout](https://www.sparkfun.com/products/9716) boards.  Other adapters often contain additional components, such as LEDs that are directly connected to the RX and TX lines which add extra loads.  For adapter boards with LEDs on these lines (which are often based on the CH340 series chips), it sometimes works to remove these LEDs (and any accompany resistors.)  But, I think is easier to stick with adapters that don't do this.
 
-### 12 Volt Programming<a name='12vProg'></a>
+## 12 Volt Programming<a name='12vProg'></a>
 
-You might also consider using a [USB/Serial-based programmer](https://www.tindie.com/products/leonerd/avr-updi-programmer-with-12v/) available on Tindie.  This design has a switch to select sending a 12 volt, "high voltage" pulse which can enable programming even when the UPDI pin has been set to function as a RESET or GPIO pin.
+You might also consider using a 12 volt-capable [USB/Serial-based programmer](https://www.tindie.com/products/leonerd/avr-updi-programmer-with-12v/) available on Tindie.  This design has a switch to select sending a 12 volt, "high voltage" pulse to the UPDI pin,  This can enable programming or debugging even when the UPDI pin has been set to function as a RESET or GPIO pin.
 
 <p align="center"><img src="images/Updi12V.JPG"></p>
 
-Note: this programmers uses a Silicon Labs CP2105 for its USB to serial interface.  This IC actually contains 2 serial interfaces, so you need to select the one that's used as the programmer side.  On macos, this should appear as something like "/dev/cu.SLAB_USBtoUART" in the programmer selection menu.  The other serial port is intended for use as a regular serial port and should appear as something ilke "/dev/cu.SLAB_USBtoUART23".
+Note: this programmer uses a Silicon Labs CP2105 for its USB to serial interface.  This IC actually contains 2 serial interfaces, so you need to select the one that's used as the programmer side.  On macOS, this should appear as something like "/dev/cu.SLAB_USBtoUART" in the programmer selection menu.  The other serial port is intended for use as a regular serial port and should appear as something like "/dev/cu.SLAB_USBtoUART23".  Connect as shown below:
+
+<p align="center"><img src="images/updi-pinout.png"></p>
+
+### Adafruits UPDI Friend and UPDI Friend HV
+
+Adafruit makes two handy UPDI programmers, the [UPDI Friend](https://www.adafruit.com/product/5879) and the [UPDI Friend HV](https://www.adafruit.com/product/5893), where HV indicates that this model can send a 12 volt pulse to program a device even when the UPDI pin has been set to function as a RESET or GPIO pin.  The UPDI Friend and UPDI Friend HV come with a plug-in wire-to-pin harness which makes connecting to a breadboard very easy (see the Adafuit links above for details.)  In addition, both UPDI Friend devices can supply switch-selectable 3.3 volts or 5 volts to the target device via the PWR connection.
+
+<p align="center"><img src="images/UpdiFriend.jpg"></p>
+
+Note: both versions of the UPDI Friend are based on the CH340E USB to serial interface, which may require installing a driver on some versions of macOS.  When working correctly, the name shown should be something like "/dev/cu.usbserial-sifocomb".  If another name is displayed in the MegaTinyIDE GUI, it may indicate the need to install the CH340E driver.
+
+## Other Programming Options
+
+As of 9/7/2025 there are a variety of other USB serial-based UPDI programmers available.  Howwever, these are untested with MegaTinyIDE.  You can read more about alternate UPDI programmers at this link: https://github.com/wagiminator/AVR-Programmer

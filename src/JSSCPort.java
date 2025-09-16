@@ -10,11 +10,11 @@ import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
 /*
- * Encapsulates JSSC functionality into an easy to use class
+ * Encapsulates JSSC functionality into an easy-to-use class
  * See: https://code.google.com/p/java-simple-serial-connector/
  * And: https://github.com/scream3r/java-simple-serial-connector/releases
  *
- *  Author: Wayne Holder, 2015-2020 (first version 10/30/2015)
+ *  Author: Wayne Holder, 2015-2025 (first version 10/30/2015)
  *
  *  Note: updated code to: 2.9.2, see: https://github.com/java-native/jssc/releases, requires slf4j-simple-1.7.9.jar
  *
@@ -308,16 +308,15 @@ public class JSSCPort implements SerialPortEventListener {
     return menu;
   }
 
-  List<JRadioButtonMenuItem> getPortMenuItems () {
-    List<JRadioButtonMenuItem> list = new ArrayList<>();
+  /**
+   * Scan for conntected USB serial devices
+   * @return List of connected serial device names
+   */
+  List<String> getSerialDeviceNames () {
+    List<String> list = new ArrayList<>();
     for (String pName : SerialPortList.getPortNames(macPat)) {
       if (!pName.toLowerCase(Locale.ROOT).contains("bluetooth")) {
-        JRadioButtonMenuItem item = new JRadioButtonMenuItem(pName, pName.equals(portName));
-        list.add(item);
-        item.addActionListener((ev) -> {
-          portName = ev.getActionCommand();
-          prefs.put("serial.port", portName);
-        });
+        list.add(pName);
       }
     }
     return list;
@@ -343,4 +342,12 @@ public class JSSCPort implements SerialPortEventListener {
     }
     return menu;
   }
+
+/*
+  public static void main (String[] args) {
+    for (String pName : SerialPortList.getPortNames(macPat)) {
+      System.out.println(pName);
+    }
+  }
+*/
 }

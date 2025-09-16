@@ -1,5 +1,5 @@
 ### USB Devices on Linux
-Access to to USB, HID-based programmers, such as the Atmel-ICE, is limited to certain users and groups in Linux, which may prevent you from selecting and using these programmers.  This is normally fixed by adding special "rules" to a file in the "`/etc/udev/rules.d/`" directory.  You can create tne needed rules file by running the following command line in the Linux terminal program:
+Access to USB, HID-based programmers, such as the Atmel-ICE, is limited to certain users and groups in Linux, which may prevent you from selecting and using these programmers.  This is normally fixed by adding special "rules" to a file in the "`/etc/udev/rules.d/`" directory.  You can create tne needed rules file by running the following command line in the Linux terminal program:
 
 `echo 'KERNEL=="hidraw*", ATTRS{idVendor}=="03eb", ATTRS{idProduct}=="*", MODE:="0666", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl"' | sudo tee /etc/udev/rules.d/100-atmel.rules`
 

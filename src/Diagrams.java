@@ -44,7 +44,7 @@ public class Diagrams {
       g2.setColor(drawn[ii] ? Color.BLACK : Color.lightGray);
       g2.drawLine(x, hyt / 2 - cellHalf, x, hyt / 2 + cellHalf);
       if (ii < 8) {
-        // Draw bit number
+        // Draw the bit number
         g2.setColor(Color.darkGray);
         int xBit = x + cellWid / 2 - fm.stringWidth("0") / 2;
         g2.drawString(Integer.toString(7 - ii), xBit, cellHyt - 5);
@@ -81,6 +81,7 @@ public class Diagrams {
   /*
    *  Test code for MarkupView Pane and Diagrams
    */
+/*
   public static void main (String[] args) {
     Preferences prefs = Preferences.userRoot().node(MarkupView.class.getName());
     JFrame frame = new JFrame();
@@ -112,4 +113,5 @@ public class Diagrams {
     });
     frame.setVisible(true);
   }
+*/
 }

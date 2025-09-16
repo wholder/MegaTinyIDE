@@ -181,6 +181,11 @@ public class HexEditPane extends JTextPane {
       label.setHorizontalAlignment(SwingConstants.LEFT);
       panel.add(label, BorderLayout.NORTH);
     }
+    if (updater != null) {
+      JLabel hint = new JLabel("Double-click a value to edit.  Then, press OK to update or X to cancel edit");
+      hint.setFont(new Font("Serif", Font.PLAIN, 12));
+      panel.add(hint, BorderLayout.SOUTH);
+    }
     panel.add(scroll, BorderLayout.CENTER);
     setCaretPosition(0);
     JOptionPane.showConfirmDialog(parent, panel, frameLabel, JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
@@ -203,6 +208,7 @@ public class HexEditPane extends JTextPane {
   }
 
   // Test code
+/*
   public static void main (String[] args) {
     HexEditPane varPane = new HexEditPane(null, 16, 16);
     byte[] data = new byte[256];
@@ -215,4 +221,5 @@ public class HexEditPane extends JTextPane {
       }
     });
   }
+*/
 }

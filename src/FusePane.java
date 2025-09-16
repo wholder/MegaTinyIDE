@@ -48,12 +48,13 @@ import static javax.swing.JOptionPane.*;
 
 public class FusePane extends JPanel {
   static Map<String,String>   tooltips = new HashMap<>();
-  Map<String,MyJComboBox>     comps = new HashMap<>();
+  Map<String, FuseComboBox>   comps = new HashMap<>();
   private int                 col, row;
   private int                 appEnd, bootEnd;
   private final byte[]        priorVals = new byte[11];
   private final int[]         usedBitMasks = new int[] {0xFF, 0xFF, 0x83, 0x00, 0xFF, 0xDD, 0x07, 0xFF, 0xFF, 0x00, 0x00};
   boolean                     disableChangeDetect;
+  static int                  COLUMNS = 8;
 
   static {
     try {
@@ -63,12 +64,12 @@ public class FusePane extends JPanel {
     }
   }
 
-  class MyJComboBox extends JComboBox<String> {
+  class FuseComboBox extends JComboBox<String> {
     private final Map<Integer,Integer>  valueIndex = new HashMap<>();
     private final Map<Integer,Integer>  indexValue = new HashMap<>();
     private int                         initialValue;
 
-    MyJComboBox (String name, String[] values) {
+    FuseComboBox (String name, String[] values) {
       String toolTip = tooltips.get(name);
       setToolTipText(toolTip != null ? (name + ": " + toolTip) : name);
       setPrototypeDisplayValue("xx");
@@ -107,36 +108,34 @@ public class FusePane extends JPanel {
     }
   }
 
-  public MyJComboBox addField (String desc) {
+  // Example value: "LVL:3=1.8V:0,2.6V:2,4.2V:7"
+  public FuseComboBox addField (String desc) {
     String[] parts = desc.split("=");
     if (parts.length == 2) {
       String[] vals = parts[1].split(",");
-      return addField(parts[0].trim(), vals);
+      String name = parts[0].trim();
+      String[] parts1 = name.split(":");
+      int bits;
+      if (parts1.length > 1) {
+        bits = Integer.parseInt(parts1[1]);
+        name = parts1[0];
+        JPanel panel = new JPanel(new GridLayout(1, 1));
+        panel.setBorder(Utility.getBorder(BorderFactory.createLineBorder(Color.gray), 1, 1, 2, 1));
+        FuseComboBox comp = new FuseComboBox(name, vals);
+        comps.put(name, comp);
+        panel.add(comp);
+        add(panel, new Rectangle(col, row, bits, 1));
+        col += bits;
+        if (col >= COLUMNS) {
+          col = 0;
+          row++;
+        }
+        return comp;
+      } else {
+        throw new IllegalStateException("number of bits not specified");
+      }
     } else {
       throw new IllegalStateException("addField() no '=' delimiter");
-    }
-  }
-
-  public MyJComboBox addField (String name, String[] values) {
-    String[] parts = name.split(":");
-    int bits;
-    if (parts.length > 1) {
-      bits = Integer.parseInt(parts[1]);
-      name = parts[0];
-      JPanel panel = new JPanel(new GridLayout(1, 1));
-      panel.setBorder(Utility.getBorder(BorderFactory.createLineBorder(Color.gray), 1, 1, 2, 1));
-      MyJComboBox comp = new MyJComboBox(name, values);
-      comps.put(name, comp);
-      panel.add(comp);
-      add(panel, new Rectangle(col, row, bits, 1));
-      col += bits;
-      if (col >= 8) {
-        col = 0;
-        row++;
-      }
-      return comp;
-    } else {
-      throw new IllegalStateException("number of bits not specified");
     }
   }
 
@@ -150,7 +149,7 @@ public class FusePane extends JPanel {
       panel.add(lbl);
       add(panel, new Rectangle(col, row, 1, 1));
       col += 1;
-      if (col >= 8) {
+      if (col >= COLUMNS) {
         col = 0;
         row++;
       }
@@ -159,7 +158,8 @@ public class FusePane extends JPanel {
 
   public void setFieldValue (String name, int value) {
     if (comps.containsKey(name)) {
-      comps.get(name).setValue(value);
+      FuseComboBox comboBox = comps.get(name);
+      comboBox.setValue(value);
     } else {
       throw new IllegalStateException("setFieldValue() unknown field name: " + name);
     }
@@ -172,9 +172,6 @@ public class FusePane extends JPanel {
   public boolean hasChanged (String name) {
     return comps.get(name).hasChanged();
   }
-
-  //    0     1     2     3     4     5     6     7     8     9    A
-  // 0xFF, 0xFF, 0x83, 0x00, 0xFF, 0xDD, 0x07, 0xFF, 0xFF, 0x00, 0x00
 
   public boolean hasChanged (int offset) {
     return (priorVals[offset] & usedBitMasks[offset]) != (getFuse(offset) & usedBitMasks[offset]);
@@ -197,7 +194,7 @@ public class FusePane extends JPanel {
       break;
     case 0x02:    // OSCCFG - Oscillator Configuration
       setFieldValue("OSCLOCK",    (value >> 7) & 0x01);       // Mask = 0x80
-      setFieldValue("FREQSEL",    value & 0x03);              // Mask = 0x03
+      setFieldValue("FREQSEL",     value & 0x03);             // Mask = 0x03
                                                               // ORed = 0x83
       break;
     case 0x04:    // Timer Counter Type D Configuration
@@ -208,18 +205,18 @@ public class FusePane extends JPanel {
       setFieldValue("CMPD",       (value >> 3) & 0x01);       // Mask = 0x08
       setFieldValue("CMPC",       (value >> 2) & 0x01);       // Mask = 0x04
       setFieldValue("CMPB",       (value >> 1) & 0x01);       // Mask = 0x02
-      setFieldValue("CMPA",       value & 0x01);              // Mask = 0x01
+      setFieldValue("CMPA",        value & 0x01);             // Mask = 0x01
                                                               // ORed = 0xFF
       break;
     case 0x05:    // SYSCFG0 - System Configuration 0
       setFieldValue("CRCSRC",     (value >> 6) & 0x03);       //  Mask = 0xC0
       setFieldValue("TOUTDIS",    (value >> 4) & 0x01);       //  Mask = 0x10   // ATtiny3216/3217
       setFieldValue("RSTPINCFG",  (value >> 2) & 0x03);       //  Mask = 0x0C
-      setFieldValue("EESAVE",     value & 0x01);              //  Mask = 0x01
+      setFieldValue("EESAVE",      value & 0x01);             //  Mask = 0x01
                                                               //  ORed = 0xDD
       break;
     case 0x06:    // SYSCFG1 - System Configuration 1
-      setFieldValue("SUT",        value & 0x07);              // Mask = 0x07
+      setFieldValue("SUT",         value & 0x07);             // Mask = 0x07
                                                               // ORed = 0x07
       break;
     case 0x07:    // APPEND - Application Code End
@@ -237,8 +234,8 @@ public class FusePane extends JPanel {
   }
 
   private void updateBootApp () {
-    setFieldValue("APPSIZE",    appEnd - bootEnd);
-    setFieldValue("BOOTSIZE",   bootEnd);
+    setFieldValue("APPEND",    appEnd - bootEnd);
+    setFieldValue("BOOTEND",   bootEnd);
   }
 
   public byte getFuse (int offset) {
@@ -278,15 +275,15 @@ public class FusePane extends JPanel {
       fuse |= getFieldValue("SUT");
       break;
     case 0x07:    // APPEND - Application Code End
-      int appSize =  getFieldValue("APPSIZE");
-      int bootSize =  getFieldValue("BOOTSIZE");
-      if (appSize > 0) {
-        return (byte) (bootSize + appSize);
+      int appEnd =  getFieldValue("APPEND");
+      int bootEnd =  getFieldValue("BOOTSIZE");
+      if (appEnd > 0) {
+        return (byte) (bootEnd + appEnd);
       } else {
-        return (byte) appSize;
+        return (byte) appEnd;
       }
     case 0x08:    // BOOTEND - Boot End
-      return (byte) getFieldValue("BOOTSIZE");
+      return (byte) getFieldValue("BOOTEND");
     case 0x0A:    // LOCKBIT - Lockbits
       return (byte) getFieldValue("LOCKBIT");
     default:
@@ -297,13 +294,13 @@ public class FusePane extends JPanel {
 
   FusePane (MegaTinyIDE.ChipInfo chip) {
     super(new GraphPaperLayout());
-    addReservedBits(8);
+    addReservedBits(COLUMNS);
     addField("WINDOW:4=OFF:0,8 CLK:1,16 CLK:2,32 CLK:3,64 CLK:4,128 CLK:5,256 CLK:6,512 CLK:7,1K CLK:8,2K CLK:9,4K CLK:10,8KC LK:11");
     addField("PERIOD:4=OFF:0,8 CLK:1,16 CLK:2,32 CLK:3,64 CLK:4,128 CLK:5,256 CLK:6,512 CLK:7,1K CLK:8,2K CLK:9,4K CLK:10,8KC LK:11");
     addField("LVL:3=1.8V:0,2.6V:2,4.2V:7");
     addField("SAMPFREQ:1=1 kHz:0,125 Hz:1");
     addField("ACTIVE:2=Disabled:0,Enabled:1,Sampled:2,Enabled with wake-up halted until BOD is ready:3");
-    addField("SLEEP:2=Disabled:0,Enabled:1,Sampled:2");
+    addField("SLEEP:2=Disabled:0,Enabled:1,Sampled:2,Reserved:3");
     addField("OSCLOCK:1=20 MHz osc regs accessible:0,20 MHz osc regs locked:1");
     addReservedBits(5);
     addField("FREQSEL:2=16 MHz:1,20 MHz:2");
@@ -315,10 +312,10 @@ public class FusePane extends JPanel {
     addField("CMPC:1=Disabled:0,Enabled:1");
     addField("CMPB:1=Disabled:0,Enabled:1");
     addField("CMPA:1=Disabled:0,Enabled:1");
-    addField("CRCSRC:2=All Flash:0,Boot:1,App and Boot,None:3");
+    addField("CRCSRC:2=Flash CRC:0,Boot CRC:1,App & Boot CRC:2,No CRC:3");
     addReservedBits(1);
     addField("TOUTDIS:1=Enable NVM write block:0,Disable NVM write block:1");
-    MyJComboBox tmp = addField("RSTPINCFG:2=GPIO:0,UPDI:1,RESET:2");
+    FuseComboBox tmp = addField("RSTPINCFG:2=GPIO:0,UPDI:1,RESET:2,Reserved:3");
     tmp.addActionListener(ev -> {
       if (!disableChangeDetect && !"UPDI".equals(tmp.getSelectedItem())) {
         ImageIcon icon = new ImageIcon(Objects.requireNonNull(Utility.class.getResource("images/warning-32x32.png")));
@@ -330,20 +327,46 @@ public class FusePane extends JPanel {
     addField("EESAVE:1=Enable EEPROM erase:0,Disable EEPROM erase:1");
     addReservedBits(5);
     addField("SUT:3=0 ms:0,1 ms:1,2 ms:2,4 ms:3,8 ms:4,16 ms:5,32 ms:6,64 ms:7");
-    int flashSize = chip.getInt("flash") * 1024 / 256;  // multiples of 256
-    addField("APPSIZE:8=" + buildSelector(flashSize, 0));
-    addField("BOOTSIZE:8=" + buildSelector(flashSize, 1));
+    int flashSize = chip.getInt("flash") * 1024 / 256;        // multiples of 256
+    addField("APPEND:8=" + hexSelector(flashSize));
+    addField("BOOTEND:8=" + hexSelector(flashSize));
   }
 
-  private String buildSelector (int flashSize, int offset) {
+  private String hexSelector (int flashSize) {
     StringBuilder buf = new StringBuilder();
     for (int ii = 0; ii < flashSize; ii++) {
       if (ii > 0) {
         buf.append(",");
       }
-      buf.append((ii + offset) * 256);
+      buf.append(String.format("0x%02X:", ii));
+      buf.append(ii % flashSize);
+    }
+    return buf.toString();
+  }
+
+
+  private String appSizeSelector (int flashSize) {
+    StringBuilder buf = new StringBuilder("All Bytes:0,");
+    for (int ii = 1; ii < flashSize; ii++) {
+      if (ii > 1) {
+        buf.append(",");
+      }
+      buf.append(ii * 256);
       buf.append(" bytes:");
-      buf.append((ii + offset) % flashSize);
+      buf.append(ii % flashSize);
+    }
+    return buf.toString();
+  }
+
+  private String bootEndSelector (int flashSize) {
+    StringBuilder buf = new StringBuilder();
+    for (int ii = 0; ii < flashSize; ii++) {
+      if (ii > 0) {
+        buf.append(",");
+      }
+      buf.append(ii * 256);
+      buf.append(" bytes:");
+      buf.append(ii % flashSize);
     }
     return buf.toString();
   }
@@ -351,23 +374,28 @@ public class FusePane extends JPanel {
   /**
    * Test Code for FusePane
    */
+/*
   public static void main (String[] args) {
     EventQueue.invokeLater(() -> {
       try {
         MegaTinyIDE.ChipInfo chip = MegaTinyIDE.chipTypes.get("attiny412");
         FusePane fusePane = new FusePane(chip);
-        // Set reset data from attiny3217
+        // Set reset data from attiny416xPlained
         fusePane.setFuse(0x00, (byte) 0x00);   // WDTCFG
         fusePane.setFuse(0x01, (byte) 0x00);   // BODCFG
         fusePane.setFuse(0x02, (byte) 0x02);   // OSCCFG
         fusePane.setFuse(0x04, (byte) 0x00);   // TCD0CFG
-        fusePane.setFuse(0x05, (byte) 0xF6);   // SYSCFG0
-        fusePane.setFuse(0x06, (byte) 0x07);   // SYSCFG1
+        fusePane.setFuse(0x05, (byte) 0xCD);   // SYSCFG0
+        fusePane.setFuse(0x06, (byte) 0x03);   // SYSCFG1
         fusePane.setFuse(0x07, (byte) 0x00);   // APPEND
-        fusePane.setFuse(0x08, (byte) 0x00);   // BOOTEND
+        fusePane.setFuse(0x08, (byte) 0x02);   // BOOTEND
         fusePane.setFuse(0x0A, (byte) 0xC5);   // LOCKBIT
-
-        if (JOptionPane.showConfirmDialog(null, fusePane, "FUSES for " + chip.name, OK_CANCEL_OPTION, PLAIN_MESSAGE) == 0) {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add(fusePane, BorderLayout.CENTER);
+        JLabel hint = new JLabel("Hover the mouse pointer over a selector to see more details");
+        hint.setFont(new Font("Serif", Font.PLAIN, 12));
+        panel.add(hint, BorderLayout.SOUTH);
+        if (JOptionPane.showConfirmDialog(null, panel, "FUSES for " + chip.name, OK_CANCEL_OPTION, PLAIN_MESSAGE) == 0) {
           System.out.println("exit");
         }
       } catch (Exception e) {
@@ -375,4 +403,5 @@ public class FusePane extends JPanel {
       }
     });
   }
+*/
 }

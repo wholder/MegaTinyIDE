@@ -2,15 +2,15 @@
 
 ## MegaTinyIDE (for 64 bit macOS, Windows & Linux)
 
-MegaTinyIDE is a simple, GNU-based IDE that's derived from another project of mine called [ATTiny10IDE](https://github.com/wholder/ATTiny10IDE), which I originally wrote to simplify writing code for the ATTiny10 Series Microcontrollers using C. C++ or Assembly language.  This new version is intended to support coding for the new MegaTiny chips (tinyAVR® 1-series and 0-series), such as the ATtiny112, which feature 4K of Flash memory and a greatly expanded set of features when compared to the original, Atmel-designed ATTiny series chips.
+MegaTinyIDE is a simple, GNU-based IDE that's derived from another project of mine called [ATTiny10IDE](https://github.com/wholder/ATTiny10IDE), which I originally wrote to simplify writing code for the ATTiny10 Series Microcontrollers using C. C++ or Assembly language.  This new version is intended to support coding for the new MegaTiny chips (tinyAVR® series 0, 1 & 2), such as the ATtiny112, which feature 4K of Flash memory and a greatly expanded set of features when compared to the original, Atmel-designed ATTiny series chips.
 
-Note: native release for 64-bit Windows, Linux and MacOs are available in the **Releases** section to the right of this page.  These come with and embedded Java runtime and do not require you to first install a compatible Java runtime on your computer.  However, this feature is still experimental.
+Note: native release for 64-bit Windows, Linux and macOS are available in the **Releases** section to the right of this page.  These come with and embedded Java runtime and do not require you to first install a compatible Java runtime on your computer.  However, this feature is still experimental.
 
-Note: 8/31/2125 - I recently discovered that the code I wrote to detect what device programmers/debuggers are connected uses USB vendor id (VID) values from Atmel (0x03EB) and may not detect programmers using Micochip's VID (0x04D8).  This is controlled by the resource file programmers.props.  If you have problems detecting a programmer, you can experiment with editing this file (requires restart).  I'm currently unable to test this, as I don't own the devices needed to test this.  Please leave a comment if you have any info on this topic.
+Note: 8/31/2125 - I recently discovered that the code I wrote to detect what device programmers/debuggers are connected uses USB vendor id (VID) values from Atmel (0x03EB) and may not detect programmers using Micochip's VID (0x04D8).  This is controlled by the resource file programmers.props.  If you have problems detecting a programmer, you can experiment with editing this file (requires restart).  I'm currently unable to test this, as I don't own the devices needed to perform the needed tests.  Please leave a comment if you have any info on this topic.
 
 ### Project Goals
 
-The tinyAVR® 1-series and 0-series chips introduce a single-pin Unified Program and Debug Interface (UPDI), which makes it possible to do away with the need for a boot loader and still make use of all the I/O pins except RESET, which is the pin used by UPDI.  While UPDI is supported by Microchip's development tools, such a MPLAB, I wanted to develop a lightweight, alternative IDE similar to the Arduino IDE, but streamlined to support just this new tinyAVR architecture.  In addition, I wanted to add other, special features such as those listed below:
+The tinyAVR® 0, 1 and 2-series chips introduce a single-pin Unified Program and Debug Interface (UPDI), which makes it possible to do away with the need for a bootloader and still make use of all the I/O pins except RESET, which is the pin used by UPDI.  While UPDI is supported by Microchip's development tools, such a MPLAB, I wanted to develop a lightweight, alternative IDE similar to the Arduino IDE, but streamlined to support just this new tinyAVR architecture.  In addition, I wanted to add other, special features such as those listed below:
 
   - Now supports include of user files using `#include "file.h"` notation
   - Automatically annotate interrupt vectors in listing file (optional)
@@ -27,7 +27,7 @@ The tinyAVR® 1-series and 0-series chips introduce a single-pin Unified Program
       - Right click on Registers and Status Flags in debugger pane to change value (I/O ports not currently supported)
       - Watch the I/O ports, Registers and Status Flags change while stepping through code (changed fields are highlighted)
       - Click on Links in Symbol table to view current state of variables
-      - Also able to debug externally compiled ELF files (version 1.0.1)
+      - Also, able to debug externally compiled ELF files (version 1.0.1)
   - Built-in Pinout Reference Diagrams (with pin-level tooltips)
   - Pop up AVR Instruction Guide tooltips in Listing Pane (hover over instruction name)
   - A [Console Monitor feature called OCD Messaging](https://github.com/wholder/MegaTinyIDE/blob/master/resources/documentation/ocdmsg.md) that can send text message to the debugger over UPDI
@@ -35,16 +35,16 @@ The tinyAVR® 1-series and 0-series chips introduce a single-pin Unified Program
   - Use a [`#pragma`](https://github.com/wholder/MegaTinyIDE/blob/master/resources/documentation/pragmas.md) in code to engage special compile time features, such as pop up dialogs that prompt for `#define` values or select the target chip part number.
   - **Native Versions with an embedded JVM are now available (see "[Releases](https://github.com/wholder/MegaTinyIDE/releases)")**
 
-As this project advances, I hope to add many more features designed to make uisng the tinyAVR 1-series and 0-series as easy as possible, such as:
+As this project advances, I hope to add many more features designed to make uisng the tinyAVR 0, 1 & 2-series chips as easy as possible, such as:
 
   - Improving the built-in documentation
-  - More example code for the tinyAVR® 1-series and 0-series chips
+  - More example code for the tinyAVR® 0, 1 & 2-series chips
   - Support for other UPDI-based programmers (and possibly debugging)
   - Support for additional tabs to allow opening additional source or header files
 
 ### Project status
 
-While more testing is needed, I am declaring the code as operational (Beta status) on Mac, Windows 10 and Linux.  However, MegaTinyIDE is still in development and likely has more than a few bugs, or rough edges.  As this is a one man project, I sometimes struggle to do adequate testing (especially on Windows and Linux) when I release a new version. If you a spot a problem, [please post in Issue](https://github.com/wholder/MegaTinyIDE/issues) so I can investigate.  If you have questions, or suggestions, [please post in Discussions](https://github.com/wholder/MegaTinyIDE/discussions)
+While more testing is needed, I am declaring the code as operational (Beta status) on Mac, Windows 10 and Linux.  However, MegaTinyIDE is still in development and likely has more than a few bugs, or rough edges.  As this is a one-man project, I sometimes struggle to do adequate testing (especially on Windows and Linux) when I release a new version. If you do a spot a problem, [please post in Issue,,](https://github.com/wholder/MegaTinyIDE/issues), so I can investigate.  If you have questions, or suggestions, [please post in Discussions](https://github.com/wholder/MegaTinyIDE/discussions)
 
 ### Releases
     - 1.0.0 - initial release.
@@ -59,6 +59,7 @@ While more testing is needed, I am declaring the code as operational (Beta statu
     - 1.0.9 - Added code examples embedded in markup-type documentation
     - 1.0.10 - Added support for using UBB/Serial adapters as programmers
     - 1.0.11 - Regression fixes for Flash programming functions and other changes
+    - 1.0.12 - Reworked Programmer menu, update to jssc-2.10.2 and added series 2 attinys
 
 ### Debugging Interface
 
@@ -82,14 +83,14 @@ MegaTinyIDE's built-in Fuse Editor lets you read the current fuse setting from a
 
 ### Universal JAR File supports 64-bit Mac, Windows and Linux
 
-The Native code releases of MegaTinyIDE, which include an OpenJDM JVM are recommended (see "Releases" near the top right of this page.) However, I also maintain a pre-built, executable universal JAR file in the [out/artifacts/MegaTinyIDE_jar](https://github.com/wholder/MegaTinyIDE/blob/master/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar) folder.  This version is designed to run on 64 bit versions of macOs, Windows 10 and Linux as long as you have Java 8, or later installed on your system.
+The Native code releases of MegaTinyIDE, which include an OpenJDM JVM are recommended (see "Releases" near the top right of this page.) However, I also maintain a pre-built, executable universal JAR file in the [out/artifacts/MegaTinyIDE_jar](https://github.com/wholder/MegaTinyIDE/blob/master/out/artifacts/MegaTinyIDE_jar/MegaTinyIDE.jar) folder.  This version is designed to run on 64 bit versions of macOS, Windows 10 and Linux as long as you have Java 8, or later installed on your system.
 
-To use the universal version on a Mac, simply double click the MegaTinyIDE.jar file to run it once you've downloaded it, although you'll probably have to right click and select "Open" the  first time you run MegaTinyIDE due to the Mac OS X security check and the fact that I'm currently unable to digitally sign the JAR file.  You should also be able to double click and run using Windows, but some versions of Windows may require you to [enable this ability](https://www.addictivetips.com/windows-tips/run-a-jar-file-on-windows/) first.  You'll need to give the .jar file RUN permission to execute on Linux and using a USB-based device programmer, such as the AVRISP MkII, may also require you to [create an install a rules file](https://stackoverflow.com/questions/5412727/avrisp-mkii-doesnt-work-with-avrdude-on-linux).  The needed GNU-based AVR toolchains are built into MegaTinyIDE and the appropriate toolchain will be automatically installed when you run the MegaTinyIDE JAR file.
+To use the universal version on a Mac, simply double-click the MegaTinyIDE.jar file to run it once you've downloaded it, although you'll probably have to right-click and select "Open" the  first time you run MegaTinyIDE due to the Mac OS X security check and the fact that I'm currently unable to digitally sign the JAR file.  You should also be able to double-click and run using Windows, but some versions of Windows may require you to [enable this ability](https://www.addictivetips.com/windows-tips/run-a-jar-file-on-windows/) first.  You'll need to give the .jar file RUN permission to execute on Linux and using a USB-based device programmer, such as the AVRISP MkII, may also require you to [create and install a rules file](https://stackoverflow.com/questions/5412727/avrisp-mkii-doesnt-work-with-avrdude-on-linux).  The needed GNU-based AVR toolchains are built into MegaTinyIDE and the appropriate toolchain will be automatically installed when you run the MegaTinyIDE JAR file.
 
 ### Requirements
-I suggest using [Java 8 JRE](https://www.java.com) or JDK, or later for MegaTinyIDE, but the code also seems to run fine under the OpenJDK Java.  Note: I wrote MegaTinyIDE on a Mac Pro using the _Community_ version of [IntelliJ IDEA from JetBrains](https://www.jetbrains.com/idea/) and OS X is the only environment where I have extensively tested and used MegaTinyIDE .  I've included GNU/AVR toolchains for Mac and 64 bit Windows and 64 bit Linux, but have not extensively tested the code under Windows or Linux.  Feel free to report any issues you discover.  I'll do my best, when time permits, to investigate them, but I cannot guarantee fixes, timely or otherwise.
+I suggest using [Java 8 JRE](https://www.java.com) or JDK, or later for MegaTinyIDE, but the code also seems to run fine under the OpenJDK Java.  Note: I wrote MegaTinyIDE on a Mac Pro using the _Community_ version of [IntelliJ IDEA from JetBrains](https://www.jetbrains.com/idea/) and OS X is the only environment where I have extensively tested and used MegaTinyIDE .  I've included GNU/AVR toolchains for Mac and 64-bit Windows and 64-bit Linux, but have not extensively tested the code under Windows or Linux.  Feel free to report any issues you discover.  I'll do my best, when time permits, to investigate them, but I cannot guarantee fixes, timely or otherwise.
 
-Note: MegaTinyIDE for macOs seems to run fine on the new Mac Mini with Apple Silicon and Rosetta 2, but more testing is needed.
+Note: MegaTinyIDE for macOS seems to run fine on the new Mac Mini with Apple Silicon and Rosetta 2, but more testing is needed.
 
 ### Using MegaTinyIDE
 MegaTinyIDE supports coding for the AvrXMega3 Series of Microcontrollers in C and C++ using the GNU AVR-C++ compiler to generate code.  The file extension you choose for your code file tells MegaTinyIDE how to process the code:
@@ -116,6 +117,9 @@ This project would have been much harder and much less cool without help from th
  - [James' Dodgy Arduino-Oriented Pinout Maker For Microcontrollers](https://github.com/sleemanj/ArduinoOrientedChipPinoutCreator) by James Sleeman for inspirig me to write my take on his pinout diagram generator.
  - [AVR Logo graphic](https://icon-icons.com/icon/Assembly-AVR/132579) by John Gardner from which I adapted the MegaTinyIDE logo.
  - [Packr](https://github.com/libgdx/packr) by libgdx for the ability to package native versions of MegaTinyIDE with an embedded JVM.
+
+### Unresolved Issues
+ - Currrently unable to disassemble code read from an ATtiny817.  Instead, avr-objdump reports "avr-objdump: can't use supplied machine avr7".  Note: this may apply to all avr7, such as ATtiny417, ATtiny807, etc., but I can currently only test on an ATtiny817.
 
 ### MIT License
 

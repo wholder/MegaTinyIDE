@@ -103,13 +103,13 @@ public class SDBG extends Programmer {
   // Variables
   private final JSSCPort      jPort;
   private Utility.ProgressBar progress;
-  private final MegaTinyIDE   ide;
+  private final MegaTinyIDE   frame;
 
-  public SDBG (MegaTinyIDE ide, JSSCPort jPort) {
-    this.ide = ide;
+  public SDBG (MegaTinyIDE frame, JSSCPort jPort) {
+    this.frame = frame;
     this.jPort = jPort;
-    int baudRate = ide.prefs.getInt("sdbg_baud", SerialPort.BAUDRATE_57600);
-    // setParameters(int baudRate, int dataBits, int stopBits, int parity)
+    int baudRate = frame.prefs.getInt("sdbg_baud", SerialPort.BAUDRATE_115200);
+    //    setParameters(int,      int,                   int,                   int)
     jPort.setParameters(baudRate, SerialPort.DATABITS_8, SerialPort.STOPBITS_2, SerialPort.PARITY_EVEN);
   }
 
@@ -117,7 +117,7 @@ public class SDBG extends Programmer {
 
   public void setProgressMessage (String msg) {
     if (progress == null) {
-      progress = new Utility.ProgressBar(ide, "");
+      progress = new Utility.ProgressBar(frame, "");
     }
     progress.setMessage(msg);
   }
@@ -349,7 +349,7 @@ public class SDBG extends Programmer {
   }
 
   /**
-   * Use the st() method to send an bit BYTE of data
+   * Use the st() method to send ane bit BYTE of data
    * @param ptr if 0 = *(ptr), if 1 = *(ptr++), else 3 = ptr
    * @param value 8 bit word value
    * @throws SerialPortException
@@ -393,7 +393,7 @@ public class SDBG extends Programmer {
   }
 
   /**
-   * Send key value to unlock selected function function:
+   * Send key value to unlock selected function:
    *  ChipErase, NvmProg, UserRow, Attach (debugger)
    * @param key key value
    * @throws SerialPortException

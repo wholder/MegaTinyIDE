@@ -102,6 +102,22 @@ class Utility {
     return out.toString();
   }
 
+  public static String getMicrochipLink (String tiny) {
+    return "<a href=https://www.microchip.com/en-us/product/" + tiny + ">" + tiny + "</a>";
+  }
+
+  public static String getPinoutLink (Map<String, String> parms, String label) {
+    // <a href="pinouts.md?CHIP=attiny212,NAME=ATtiny212,PKG=SOIC-8">SOIC-8</a>
+    StringBuilder buf = new StringBuilder("<a href=\"pinouts.md?");
+    String key = parms.get("key");
+    String pins = parms.get("pins");
+    buf.append("CHIP=" + key + ",");
+    String capKey = key.toUpperCase().substring(0, 2) + key.substring(2);
+    buf.append("NAME=" + capKey + ",");
+    buf.append("PKG=" + label + "-" + pins + "\">" + label + "</a>");
+    return buf.toString();
+  }
+
   static void copyFile (File src, String dest) throws IOException {
     FileInputStream fis = new FileInputStream(src);
     byte[] data = new byte[fis.available()];
@@ -178,6 +194,24 @@ class Utility {
         }
       }
     }
+  }
+
+  /**
+   * Return an array of Maps sorted by the specified key (sKey)
+   * @param pMap PropertyMap (see "attinys.props")
+   * @param sKey Sorting key
+   * @return Array of Map<String, String>[]
+   */
+  static Map<String, String>[] mapToOrderedArray (PropertyMap pMap, String sKey) {
+    int numKeys = pMap.keySet().size();
+    Map[] arrayOfMaps = new Map[numKeys];
+    for (String key : pMap.keySet()) {
+      Map<String,String> items = pMap.get(key);
+      items.put("key", key);
+      int ii = Integer.parseInt(items.get(sKey));
+      arrayOfMaps[ii] = items;
+    }
+    return arrayOfMaps;
   }
 
   static Map<String,String> getResourceMap (String file) throws IOException {
@@ -263,35 +297,40 @@ class Utility {
   }
 
   static String replaceTags (String src, Map<String,String> tags, TagCallback callback) {
-    Matcher mat1 = pat1.matcher(src);
-    StringBuffer buf = new StringBuffer();
-    while (mat1.find()) {
-      String tag = mat1.group(2);
-      if (tag.contains("*{") && tag.contains("}*")) {
-        tag = tag.replaceAll("\\*\\{", "*[");
-        tag = tag.replaceAll("}\\*", "]*");
-        tag = replaceTags(tag, tags, callback);
-      }
-      String parm = null;
-      int idx = tag.indexOf(':');
-      if (idx > 0) {
-        parm = tag.substring((idx + 1));
-        tag = tag.substring(0, idx);
-      }
-      String rep = tags.get(tag);
-      if (rep != null) {
-        try {
-          mat1.appendReplacement(buf, Matcher.quoteReplacement(rep));
-        } catch (Exception ex) {
-          throw (new IllegalStateException("tag = '" + tag + "'. rep = '" + rep + "'"));
+    StringBuilder buf = new StringBuilder();
+    try {
+      Matcher mat1 = pat1.matcher(src);
+      while (mat1.find()) {
+        String tag = mat1.group(2);
+        if (tag.contains("*{") && tag.contains("}*")) {
+          tag = tag.replaceAll("\\*\\{", "*[");
+          tag = tag.replaceAll("}\\*", "]*");
+          tag = replaceTags(tag, tags, callback);
         }
-      } else if (callback != null && (rep = callback.getTag(tag, parm, tags)) != null) {
-        mat1.appendReplacement(buf, Matcher.quoteReplacement(rep));
-      } else {
-        throw new IllegalStateException("Utility.replaceTags() Tag '" + tag + "' not defined");
+        String parm = null;
+        int idx = tag.indexOf(':');
+        if (idx > 0) {
+          parm = tag.substring((idx + 1));
+          tag = tag.substring(0, idx);
+        }
+        String rep = tags.get(tag);
+        if (rep != null) {
+          try {
+            mat1.appendReplacement(buf, Matcher.quoteReplacement(rep));
+          } catch (Exception ex) {
+            throw (new IllegalStateException("tag = '" + tag + "'. rep = '" + rep + "'"));
+          }
+        } else if (callback != null && (rep = callback.getTag(tag, parm, tags)) != null) {
+          mat1.appendReplacement(buf, Matcher.quoteReplacement(rep));
+        } else {
+          throw new IllegalStateException("Utility.replaceTags() Tag '" + tag + "' not defined");
+        }
       }
+      mat1.appendTail(buf);
+    } catch (Exception ex) {
+      ex.printStackTrace();
+      int dum = 0;
     }
-    mat1.appendTail(buf);
     return buf.toString();
   }
 
@@ -504,7 +543,7 @@ class Utility {
             break;
           case 1:
           case 2:
-            // Collect 2 bytes into a 16 bit address
+            // Collect 2 bytes into a 16-bit address
             add = (add << 8) + val;
             if (add + count > buf.size()) {
               buf.ensureCapacity(add + count);
