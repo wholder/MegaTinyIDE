@@ -1065,6 +1065,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
             devices.add(new Programmer.DebugDevice(parmSet, prog.key));
           }
         } catch (Exception ex) {
+          // Hidapi did not initialise: com/sun/jna/Structure$ByReference
           showErrorDialog("Unable to load programmers.props file");
         }
         // Add USB serial devices to list
@@ -1271,7 +1272,7 @@ public class MegaTinyIDE extends JFrame implements ListingPane.DebugListener {
             Pattern lineRef = Pattern.compile("(" + trueName + ":([0-9]+?):(([0-9]+?):)*)", Pattern.CASE_INSENSITIVE);
             Matcher mat = lineRef.matcher(errText);
             Font font = Utility.getCodeFont(12);
-            StringBuilder buf = new StringBuilder("<html><pre " + Utility.getFontStyle(font) + ">");
+            StringBuffer buf = new StringBuffer("<html><pre " + Utility.getFontStyle(font) + ">");
             while (mat.find()) {
               String seq = mat.group(1);
               String line = mat.group(2);

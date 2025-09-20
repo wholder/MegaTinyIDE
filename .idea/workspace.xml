@@ -3,6 +3,7 @@
   <component name="AnalysisUIOptions">
     <option name="SPLITTER_PROPORTION" value="0.40994543" />
     <option name="ANALYZE_INJECTED_CODE" value="false" />
+    <option name="SCOPE_TYPE" value="3" />
   </component>
   <component name="ArtifactsWorkspaceSettings">
     <artifacts-to-build>
@@ -14,8 +15,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ac9306bf-b5f3-4e36-90eb-7d038501efdb" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.MD" beforeDir="false" afterPath="$PROJECT_DIR$/README.MD" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/programmers.props" beforeDir="false" afterPath="$PROJECT_DIR$/resources/programmers.props" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MarkupView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MarkupView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MegaTinyIDE.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MegaTinyIDE.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Utility.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Utility.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,19 +49,21 @@
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;ms-11&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/wholder/IdeaProjects/MegaTinyIDE&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Artifacts&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "jdk.selected.JAVA_MODULE": "ms-11",
+    "last_opened_file_path": "/Users/wholder/IdeaProjects/MegaTinyIDE",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/resources/documentation/images" />
@@ -89,8 +96,29 @@
     </key>
   </component>
   <component name="RunManager" selected="Application.MegaTinyIDE">
-    <configuration name="GraphPaperLayout" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="GraphPaperLayout" />
+    <configuration name="Breadboard (1)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Breadboard" />
+      <module name="MegaTinyIDE" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Breadboard (2)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Breadboard" />
+      <module name="MegaTinyIDE" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Breadboard (3)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Breadboard" />
+      <module name="MegaTinyIDE" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Breadboard (4)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Breadboard" />
       <module name="MegaTinyIDE" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -99,28 +127,6 @@
     <configuration name="MegaTinyIDE" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="MegaTinyIDE" />
       <module name="MegaTinyIDE" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="NativeBuilder (3)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="NativeBuilder" />
-      <module name="NativeBuilder" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="NativeBuilder" type="Application" factoryName="Application" temporary="true">
-      <option name="ALTERNATIVE_JRE_PATH" value="ms-11" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
-      <option name="MAIN_CLASS_NAME" value="NativeBuilder" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="ToolchainCombiner" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="ToolchainCombiner" />
-      <module name="ToolBuilder" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -190,19 +196,19 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Application.GraphPaperLayout" />
-      <item itemvalue="Application.NativeBuilder" />
-      <item itemvalue="Application.NativeBuilder (3)" />
-      <item itemvalue="Application.ToolchainCombiner" />
       <item itemvalue="Application.MegaTinyIDE" />
+      <item itemvalue="Application.Breadboard (3)" />
+      <item itemvalue="Application.Breadboard (2)" />
+      <item itemvalue="Application.Breadboard (1)" />
+      <item itemvalue="Application.Breadboard (4)" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.MegaTinyIDE" />
-        <item itemvalue="Application.NativeBuilder" />
-        <item itemvalue="Application.GraphPaperLayout" />
-        <item itemvalue="Application.NativeBuilder (3)" />
-        <item itemvalue="Application.ToolchainCombiner" />
+        <item itemvalue="Application.Breadboard (3)" />
+        <item itemvalue="Application.Breadboard (4)" />
+        <item itemvalue="Application.Breadboard (2)" />
+        <item itemvalue="Application.Breadboard (1)" />
       </list>
     </recent_temporary>
   </component>
@@ -561,8 +567,11 @@
       <option name="project" value="LOCAL" />
       <updated>1648522232986</updated>
     </task>
-    <option name="localTasksCounter" value="159" />
+    <option name="localTasksCounter" value="160" />
     <servers />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.bb" />
   </component>
   <component name="Vcs.Log.History.Properties">
     <option name="COLUMN_ID_ORDER">
@@ -895,7 +904,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/MegaTinyIDE.java</url>
-          <line>1206</line>
+          <line>1207</line>
           <option name="timeStamp" value="197" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
@@ -910,8 +919,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/MarkupView.java</url>
-          <line>451</line>
+          <line>455</line>
           <option name="timeStamp" value="241" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/MegaTinyIDE.java</url>
+          <line>1068</line>
+          <option name="timeStamp" value="248" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -118,6 +118,32 @@ class Utility {
     return buf.toString();
   }
 
+  /**
+   * Get file path to Support Directory (MegaTinyIDE)
+   * Used to unpack and use GNU toolchains and other data that needs to persist
+   * @param appName parent reference to MegaTinyIDE class
+   * @return file path
+   */
+  public static File getAppSupportDirectoryPath (JComponent parent) {
+    String appName = parent.getName();
+    String os = System.getProperty("os.name").toLowerCase();
+    String userHome = System.getProperty("user.home");
+    if (os.contains("mac")) {
+      return new File(userHome, "Library/Application Support/" + appName);
+    } else if (os.contains("win")) {
+      String appDataPath = System.getenv("APPDATA");  // For roaming app data
+      if (appDataPath == null) {
+        appDataPath = System.getenv("LOCALAPPDATA");  // For local app data
+      }
+      if (appDataPath != null) {
+        return new File(appDataPath, appName);
+      }
+      return new File(userHome, "Application Data/" + appName);
+    } else {                                          // Assuming Linux/Unix-like
+      return new File(userHome, "." + appName);
+    }
+  }
+
   static void copyFile (File src, String dest) throws IOException {
     FileInputStream fis = new FileInputStream(src);
     byte[] data = new byte[fis.available()];
@@ -297,7 +323,7 @@ class Utility {
   }
 
   static String replaceTags (String src, Map<String,String> tags, TagCallback callback) {
-    StringBuilder buf = new StringBuilder();
+    StringBuffer buf = new StringBuffer();
     try {
       Matcher mat1 = pat1.matcher(src);
       while (mat1.find()) {

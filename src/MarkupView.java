@@ -94,7 +94,11 @@ class MarkupView extends JPanel {
     private MyImageView (Element elem) {
       super(elem);
       AttributeSet attributes = elem.getAttributes();
-      loc = URLDecoder.decode((String) attributes.getAttribute(HTML.Attribute.SRC), StandardCharsets.UTF_8);
+      try {
+        loc = URLDecoder.decode((String) attributes.getAttribute(HTML.Attribute.SRC), "UTF_8");
+      } catch (Exception ex) {
+        ex.printStackTrace();
+      }
     }
 
     /**
@@ -377,7 +381,7 @@ class MarkupView extends JPanel {
         FormSubmitEvent fEvent = (FormSubmitEvent) ev;
         String file = fEvent.getData();
         try {
-          file = URLDecoder.decode(file, StandardCharsets.UTF_8);
+          file = URLDecoder.decode(file, "UTF_8");
           int idx = file.indexOf("=");
           if (idx > 0) {
             String type = file.substring(0, idx);
@@ -485,7 +489,7 @@ class MarkupView extends JPanel {
   private static String addMarkHover (String text) {
     Pattern LinkMatch = Pattern.compile("\\[(.+)\\]\\((.+)\\)");
     Matcher mat = LinkMatch.matcher(text);
-    StringBuilder buf = new StringBuilder();
+    StringBuffer buf = new StringBuffer();
     while (mat.find()) {
       String g1 = mat.group(1);
       String g2 = mat.group(2);
